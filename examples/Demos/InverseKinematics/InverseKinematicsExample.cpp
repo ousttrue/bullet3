@@ -8,10 +8,10 @@
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
 
-#include "BussIK/Node.h"
-#include "BussIK/Tree.h"
-#include "BussIK/Jacobian.h"
-#include "BussIK/VectorRn.h"
+#include <BussIK/Node.h>
+#include <BussIK/Tree.h>
+#include <BussIK/Jacobian.h>
+#include <BussIK/VectorRn.h>
 
 #define RADIAN(X) ((X)*RadiansToDegrees)
 

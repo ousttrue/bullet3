@@ -96,10 +96,6 @@ add_executable(
   ../RobotSimulator/b3RobotSimulatorClientAPI.h
   ../BasicDemo/BasicExample.cpp
   ../BasicDemo/BasicExample.h
-  ../InverseDynamics/InverseDynamicsExample.cpp
-  ../InverseDynamics/InverseDynamicsExample.h
-  ../InverseKinematics/InverseKinematicsExample.cpp
-  ../InverseKinematics/InverseKinematicsExample.h
   ../MultiThreadedDemo/MultiThreadedDemo.cpp
   ../MultiThreadedDemo/MultiThreadedDemo.h
   ../MultiThreadedDemo/CommonRigidBodyMTBase.cpp
@@ -244,6 +240,8 @@ target_link_libraries(
           DynamicControlDemo
           SoftDemo
           GyroscopicDemo
+          InverseDynamics
+          InverseKinematics
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS

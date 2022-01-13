@@ -68,11 +68,11 @@
 #include "../Tutorial/Tutorial.h"
 #include "../Tutorial/Dof6ConstraintTutorial.h"
 #include "../MultiThreading/MultiThreadingExample.h"
-#include "../InverseDynamics/InverseDynamicsExample.h"
+#include <InverseDynamics/InverseDynamicsExample.h>
 #include "../RoboticsLearning/R2D2GraspExample.h"
 #include "../RoboticsLearning/KukaGraspExample.h"
 #include "../RoboticsLearning/GripperGraspExample.h"
-#include "../InverseKinematics/InverseKinematicsExample.h"
+#include <InverseKinematics/InverseKinematicsExample.h>
 
 #ifdef B3_ENABLE_TINY_AUDIO
 #include "../TinyAudio/TinyAudioExample.h"

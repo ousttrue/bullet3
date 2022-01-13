@@ -11,4 +11,6 @@ subdirs(
   Benchmarks
   DynamicControlDemo
   SoftDemo
-  GyroscopicDemo)
+  GyroscopicDemo
+  InverseDynamics
+  InverseKinematics)
