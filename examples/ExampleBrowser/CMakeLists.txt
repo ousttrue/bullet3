@@ -222,18 +222,8 @@ add_executable(
   ../Importers/ImportURDFDemo/BulletUrdfImporter.h
   ../Vehicles/Hinge2Vehicle.cpp
   ../Vehicles/Hinge2Vehicle.h
-  ../MultiBody/Pendulum.cpp
-  ../MultiBody/MultiBodySoftContact.cpp
-  ../MultiBody/TestJointTorqueSetup.cpp
-  ../MultiBody/TestJointTorqueSetup.h
-  ../MultiBody/InvertedPendulumPDControl.cpp
-  ../MultiBody/InvertedPendulumPDControl.h
-  ../MultiBody/MultiBodyConstraintFeedback.cpp
-  ../MultiBody/KinematicMultiBodyExample.cpp
   ../SoftDemo/SoftDemo.cpp
   ../SoftDemo/SoftDemo.h
-  ../MultiBody/MultiDofDemo.cpp
-  ../MultiBody/MultiDofDemo.h
   ../RigidBody/RigidBodySoftContact.cpp
   ../RigidBody/KinematicRigidBodyExample.cpp
   ../ThirdPartyLibs/stb_image/stb_image.cpp
@@ -264,6 +254,7 @@ target_link_libraries(
           Constraints
           DeformableDemo
           VoronoiFracture
+          MultiBody
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS

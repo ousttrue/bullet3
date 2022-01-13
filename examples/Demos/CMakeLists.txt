@@ -1,2 +1,9 @@
-subdirs(ExtendedTutorials BulletRobotics TinyRenderer ForkLift Constraints
-        DeformableDemo VoronoiFracture)
+subdirs(
+  ExtendedTutorials
+  BulletRobotics
+  TinyRenderer
+  ForkLift
+  Constraints
+  DeformableDemo
+  VoronoiFracture
+  MultiBody)

@@ -27,13 +27,13 @@
 #include "../GyroscopicDemo/GyroscopicSetup.h"
 #include <Constraints/Dof6Spring2Setup.h>
 #include <Constraints/ConstraintPhysicsSetup.h>
-#include "../MultiBody/TestJointTorqueSetup.h"
-#include "../MultiBody/Pendulum.h"
-#include "../MultiBody/MultiBodySoftContact.h"
-#include "../MultiBody/MultiBodyConstraintFeedback.h"
-#include "../MultiBody/MultiDofDemo.h"
-#include "../MultiBody/InvertedPendulumPDControl.h"
-#include "../MultiBody/KinematicMultiBodyExample.h"
+#include <MultiBody/TestJointTorqueSetup.h>
+#include <MultiBody/Pendulum.h>
+#include <MultiBody/MultiBodySoftContact.h>
+#include <MultiBody/MultiBodyConstraintFeedback.h>
+#include <MultiBody/MultiDofDemo.h>
+#include <MultiBody/InvertedPendulumPDControl.h>
+#include <MultiBody/KinematicMultiBodyExample.h>
 
 #include "../RigidBody/RigidBodySoftContact.h"
 #include "../RigidBody/KinematicRigidBodyExample.h"
