@@ -2,14 +2,14 @@
 #include "PosixSharedMemory.h"
 #include "Win32SharedMemory.h"
 
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonRenderInterface.h>
+#include <CommonExampleInterface.h>
 #include "btBulletDynamicsCommon.h"
 
 #include "LinearMath/btTransform.h"
 
 #include "Bullet3Common/b3Logging.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "SharedMemoryBlock.h"
 
 #include "PhysicsCommandProcessorInterface.h"

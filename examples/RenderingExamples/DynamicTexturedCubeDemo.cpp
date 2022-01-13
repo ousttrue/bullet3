@@ -1,21 +1,21 @@
 
 #include "DynamicTexturedCubeDemo.h"
 #include "Bullet3Common/b3Logging.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
+#include <CommonGraphicsAppInterface.h>
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3AlignedObjectArray.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonRenderInterface.h>
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
 #include "GwenGUISupport/GraphingTexture.h"
 
-#include "../CommonInterfaces/Common2dCanvasInterface.h"
+#include <Common2dCanvasInterface.h>
 #include "../RenderingExamples/TimeSeriesCanvas.h"
 #include "../RenderingExamples/TimeSeriesFontData.h"
 #include "../Importers/ImportMeshUtility/b3ImportMeshUtility.h"
 #include "../OpenGLWindow/GLInstanceGraphicsShape.h"
 #include "TinyVRGui.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 
 class DynamicTexturedCubeDemo : public CommonExampleInterface
 {

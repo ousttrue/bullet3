@@ -21,7 +21,7 @@
 #include "../OpenGLWindow/GLInstancingRenderer.h"
 #include "BulletCollision/CollisionShapes/btShapeHull.h"
 
-#include "../CommonInterfaces/CommonMultiBodyBase.h"
+#include <CommonMultiBodyBase.h>
 
 class MultiDofDemo : public CommonMultiBodyBase
 {

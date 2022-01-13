@@ -1,17 +1,17 @@
 
 #include "CollisionTutorialBullet2.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonGraphicsAppInterface.h>
+#include <CommonRenderInterface.h>
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 #include "LinearMath/btTransform.h"
 
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "../RenderingExamples/TimeSeriesCanvas.h"
 #include "stb_image/stb_image.h"
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3Matrix3x3.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 
 #include "LinearMath/btAlignedObjectArray.h"
 #include "CollisionSdkC_Api.h"

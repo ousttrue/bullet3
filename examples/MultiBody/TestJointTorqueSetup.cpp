@@ -4,7 +4,7 @@
 #include "BulletDynamics/Featherstone/btMultiBodyLinkCollider.h"
 #include "BulletDynamics/Featherstone/btMultiBodyJointFeedback.h"
 
-#include "../CommonInterfaces/CommonMultiBodyBase.h"
+#include <CommonMultiBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 
 static btScalar radius(0.2);

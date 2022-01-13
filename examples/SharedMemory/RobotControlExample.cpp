@@ -4,7 +4,7 @@
 
 #if 0
 
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include "PhysicsServer.h"
 #include "PhysicsClient.h"
 #include "SharedMemoryCommon.h"

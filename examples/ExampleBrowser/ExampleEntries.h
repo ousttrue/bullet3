@@ -2,7 +2,7 @@
 #ifndef EXAMPLE_ENTRIES_H
 #define EXAMPLE_ENTRIES_H
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 
 class ExampleEntriesAll : public ExampleEntries
 {

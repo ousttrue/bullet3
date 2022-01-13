@@ -1,6 +1,6 @@
 #include "TinyAudioExample.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
 #include "Bullet3Common/b3AlignedObjectArray.h"
 #include "Bullet3Common/b3HashMap.h"
 

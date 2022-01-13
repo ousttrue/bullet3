@@ -22,8 +22,8 @@
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonRigidBodyBase.h>
+#include <CommonParameterInterface.h>
 
 static btScalar gPendulaQty = 2;  //TODO: This would actually be an Integer, but the Slider does not like integers, so I floor it when changed
 

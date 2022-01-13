@@ -18,8 +18,8 @@ subject to the following restrictions:
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonRigidBodyBase.h>
+#include <CommonParameterInterface.h>
 
 static btScalar gTilt = 20.0f / 180.0f * SIMD_PI;  // tilt the ramp 20 degrees
 

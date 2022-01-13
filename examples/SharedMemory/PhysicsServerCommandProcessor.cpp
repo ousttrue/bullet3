@@ -1,5 +1,5 @@
 #include "PhysicsServerCommandProcessor.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonRenderInterface.h>
 #include "plugins/b3PluginCollisionInterface.h"
 #include "../Importers/ImportURDFDemo/BulletUrdfImporter.h"
 #include "../Importers/ImportURDFDemo/MyMultiBodyCreator.h"
@@ -53,7 +53,7 @@
 #include "BulletDynamics/Featherstone/btMultiBodyJointMotor.h"
 #include "LinearMath/btSerializer.h"
 #include "Bullet3Common/b3Logging.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "SharedMemoryCommands.h"
 #include "LinearMath/btRandom.h"
 #include "Bullet3Common/b3ResizablePool.h"
@@ -137,7 +137,7 @@ btQuaternion gVRTeleportOrn(0, 0, 0, 1);
 btScalar simTimeScalingFactor = 1;
 btScalar gRhsClamp = 1.f;
 
-#include "../CommonInterfaces/CommonFileIOInterface.h"
+#include <CommonFileIOInterface.h>
 
 class b3ThreadPool
 {

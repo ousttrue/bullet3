@@ -2,8 +2,8 @@
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonGraphicsAppInterface.h>
+#include <CommonRenderInterface.h>
 #include "Bullet3Common/b3Scalar.h"
 #include "CollisionShape2TriangleMesh.h"
 #include "BulletSoftBody/btSoftBodyHelpers.h"

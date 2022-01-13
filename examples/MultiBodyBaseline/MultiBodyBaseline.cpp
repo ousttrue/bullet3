@@ -38,13 +38,13 @@ subject to the following restrictions:
 #include "BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h"
 #include <stdio.h>  //printf debugging
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 #include "../SoftDemo/BunnyMesh.h"
 #include "BulletDynamics/Featherstone/btMultiBodyLinkCollider.h"
 #include "BulletDynamics/Featherstone/btMultiBodyJointFeedback.h"
 
-#include "../CommonInterfaces/CommonMultiBodyBase.h"
+#include <CommonMultiBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 ///The MultiBodyBaseline demo deformable bodies self-collision
 static bool g_floatingBase = true;

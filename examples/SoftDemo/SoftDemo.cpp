@@ -51,7 +51,7 @@ class btSoftSoftCollisionAlgorithm;
 class btSoftRididCollisionAlgorithm;
 class btSoftRigidDynamicsWorld;
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 class SoftDemo : public CommonRigidBodyBase
 {

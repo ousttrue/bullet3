@@ -15,7 +15,7 @@ subject to the following restrictions:
 
 #include "MultiThreadedDemo.h"
 #include "CommonRigidBodyMTBase.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include "btBulletDynamicsCommon.h"
 #include "btBulletCollisionCommon.h"
 #include "LinearMath/btAlignedObjectArray.h"

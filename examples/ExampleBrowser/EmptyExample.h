@@ -1,7 +1,7 @@
 #ifndef EMPTY_EXAMPLE_H
 #define EMPTY_EXAMPLE_H
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 
 class EmptyExample : public CommonExampleInterface
 {

@@ -20,10 +20,10 @@
 #include "BulletSoftBody/btDeformableBodySolver.h"
 #include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
 #include "BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include <stdio.h>  //printf debugging
 
-#include "../CommonInterfaces/CommonDeformableBodyBase.h"
+#include <CommonDeformableBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 
 ///The LargeDeformation shows the contact between volumetric deformable objects and rigid objects.

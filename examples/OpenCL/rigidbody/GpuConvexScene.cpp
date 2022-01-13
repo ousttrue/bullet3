@@ -5,7 +5,7 @@
 
 #include "../OpenGLWindow/GLInstancingRenderer.h"
 #include "Bullet3Common/b3Quaternion.h"
-#include "../CommonInterfaces/CommonWindowInterface.h"
+#include <CommonWindowInterface.h>
 #include "Bullet3OpenCL/BroadphaseCollision/b3GpuSapBroadphase.h"
 #include "../CommonOpenCL/GpuDemoInternalData.h"
 #include "Bullet3OpenCL/Initialize/b3OpenCLUtils.h"

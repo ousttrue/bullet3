@@ -2,7 +2,7 @@
 #ifndef B3_BULLET_DEFAULT_FILE_IO_H
 #define B3_BULLET_DEFAULT_FILE_IO_H
 
-#include "../CommonInterfaces/CommonFileIOInterface.h"
+#include <CommonFileIOInterface.h>
 #include "b3ResourcePath.h"
 
 #include <stdio.h>

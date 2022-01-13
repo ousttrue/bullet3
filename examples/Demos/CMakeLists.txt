@@ -1,1 +1,1 @@
-subdirs(ExtendedTutorials)
+subdirs(ExtendedTutorials BulletRobotics)

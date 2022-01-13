@@ -1,7 +1,7 @@
 #ifndef SHARED_MEMORY_COMMON_H
 #define SHARED_MEMORY_COMMON_H
 
-#include "../CommonInterfaces/CommonMultiBodyBase.h"
+#include <CommonMultiBodyBase.h>
 
 class SharedMemoryCommon : public CommonExampleInterface
 {

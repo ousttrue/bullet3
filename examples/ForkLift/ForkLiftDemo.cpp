@@ -33,13 +33,13 @@ class btCollisionShape;
 #include "BulletDynamics/ConstraintSolver/btHingeConstraint.h"
 #include "BulletDynamics/ConstraintSolver/btSliderConstraint.h"
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 #include "LinearMath/btAlignedObjectArray.h"
 #include "btBulletCollisionCommon.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonWindowInterface.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
+#include <CommonGUIHelperInterface.h>
+#include <CommonRenderInterface.h>
+#include <CommonWindowInterface.h>
+#include <CommonGraphicsAppInterface.h>
 
 ///VehicleDemo shows how to setup and use the built-in raycast vehicle
 class ForkLiftDemo : public CommonExampleInterface

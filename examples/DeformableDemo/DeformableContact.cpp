@@ -22,7 +22,7 @@
 #include "BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h"
 #include <stdio.h>  //printf debugging
 
-#include "../CommonInterfaces/CommonDeformableBodyBase.h"
+#include <CommonDeformableBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 
 ///The DeformableContact shows the contact between deformable objects

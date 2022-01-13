@@ -2,7 +2,7 @@
 #ifndef SIMPLE_OPENGL2_RENDERER_H
 #define SIMPLE_OPENGL2_RENDERER_H
 
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonRenderInterface.h>
 #include "SimpleCamera.h"
 
 class SimpleOpenGL2Renderer : public CommonRenderInterface

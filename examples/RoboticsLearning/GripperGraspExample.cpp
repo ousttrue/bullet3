@@ -1,15 +1,15 @@
 
 #include "GripperGraspExample.h"
 
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
+#include <CommonGraphicsAppInterface.h>
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3AlignedObjectArray.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonRenderInterface.h>
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
 #include "../SharedMemory/PhysicsServerSharedMemory.h"
 #include "../SharedMemory/PhysicsClientC_API.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include "../SharedMemory/SharedMemoryPublic.h"
 #include <string>
 

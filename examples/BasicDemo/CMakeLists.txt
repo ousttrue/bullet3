@@ -6,7 +6,7 @@ add_executable(${TARGET_NAME} BasicExample.cpp main.cpp
                               ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
 target_compile_options(${TARGET_NAME} PRIVATE /wd4305)
 target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics BulletCollision
-                                             LinearMath)
+                                             LinearMath CommonInterfaces)
 
 # ##############################################################################
 # Standalone BasicExampleGui using OpenGL (but not the example browser)

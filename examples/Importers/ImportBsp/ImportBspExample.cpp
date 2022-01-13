@@ -30,7 +30,7 @@ subject to the following restrictions:
 
 #include "LinearMath/btAlignedObjectArray.h"
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 ///BspDemo shows the convex collision detection, by converting a Quake BSP file into convex objects and allowing interaction with boxes.
 class BspDemo : public CommonRigidBodyBase

@@ -1,7 +1,7 @@
 #ifndef SIMPLE_CAMERA_H
 #define SIMPLE_CAMERA_H
 
-#include "../CommonInterfaces/CommonCameraInterface.h"
+#include <CommonCameraInterface.h>
 
 struct SimpleCamera : public CommonCameraInterface
 {

@@ -22,13 +22,13 @@
 #include "BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h"
 #include <stdio.h>  //printf debugging
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 #include "../SoftDemo/BunnyMesh.h"
 #include "BulletDynamics/Featherstone/btMultiBodyLinkCollider.h"
 #include "BulletDynamics/Featherstone/btMultiBodyJointFeedback.h"
 
-#include "../CommonInterfaces/CommonDeformableBodyBase.h"
+#include <CommonDeformableBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 ///The DeformableMultibody demo deformable bodies self-collision
 static bool g_floatingBase = true;

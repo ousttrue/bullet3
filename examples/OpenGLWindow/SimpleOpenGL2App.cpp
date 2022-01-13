@@ -7,7 +7,7 @@
 #include "Bullet3Common/b3AlignedObjectArray.h"
 #include "Bullet3Common/b3Vector3.h"
 #include "Bullet3Common/b3Quaternion.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonRenderInterface.h>
 #include "../OpenGLWindow/GLPrimitiveRenderer.h"
 #include "GLInstanceGraphicsShape.h"
 #include "stdlib.h"
@@ -37,7 +37,7 @@
 #endif  //#ifdef B3_USE_GLFW
 
 #include <stdio.h>
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonRenderInterface.h>
 
 static SimpleOpenGL2App* gApp2 = 0;
 

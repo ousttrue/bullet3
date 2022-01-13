@@ -32,7 +32,7 @@ class btDefaultCollisionConfiguration;
 class NNWalker;
 
 #include "NN3DWalkersTimeWarpBase.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 
 #include "../Utils/b3ReferenceFrameHelper.hpp"
 #include "../RenderingExamples/TimeSeriesCanvas.h"

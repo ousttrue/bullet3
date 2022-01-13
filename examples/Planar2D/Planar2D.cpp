@@ -53,7 +53,7 @@ struct btCollisionAlgorithmCreateFunc;
 class btDefaultCollisionConfiguration;
 class GL_DialogDynamicsWorld;
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 class Planar2D : public CommonRigidBodyBase
 {

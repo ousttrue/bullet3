@@ -1,7 +1,7 @@
 #ifndef REMOTE_HELPER_TCP_H
 #define REMOTE_HELPER_TCP_H
 
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 
 ///a RemoteGUIHelper will connect to an existing graphics server over TCP
 struct RemoteGUIHelperTCP : public GUIHelperInterface

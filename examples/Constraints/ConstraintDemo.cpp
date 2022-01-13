@@ -21,7 +21,7 @@ subject to the following restrictions:
 #include <stdio.h>  //printf debugging
 #include <cmath>
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 ///AllConstraintDemo shows how to create a constraint, like Hinge or btGenericD6constraint
 class AllConstraintDemo : public CommonRigidBodyBase

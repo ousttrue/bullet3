@@ -21,8 +21,8 @@
 #include "LinearMath/btAlignedObjectArray.h"
 #include "LinearMath/btQuickprof.h"  // Use your own timer, this timer is only used as we lack another timer
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonRigidBodyBase.h>
+#include <CommonParameterInterface.h>
 
 //Solvers
 #include "BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"

@@ -17,7 +17,7 @@ subject to the following restrictions:
 #define GL_INSTANCING_RENDERER_H
 
 #include "Bullet3Common/b3AlignedObjectArray.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonRenderInterface.h>
 #include "SimpleCamera.h"
 
 class GLInstancingRenderer : public CommonRenderInterface

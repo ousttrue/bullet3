@@ -22,7 +22,7 @@
 #include "BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h"
 #include <stdio.h>  //printf debugging
 
-#include "../CommonInterfaces/CommonDeformableBodyBase.h"
+#include <CommonDeformableBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 
 ///The Pinch shows the frictional contact between kinematic rigid objects with deformable objects

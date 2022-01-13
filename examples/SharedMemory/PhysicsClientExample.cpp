@@ -1,10 +1,10 @@
 
 #include "PhysicsClientExample.h"
 
-#include "../CommonInterfaces/CommonMultiBodyBase.h"
-#include "../CommonInterfaces/Common2dCanvasInterface.h"
+#include <CommonMultiBodyBase.h>
+#include <Common2dCanvasInterface.h>
 #include "SharedMemoryCommon.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include "PhysicsServerCommandProcessor.h"
 #include "PhysicsClientC_API.h"
 #include "PhysicsClient.h"

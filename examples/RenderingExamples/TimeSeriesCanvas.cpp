@@ -1,5 +1,5 @@
 #include "TimeSeriesCanvas.h"
-#include "../CommonInterfaces/Common2dCanvasInterface.h"
+#include <Common2dCanvasInterface.h>
 #include "LinearMath/btAlignedObjectArray.h"
 #include "TimeSeriesFontData.h"
 #include "LinearMath/btVector3.h"

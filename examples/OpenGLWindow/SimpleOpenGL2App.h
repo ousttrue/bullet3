@@ -1,7 +1,7 @@
 #ifndef SIMPLE_OPENGL2_APP_H
 #define SIMPLE_OPENGL2_APP_H
 
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
+#include <CommonGraphicsAppInterface.h>
 
 class SimpleOpenGL2App : public CommonGraphicsApp
 {

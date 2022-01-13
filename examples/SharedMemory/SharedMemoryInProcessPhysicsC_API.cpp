@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "PhysicsServerExampleBullet2.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonGUIHelperInterface.h>
+#include <CommonExampleInterface.h>
 #include "InProcessMemory.h"
 #include "RemoteGUIHelper.h"
 

@@ -12,7 +12,7 @@
 
 #include "stb_image/stb_image.h"
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 #include "../ImportMeshUtility/b3ImportMeshUtility.h"
 
 class ImportObjSetup : public CommonRigidBodyBase

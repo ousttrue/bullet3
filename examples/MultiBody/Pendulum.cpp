@@ -22,7 +22,7 @@ subject to the following restrictions:
 
 #endif
 
-#include "../CommonInterfaces/CommonMultiBodyBase.h"
+#include <CommonMultiBodyBase.h>
 
 static btScalar radius(0.05);
 

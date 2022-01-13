@@ -1,15 +1,15 @@
 
 #include "GraphicsServerExample.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonGraphicsAppInterface.h>
+#include <CommonRenderInterface.h>
 #include "PosixSharedMemory.h"
 #include "Win32SharedMemory.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 #include "LinearMath/btTransform.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "Bullet3Common/b3AlignedObjectArray.h"
 #include "GraphicsSharedMemoryBlock.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "SharedMemoryPublic.h"
 #include "../MultiThreading/b3ThreadSupportInterface.h"
 #include "../Utils/b3Clock.h"
@@ -18,7 +18,7 @@
 
 #include "PassiveSocket.h"  // Include header for active socket object definition
 #include <stdio.h>
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "Bullet3Common/b3CommandLineArgs.h"
 #include "RemoteGUIHelper.h"
 #include "GraphicsSharedMemoryPublic.h"

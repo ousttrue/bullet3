@@ -3,12 +3,12 @@
 #define COMMON_RIGID_BODY_MT_BASE_H
 
 #include "btBulletDynamicsCommon.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonCameraInterface.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
-#include "../CommonInterfaces/CommonWindowInterface.h"
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
+#include <CommonRenderInterface.h>
+#include <CommonCameraInterface.h>
+#include <CommonGraphicsAppInterface.h>
+#include <CommonWindowInterface.h>
 
 enum SolverType
 {

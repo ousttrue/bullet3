@@ -17,8 +17,8 @@ subject to the following restrictions:
 
 #include "Bullet3Common/b3CommandLineArgs.h"
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
 #include "SharedMemoryCommon.h"
 
 #include <stdlib.h>

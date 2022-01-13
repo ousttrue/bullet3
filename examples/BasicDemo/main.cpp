@@ -15,8 +15,8 @@ subject to the following restrictions:
 
 #include "BasicExample.h"
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
 #include "BulletCollision/CollisionDispatch/btCollisionObject.h"
 #include "BulletCollision/CollisionShapes/btCollisionShape.h"
 #include "BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"

@@ -1,7 +1,7 @@
 #ifndef REMOTE_HELPER_H
 #define REMOTE_HELPER_H
 
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 
 ///a RemoteGUIHelper will connect to an existing graphics server through shared memory
 struct RemoteGUIHelper : public GUIHelperInterface

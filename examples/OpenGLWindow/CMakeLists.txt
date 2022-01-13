@@ -23,4 +23,4 @@ target_compile_definitions(${TARGET_NAME} PUBLIC GLEW_STATIC)
 target_compile_options(${TARGET_NAME} PRIVATE /wd4244)
 target_include_directories(
   ${TARGET_NAME} PRIVATE ${BULLET_PHYSICS_SOURCE_DIR}/examples/ThirdPartyLibs)
-target_link_libraries(${TARGET_NAME} PUBLIC glad Bullet3Common OpenGL32.lib)
+target_link_libraries(${TARGET_NAME} PUBLIC glad Bullet3Common CommonInterfaces OpenGL32.lib)

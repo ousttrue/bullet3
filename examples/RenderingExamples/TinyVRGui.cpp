@@ -1,16 +1,16 @@
 #include "TinyVRGui.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "../ExampleBrowser/GwenGUISupport/GraphingTexture.h"
 
-#include "../CommonInterfaces/Common2dCanvasInterface.h"
+#include <Common2dCanvasInterface.h>
 #include "../RenderingExamples/TimeSeriesCanvas.h"
 #include "../RenderingExamples/TimeSeriesFontData.h"
 #include "../Importers/ImportMeshUtility/b3ImportMeshUtility.h"
 #include "../OpenGLWindow/GLInstanceGraphicsShape.h"
 #include "../Utils/b3BulletDefaultFileIO.h"
 
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonRenderInterface.h>
+#include <CommonParameterInterface.h>
 
 struct TestCanvasInterface2 : public Common2dCanvasInterface
 {

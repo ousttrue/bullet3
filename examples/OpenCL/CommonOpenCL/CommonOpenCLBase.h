@@ -1,12 +1,12 @@
 #ifndef COMMON_MULTI_BODY_SETUP_H
 #define COMMON_MULTI_BODY_SETUP_H
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
-#include "../CommonInterfaces/CommonWindowInterface.h"
-#include "../CommonInterfaces/CommonCameraInterface.h"
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
+#include <CommonRenderInterface.h>
+#include <CommonGraphicsAppInterface.h>
+#include <CommonWindowInterface.h>
+#include <CommonCameraInterface.h>
 
 #include "GpuDemoInternalData.h"
 #include "Bullet3Common/b3Scalar.h"

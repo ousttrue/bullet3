@@ -4,7 +4,7 @@
 
 #include "PhysicsServerExample.h"
 
-#include "../CommonInterfaces/Common2dCanvasInterface.h"
+#include <Common2dCanvasInterface.h>
 #include "PhysicsServerSharedMemory.h"
 #include "Bullet3Common/b3CommandLineArgs.h"
 #include "SharedMemoryCommon.h"
@@ -18,7 +18,7 @@
 #include "../RenderingExamples/TinyVRGui.h"
 #endif  //BT_ENABLE_VR
 
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include "../Importers/ImportURDFDemo/urdfStringSplit.h"
 
 //@todo(erwincoumans) those globals are hacks for a VR demo, move this to Python/pybullet!

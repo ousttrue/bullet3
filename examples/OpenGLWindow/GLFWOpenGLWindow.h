@@ -4,7 +4,7 @@
 
 #ifdef B3_USE_GLFW
 
-#include "../CommonInterfaces/CommonWindowInterface.h"
+#include <CommonWindowInterface.h>
 
 #define b3gDefaultOpenGLWindow GLFWOpenGLWindow
 

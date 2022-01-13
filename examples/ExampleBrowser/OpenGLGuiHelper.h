@@ -1,6 +1,6 @@
 #ifndef OPENGL_GUI_HELPER_H
 #define OPENGL_GUI_HELPER_H
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 
 class btCollisionShape;
 class btTransform;

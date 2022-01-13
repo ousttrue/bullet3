@@ -1,6 +1,6 @@
 #include "LuaPhysicsSetup.h"
 
-#include "../CommonInterfaces/CommonMultiBodyBase.h"
+#include <CommonMultiBodyBase.h>
 #include "../Importers/ImportURDFDemo/BulletURDFImporter.h"
 #include "../Importers/ImportURDFDemo/MyMultiBodyCreator.h"
 #include "../Importers/ImportURDFDemo/URDF2Bullet.h"

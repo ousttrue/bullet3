@@ -22,12 +22,12 @@
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 #include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
 #include "BulletSoftBody/btSoftBodyHelpers.h"
 #include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 
 static btScalar gPendulaQty = 5;  // Number of pendula in newton's cradle
 //TODO: This would actually be an Integer, but the Slider does not like integers, so I floor it when changed

@@ -3,9 +3,9 @@
 
 #include "../OpenGLWindow/GLInstancingRenderer.h"
 #include "../OpenGLWindow/GLPrimitiveRenderer.h"
-#include "../CommonInterfaces/CommonWindowInterface.h"
+#include <CommonWindowInterface.h>
 
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
+#include <CommonGraphicsAppInterface.h>
 
 struct SimpleOpenGL3App : public CommonGraphicsApp
 {

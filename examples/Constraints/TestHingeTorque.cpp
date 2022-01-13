@@ -1,7 +1,7 @@
 #include "TestHingeTorque.h"
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonRigidBodyBase.h>
+#include <CommonParameterInterface.h>
 
 int collisionFilterGroup = int(btBroadphaseProxy::CharacterFilter);
 int collisionFilterMask = int(btBroadphaseProxy::AllFilter ^ (btBroadphaseProxy::CharacterFilter));

@@ -489,7 +489,7 @@ bool GwenUserInterface::mouseMoveCallback(float x, float y)
 	}
 	return handled;
 }
-#include "../CommonInterfaces/CommonWindowInterface.h"
+#include <CommonWindowInterface.h>
 
 bool GwenUserInterface::keyboardCallback(int bulletKey, int state)
 {

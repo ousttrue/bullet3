@@ -46,9 +46,6 @@ add_executable(
   main.cpp
   ExampleEntries.cpp
   ExampleEntries.h
-  ../BulletRobotics/FixJointBoxes.cpp
-  ../BulletRobotics/BoxStack.cpp
-  ../BulletRobotics/JointLimit.cpp
   # ../BulletRobotics/GraspBox.cpp
   ../TinyRenderer/geometry.cpp
   ../TinyRenderer/model.cpp

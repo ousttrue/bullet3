@@ -1,11 +1,11 @@
 
 #include "CoordinateSystemDemo.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonGraphicsAppInterface.h>
+#include <CommonRenderInterface.h>
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 #include "LinearMath/btTransform.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 ///quick demo showing the right-handed coordinate system and positive rotations around each axis
 class CoordinateSystemDemo : public CommonExampleInterface
 {

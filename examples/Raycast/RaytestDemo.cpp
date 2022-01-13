@@ -25,7 +25,7 @@ subject to the following restrictions:
 
 ///RaytestDemo shows how to use the btCollisionWorld::rayTest feature
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 class RaytestDemo : public CommonRigidBodyBase
 {

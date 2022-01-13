@@ -32,7 +32,7 @@ subject to the following restrictions:
 #include "btBulletDynamicsCommon.h"
 #include <stdio.h>  //printf debugging
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 
 ///The RollingFrictionDemo shows the use of rolling friction.

@@ -23,16 +23,16 @@
 #include "BulletDynamics/Featherstone/btMultiBodyJointMotor.h"
 #include <stdio.h>  //printf debugging
 
-#include "../CommonInterfaces/CommonDeformableBodyBase.h"
+#include <CommonDeformableBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
 #include "../Importers/ImportURDFDemo/BulletUrdfImporter.h"
 #include "../Importers/ImportURDFDemo/MyMultiBodyCreator.h"
 #include "../Importers/ImportURDFDemo/URDF2Bullet.h"
 #include "../Utils/b3BulletDefaultFileIO.h"
-#include "../CommonInterfaces/CommonMultiBodyBase.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
-#include "../CommonInterfaces/CommonFileIOInterface.h"
+#include <CommonMultiBodyBase.h>
+#include <CommonGraphicsAppInterface.h>
+#include <CommonParameterInterface.h>
+#include <CommonFileIOInterface.h>
 #include "Bullet3Common/b3FileUtils.h"
 
 ///The GraspDeformable shows grasping a volumetric deformable objects with multibody gripper with moter constraints.

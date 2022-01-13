@@ -1,6 +1,6 @@
 #include "GyroscopicSetup.h"
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 struct GyroscopicSetup : public CommonRigidBodyBase
 {

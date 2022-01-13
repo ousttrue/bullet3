@@ -32,15 +32,15 @@ class btCollisionShape;
 #include "BulletDynamics/ConstraintSolver/btHingeConstraint.h"
 #include "BulletDynamics/ConstraintSolver/btSliderConstraint.h"
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 #include "LinearMath/btAlignedObjectArray.h"
 #include "btBulletCollisionCommon.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonWindowInterface.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
+#include <CommonGUIHelperInterface.h>
+#include <CommonRenderInterface.h>
+#include <CommonWindowInterface.h>
+#include <CommonGraphicsAppInterface.h>
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 class Hinge2Vehicle : public CommonRigidBodyBase
 {

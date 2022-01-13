@@ -1,7 +1,7 @@
 #include "SerializeSetup.h"
 #include "../Extras/Serialize/BulletWorldImporter/btBulletWorldImporter.h"
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 class SerializeSetup : public CommonRigidBodyBase
 {

@@ -1,21 +1,21 @@
 
 #include "RaytracerSetup.h"
 
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
+#include <CommonGraphicsAppInterface.h>
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3AlignedObjectArray.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonRenderInterface.h>
 #include "../TinyRenderer/TinyRenderer.h"
-#include "../CommonInterfaces/Common2dCanvasInterface.h"
+#include <Common2dCanvasInterface.h>
 #include "BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 #include "LinearMath/btAlignedObjectArray.h"
 #include "btBulletCollisionCommon.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "../ExampleBrowser/CollisionShape2TriangleMesh.h"
 #include "../Importers/ImportMeshUtility/b3ImportMeshUtility.h"
 #include "../OpenGLWindow/GLInstanceGraphicsShape.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include "../Utils/b3BulletDefaultFileIO.h"
 struct TinyRendererSetupInternalData
 {

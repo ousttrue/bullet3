@@ -40,7 +40,7 @@ int sFrameNumber = 0;
 
 #include "LinearMath/btAlignedObjectArray.h"
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 ///FractureDemo shows basic breaking and glueing of objects
 class FractureDemo : public CommonRigidBodyBase

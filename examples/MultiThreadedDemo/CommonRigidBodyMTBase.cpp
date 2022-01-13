@@ -22,7 +22,7 @@ subject to the following restrictions:
 class btCollisionShape;
 
 #include "CommonRigidBodyMTBase.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include "LinearMath/btAlignedObjectArray.h"
 #include "LinearMath/btPoolAllocator.h"
 #include "btBulletCollisionCommon.h"

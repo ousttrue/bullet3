@@ -3,7 +3,7 @@
 
 struct MacOpenGLWindowInternalData;
 
-#include "../CommonInterfaces/CommonCallbacks.h"
+#include <CommonCallbacks.h>
 
 struct MacWindowConstructionInfo
 {

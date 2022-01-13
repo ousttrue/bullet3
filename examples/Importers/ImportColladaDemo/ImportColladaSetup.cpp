@@ -25,7 +25,7 @@ subject to the following restrictions:
 #include "Bullet3Common/b3FileUtils.h"
 #include "../../Utils/b3ResourcePath.h"
 #include "../../Utils/b3BulletDefaultFileIO.h"
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 class ImportColladaSetup : public CommonRigidBodyBase
 {

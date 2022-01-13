@@ -1,7 +1,7 @@
 #include "PhysicsDirect.h"
 
 #include "PhysicsClientSharedMemory.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "SharedMemoryCommands.h"
 #include "PhysicsCommandProcessorInterface.h"
 #include "../Utils/b3Clock.h"

@@ -1,7 +1,7 @@
 #ifndef EXAMPLE_BROWSER_GUI_H
 #define EXAMPLE_BROWSER_GUI_H
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 
 class ExampleBrowserInterface
 {

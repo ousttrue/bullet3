@@ -1,14 +1,14 @@
 
 #include "TimeSeriesExample.h"
 
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonGraphicsAppInterface.h>
+#include <CommonRenderInterface.h>
 
-#include "../CommonInterfaces/Common2dCanvasInterface.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <Common2dCanvasInterface.h>
+#include <CommonExampleInterface.h>
 #include "LinearMath/btAlignedObjectArray.h"
 #include "btBulletCollisionCommon.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 
 #include "TimeSeriesCanvas.h"
 

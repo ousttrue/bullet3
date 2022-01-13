@@ -5,7 +5,7 @@
 #ifndef NO_OPENGL3
 #include "../OpenGLWindow/SimpleOpenGL3App.h"
 #endif
-#include "../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonRenderInterface.h>
 #ifdef __APPLE__
 #include "../OpenGLWindow/MacOpenGLWindow.h"
 #else
@@ -35,8 +35,8 @@
 #endif
 #include "GwenGUISupport/GwenTextureWindow.h"
 #include "GwenGUISupport/GraphingTexture.h"
-#include "../CommonInterfaces/Common2dCanvasInterface.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <Common2dCanvasInterface.h>
+#include <CommonExampleInterface.h>
 #include "Bullet3Common/b3CommandLineArgs.h"
 #include "../OpenGLWindow/SimpleCamera.h"
 #include "../OpenGLWindow/SimpleOpenGL2Renderer.h"

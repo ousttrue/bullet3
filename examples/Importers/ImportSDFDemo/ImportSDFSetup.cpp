@@ -7,7 +7,7 @@
 
 #include "BulletDynamics/Featherstone/btMultiBodyJointMotor.h"
 #include "BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include "../../Utils/b3ResourcePath.h"
 
 #include "../ImportURDFDemo/BulletUrdfImporter.h"
@@ -16,7 +16,7 @@
 
 //#include "urdf_samples.h"
 
-#include "../CommonInterfaces/CommonMultiBodyBase.h"
+#include <CommonMultiBodyBase.h>
 
 #include "../ImportURDFDemo/MyMultiBodyCreator.h"
 

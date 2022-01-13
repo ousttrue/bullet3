@@ -18,9 +18,9 @@ subject to the following restrictions:
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 #include "../MultiThreadedDemo/CommonRigidBodyMTBase.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonParameterInterface.h>
 #include "../OpenGLWindow/GLInstanceGraphicsShape.h"
 #include "../Utils/b3BulletDefaultFileIO.h"
 #include "../Importers/ImportURDFDemo/urdfStringSplit.h"

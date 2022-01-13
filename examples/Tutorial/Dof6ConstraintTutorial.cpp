@@ -34,7 +34,7 @@ extern float g_additionalBodyMass;
 #define EXTRAPARAMS , true
 #endif
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 
 struct Dof6ConstraintTutorial : public CommonRigidBodyBase
 {

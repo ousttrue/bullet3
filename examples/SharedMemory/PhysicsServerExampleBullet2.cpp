@@ -2,7 +2,7 @@
 #include "PhysicsServerExampleBullet2.h"
 #include "PhysicsServerExample.h"
 #include "PhysicsServerCommandProcessor.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 
 struct Bullet2CommandProcessorCreation : public CommandProcessorCreationInterface
 {

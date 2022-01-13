@@ -13,8 +13,8 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
 #include "../Utils/b3Clock.h"
 
 #include "../OpenGLWindow/SimpleOpenGL3App.h"

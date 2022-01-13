@@ -23,12 +23,12 @@
 extern int gPreferredOpenCLDeviceIndex;
 extern int gPreferredOpenCLPlatformIndex;
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonCameraInterface.h"
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
-#include "../CommonInterfaces/CommonWindowInterface.h"
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
+#include <CommonRenderInterface.h>
+#include <CommonCameraInterface.h>
+#include <CommonGraphicsAppInterface.h>
+#include <CommonWindowInterface.h>
 #include "../CommonOpenCL/CommonOpenCLBase.h"
 #include "../OpenGLWindow/GLInstancingRenderer.h"
 #include "../OpenGLWindow/GLInstanceRendererInternalData.h"

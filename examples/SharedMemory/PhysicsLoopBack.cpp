@@ -1,9 +1,9 @@
 #include "PhysicsLoopBack.h"
 #include "PhysicsServerSharedMemory.h"
 #include "PhysicsClientSharedMemory.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonGUIHelperInterface.h>
 #include "PhysicsServerCommandProcessor.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
+#include <CommonExampleInterface.h>
 struct PhysicsLoopBackInternalData
 {
 	CommandProcessorInterface* m_commandProcessor;

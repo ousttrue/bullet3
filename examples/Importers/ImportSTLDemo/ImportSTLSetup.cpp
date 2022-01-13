@@ -5,7 +5,7 @@
 #include "btBulletDynamicsCommon.h"
 #include "../OpenGLWindow/SimpleOpenGL3App.h"
 #include "LoadMeshFromSTL.h"
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
+#include <CommonRigidBodyBase.h>
 #include "../../Utils/b3ResourcePath.h"
 #include "../../Utils/b3BulletDefaultFileIO.h"
 

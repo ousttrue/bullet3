@@ -1,7 +1,7 @@
 #include "ConstraintPhysicsSetup.h"
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
-#include "../CommonInterfaces/CommonParameterInterface.h"
+#include <CommonRigidBodyBase.h>
+#include <CommonParameterInterface.h>
 
 struct ConstraintPhysicsSetup : public CommonRigidBodyBase
 {

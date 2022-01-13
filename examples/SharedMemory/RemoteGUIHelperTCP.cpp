@@ -1,7 +1,7 @@
 #include "RemoteGUIHelperTCP.h"
 
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
 #include "Bullet3Common/b3Logging.h"
 #include "GraphicsSharedMemoryCommands.h"
 

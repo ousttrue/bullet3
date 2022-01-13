@@ -1,12 +1,12 @@
 #include "InverseKinematicsExample.h"
 
-#include "../CommonInterfaces/CommonGraphicsAppInterface.h"
+#include <CommonGraphicsAppInterface.h>
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3Transform.h"
 #include "Bullet3Common/b3AlignedObjectArray.h"
-#include "../CommonInterfaces/CommonRenderInterface.h"
-#include "../CommonInterfaces/CommonExampleInterface.h"
-#include "../CommonInterfaces/CommonGUIHelperInterface.h"
+#include <CommonRenderInterface.h>
+#include <CommonExampleInterface.h>
+#include <CommonGUIHelperInterface.h>
 
 #include "BussIK/Node.h"
 #include "BussIK/Tree.h"
