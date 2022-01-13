@@ -220,10 +220,6 @@ add_executable(
   ../Importers/ImportURDFDemo/urdfStringSplit.h
   ../Importers/ImportURDFDemo/BulletUrdfImporter.cpp
   ../Importers/ImportURDFDemo/BulletUrdfImporter.h
-  ../VoronoiFracture/VoronoiFractureDemo.cpp
-  ../VoronoiFracture/VoronoiFractureDemo.h
-  ../VoronoiFracture/btConvexConvexMprAlgorithm.cpp
-  ../VoronoiFracture/btConvexConvexMprAlgorithm.h
   ../Vehicles/Hinge2Vehicle.cpp
   ../Vehicles/Hinge2Vehicle.h
   ../MultiBody/Pendulum.cpp
@@ -266,7 +262,9 @@ target_link_libraries(
           TinyRenderer
           ForkLift
           Constraints
-          DeformableDemo)
+          DeformableDemo
+          VoronoiFracture
+          )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)
