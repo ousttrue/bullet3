@@ -8,4 +8,5 @@ subdirs(
   VoronoiFracture
   MultiBody
   FractureDemo
-  Benchmarks)
+  Benchmarks
+  DynamicControlDemo)

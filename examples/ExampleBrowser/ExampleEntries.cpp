@@ -44,7 +44,7 @@
 #include "../Importers/ImportBullet/SerializeSetup.h"
 #include "../Raycast/RaytestDemo.h"
 #include <FractureDemo/FractureDemo.h>
-#include "../DynamicControlDemo/MotorDemo.h"
+#include <DynamicControlDemo/MotorDemo.h>
 #include "../RollingFrictionDemo/RollingFrictionDemo.h"
 #include <DeformableDemo/DeformableRigid.h>
 #include <DeformableDemo/SplitImpulse.h>

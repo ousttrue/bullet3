@@ -128,8 +128,6 @@ add_executable(
   ../Planar2D/Planar2D.h
   ../RollingFrictionDemo/RollingFrictionDemo.cpp
   ../RollingFrictionDemo/RollingFrictionDemo.h
-  ../DynamicControlDemo/MotorDemo.cpp
-  ../DynamicControlDemo/MotorDemo.h
   ../MultiThreading/MultiThreadingExample.cpp
   ../MultiThreading/b3PosixThreadSupport.cpp
   ../MultiThreading/b3Win32ThreadSupport.cpp
@@ -247,6 +245,7 @@ target_link_libraries(
           MultiBody
           FractureDemo
           Benchmarks
+          DynamicControlDemo
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
