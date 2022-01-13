@@ -25,8 +25,8 @@
 #include "../Importers/ImportMJCFDemo/ImportMJCFSetup.h"
 #include "../Collision/CollisionTutorialBullet2.h"
 #include "../GyroscopicDemo/GyroscopicSetup.h"
-#include "../Constraints/Dof6Spring2Setup.h"
-#include "../Constraints/ConstraintPhysicsSetup.h"
+#include <Constraints/Dof6Spring2Setup.h>
+#include <Constraints/ConstraintPhysicsSetup.h>
 #include "../MultiBody/TestJointTorqueSetup.h"
 #include "../MultiBody/Pendulum.h"
 #include "../MultiBody/MultiBodySoftContact.h"
@@ -39,7 +39,7 @@
 #include "../RigidBody/KinematicRigidBodyExample.h"
 #include "../VoronoiFracture/VoronoiFractureDemo.h"
 #include "../SoftDemo/SoftDemo.h"
-#include "../Constraints/ConstraintDemo.h"
+#include <Constraints/ConstraintDemo.h>
 #include "../Vehicles/Hinge2Vehicle.h"
 #include "../Importers/ImportBullet/SerializeSetup.h"
 #include "../Raycast/RaytestDemo.h"
@@ -63,7 +63,7 @@
 #include "../SharedMemory/PhysicsServerExampleBullet2.h"
 #include "../SharedMemory/PhysicsServerExample.h"
 #include "../SharedMemory/PhysicsClientExample.h"
-#include "../Constraints/TestHingeTorque.h"
+#include <Constraints/TestHingeTorque.h>
 #include "../RenderingExamples/TimeSeriesExample.h"
 #include "../Tutorial/Tutorial.h"
 #include "../Tutorial/Dof6ConstraintTutorial.h"

@@ -268,14 +268,6 @@ add_executable(
   ../MultiBody/MultiDofDemo.h
   ../RigidBody/RigidBodySoftContact.cpp
   ../RigidBody/KinematicRigidBodyExample.cpp
-  ../Constraints/TestHingeTorque.cpp
-  ../Constraints/TestHingeTorque.h
-  ../Constraints/ConstraintDemo.cpp
-  ../Constraints/ConstraintDemo.h
-  ../Constraints/Dof6Spring2Setup.cpp
-  ../Constraints/Dof6Spring2Setup.h
-  ../Constraints/ConstraintPhysicsSetup.cpp
-  ../Constraints/ConstraintPhysicsSetup.h
   ../ThirdPartyLibs/stb_image/stb_image.cpp
   ../ThirdPartyLibs/stb_image/stb_image.h
   ../ThirdPartyLibs/stb_image/stb_image_write.cpp
@@ -301,6 +293,7 @@ target_link_libraries(
           BulletRobotics
           TinyRenderer
           ForkLift
+          Constraints
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
