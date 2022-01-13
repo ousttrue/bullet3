@@ -46,12 +46,6 @@ add_executable(
   main.cpp
   ExampleEntries.cpp
   ExampleEntries.h
-  # ../BulletRobotics/GraspBox.cpp
-  ../TinyRenderer/geometry.cpp
-  ../TinyRenderer/model.cpp
-  ../TinyRenderer/tgaimage.cpp
-  ../TinyRenderer/our_gl.cpp
-  ../TinyRenderer/TinyRenderer.cpp
   ../SharedMemory/plugins/collisionFilterPlugin/collisionFilterPlugin.cpp
   ../SharedMemory/plugins/collisionFilterPlugin/collisionFilterPlugin.h
   ../SharedMemory/plugins/pdControlPlugin/pdControlPlugin.cpp
@@ -294,19 +288,20 @@ add_executable(
 target_link_libraries(
   ${TARGET_NAME}
   PRIVATE BulletExampleBrowserLib
-         Bullet3Common
-         BulletSoftBody
-         BulletDynamics
-         BulletCollision
-         BulletInverseDynamics
-         LinearMath
-         OpenGLWindow
-         gwen
-         glad
-         BussIK
-         #
-         ExtendedTutorials
-         )
+          Bullet3Common
+          BulletSoftBody
+          BulletDynamics
+          BulletCollision
+          BulletInverseDynamics
+          LinearMath
+          OpenGLWindow
+          gwen
+          glad
+          BussIK
+          #
+          ExtendedTutorials
+          BulletRobotics
+          TinyRenderer)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)

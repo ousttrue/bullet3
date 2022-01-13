@@ -5,7 +5,7 @@
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3AlignedObjectArray.h"
 #include <CommonRenderInterface.h>
-#include "../TinyRenderer/TinyRenderer.h"
+#include <TinyRenderer/TinyRenderer.h>
 #include <Common2dCanvasInterface.h>
 #include "BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.h"
 #include <CommonExampleInterface.h>

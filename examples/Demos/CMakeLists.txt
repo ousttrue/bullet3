@@ -1,1 +1,1 @@
-subdirs(ExtendedTutorials BulletRobotics)
+subdirs(ExtendedTutorials BulletRobotics TinyRenderer)
