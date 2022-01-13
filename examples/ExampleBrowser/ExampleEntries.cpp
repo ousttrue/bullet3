@@ -90,18 +90,18 @@
 #endif  //B3_USE_CLEW
 
 //Extended Tutorial Includes Added by Mobeen and Benelot
-#include "../ExtendedTutorials/SimpleBox.h"
-#include "../ExtendedTutorials/MultipleBoxes.h"
-#include "../ExtendedTutorials/CompoundBoxes.h"
-#include "../ExtendedTutorials/SimpleJoint.h"
-#include "../ExtendedTutorials/SimpleCloth.h"
-#include "../ExtendedTutorials/Chain.h"
-#include "../ExtendedTutorials/Bridge.h"
-#include "../ExtendedTutorials/RigidBodyFromObj.h"
-#include "../ExtendedTutorials/InclinedPlane.h"
-#include "../ExtendedTutorials/NewtonsCradle.h"
-#include "../ExtendedTutorials/NewtonsRopeCradle.h"
-#include "../ExtendedTutorials/MultiPendulum.h"
+#include <ExtendedTutorials/SimpleBox.h>
+#include <ExtendedTutorials/MultipleBoxes.h>
+#include <ExtendedTutorials/CompoundBoxes.h>
+#include <ExtendedTutorials/SimpleJoint.h>
+#include <ExtendedTutorials/SimpleCloth.h>
+#include <ExtendedTutorials/Chain.h>
+#include <ExtendedTutorials/Bridge.h>
+#include <ExtendedTutorials/RigidBodyFromObj.h>
+#include <ExtendedTutorials/InclinedPlane.h>
+#include <ExtendedTutorials/NewtonsCradle.h>
+#include <ExtendedTutorials/NewtonsRopeCradle.h>
+#include <ExtendedTutorials/MultiPendulum.h>
 #include "../Evolution/NN3DWalkers.h"
 
 struct ExampleEntry

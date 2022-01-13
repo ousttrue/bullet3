@@ -46,28 +46,6 @@ add_executable(
   main.cpp
   ExampleEntries.cpp
   ExampleEntries.h
-  ../ExtendedTutorials/Chain.cpp
-  ../ExtendedTutorials/Chain.h
-  ../ExtendedTutorials/Bridge.cpp
-  ../ExtendedTutorials/Bridge.h
-  ../ExtendedTutorials/RigidBodyFromObj.cpp
-  ../ExtendedTutorials/RigidBodyFromObj.h
-  ../ExtendedTutorials/SimpleBox.cpp
-  ../ExtendedTutorials/SimpleBox.h
-  ../ExtendedTutorials/MultipleBoxes.cpp
-  ../ExtendedTutorials/MultipleBoxes.h
-  ../ExtendedTutorials/CompoundBoxes.cpp
-  ../ExtendedTutorials/CompoundBoxes.h
-  ../ExtendedTutorials/SimpleCloth.cpp
-  ../ExtendedTutorials/SimpleCloth.h
-  ../ExtendedTutorials/SimpleJoint.cpp
-  ../ExtendedTutorials/SimpleJoint.h
-  ../ExtendedTutorials/NewtonsCradle.cpp
-  ../ExtendedTutorials/NewtonsCradle.h
-  ../ExtendedTutorials/InclinedPlane.cpp
-  ../ExtendedTutorials/InclinedPlane.h
-  ../ExtendedTutorials/MultiPendulum.cpp
-  ../ExtendedTutorials/MultiPendulum.h
   ../BulletRobotics/FixJointBoxes.cpp
   ../BulletRobotics/BoxStack.cpp
   ../BulletRobotics/JointLimit.cpp
@@ -146,8 +124,6 @@ add_executable(
   ../Evolution/NN3DWalkers.cpp
   ../Evolution/NN3DWalkers.h
   ../Evolution/NN3DWalkersTimeWarpBase.h
-  ../ExtendedTutorials/NewtonsRopeCradle.cpp
-  ../ExtendedTutorials/NewtonsRopeCradle.h
   ../Collision/CollisionSdkC_Api.cpp
   ../Collision/CollisionSdkC_Api.h
   ../Collision/CollisionTutorialBullet2.cpp
@@ -330,7 +306,10 @@ target_link_libraries(
          OpenGLWindow
          gwen
          glad
-         BussIK)
+         BussIK
+         #
+         ExtendedTutorials
+         )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)

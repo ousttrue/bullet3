@@ -1,4 +1,5 @@
 subdirs(ThirdPartyLibs)
+subdirs(Demos)
 subdirs(HelloWorld  OpenGLWindow BasicDemo ExampleBrowser)
 # IF(BUILD_BULLET3) SUBDIRS(  RobotSimulator SharedMemory ThirdPartyLibs/Gwen
 # ThirdPartyLibs/BussIK ThirdPartyLibs/clsocket OpenGLWindow TwoJoint ) ENDIF()
