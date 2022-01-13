@@ -13,7 +13,7 @@ subject to the following restrictions:
 
 #include "BulletUrdfImporter.h"
 #include "../../CommonInterfaces/CommonRenderInterface.h"
-#include "../../ThirdPartyLibs/Wavefront/tiny_obj_loader.h"
+#include <tiny_obj_loader.h>
 #include "URDFImporterInterface.h"
 #include "btBulletCollisionCommon.h"
 #include "../ImportObjDemo/LoadMeshFromObj.h"

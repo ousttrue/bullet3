@@ -15,7 +15,7 @@
 #include "Bullet3OpenCL/RigidBody/b3GpuNarrowPhase.h"
 #include "Bullet3Collision/NarrowPhaseCollision/b3Config.h"
 #include "GpuRigidBodyDemoInternalData.h"
-#include "../../Wavefront/tiny_obj_loader.h"
+#include <tiny_obj_loader.h>
 #include "Bullet3Common/b3Transform.h"
 #include "Bullet3Collision/NarrowPhaseCollision/b3ConvexUtility.h"
 

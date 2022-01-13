@@ -1,1 +1,1 @@
-subdirs(glad Gwen BussIK stb_image)
+subdirs(glad Gwen BussIK stb_image Wavefront)

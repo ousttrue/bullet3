@@ -1,7 +1,7 @@
 #include "ImportObjExample.h"
 #include <vector>
 #include "../OpenGLWindow/GLInstancingRenderer.h"
-#include "Wavefront/tiny_obj_loader.h"
+#include <tiny_obj_loader.h>
 #include "../OpenGLWindow/GLInstanceGraphicsShape.h"
 #include "btBulletDynamicsCommon.h"
 #include "../OpenGLWindow/SimpleOpenGL3App.h"
@@ -10,7 +10,7 @@
 #include "../../Utils/b3BulletDefaultFileIO.h"
 #include "Bullet3Common/b3FileUtils.h"
 
-#include "stb_image/stb_image.h"
+#include <stb_image.h>
 
 #include <CommonRigidBodyBase.h>
 #include "../ImportMeshUtility/b3ImportMeshUtility.h"

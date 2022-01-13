@@ -3,7 +3,7 @@
 
 struct GLInstanceGraphicsShape;
 
-#include "../../ThirdPartyLibs/Wavefront/tiny_obj_loader.h"
+#include <tiny_obj_loader.h>
 
 int b3IsFileCachingEnabled();
 void b3EnableFileCaching(int enable);

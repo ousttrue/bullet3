@@ -143,11 +143,6 @@ add_executable(
   ../RenderingExamples/RenderInstancingDemo.h
   ../RenderingExamples/TimeSeriesExample.cpp
   ../Raycast/RaytestDemo.cpp
-  ../Importers/ImportBsp/BspConverter.h
-  ../Importers/ImportBullet/SerializeSetup.cpp
-  ../Importers/ImportBullet/SerializeSetup.h
-  ../Importers/ImportMeshUtility/b3ImportMeshUtility.cpp
-  ../Importers/ImportMeshUtility/b3ImportMeshUtility.h
   ../../Extras/Serialize/BulletWorldImporter/btWorldImporter.cpp
   ../../Extras/Serialize/BulletWorldImporter/btMultiBodyWorldImporter.cpp
   ../../Extras/Serialize/BulletWorldImporter/btBulletWorldImporter.cpp
@@ -155,52 +150,12 @@ add_executable(
   ../../Extras/Serialize/BulletFileLoader/bFile.cpp
   ../../Extras/Serialize/BulletFileLoader/bDNA.cpp
   ../../Extras/Serialize/BulletFileLoader/btBulletFile.cpp
-  ../Importers/ImportBsp/BspLoader.h
-  ../Importers/ImportBsp/ImportBspExample.h
-  ../Importers/ImportColladaDemo/btMatrix4x4.h
-  ../Importers/ImportColladaDemo/ColladaGraphicsInstance.h
-  ../Importers/ImportColladaDemo/ImportColladaSetup.h
-  ../Importers/ImportColladaDemo/LoadMeshFromCollada.h
-  ../Importers/ImportObjDemo/ImportObjExample.h
-  ../Importers/ImportObjDemo/LoadMeshFromObj.h
-  ../Importers/ImportObjDemo/Wavefront2GLInstanceGraphicsShape.h
-  ../Importers/ImportSTLDemo/ImportSTLSetup.h
-  ../Importers/ImportSTLDemo/LoadMeshFromSTL.h
-  ../Importers/ImportURDFDemo/ConvertRigidBodies2MultiBody.h
-  ../Importers/ImportURDFDemo/ImportURDFSetup.h
-  ../Importers/ImportURDFDemo/URDF2Bullet.h
-  ../Importers/ImportURDFDemo/urdf_samples.h
-  ../Importers/ImportURDFDemo/urdf_samples.h
-  ../Importers/ImportMJCFDemo/BulletMJCFImporter.cpp
-  ../Importers/ImportMJCFDemo/BulletMJCFImporter.h
-  ../Importers/ImportMJCFDemo/ImportMJCFSetup.cpp
-  ../Importers/ImportMJCFDemo/ImportMJCFSetup.h
-  ../Importers/ImportBsp/BspConverter.cpp
-  ../Importers/ImportBsp/BspLoader.cpp
-  ../Importers/ImportBsp/ImportBspExample.cpp
-  ../Importers/ImportColladaDemo/ImportColladaSetup.cpp
-  ../Importers/ImportColladaDemo/LoadMeshFromCollada.cpp
-  ../Importers/ImportObjDemo/ImportObjExample.cpp
-  ../Importers/ImportObjDemo/LoadMeshFromObj.cpp
-  ../Importers/ImportObjDemo/Wavefront2GLInstanceGraphicsShape.cpp
-  ../Importers/ImportSTLDemo/ImportSTLSetup.cpp
-  ../Importers/ImportSDFDemo/ImportSDFSetup.cpp
-  ../Importers/ImportURDFDemo/ImportURDFSetup.cpp
-  ../Importers/ImportURDFDemo/URDF2Bullet.cpp
-  ../Importers/ImportURDFDemo/MyMultiBodyCreator.cpp
-  ../Importers/ImportURDFDemo/MyMultiBodyCreator.h
-  ../Importers/ImportURDFDemo/UrdfParser.cpp
   ../Utils/RobotLoggingUtil.cpp
   ../Utils/RobotLoggingUtil.h
-  ../Importers/ImportURDFDemo/urdfStringSplit.cpp
-  ../Importers/ImportURDFDemo/urdfStringSplit.h
-  ../Importers/ImportURDFDemo/BulletUrdfImporter.cpp
-  ../Importers/ImportURDFDemo/BulletUrdfImporter.h
   ../Vehicles/Hinge2Vehicle.cpp
   ../Vehicles/Hinge2Vehicle.h
   ../RigidBody/RigidBodySoftContact.cpp
   ../RigidBody/KinematicRigidBodyExample.cpp
-  ../ThirdPartyLibs/Wavefront/tiny_obj_loader.cpp
   ../ThirdPartyLibs/tinyxml2/tinyxml2.cpp
   InProcessExampleBrowser.cpp
   ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
@@ -235,6 +190,7 @@ target_link_libraries(
           InverseKinematics
           Heightfield
           MultiThreadedDemo
+          Importers
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS

@@ -21,7 +21,7 @@
 #include "../ImportColladaDemo/LoadMeshFromCollada.h"
 #include "../OpenGLWindow/ShapeData.h"
 
-#include "../../ThirdPartyLibs/Wavefront/tiny_obj_loader.h"
+#include <tiny_obj_loader.h>
 #include "../ImportMeshUtility/b3ImportMeshUtility.h"
 #include "BulletCollision/CollisionDispatch/btCollisionObject.h"
 #include "BulletCollision/CollisionShapes/btCompoundShape.h"

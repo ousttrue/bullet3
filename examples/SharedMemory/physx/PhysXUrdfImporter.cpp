@@ -13,7 +13,7 @@ subject to the following restrictions:
 
 #include "PhysXUrdfImporter.h"
 #include "../../CommonInterfaces/CommonRenderInterface.h"
-#include "../../ThirdPartyLibs/Wavefront/tiny_obj_loader.h"
+#include <tiny_obj_loader.h>
 #include "../../Importers/ImportURDFDemo/URDFImporterInterface.h"
 
 #include "../../Importers/ImportObjDemo/LoadMeshFromObj.h"

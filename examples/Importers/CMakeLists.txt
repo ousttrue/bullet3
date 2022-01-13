@@ -1,0 +1,51 @@
+set(TARGET_NAME Importers)
+add_library(
+  ${TARGET_NAME}
+  ImportBsp/BspLoader.h
+  ImportBsp/ImportBspExample.h
+  ImportColladaDemo/btMatrix4x4.h
+  ImportColladaDemo/ColladaGraphicsInstance.h
+  ImportColladaDemo/ImportColladaSetup.h
+  ImportColladaDemo/LoadMeshFromCollada.h
+  ImportObjDemo/ImportObjExample.h
+  ImportObjDemo/LoadMeshFromObj.h
+  ImportObjDemo/Wavefront2GLInstanceGraphicsShape.h
+  ImportSTLDemo/ImportSTLSetup.h
+  ImportSTLDemo/LoadMeshFromSTL.h
+  ImportURDFDemo/ConvertRigidBodies2MultiBody.h
+  ImportURDFDemo/ImportURDFSetup.h
+  ImportURDFDemo/URDF2Bullet.h
+  ImportURDFDemo/urdf_samples.h
+  ImportURDFDemo/urdf_samples.h
+  ImportMJCFDemo/BulletMJCFImporter.cpp
+  ImportMJCFDemo/BulletMJCFImporter.h
+  ImportMJCFDemo/ImportMJCFSetup.cpp
+  ImportMJCFDemo/ImportMJCFSetup.h
+  ImportBsp/BspConverter.cpp
+  ImportBsp/BspLoader.cpp
+  ImportBsp/ImportBspExample.cpp
+  ImportColladaDemo/ImportColladaSetup.cpp
+  ImportColladaDemo/LoadMeshFromCollada.cpp
+  ImportObjDemo/ImportObjExample.cpp
+  ImportObjDemo/LoadMeshFromObj.cpp
+  ImportObjDemo/Wavefront2GLInstanceGraphicsShape.cpp
+  ImportSTLDemo/ImportSTLSetup.cpp
+  ImportSDFDemo/ImportSDFSetup.cpp
+  ImportURDFDemo/ImportURDFSetup.cpp
+  ImportURDFDemo/URDF2Bullet.cpp
+  ImportURDFDemo/MyMultiBodyCreator.cpp
+  ImportURDFDemo/MyMultiBodyCreator.h
+  ImportURDFDemo/UrdfParser.cpp
+  ImportURDFDemo/urdfStringSplit.cpp
+  ImportURDFDemo/urdfStringSplit.h
+  ImportURDFDemo/BulletUrdfImporter.cpp
+  ImportURDFDemo/BulletUrdfImporter.h
+  ImportBsp/BspConverter.h
+  ImportBullet/SerializeSetup.cpp
+  ImportBullet/SerializeSetup.h
+  ImportMeshUtility/b3ImportMeshUtility.cpp
+  ImportMeshUtility/b3ImportMeshUtility.h)
+target_link_libraries(
+  ${TARGET_NAME}
+  PRIVATE BulletDynamics CommonInterfaces stb_image
+  PUBLIC tiny_obj_loader)
