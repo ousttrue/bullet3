@@ -102,7 +102,7 @@
 #include <ExtendedTutorials/NewtonsCradle.h>
 #include <ExtendedTutorials/NewtonsRopeCradle.h>
 #include <ExtendedTutorials/MultiPendulum.h>
-#include "../Evolution/NN3DWalkers.h"
+#include <Evolution/NN3DWalkers.h>
 
 struct ExampleEntry
 {

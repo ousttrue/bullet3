@@ -16,4 +16,6 @@ subdirs(
   InverseKinematics
   Heightfield
   MultiThreadedDemo
-  Vehicles)
+  Vehicles
+  Evolution
+  )

@@ -100,9 +100,6 @@ add_executable(
   ../Tutorial/Tutorial.h
   ../Tutorial/Dof6ConstraintTutorial.cpp
   ../Tutorial/Dof6ConstraintTutorial.h
-  ../Evolution/NN3DWalkers.cpp
-  ../Evolution/NN3DWalkers.h
-  ../Evolution/NN3DWalkersTimeWarpBase.h
   ../Collision/CollisionSdkC_Api.cpp
   ../Collision/CollisionSdkC_Api.h
   ../Collision/CollisionTutorialBullet2.cpp
@@ -189,7 +186,8 @@ target_link_libraries(
           Heightfield
           MultiThreadedDemo
           Importers
-          Vehicles)
+          Vehicles
+          Evolution)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)
