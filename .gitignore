@@ -37,4 +37,6 @@ CTestTestFile.cmake
 # vim temp files
 *.swp
 
-.vscode/0_Bullet3Demo.txt
+/.vscode/0_Bullet3Demo.txt
+/.venv/
+/public/
