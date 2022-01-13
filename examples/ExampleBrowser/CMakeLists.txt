@@ -122,8 +122,6 @@ add_executable(
   ../Collision/Internal/CollisionSdkInterface.h
   ../Collision/Internal/RealTimeBullet3CollisionSdk.cpp
   ../Collision/Internal/RealTimeBullet3CollisionSdk.h
-  ../GyroscopicDemo/GyroscopicSetup.cpp
-  ../GyroscopicDemo/GyroscopicSetup.h
   ../Planar2D/Planar2D.cpp
   ../Planar2D/Planar2D.h
   ../RollingFrictionDemo/RollingFrictionDemo.cpp
@@ -245,6 +243,7 @@ target_link_libraries(
           Benchmarks
           DynamicControlDemo
           SoftDemo
+          GyroscopicDemo
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS

@@ -24,7 +24,7 @@
 #include "../Importers/ImportSDFDemo/ImportSDFSetup.h"
 #include "../Importers/ImportMJCFDemo/ImportMJCFSetup.h"
 #include "../Collision/CollisionTutorialBullet2.h"
-#include "../GyroscopicDemo/GyroscopicSetup.h"
+#include <GyroscopicDemo/GyroscopicSetup.h>
 #include <Constraints/Dof6Spring2Setup.h>
 #include <Constraints/ConstraintPhysicsSetup.h>
 #include <MultiBody/TestJointTorqueSetup.h>

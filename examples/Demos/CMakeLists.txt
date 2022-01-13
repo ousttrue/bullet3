@@ -10,4 +10,5 @@ subdirs(
   FractureDemo
   Benchmarks
   DynamicControlDemo
-  SoftDemo)
+  SoftDemo
+  GyroscopicDemo)
