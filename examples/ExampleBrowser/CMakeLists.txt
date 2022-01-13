@@ -109,8 +109,6 @@ add_executable(
   ../Collision/Internal/CollisionSdkInterface.h
   ../Collision/Internal/RealTimeBullet3CollisionSdk.cpp
   ../Collision/Internal/RealTimeBullet3CollisionSdk.h
-  ../Planar2D/Planar2D.cpp
-  ../Planar2D/Planar2D.h
   ../RollingFrictionDemo/RollingFrictionDemo.cpp
   ../RollingFrictionDemo/RollingFrictionDemo.h
   ../MultiThreading/MultiThreadingExample.cpp
@@ -187,7 +185,8 @@ target_link_libraries(
           MultiThreadedDemo
           Importers
           Vehicles
-          Evolution)
+          Evolution
+          Planar2D)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)

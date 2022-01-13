@@ -18,4 +18,5 @@ subdirs(
   MultiThreadedDemo
   Vehicles
   Evolution
+  Planar2D
   )
