@@ -113,7 +113,7 @@
 #include "BulletSoftBody/btDeformableMultiBodyDynamicsWorld.h"
 #include "BulletSoftBody/btDeformableBodySolver.h"
 #include "BulletSoftBody/btDeformableMultiBodyConstraintSolver.h"
-#include "../SoftDemo/BunnyMesh.h"
+#include <SoftDemo/BunnyMesh.h>
 #endif  //SKIP_SOFT_BODY_MULTI_BODY_DYNAMICS_WORLD
 
 #ifndef SKIP_DEFORMABLE_BODY

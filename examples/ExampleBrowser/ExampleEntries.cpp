@@ -38,7 +38,7 @@
 #include "../RigidBody/RigidBodySoftContact.h"
 #include "../RigidBody/KinematicRigidBodyExample.h"
 #include <VoronoiFracture/VoronoiFractureDemo.h>
-#include "../SoftDemo/SoftDemo.h"
+#include <SoftDemo/SoftDemo.h>
 #include <Constraints/ConstraintDemo.h>
 #include "../Vehicles/Hinge2Vehicle.h"
 #include "../Importers/ImportBullet/SerializeSetup.h"

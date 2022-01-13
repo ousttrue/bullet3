@@ -210,8 +210,6 @@ add_executable(
   ../Importers/ImportURDFDemo/BulletUrdfImporter.h
   ../Vehicles/Hinge2Vehicle.cpp
   ../Vehicles/Hinge2Vehicle.h
-  ../SoftDemo/SoftDemo.cpp
-  ../SoftDemo/SoftDemo.h
   ../RigidBody/RigidBodySoftContact.cpp
   ../RigidBody/KinematicRigidBodyExample.cpp
   ../ThirdPartyLibs/stb_image/stb_image.cpp
@@ -246,6 +244,7 @@ target_link_libraries(
           FractureDemo
           Benchmarks
           DynamicControlDemo
+          SoftDemo
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS

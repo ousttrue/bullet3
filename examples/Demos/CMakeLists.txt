@@ -9,4 +9,5 @@ subdirs(
   MultiBody
   FractureDemo
   Benchmarks
-  DynamicControlDemo)
+  DynamicControlDemo
+  SoftDemo)
