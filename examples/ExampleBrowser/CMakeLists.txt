@@ -137,7 +137,6 @@ add_executable(
   ../RenderingExamples/RenderInstancingDemo.cpp
   ../RenderingExamples/RenderInstancingDemo.h
   ../RenderingExamples/TimeSeriesExample.cpp
-  ../Raycast/RaytestDemo.cpp
   ../../Extras/Serialize/BulletWorldImporter/btWorldImporter.cpp
   ../../Extras/Serialize/BulletWorldImporter/btMultiBodyWorldImporter.cpp
   ../../Extras/Serialize/BulletWorldImporter/btBulletWorldImporter.cpp
@@ -186,7 +185,8 @@ target_link_libraries(
           Importers
           Vehicles
           Evolution
-          Planar2D)
+          Planar2D
+          Raycast)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)

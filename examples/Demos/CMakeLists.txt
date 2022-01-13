@@ -19,4 +19,5 @@ subdirs(
   Vehicles
   Evolution
   Planar2D
+  Raycast
   )

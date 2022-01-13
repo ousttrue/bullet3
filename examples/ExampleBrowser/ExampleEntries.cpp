@@ -42,7 +42,7 @@
 #include <Constraints/ConstraintDemo.h>
 #include <Vehicles/Hinge2Vehicle.h>
 #include "../Importers/ImportBullet/SerializeSetup.h"
-#include "../Raycast/RaytestDemo.h"
+#include <Raycast/RaytestDemo.h>
 #include <FractureDemo/FractureDemo.h>
 #include <DynamicControlDemo/MotorDemo.h>
 #include "../RollingFrictionDemo/RollingFrictionDemo.h"
