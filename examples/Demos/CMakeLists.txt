@@ -13,4 +13,5 @@ subdirs(
   SoftDemo
   GyroscopicDemo
   InverseDynamics
-  InverseKinematics)
+  InverseKinematics
+  Heightfield)

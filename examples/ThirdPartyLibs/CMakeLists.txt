@@ -1,1 +1,1 @@
-subdirs(glad Gwen BussIK)
+subdirs(glad Gwen BussIK stb_image)

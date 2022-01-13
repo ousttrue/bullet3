@@ -2,7 +2,7 @@
 
 #include "LinearMath/btAlignedObjectArray.h"
 #include "EmptyExample.h"
-#include "../Heightfield/HeightfieldExample.h"
+#include <Heightfield/HeightfieldExample.h>
 #include "../RenderingExamples/RenderInstancingDemo.h"
 #include "../RenderingExamples/CoordinateSystemDemo.h"
 #include "../RenderingExamples/RaytracerSetup.h"

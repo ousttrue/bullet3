@@ -24,7 +24,7 @@ subject to the following restrictions:
 #include "../OpenGLWindow/GLInstanceGraphicsShape.h"
 #include "../Utils/b3BulletDefaultFileIO.h"
 #include "../Importers/ImportURDFDemo/urdfStringSplit.h"
-#include "stb_image/stb_image.h"
+#include <stb_image.h>
 
 // constants -------------------------------------------------------------------
 static const btScalar s_gravity = 9.8;		// 9.8 m/s^2

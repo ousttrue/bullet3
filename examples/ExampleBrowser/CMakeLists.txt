@@ -100,8 +100,6 @@ add_executable(
   ../MultiThreadedDemo/MultiThreadedDemo.h
   ../MultiThreadedDemo/CommonRigidBodyMTBase.cpp
   ../MultiThreadedDemo/CommonRigidBodyMTBase.h
-  ../Heightfield/HeightfieldExample.cpp
-  ../Heightfield/HeightfieldExample.h
   ../Tutorial/Tutorial.cpp
   ../Tutorial/Tutorial.h
   ../Tutorial/Dof6ConstraintTutorial.cpp
@@ -206,9 +204,6 @@ add_executable(
   ../Vehicles/Hinge2Vehicle.h
   ../RigidBody/RigidBodySoftContact.cpp
   ../RigidBody/KinematicRigidBodyExample.cpp
-  ../ThirdPartyLibs/stb_image/stb_image.cpp
-  ../ThirdPartyLibs/stb_image/stb_image.h
-  ../ThirdPartyLibs/stb_image/stb_image_write.cpp
   ../ThirdPartyLibs/Wavefront/tiny_obj_loader.cpp
   ../ThirdPartyLibs/tinyxml2/tinyxml2.cpp
   InProcessExampleBrowser.cpp
@@ -242,6 +237,7 @@ target_link_libraries(
           GyroscopicDemo
           InverseDynamics
           InverseKinematics
+          Heightfield
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS

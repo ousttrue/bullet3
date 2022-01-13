@@ -17,10 +17,9 @@ add_library(
   ${OpenGLWindow_HDRS}
   ${OpenGLWindowWin32_CPP}
   ${OpenGLWindowCommon_CPP}
-  ${BULLET_PHYSICS_SOURCE_DIR}/examples/ThirdPartyLibs/stb_image/stb_image_write.cpp
 )
 target_compile_definitions(${TARGET_NAME} PUBLIC GLEW_STATIC)
 target_compile_options(${TARGET_NAME} PRIVATE /wd4244)
 target_include_directories(
   ${TARGET_NAME} PRIVATE ${BULLET_PHYSICS_SOURCE_DIR}/examples/ThirdPartyLibs)
-target_link_libraries(${TARGET_NAME} PUBLIC glad Bullet3Common CommonInterfaces OpenGL32.lib)
+target_link_libraries(${TARGET_NAME} PUBLIC glad Bullet3Common CommonInterfaces OpenGL32.lib stb_image)
