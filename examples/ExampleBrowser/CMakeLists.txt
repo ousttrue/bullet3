@@ -96,10 +96,6 @@ add_executable(
   ../RobotSimulator/b3RobotSimulatorClientAPI.h
   ../BasicDemo/BasicExample.cpp
   ../BasicDemo/BasicExample.h
-  ../MultiThreadedDemo/MultiThreadedDemo.cpp
-  ../MultiThreadedDemo/MultiThreadedDemo.h
-  ../MultiThreadedDemo/CommonRigidBodyMTBase.cpp
-  ../MultiThreadedDemo/CommonRigidBodyMTBase.h
   ../Tutorial/Tutorial.cpp
   ../Tutorial/Tutorial.h
   ../Tutorial/Dof6ConstraintTutorial.cpp
@@ -238,6 +234,7 @@ target_link_libraries(
           InverseDynamics
           InverseKinematics
           Heightfield
+          MultiThreadedDemo
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS

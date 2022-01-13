@@ -14,4 +14,5 @@ subdirs(
   GyroscopicDemo
   InverseDynamics
   InverseKinematics
-  Heightfield)
+  Heightfield
+  MultiThreadedDemo)
