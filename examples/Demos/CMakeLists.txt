@@ -6,4 +6,5 @@ subdirs(
   Constraints
   DeformableDemo
   VoronoiFracture
-  MultiBody)
+  MultiBody
+  FractureDemo)

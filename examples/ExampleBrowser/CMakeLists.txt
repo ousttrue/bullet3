@@ -128,12 +128,6 @@ add_executable(
   ../Planar2D/Planar2D.h
   ../RollingFrictionDemo/RollingFrictionDemo.cpp
   ../RollingFrictionDemo/RollingFrictionDemo.h
-  ../FractureDemo/FractureDemo.cpp
-  ../FractureDemo/btFractureBody.cpp
-  ../FractureDemo/btFractureDynamicsWorld.cpp
-  ../FractureDemo/FractureDemo.h
-  ../FractureDemo/btFractureBody.h
-  ../FractureDemo/btFractureDynamicsWorld.h
   ../DynamicControlDemo/MotorDemo.cpp
   ../DynamicControlDemo/MotorDemo.h
   ../MultiThreading/MultiThreadingExample.cpp
@@ -255,6 +249,7 @@ target_link_libraries(
           DeformableDemo
           VoronoiFracture
           MultiBody
+          FractureDemo
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
