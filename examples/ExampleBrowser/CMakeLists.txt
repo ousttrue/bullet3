@@ -152,8 +152,6 @@ add_executable(
   ../../Extras/Serialize/BulletFileLoader/btBulletFile.cpp
   ../Utils/RobotLoggingUtil.cpp
   ../Utils/RobotLoggingUtil.h
-  ../Vehicles/Hinge2Vehicle.cpp
-  ../Vehicles/Hinge2Vehicle.h
   ../RigidBody/RigidBodySoftContact.cpp
   ../RigidBody/KinematicRigidBodyExample.cpp
   ../ThirdPartyLibs/tinyxml2/tinyxml2.cpp
@@ -191,7 +189,7 @@ target_link_libraries(
           Heightfield
           MultiThreadedDemo
           Importers
-          )
+          Vehicles)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)

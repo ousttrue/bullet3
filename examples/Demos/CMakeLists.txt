@@ -15,4 +15,5 @@ subdirs(
   InverseDynamics
   InverseKinematics
   Heightfield
-  MultiThreadedDemo)
+  MultiThreadedDemo
+  Vehicles)

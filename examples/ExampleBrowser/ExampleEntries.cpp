@@ -40,7 +40,7 @@
 #include <VoronoiFracture/VoronoiFractureDemo.h>
 #include <SoftDemo/SoftDemo.h>
 #include <Constraints/ConstraintDemo.h>
-#include "../Vehicles/Hinge2Vehicle.h"
+#include <Vehicles/Hinge2Vehicle.h>
 #include "../Importers/ImportBullet/SerializeSetup.h"
 #include "../Raycast/RaytestDemo.h"
 #include <FractureDemo/FractureDemo.h>
