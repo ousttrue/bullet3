@@ -1,1 +1,2 @@
-subdirs(ExtendedTutorials BulletRobotics TinyRenderer ForkLift Constraints)
+subdirs(ExtendedTutorials BulletRobotics TinyRenderer ForkLift Constraints
+        DeformableDemo)

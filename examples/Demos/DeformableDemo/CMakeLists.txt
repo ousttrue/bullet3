@@ -1,0 +1,32 @@
+set(TARGET_NAME DeformableDemo)
+add_library(
+  ${TARGET_NAME}
+  DeformableContact.cpp
+  DeformableContact.h
+  GraspDeformable.cpp
+  GraspDeformable.h
+  Pinch.cpp
+  Pinch.h
+  DeformableSelfCollision.cpp
+  DeformableSelfCollision.h
+  PinchFriction.cpp
+  PinchFriction.h
+  ClothFriction.cpp
+  ClothFriction.h
+  DeformableMultibody.cpp
+  DeformableMultibody.h
+  DeformableRigid.cpp
+  DeformableRigid.h
+  SplitImpulse.cpp
+  SplitImpulse.h
+  VolumetricDeformable.cpp
+  VolumetricDeformable.h
+  Collide.cpp
+  Collide.h
+  LargeDeformation.cpp
+  LargeDeformation.h
+  DeformableClothAnchor.cpp
+  DeformableClothAnchor.h
+  MultibodyClothAnchor.cpp
+  MultibodyClothAnchor.h)
+target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics CommonInterfaces)

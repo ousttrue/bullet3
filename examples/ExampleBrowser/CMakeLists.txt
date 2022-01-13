@@ -236,34 +236,6 @@ add_executable(
   ../MultiBody/KinematicMultiBodyExample.cpp
   ../SoftDemo/SoftDemo.cpp
   ../SoftDemo/SoftDemo.h
-  ../DeformableDemo/DeformableContact.cpp
-  ../DeformableDemo/DeformableContact.h
-  ../DeformableDemo/GraspDeformable.cpp
-  ../DeformableDemo/GraspDeformable.h
-  ../DeformableDemo/Pinch.cpp
-  ../DeformableDemo/Pinch.h
-  ../DeformableDemo/DeformableSelfCollision.cpp
-  ../DeformableDemo/DeformableSelfCollision.h
-  ../DeformableDemo/PinchFriction.cpp
-  ../DeformableDemo/PinchFriction.h
-  ../DeformableDemo/ClothFriction.cpp
-  ../DeformableDemo/ClothFriction.h
-  ../DeformableDemo/DeformableMultibody.cpp
-  ../DeformableDemo/DeformableMultibody.h
-  ../DeformableDemo/DeformableRigid.cpp
-  ../DeformableDemo/DeformableRigid.h
-  ../DeformableDemo/SplitImpulse.cpp
-  ../DeformableDemo/SplitImpulse.h
-  ../DeformableDemo/VolumetricDeformable.cpp
-  ../DeformableDemo/VolumetricDeformable.h
-  ../DeformableDemo/Collide.cpp
-  ../DeformableDemo/Collide.h
-  ../DeformableDemo/LargeDeformation.cpp
-  ../DeformableDemo/LargeDeformation.h
-  ../DeformableDemo/DeformableClothAnchor.cpp
-  ../DeformableDemo/DeformableClothAnchor.h
-  ../DeformableDemo/MultibodyClothAnchor.cpp
-  ../DeformableDemo/MultibodyClothAnchor.h
   ../MultiBody/MultiDofDemo.cpp
   ../MultiBody/MultiDofDemo.h
   ../RigidBody/RigidBodySoftContact.cpp
@@ -294,7 +266,7 @@ target_link_libraries(
           TinyRenderer
           ForkLift
           Constraints
-          )
+          DeformableDemo)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)
