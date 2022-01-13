@@ -9,6 +9,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/Release/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/Release/bin)
 
 subdirs(src)
-# subdirs(examples)
+subdirs(examples)
 # subdirs(Extras)
 # subdirs(test)

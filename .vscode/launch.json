@@ -8,23 +8,23 @@
             "name": "App_ExampleBrowser",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}\\build\\Debug\\bin\\App_ExampleBrowser.exe",
+            "program": "${workspaceFolder}/build/Debug/bin/App_ExampleBrowser.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "console": "externalTerminal"
+            "console": "integratedTerminal"
         },
         {
-            "name": "App_HelloWorld",
+            "name": "AppBasicExampleGui",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}\\build\\Debug\\bin\\App_HelloWorld.exe",
+            "program": "${workspaceFolder}/build/Debug/bin/AppBasicExampleGui.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "console": "externalTerminal"
+            "console": "integratedTerminal"
         }
     ]
 }
