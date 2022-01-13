@@ -156,10 +156,6 @@ add_executable(
   ../RenderingExamples/RenderInstancingDemo.cpp
   ../RenderingExamples/RenderInstancingDemo.h
   ../RenderingExamples/TimeSeriesExample.cpp
-  ../Benchmarks/BenchmarkDemo.cpp
-  ../Benchmarks/BenchmarkDemo.h
-  ../Benchmarks/landscapeData.h
-  ../Benchmarks/TaruData.h
   ../Raycast/RaytestDemo.cpp
   ../Importers/ImportBsp/BspConverter.h
   ../Importers/ImportBullet/SerializeSetup.cpp
@@ -250,6 +246,7 @@ target_link_libraries(
           VoronoiFracture
           MultiBody
           FractureDemo
+          Benchmarks
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS

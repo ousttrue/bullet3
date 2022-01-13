@@ -7,4 +7,5 @@ subdirs(
   DeformableDemo
   VoronoiFracture
   MultiBody
-  FractureDemo)
+  FractureDemo
+  Benchmarks)
