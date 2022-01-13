@@ -11,7 +11,7 @@
 #include "../SharedMemory/GraphicsServerExample.h"
 #include "../SharedMemory/GraphicsClientExample.h"
 
-#include "../ForkLift/ForkLiftDemo.h"
+#include <ForkLift/ForkLiftDemo.h>
 #include "../MultiThreadedDemo/MultiThreadedDemo.h"
 #include "../BasicDemo/BasicExample.h"
 #include "../Planar2D/Planar2D.h"

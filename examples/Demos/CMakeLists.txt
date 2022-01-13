@@ -1,1 +1,1 @@
-subdirs(ExtendedTutorials BulletRobotics TinyRenderer)
+subdirs(ExtendedTutorials BulletRobotics TinyRenderer ForkLift)

@@ -100,8 +100,6 @@ add_executable(
   ../InverseDynamics/InverseDynamicsExample.h
   ../InverseKinematics/InverseKinematicsExample.cpp
   ../InverseKinematics/InverseKinematicsExample.h
-  ../ForkLift/ForkLiftDemo.cpp
-  ../ForkLift/ForkLiftDemo.h
   ../MultiThreadedDemo/MultiThreadedDemo.cpp
   ../MultiThreadedDemo/MultiThreadedDemo.h
   ../MultiThreadedDemo/CommonRigidBodyMTBase.cpp
@@ -301,7 +299,9 @@ target_link_libraries(
           #
           ExtendedTutorials
           BulletRobotics
-          TinyRenderer)
+          TinyRenderer
+          ForkLift
+          )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)
