@@ -1,15 +1,5 @@
-
-INCLUDE_DIRECTORIES(
-	.
-)
-
-
-FILE(GLOB BussIK_SRCS "*.cpp" )
-FILE(GLOB BussIK_HDRS "*.h" )
-
-ADD_LIBRARY(BussIK ${BussIK_SRCS} ${BussIK_HDRS})
-
-INSTALL(TARGETS BussIK
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib${LIB_SUFFIX}
-        ARCHIVE DESTINATION lib${LIB_SUFFIX})
+set(TARGET_NAME BussIK)
+file(GLOB BussIK_SRCS "*.cpp")
+file(GLOB BussIK_HDRS "*.h")
+add_library(${TARGET_NAME} ${BussIK_SRCS} ${BussIK_HDRS})
+target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

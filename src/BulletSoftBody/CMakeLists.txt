@@ -52,3 +52,4 @@ add_library(
 set_target_properties(${TARGET_NAME} PROPERTIES VERSION ${BULLET_VERSION})
 set_target_properties(${TARGET_NAME} PROPERTIES SOVERSION ${BULLET_VERSION})
 target_link_libraries(${TARGET_NAME} PUBLIC BulletDynamics)
+target_compile_options(${TARGET_NAME} PRIVATE /wd4244 /wd4267 /wd4305)

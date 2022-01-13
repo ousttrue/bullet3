@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "App_ExampleBrowser",
+            "name": "BulletExampleBrowser",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/bin/App_ExampleBrowser.exe",
+            "program": "${workspaceFolder}/build/Debug/bin/BulletExampleBrowser.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

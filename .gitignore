@@ -40,3 +40,4 @@ CTestTestFile.cmake
 /.vscode/0_Bullet3Demo.txt
 /.venv/
 /public/
+/.cache/
