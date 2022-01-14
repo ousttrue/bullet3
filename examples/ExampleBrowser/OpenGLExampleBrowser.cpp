@@ -1,4 +1,5 @@
 #include "OpenGLExampleBrowser.h"
+#include "CommonGraphicsAppInterface.h"
 #include "LinearMath/btQuickprof.h"
 #include <OpenGLInclude.h>
 #include <SimpleOpenGL2App.h>
@@ -232,7 +233,7 @@ class OpenGLExampleBrowserInternalData
 	struct MyMenuItemHander* m_handler2 = nullptr;
 	btAlignedObjectArray<MyMenuItemHander*> m_handlers;
 
-	CommonGraphicsApp* s_app = 0;
+	SimpleOpenGL3App* s_app = 0;
 
 	CommonParameterInterface* s_parameterInterface = 0;
 	CommonRenderInterface* s_instancingRenderer = 0;
@@ -849,7 +850,6 @@ public:
 			args.GetCmdLineArgument("height", height);
 		}
 
-		SimpleOpenGL3App* simpleApp = 0;
 		args.GetCmdLineArgument("render_device", gRenderDevice);
 		args.GetCmdLineArgument("window_backend", gWindowBackend);
 		const char* appTitle = "Bullet Physics ExampleBrowser";
@@ -867,8 +867,7 @@ public:
 
 		char title[1024];
 		sprintf(title, "%s using OpenGL3+ %s %s", appTitle, glContext, optMode);
-		simpleApp = new SimpleOpenGL3App(title, width, height, gAllowRetina, gWindowBackend, gRenderDevice);
-		s_app = simpleApp;
+		s_app = new SimpleOpenGL3App(title, width, height, gAllowRetina, gWindowBackend, gRenderDevice);
 
 		char* gVideoFileName = 0;
 		args.GetCmdLineArgument("mp4", gVideoFileName);
@@ -876,12 +875,12 @@ public:
 		args.GetCmdLineArgument("mp4fps", gVideoFps);
 		if (gVideoFps)
 		{
-			simpleApp->setMp4Fps(gVideoFps);
+			s_app->setMp4Fps(gVideoFps);
 		}
 
 #ifndef NO_OPENGL3
 		if (gVideoFileName)
-			simpleApp->dumpFramesToVideo(gVideoFileName);
+			s_app->dumpFramesToVideo(gVideoFileName);
 #endif
 
 		s_instancingRenderer = s_app->m_renderer;
@@ -932,11 +931,12 @@ public:
 
 		assert(glGetError() == GL_NO_ERROR);
 
+		// init Gwen
 		{
 			m_myTexLoader = new GL3TexLoader;
 
-			sth_stash* fontstash = simpleApp->getFontStash();
-			m_gwenRenderer = new GwenOpenGL3CoreRenderer(simpleApp->m_primRenderer, fontstash, width, height, s_window->getRetinaScale(), m_myTexLoader);
+			sth_stash* fontstash = s_app->getFontStash();
+			m_gwenRenderer = new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, s_window->getRetinaScale(), m_myTexLoader);
 
 			gui2 = new GwenUserInterface;
 
@@ -1111,14 +1111,6 @@ public:
 
 		static int frameCount = 0;
 		frameCount++;
-
-		if (0)
-		{
-			BT_PROFILE("Draw frame counter");
-			char bla[1024];
-			sprintf(bla, "Frame %d", frameCount);
-			s_app->drawText(bla, 10, 10);
-		}
 
 		if (gPngFileName)
 		{
