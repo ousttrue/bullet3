@@ -98,10 +98,6 @@ add_executable(
   ../BasicDemo/BasicExample.h
   ../RollingFrictionDemo/RollingFrictionDemo.cpp
   ../RollingFrictionDemo/RollingFrictionDemo.h
-  ../MultiThreading/MultiThreadingExample.cpp
-  ../MultiThreading/b3PosixThreadSupport.cpp
-  ../MultiThreading/b3Win32ThreadSupport.cpp
-  ../MultiThreading/b3ThreadSupportInterface.cpp
   ../RenderingExamples/TinyRendererSetup.cpp
   ../RenderingExamples/TimeSeriesCanvas.cpp
   ../RenderingExamples/TimeSeriesCanvas.h
@@ -146,6 +142,7 @@ target_link_libraries(
           #
           BulletFileLoader
           BulletWorldImporter
+          MultiThreading       
           #
           ExtendedTutorials
           BulletRobotics

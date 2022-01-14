@@ -67,7 +67,7 @@
 #include "../RenderingExamples/TimeSeriesExample.h"
 #include <Tutorial/Tutorial.h>
 #include <Tutorial/Dof6ConstraintTutorial.h>
-#include "../MultiThreading/MultiThreadingExample.h"
+#include <MultiThreadedDemo/MultiThreadingExample.h>
 #include <InverseDynamics/InverseDynamicsExample.h>
 #include "../RoboticsLearning/R2D2GraspExample.h"
 #include "../RoboticsLearning/KukaGraspExample.h"
