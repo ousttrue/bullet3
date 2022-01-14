@@ -35,8 +35,8 @@
 #include <MultiBody/InvertedPendulumPDControl.h>
 #include <MultiBody/KinematicMultiBodyExample.h>
 
-#include "../RigidBody/RigidBodySoftContact.h"
-#include "../RigidBody/KinematicRigidBodyExample.h"
+#include <RigidBody/RigidBodySoftContact.h>
+#include <RigidBody/KinematicRigidBodyExample.h>
 #include <VoronoiFracture/VoronoiFractureDemo.h>
 #include <SoftDemo/SoftDemo.h>
 #include <Constraints/ConstraintDemo.h>

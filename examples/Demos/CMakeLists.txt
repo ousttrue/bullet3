@@ -25,4 +25,5 @@ subdirs(
   RollingFrictionDemo
   RoboticsLearning
   BasicDemo
+  RigidBody
   )

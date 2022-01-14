@@ -96,8 +96,6 @@ add_executable(
   ../RobotSimulator/b3RobotSimulatorClientAPI.h
   ../Utils/RobotLoggingUtil.cpp
   ../Utils/RobotLoggingUtil.h
-  ../RigidBody/RigidBodySoftContact.cpp
-  ../RigidBody/KinematicRigidBodyExample.cpp
   ../ThirdPartyLibs/tinyxml2/tinyxml2.cpp
   InProcessExampleBrowser.cpp
   ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
@@ -149,6 +147,7 @@ target_link_libraries(
           RollingFrictionDemo
           RoboticsLearning
           BasicDemo
+          RigidBody
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
