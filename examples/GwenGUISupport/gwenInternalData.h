@@ -1,7 +1,7 @@
 #ifndef GWEN_INTERNAL_DATA_H
 #define GWEN_INTERNAL_DATA_H
 
-#include <GwenOpenGL3CoreRenderer.h>
+#include "GwenOpenGL3CoreRenderer.h"
 #include <GLPrimitiveRenderer.h>
 #include "Gwen/Platform.h"
 #include "Gwen/Controls/TreeControl.h"
