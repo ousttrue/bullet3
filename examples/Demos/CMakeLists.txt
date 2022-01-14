@@ -22,4 +22,5 @@ subdirs(
   Collision
   Tutorial
   RenderingExamples
+  RollingFrictionDemo
   )

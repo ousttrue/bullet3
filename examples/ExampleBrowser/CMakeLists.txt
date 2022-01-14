@@ -96,8 +96,6 @@ add_executable(
   ../RobotSimulator/b3RobotSimulatorClientAPI.h
   ../BasicDemo/BasicExample.cpp
   ../BasicDemo/BasicExample.h
-  ../RollingFrictionDemo/RollingFrictionDemo.cpp
-  ../RollingFrictionDemo/RollingFrictionDemo.h
   ../RoboticsLearning/GripperGraspExample.cpp
   ../RoboticsLearning/GripperGraspExample.h
   ../RoboticsLearning/R2D2GraspExample.cpp
@@ -155,7 +153,9 @@ target_link_libraries(
           Raycast
           Collision
           Tutorial
-          RenderingExamples)
+          RenderingExamples
+          RollingFrictionDemo          
+          )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)
