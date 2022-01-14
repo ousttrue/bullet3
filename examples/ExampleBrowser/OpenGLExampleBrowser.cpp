@@ -25,16 +25,16 @@
 #include "Bullet3Common/b3Vector3.h"
 #include "assert.h"
 #include <stdio.h>
-#include "GwenGUISupport/gwenInternalData.h"
-#include "GwenGUISupport/gwenUserInterface.h"
-#include "../Utils/b3Clock.h"
-#include "../Utils/ChromeTraceUtil.h"
-#include "GwenGUISupport/GwenParameterInterface.h"
+#include <gwenInternalData.h>
+#include <gwenUserInterface.h>
+#include <b3Clock.h>
+#include <ChromeTraceUtil.h>
+#include <GwenParameterInterface.h>
 #ifndef BT_NO_PROFILE
 #include "GwenGUISupport/GwenProfileWindow.h"
 #endif
-#include "GwenGUISupport/GwenTextureWindow.h"
-#include "GwenGUISupport/GraphingTexture.h"
+#include <GwenTextureWindow.h>
+#include <GraphingTexture.h>
 #include <Common2dCanvasInterface.h>
 #include <CommonExampleInterface.h>
 #include "Bullet3Common/b3CommandLineArgs.h"

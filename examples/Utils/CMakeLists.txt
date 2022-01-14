@@ -10,3 +10,4 @@ add_library(
   b3ERPCFMHelper.hpp
   b3ReferenceFrameHelper.hpp)
 target_link_libraries(${TARGET_NAME} PRIVATE Bullet3Common)
+target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

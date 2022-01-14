@@ -1,31 +1,31 @@
 set(TARGET_NAME BulletExampleBrowserLib)
-file(GLOB GwenGUISupport_SRCS "GwenGUISupport/*")
-file(GLOB GwenGUISupport_HDRS "GwenGUISupport/*")
 add_library(
   ${TARGET_NAME}
-  OpenGLExampleBrowser.cpp
-  OpenGLGuiHelper.cpp
-  GL_ShapeDrawer.cpp
-  CollisionShape2TriangleMesh.cpp
-  CollisionShape2TriangleMesh.h
-  ${GwenGUISupport_SRCS}
-  ${GwenGUISupport_HDRS})
+  OpenGLExampleBrowser.cpp OpenGLGuiHelper.cpp GL_ShapeDrawer.cpp
+  CollisionShape2TriangleMesh.cpp CollisionShape2TriangleMesh.h)
 
 set_target_properties(${TARGET_NAME} PROPERTIES VERSION ${BULLET_VERSION})
 set_target_properties(${TARGET_NAME} PROPERTIES SOVERSION ${BULLET_VERSION})
 target_compile_options(${TARGET_NAME} PRIVATE /wd4244 /wd4267 /wd4305 /wd4312)
 target_link_libraries(
   ${TARGET_NAME}
-  PUBLIC Bullet3Common
+  PUBLIC 
+  # bullet
+  Bullet3Common
          BulletSoftBody
          BulletDynamics
          BulletCollision
          BulletInverseDynamics
          BulletInverseDynamicsUtils
          LinearMath
+         # support
          OpenGLWindow
+         GwenGUISupport
+         # 3rd
          gwen
-         BussIK)
+         BussIK
+         Utils
+         )
 
 # ##############################################################################
 #
@@ -47,15 +47,14 @@ add_executable(
   ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
 target_link_libraries(
   ${TARGET_NAME}
-  PRIVATE 
- 
-          # support lib
+  PRIVATE # support lib
           Utils
           BulletExampleBrowserLib
           OpenGLWindow
           MultiThreading
           TinyRenderer
           SharedMemory
+          GwenGUISupport
           # Demos
           ExtendedTutorials
           BulletRobotics
@@ -97,8 +96,7 @@ target_link_libraries(
           LinearMath
           # ThirdParty
           gwen
-          glad
-          )
+          glad)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)

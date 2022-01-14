@@ -1,6 +1,6 @@
 #include "TinyVRGui.h"
 #include <CommonGUIHelperInterface.h>
-#include "../ExampleBrowser/GwenGUISupport/GraphingTexture.h"
+#include <GraphingTexture.h>
 
 #include <Common2dCanvasInterface.h>
 #include "../RenderingExamples/TimeSeriesCanvas.h"

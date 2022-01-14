@@ -1,5 +1,5 @@
 #include "GraphingTexture.h"
-#include "../OpenGLWindow/OpenGLInclude.h"
+#include <OpenGLInclude.h>
 #include <assert.h>
 
 GraphingTexture::GraphingTexture()

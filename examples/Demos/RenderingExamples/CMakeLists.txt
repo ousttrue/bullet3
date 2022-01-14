@@ -18,4 +18,4 @@ add_library(
   TinyVRGui.cpp
   TinyVRGui.h)
 target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics Bullet3Common
-                                             CommonInterfaces TinyRenderer)
+                                             CommonInterfaces TinyRenderer GwenGUISupport)
