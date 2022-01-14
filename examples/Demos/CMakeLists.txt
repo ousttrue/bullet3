@@ -21,4 +21,5 @@ subdirs(
   Planar2D
   Raycast
   Collision
+  Tutorial
   )

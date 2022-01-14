@@ -65,8 +65,8 @@
 #include "../SharedMemory/PhysicsClientExample.h"
 #include <Constraints/TestHingeTorque.h>
 #include "../RenderingExamples/TimeSeriesExample.h"
-#include "../Tutorial/Tutorial.h"
-#include "../Tutorial/Dof6ConstraintTutorial.h"
+#include <Tutorial/Tutorial.h>
+#include <Tutorial/Dof6ConstraintTutorial.h>
 #include "../MultiThreading/MultiThreadingExample.h"
 #include <InverseDynamics/InverseDynamicsExample.h>
 #include "../RoboticsLearning/R2D2GraspExample.h"

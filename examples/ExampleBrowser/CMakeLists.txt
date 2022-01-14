@@ -96,10 +96,6 @@ add_executable(
   ../RobotSimulator/b3RobotSimulatorClientAPI.h
   ../BasicDemo/BasicExample.cpp
   ../BasicDemo/BasicExample.h
-  ../Tutorial/Tutorial.cpp
-  ../Tutorial/Tutorial.h
-  ../Tutorial/Dof6ConstraintTutorial.cpp
-  ../Tutorial/Dof6ConstraintTutorial.h
   ../RollingFrictionDemo/RollingFrictionDemo.cpp
   ../RollingFrictionDemo/RollingFrictionDemo.h
   ../MultiThreading/MultiThreadingExample.cpp
@@ -174,6 +170,7 @@ target_link_libraries(
           Planar2D
           Raycast
           Collision
+          Tutorial
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
