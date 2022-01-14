@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "BulletExampleBrowser",
+            "name": "App_ExampleBrowser",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/bin/BulletExampleBrowser.exe",
+            "program": "${workspaceFolder}/build/Debug/bin/App_ExampleBrowser.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -16,10 +16,10 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "AppBasicExampleGui",
+            "name": "App_BasicExampleGui",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/bin/AppBasicExampleGui.exe",
+            "program": "${workspaceFolder}/build/Debug/bin/App_BasicExampleGui.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

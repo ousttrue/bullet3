@@ -25,5 +25,38 @@ subdirs(
   RollingFrictionDemo
   RoboticsLearning
   BasicDemo
-  RigidBody
-  )
+  RigidBody)
+
+set(TARGET_NAME Demos)
+add_library(${TARGET_NAME} INTERFACE)
+target_link_libraries(
+  ${TARGET_NAME}
+  INTERFACE # Demos
+            ExtendedTutorials
+            BulletRobotics
+            ForkLift
+            Constraints
+            DeformableDemo
+            VoronoiFracture
+            MultiBody
+            FractureDemo
+            Benchmarks
+            DynamicControlDemo
+            SoftDemo
+            GyroscopicDemo
+            InverseDynamics
+            InverseKinematics
+            Heightfield
+            MultiThreadedDemo
+            Importers
+            Vehicles
+            Evolution
+            Planar2D
+            Raycast
+            Collision
+            Tutorial
+            RenderingExamples
+            RollingFrictionDemo
+            RoboticsLearning
+            BasicDemo
+            RigidBody)

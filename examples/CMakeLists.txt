@@ -6,6 +6,7 @@ subdirs(Importers)
 subdirs(MultiThreading)
 subdirs(Utils)
 subdirs(Demos)
+subdirs(RobotSimulator)
 subdirs(HelloWorld ExampleBrowser)
 
 # IF(BUILD_BULLET3) SUBDIRS(  RobotSimulator SharedMemory ThirdPartyLibs/Gwen

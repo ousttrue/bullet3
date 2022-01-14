@@ -13,7 +13,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE BasicDemo CommonInterfaces)
 
 # ##############################################################################
 # Standalone BasicExampleGui using OpenGL (but not the example browser)
-set(TARGET_NAME AppBasicExampleGui)
+set(TARGET_NAME App_BasicExampleGui)
 add_executable(
   ${TARGET_NAME}
   CreateFunc.cpp
