@@ -19,12 +19,12 @@ subject to the following restrictions:
 #include "BulletCollision/CollisionShapes/btCollisionShape.h"
 #include "BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
 #include "../ExampleBrowser/CollisionShape2TriangleMesh.h"
-#include "../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <GLInstanceGraphicsShape.h>
 #include "LinearMath/btTransform.h"
 #include "LinearMath/btHashMap.h"
 
 #include "../TinyRenderer/TinyRenderer.h"
-#include "../OpenGLWindow/SimpleCamera.h"
+#include <SimpleCamera.h>
 
 static btVector4 sMyColors[4] =
 	{

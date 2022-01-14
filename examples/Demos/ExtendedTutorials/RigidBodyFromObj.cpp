@@ -23,7 +23,7 @@ subject to the following restrictions:
 #include "../Utils/b3ResourcePath.h"
 #include "Bullet3Common/b3FileUtils.h"
 #include "../Importers/ImportObjDemo/LoadMeshFromObj.h"
-#include "../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <GLInstanceGraphicsShape.h>
 #include "../Utils/b3BulletDefaultFileIO.h"
 
 struct RigidBodyFromObjExample : public CommonRigidBodyBase

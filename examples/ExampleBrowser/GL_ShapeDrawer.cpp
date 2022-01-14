@@ -17,7 +17,7 @@ subject to the following restrictions:
 #include <windows.h>
 #endif
 
-#include "../OpenGLWindow/OpenGL2Include.h"
+#include <OpenGL2Include.h>
 
 #include "GL_ShapeDrawer.h"
 #include "BulletCollision/CollisionShapes/btPolyhedralConvexShape.h"

@@ -1,5 +1,5 @@
 #include "SerialChains.h"
-#include "../OpenGLWindow/SimpleOpenGL3App.h"
+#include <SimpleOpenGL3App.h>
 #include "btBulletDynamicsCommon.h"
 
 #include "BulletDynamics/MLCPSolvers/btDantzigSolver.h"
@@ -17,7 +17,7 @@
 #include "BulletDynamics/Featherstone/btMultiBodyFixedConstraint.h"
 #include "BulletDynamics/Featherstone/btMultiBodySliderConstraint.h"
 
-#include "../OpenGLWindow/GLInstancingRenderer.h"
+#include <GLInstancingRenderer.h>
 #include "BulletCollision/CollisionShapes/btShapeHull.h"
 
 #include <CommonMultiBodyBase.h>

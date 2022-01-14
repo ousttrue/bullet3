@@ -47,5 +47,5 @@ add_library(
   ImportMeshUtility/b3ImportMeshUtility.h)
 target_link_libraries(
   ${TARGET_NAME}
-  PRIVATE BulletDynamics CommonInterfaces stb_image
+  PRIVATE BulletDynamics CommonInterfaces stb_image OpenGLWindow
   PUBLIC tiny_obj_loader)

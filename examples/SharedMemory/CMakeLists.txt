@@ -135,7 +135,7 @@ set(SharedMemory_SRCS
 )
 add_library(${TARGET_NAME} ${SharedMemory_SRCS})
 target_link_libraries(${TARGET_NAME} PRIVATE CommonInterfaces BussIK
-                                             tiny_obj_loader TinyRenderer stb_image)
+                                             tiny_obj_loader TinyRenderer stb_image OpenGLWindow)
 target_link_libraries(${TARGET_NAME} PRIVATE BulletSoftBody)
 
 # IF (WIN32) ADD_EXECUTABLE(App_PhysicsServer_SharedMemory ${SharedMemory_SRCS}

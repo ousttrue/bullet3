@@ -33,7 +33,7 @@
 #include "../Importers/ImportURDFDemo/UrdfParser.h"
 #include "../Utils/b3ResourcePath.h"
 #include "Bullet3Common/b3FileUtils.h"
-#include "../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <GLInstanceGraphicsShape.h>
 #include "BulletDynamics/Featherstone/btMultiBodySliderConstraint.h"
 #include "BulletDynamics/Featherstone/btMultiBodyPoint2Point.h"
 #include "BulletCollision/NarrowPhaseCollision/btPersistentManifold.h"

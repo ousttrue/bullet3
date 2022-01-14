@@ -23,7 +23,7 @@ subject to the following restrictions:
 #include <string>
 #include "../Utils/b3ResourcePath.h"
 #include "../TinyRenderer/TinyRenderer.h"
-#include "../OpenGLWindow/SimpleCamera.h"
+#include <SimpleCamera.h>
 #include "../Importers/ImportMeshUtility/b3ImportMeshUtility.h"
 #include <iostream>
 #include <fstream>

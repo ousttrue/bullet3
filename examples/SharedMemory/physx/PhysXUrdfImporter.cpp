@@ -27,7 +27,7 @@ subject to the following restrictions:
 #include "../../Utils/b3ResourcePath.h"
 #include "../../Utils/b3BulletDefaultFileIO.h"
 
-#include "../OpenGLWindow/ShapeData.h"
+#include <ShapeData.h>
 
 
 #include "../../Importers/ImportMeshUtility/b3ImportMeshUtility.h"

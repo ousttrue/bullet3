@@ -1,10 +1,10 @@
 #ifndef NO_OPENGL3
 #include "opengl_fontstashcallbacks.h"
-#include "../OpenGLWindow/GLPrimitiveRenderer.h"
-#include "../OpenGLWindow/GLPrimInternalData.h"
+#include <GLPrimitiveRenderer.h>
+#include <GLPrimInternalData.h>
 
 #include "fontstash.h"
-#include "../OpenGLWindow/OpenGLInclude.h"
+#include <OpenGLInclude.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

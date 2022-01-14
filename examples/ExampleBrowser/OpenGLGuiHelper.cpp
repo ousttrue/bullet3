@@ -8,9 +8,9 @@
 #include "CollisionShape2TriangleMesh.h"
 #include "BulletSoftBody/btSoftBodyHelpers.h"
 
-#include "../OpenGLWindow/ShapeData.h"
+#include <ShapeData.h>
 
-#include "../OpenGLWindow/SimpleCamera.h"
+#include <SimpleCamera.h>
 
 #define BT_LINE_BATCH_SIZE 512
 

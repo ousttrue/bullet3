@@ -1,8 +1,8 @@
 #ifndef SIMPLE_OPENGL3_APP_H
 #define SIMPLE_OPENGL3_APP_H
 
-#include "../OpenGLWindow/GLInstancingRenderer.h"
-#include "../OpenGLWindow/GLPrimitiveRenderer.h"
+#include <GLInstancingRenderer.h>
+#include <GLPrimitiveRenderer.h>
 #include <CommonWindowInterface.h>
 
 #include <CommonGraphicsAppInterface.h>

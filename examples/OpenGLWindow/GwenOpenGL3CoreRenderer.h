@@ -5,7 +5,7 @@
 #include "Gwen/Gwen.h"
 #include "Gwen/BaseRender.h"
 #include "GLPrimitiveRenderer.h"
-#include "../OpenGLWindow/OpenGLInclude.h"
+#include <OpenGLInclude.h>
 
 struct sth_stash;
 #include "fontstash.h"

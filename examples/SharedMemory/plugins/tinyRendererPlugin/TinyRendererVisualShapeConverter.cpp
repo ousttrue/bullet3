@@ -24,7 +24,7 @@ subject to the following restrictions:
 #include <string>
 #include "../Utils/b3ResourcePath.h"
 #include <TinyRenderer/TinyRenderer.h>
-#include "../OpenGLWindow/SimpleCamera.h"
+#include <SimpleCamera.h>
 #include "../Importers/ImportMeshUtility/b3ImportMeshUtility.h"
 #include <iostream>
 #include <fstream>
@@ -32,7 +32,7 @@ subject to the following restrictions:
 #include "../SharedMemory/SharedMemoryPublic.h"  //for b3VisualShapeData
 #include <TinyRenderer/model.h>
 #include <stb_image.h>
-#include "../OpenGLWindow/ShapeData.h"
+#include <ShapeData.h>
 struct MyTexture2
 {
 	unsigned char* textureData1;

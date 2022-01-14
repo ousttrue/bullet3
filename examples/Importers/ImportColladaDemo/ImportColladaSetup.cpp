@@ -17,10 +17,10 @@ subject to the following restrictions:
 
 #include "ImportColladaSetup.h"
 #include <vector>
-#include "../OpenGLWindow/GLInstancingRenderer.h"
-#include "../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <GLInstancingRenderer.h>
+#include <GLInstanceGraphicsShape.h>
 #include "btBulletDynamicsCommon.h"
-#include "../OpenGLWindow/SimpleOpenGL3App.h"
+#include <SimpleOpenGL3App.h>
 #include "LoadMeshFromCollada.h"
 #include "Bullet3Common/b3FileUtils.h"
 #include "../../Utils/b3ResourcePath.h"

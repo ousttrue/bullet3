@@ -1,10 +1,10 @@
 #include "ImportObjExample.h"
 #include <vector>
-#include "../OpenGLWindow/GLInstancingRenderer.h"
+#include <GLInstancingRenderer.h>
 #include <tiny_obj_loader.h>
-#include "../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <GLInstanceGraphicsShape.h>
 #include "btBulletDynamicsCommon.h"
-#include "../OpenGLWindow/SimpleOpenGL3App.h"
+#include <SimpleOpenGL3App.h>
 #include "Wavefront2GLInstanceGraphicsShape.h"
 #include "../../Utils/b3ResourcePath.h"
 #include "../../Utils/b3BulletDefaultFileIO.h"

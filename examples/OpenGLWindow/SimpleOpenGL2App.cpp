@@ -8,7 +8,7 @@
 #include "Bullet3Common/b3Vector3.h"
 #include "Bullet3Common/b3Quaternion.h"
 #include <CommonRenderInterface.h>
-#include "../OpenGLWindow/GLPrimitiveRenderer.h"
+#include <GLPrimitiveRenderer.h>
 #include "GLInstanceGraphicsShape.h"
 #include "stdlib.h"
 #include "TwFonts.h"

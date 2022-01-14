@@ -13,6 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/Release/bin)
 
 subdirs(src)
 subdirs(Extras)
+subdirs(CommonInterfaces)
 subdirs(ThirdPartyLibs)
 subdirs(examples)
 subdirs(test)

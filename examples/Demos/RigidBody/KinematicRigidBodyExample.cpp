@@ -23,7 +23,7 @@ subject to the following restrictions:
 
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
-#include "../OpenGLWindow/ShapeData.h"
+#include <ShapeData.h>
 
 #include <CommonRigidBodyBase.h>
 

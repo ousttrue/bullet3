@@ -2,7 +2,7 @@
 
 #include "Gwen/Gwen.h"
 #include "Gwen/Skins/Simple.h"
-#include "../OpenGLWindow/OpenGLInclude.h"
+#include <OpenGLInclude.h>
 
 #include "UnitTest.h"
 

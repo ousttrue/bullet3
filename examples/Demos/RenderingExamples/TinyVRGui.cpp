@@ -6,7 +6,7 @@
 #include "../RenderingExamples/TimeSeriesCanvas.h"
 #include "../RenderingExamples/TimeSeriesFontData.h"
 #include "../Importers/ImportMeshUtility/b3ImportMeshUtility.h"
-#include "../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <GLInstanceGraphicsShape.h>
 #include "../Utils/b3BulletDefaultFileIO.h"
 
 #include <CommonRenderInterface.h>

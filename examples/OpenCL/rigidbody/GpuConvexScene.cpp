@@ -1,16 +1,16 @@
 #include "GpuConvexScene.h"
 
 #include "GpuRigidBodyDemo.h"
-#include "../OpenGLWindow/ShapeData.h"
+#include <ShapeData.h>
 
-#include "../OpenGLWindow/GLInstancingRenderer.h"
+#include <GLInstancingRenderer.h>
 #include "Bullet3Common/b3Quaternion.h"
 #include <CommonWindowInterface.h>
 #include "Bullet3OpenCL/BroadphaseCollision/b3GpuSapBroadphase.h"
 #include "../CommonOpenCL/GpuDemoInternalData.h"
 #include "Bullet3OpenCL/Initialize/b3OpenCLUtils.h"
-#include "../OpenGLWindow/OpenGLInclude.h"
-#include "../OpenGLWindow/GLInstanceRendererInternalData.h"
+#include <OpenGLInclude.h>
+#include <GLInstanceRendererInternalData.h>
 #include "Bullet3OpenCL/ParallelPrimitives/b3LauncherCL.h"
 #include "Bullet3OpenCL/RigidBody/b3GpuRigidBodyPipeline.h"
 #include "Bullet3OpenCL/RigidBody/b3GpuNarrowPhase.h"
@@ -18,12 +18,12 @@
 #include "GpuRigidBodyDemoInternalData.h"
 
 #include "Bullet3Dynamics/ConstraintSolver/b3Point2PointConstraint.h"
-#include "../OpenGLWindow/GLPrimitiveRenderer.h"
+#include <GLPrimitiveRenderer.h>
 #include "Bullet3OpenCL/Raycast/b3GpuRaycast.h"
 #include "Bullet3Collision/NarrowPhaseCollision/b3ConvexUtility.h"
 #include "Bullet3Dynamics/ConstraintSolver/b3FixedConstraint.h"
 
-#include "../OpenGLWindow/GLRenderToTexture.h"
+#include <GLRenderToTexture.h>
 
 static bool gUseInstancedCollisionShapes = true;
 extern int gGpuArraySizeX;

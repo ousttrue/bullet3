@@ -5,7 +5,7 @@
 class btCollisionShape;
 class btTransform;
 #include "LinearMath/btAlignedObjectArray.h"
-#include "../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <GLInstanceGraphicsShape.h>
 
 struct OpenGLGuiHelper : public GUIHelperInterface
 {

@@ -14,7 +14,7 @@
 #include <CommonGUIHelperInterface.h>
 #include "../ExampleBrowser/CollisionShape2TriangleMesh.h"
 #include "../Importers/ImportMeshUtility/b3ImportMeshUtility.h"
-#include "../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <GLInstanceGraphicsShape.h>
 #include <CommonParameterInterface.h>
 #include "../Utils/b3BulletDefaultFileIO.h"
 struct TinyRendererSetupInternalData

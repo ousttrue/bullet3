@@ -21,7 +21,7 @@ subject to the following restrictions:
 #include <CommonRigidBodyBase.h>
 #include "../MultiThreadedDemo/CommonRigidBodyMTBase.h"
 #include <CommonParameterInterface.h>
-#include "../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <GLInstanceGraphicsShape.h>
 #include "../Utils/b3BulletDefaultFileIO.h"
 #include "../Importers/ImportURDFDemo/urdfStringSplit.h"
 #include <stb_image.h>

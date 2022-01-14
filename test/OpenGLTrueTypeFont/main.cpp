@@ -35,7 +35,7 @@ subject to the following restrictions:
 //#include "Bullet3Common/b3Quickprof.h"
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3CommandLineArgs.h"
-#include "../OpenGLWindow/LoadShader.h"
+#include <LoadShader.h>
 extern char OpenSansData[];
 bool printStats = false;
 bool pauseSimulation = false;
@@ -46,7 +46,7 @@ int m_glutScreenHeight;
 
 bool useInterop = false;
 
-#include "../OpenGLWindow/GLPrimInternalData.h"
+#include <GLPrimInternalData.h>
 
 static PrimInternalData sData;
 

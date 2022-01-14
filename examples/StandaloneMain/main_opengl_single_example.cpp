@@ -17,7 +17,7 @@ subject to the following restrictions:
 #include <CommonGUIHelperInterface.h>
 #include "../Utils/b3Clock.h"
 
-#include "../OpenGLWindow/SimpleOpenGL3App.h"
+#include <SimpleOpenGL3App.h>
 #include <stdio.h>
 #include "../ExampleBrowser/OpenGLGuiHelper.h"
 

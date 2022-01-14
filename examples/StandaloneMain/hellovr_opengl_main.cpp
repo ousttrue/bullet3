@@ -4,8 +4,8 @@
 
 //========= Copyright Valve Corporation ============//
 
-#include "../OpenGLWindow/SimpleOpenGL3App.h"
-#include "../OpenGLWindow/OpenGLInclude.h"
+#include <SimpleOpenGL3App.h>
+#include <OpenGLInclude.h>
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3Transform.h"
 #include "Bullet3Common/b3CommandLineArgs.h"

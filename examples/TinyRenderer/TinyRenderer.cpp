@@ -5,7 +5,7 @@
 #include <limits>
 #include <vector>
 #include <CommonFileIOInterface.h>
-#include "../OpenGLWindow/ShapeData.h"
+#include <ShapeData.h>
 #include "../Utils/b3BulletDefaultFileIO.h"
 #include "../Utils/b3ResourcePath.h"
 #include "Bullet3Common/b3Logging.h"

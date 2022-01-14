@@ -19,7 +19,7 @@
 #include "../ImportObjDemo/LoadMeshFromObj.h"
 #include "../ImportSTLDemo/LoadMeshFromSTL.h"
 #include "../ImportColladaDemo/LoadMeshFromCollada.h"
-#include "../OpenGLWindow/ShapeData.h"
+#include <ShapeData.h>
 
 #include <tiny_obj_loader.h>
 #include "../ImportMeshUtility/b3ImportMeshUtility.h"

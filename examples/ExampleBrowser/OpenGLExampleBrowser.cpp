@@ -1,22 +1,22 @@
 #include "OpenGLExampleBrowser.h"
 #include "LinearMath/btQuickprof.h"
-#include "../OpenGLWindow/OpenGLInclude.h"
-#include "../OpenGLWindow/SimpleOpenGL2App.h"
+#include <OpenGLInclude.h>
+#include <SimpleOpenGL2App.h>
 #ifndef NO_OPENGL3
-#include "../OpenGLWindow/SimpleOpenGL3App.h"
+#include <SimpleOpenGL3App.h>
 #endif
 #include <CommonRenderInterface.h>
 #ifdef __APPLE__
-#include "../OpenGLWindow/MacOpenGLWindow.h"
+#include <MacOpenGLWindow.h>
 #else
 #ifdef _WIN32
-#include "../OpenGLWindow/Win32OpenGLWindow.h"
+#include <Win32OpenGLWindow.h>
 #else
 //let's cross the fingers it is Linux/X11
 #ifdef BT_USE_EGL
-#include "../OpenGLWindow/EGLOpenGLWindow.h"
+#include <EGLOpenGLWindow.h>
 #else
-#include "../OpenGLWindow/X11OpenGLWindow.h"
+#include <X11OpenGLWindow.h>
 #endif  //BT_USE_EGL
 #endif  //_WIN32
 #endif  //__APPLE__
@@ -38,8 +38,8 @@
 #include <Common2dCanvasInterface.h>
 #include <CommonExampleInterface.h>
 #include "Bullet3Common/b3CommandLineArgs.h"
-#include "../OpenGLWindow/SimpleCamera.h"
-#include "../OpenGLWindow/SimpleOpenGL2Renderer.h"
+#include <SimpleCamera.h>
+#include <SimpleOpenGL2Renderer.h>
 #include "ExampleEntries.h"
 #include "OpenGLGuiHelper.h"
 #include "Bullet3Common/b3FileUtils.h"

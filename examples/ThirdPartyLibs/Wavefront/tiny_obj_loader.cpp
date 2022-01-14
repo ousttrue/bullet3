@@ -25,7 +25,7 @@
 #ifdef USE_STREAM
 #include <fstream>
 #else
-#include "../../CommonInterfaces/CommonFileIOInterface.h"
+#include <CommonFileIOInterface.h>
 #endif
 #include <sstream>
 #include "tiny_obj_loader.h"

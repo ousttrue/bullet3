@@ -13,8 +13,8 @@
 
 #include "Bullet3OpenCL/ParallelPrimitives/b3LauncherCL.h"
 
-#include "../OpenGLWindow/OpenGLInclude.h"
-#include "../OpenGLWindow/ShapeData.h"
+#include <OpenGLInclude.h>
+#include <ShapeData.h>
 
 #include <string.h>
 
@@ -30,8 +30,8 @@ extern int gPreferredOpenCLPlatformIndex;
 #include <CommonGraphicsAppInterface.h>
 #include <CommonWindowInterface.h>
 #include "../CommonOpenCL/CommonOpenCLBase.h"
-#include "../OpenGLWindow/GLInstancingRenderer.h"
-#include "../OpenGLWindow/GLInstanceRendererInternalData.h"
+#include <GLInstancingRenderer.h>
+#include <GLInstanceRendererInternalData.h>
 
 char* gPairBenchFileName = 0;
 
