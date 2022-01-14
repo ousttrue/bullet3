@@ -2,6 +2,7 @@
 #include "LinearMath/btQuickprof.h"
 #include <OpenGLInclude.h>
 #include <SimpleOpenGL2App.h>
+#include <functional>
 #ifndef NO_OPENGL3
 #include <SimpleOpenGL3App.h>
 #endif
@@ -725,12 +726,15 @@ struct OpenGLExampleBrowserInternalData
 		height = s_window->getHeight();
 
 		prevMouseMoveCallback = s_window->getMouseMoveCallback();
-		s_window->setMouseMoveCallback(MyMouseMoveCallback);
+		s_window->setMouseMoveCallback(std::bind(&OpenGLExampleBrowserInternalData::MyMouseMoveCallback,
+												 this, std::placeholders::_1, std::placeholders::_2));
 
 		prevMouseButtonCallback = s_window->getMouseButtonCallback();
-		s_window->setMouseButtonCallback(MyMouseButtonCallback);
+		s_window->setMouseButtonCallback(std::bind(&OpenGLExampleBrowserInternalData::MyMouseButtonCallback,
+												   this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 		prevKeyboardCallback = s_window->getKeyboardCallback();
-		s_window->setKeyboardCallback(MyKeyboardCallback);
+		s_window->setKeyboardCallback(std::bind(&OpenGLExampleBrowserInternalData::MyKeyboardCallback,
+												this, std::placeholders::_1, std::placeholders::_2));
 
 		s_app->m_renderer->getActiveCamera()->setCameraDistance(13);
 		s_app->m_renderer->getActiveCamera()->setCameraPitch(0);
@@ -757,9 +761,9 @@ struct OpenGLExampleBrowserInternalData
 		args.GetCmdLineArgument("background_color_blue", blue);
 		s_app->setBackgroundColor(red, green, blue);
 
-		b3SetCustomWarningMessageFunc(MyGuiPrintf);
-		b3SetCustomPrintfFunc(MyGuiPrintf);
-		b3SetCustomErrorMessageFunc(MyStatusBarError);
+		b3SetCustomWarningMessageFunc(std::bind(&OpenGLExampleBrowserInternalData::MyGuiPrintf, this, std::placeholders::_1));
+		b3SetCustomPrintfFunc(std::bind(&OpenGLExampleBrowserInternalData::MyGuiPrintf, this, std::placeholders::_1));
+		b3SetCustomErrorMessageFunc(std::bind(&OpenGLExampleBrowserInternalData::MyStatusBarError, this, std::placeholders::_1));
 
 		assert(glGetError() == GL_NO_ERROR);
 
@@ -903,8 +907,8 @@ struct OpenGLExampleBrowserInternalData
 				exit(0);
 			}
 
-			gui2->registerFileOpenCallback(fileOpenCallback);
-			gui2->registerQuitCallback(quitCallback);
+			gui2->registerFileOpenCallback(std::bind(&OpenGLExampleBrowserInternalData::fileOpenCallback, this));
+			gui2->registerQuitCallback(std::bind(&OpenGLExampleBrowserInternalData::quitCallback, this));
 		}
 	}
 

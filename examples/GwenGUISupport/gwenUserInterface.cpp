@@ -27,14 +27,14 @@ public:
 	{
 		if (m_quitCallback)
 		{
-			(*m_quitCallback)();
+			(m_quitCallback)();
 		}
 	}
 	void fileOpen(Gwen::Controls::Base* pControl)
 	{
 		if (m_fileOpenCallback)
 		{
-			(*m_fileOpenCallback)();
+			(m_fileOpenCallback)();
 		}
 	}
 };
@@ -118,7 +118,7 @@ struct MyComboBoxHander : public Gwen::Event::Handler
 		Gwen::String str = Gwen::Utility::UnicodeToString(but->GetSelectedItem()->GetText());
 
 		if (m_data->m_comboBoxCallback)
-			(*m_data->m_comboBoxCallback)(m_buttonId, str.c_str());
+			(m_data->m_comboBoxCallback)(m_buttonId, str.c_str());
 	}
 };
 
@@ -139,7 +139,7 @@ struct MyButtonHander : public Gwen::Event::Handler
 		//		int dep = but->IsDepressed();
 		int tog = but->GetToggleState();
 		if (m_data->m_toggleButtonCallback)
-			(*m_data->m_toggleButtonCallback)(m_buttonId, tog);
+			(m_data->m_toggleButtonCallback)(m_buttonId, tog);
 	}
 };
 

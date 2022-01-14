@@ -53,20 +53,20 @@ void b3ErrorMessageFuncDefault(const char* msg)
 	fflush(stdout);
 }
 
-static b3PrintfFunc* b3s_printfFunc = b3PrintfFuncDefault;
-static b3WarningMessageFunc* b3s_warningMessageFunc = b3WarningMessageFuncDefault;
-static b3ErrorMessageFunc* b3s_errorMessageFunc = b3ErrorMessageFuncDefault;
+static b3PrintfFunc b3s_printfFunc = b3PrintfFuncDefault;
+static b3WarningMessageFunc b3s_warningMessageFunc = b3WarningMessageFuncDefault;
+static b3ErrorMessageFunc b3s_errorMessageFunc = b3ErrorMessageFuncDefault;
 
 ///The developer can route b3Printf output using their own implementation
-void b3SetCustomPrintfFunc(b3PrintfFunc* printfFunc)
+void b3SetCustomPrintfFunc(const b3PrintfFunc& printfFunc)
 {
 	b3s_printfFunc = printfFunc;
 }
-void b3SetCustomWarningMessageFunc(b3PrintfFunc* warningMessageFunc)
+void b3SetCustomWarningMessageFunc(const b3PrintfFunc& warningMessageFunc)
 {
 	b3s_warningMessageFunc = warningMessageFunc;
 }
-void b3SetCustomErrorMessageFunc(b3PrintfFunc* errorMessageFunc)
+void b3SetCustomErrorMessageFunc(const b3PrintfFunc& errorMessageFunc)
 {
 	b3s_errorMessageFunc = errorMessageFunc;
 }
@@ -120,8 +120,8 @@ void b3EnterProfileZoneDefault(const char* name)
 void b3LeaveProfileZoneDefault()
 {
 }
-static b3EnterProfileZoneFunc* b3s_enterFunc = b3EnterProfileZoneDefault;
-static b3LeaveProfileZoneFunc* b3s_leaveFunc = b3LeaveProfileZoneDefault;
+static b3EnterProfileZoneFunc b3s_enterFunc = b3EnterProfileZoneDefault;
+static b3LeaveProfileZoneFunc b3s_leaveFunc = b3LeaveProfileZoneDefault;
 void b3EnterProfileZone(const char* name)
 {
 	(b3s_enterFunc)(name);
@@ -131,11 +131,11 @@ void b3LeaveProfileZone()
 	(b3s_leaveFunc)();
 }
 
-void b3SetCustomEnterProfileZoneFunc(b3EnterProfileZoneFunc* enterFunc)
+void b3SetCustomEnterProfileZoneFunc(const b3EnterProfileZoneFunc& enterFunc)
 {
 	b3s_enterFunc = enterFunc;
 }
-void b3SetCustomLeaveProfileZoneFunc(b3LeaveProfileZoneFunc* leaveFunc)
+void b3SetCustomLeaveProfileZoneFunc(const b3LeaveProfileZoneFunc& leaveFunc)
 {
 	b3s_leaveFunc = leaveFunc;
 }

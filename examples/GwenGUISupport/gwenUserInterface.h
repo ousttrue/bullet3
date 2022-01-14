@@ -1,12 +1,13 @@
 #ifndef _GWEN_USER_INTERFACE_H
 #define _GWEN_USER_INTERFACE_H
+#include <functional>
 
 struct GwenInternalData;
 
-typedef void (*b3ComboBoxCallback)(int combobox, const char* item);
-typedef void (*b3ToggleButtonCallback)(int button, int state);
-typedef void (*b3FileOpenCallback)();
-typedef void (*b3QuitCallback)();
+using b3ComboBoxCallback = std::function<void(int combobox, const char* item)>;
+using b3ToggleButtonCallback = std::function<void(int button, int state)>;
+using b3FileOpenCallback = std::function<void()>;
+using b3QuitCallback = std::function<void()>;
 
 namespace Gwen
 {

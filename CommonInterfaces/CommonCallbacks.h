@@ -1,12 +1,13 @@
 #ifndef COMMON_CALLBACKS_H
 #define COMMON_CALLBACKS_H
+#include <functional>
 
-typedef void (*b3WheelCallback)(float deltax, float deltay);
-typedef void (*b3ResizeCallback)(float width, float height);
-typedef void (*b3MouseMoveCallback)(float x, float y);
-typedef void (*b3MouseButtonCallback)(int button, int state, float x, float y);
-typedef void (*b3KeyboardCallback)(int keycode, int state);
-typedef void (*b3RenderCallback)();
+using b3WheelCallback = std::function<void(float deltax, float deltay)>;
+using b3ResizeCallback = std::function<void(float width, float height)>;
+using b3MouseMoveCallback = std::function<void(float x, float y)>;
+using b3MouseButtonCallback = std::function<void(int button, int state, float x, float y)>;
+using b3KeyboardCallback = std::function<void(int keycode, int state)>;
+using b3RenderCallback = std::function<void()>;
 
 enum
 {
@@ -42,7 +43,7 @@ enum
 	B3G_CONTROL,
 	B3G_ALT,
 	B3G_RETURN,
-	
+
 };
 
 #endif
