@@ -46,52 +46,6 @@ add_executable(
   main.cpp
   ExampleEntries.cpp
   ExampleEntries.h
-  ../SharedMemory/plugins/collisionFilterPlugin/collisionFilterPlugin.cpp
-  ../SharedMemory/plugins/collisionFilterPlugin/collisionFilterPlugin.h
-  ../SharedMemory/plugins/pdControlPlugin/pdControlPlugin.cpp
-  ../SharedMemory/plugins/pdControlPlugin/pdControlPlugin.h
-  ../SharedMemory/plugins/tinyRendererPlugin/tinyRendererPlugin.cpp
-  ../SharedMemory/plugins/tinyRendererPlugin/TinyRendererVisualShapeConverter.cpp
-  ../SharedMemory/IKTrajectoryHelper.cpp
-  ../SharedMemory/IKTrajectoryHelper.h
-  ../SharedMemory/PhysicsServer.cpp
-  ../SharedMemory/PhysicsClientSharedMemory.cpp
-  ../SharedMemory/PhysicsClientSharedMemory_C_API.cpp
-  ../SharedMemory/PhysicsClient.cpp
-  ../SharedMemory/PhysicsClientC_API.cpp
-  ../SharedMemory/GraphicsServerExample.cpp
-  ../SharedMemory/GraphicsClientExample.cpp
-  ../SharedMemory/RemoteGUIHelper.cpp
-  ../SharedMemory/GraphicsServerExample.h
-  ../SharedMemory/GraphicsClientExample.h
-  ../SharedMemory/RemoteGUIHelper.h
-  ../SharedMemory/GraphicsSharedMemoryCommands.h
-  ../SharedMemory/GraphicsSharedMemoryPublic.h
-  ../SharedMemory/PhysicsServerExample.cpp
-  ../SharedMemory/PhysicsServerExampleBullet2.cpp
-  ../SharedMemory/PhysicsClientExample.cpp
-  ../SharedMemory/PosixSharedMemory.cpp
-  ../SharedMemory/Win32SharedMemory.cpp
-  ../SharedMemory/InProcessMemory.cpp
-  ../SharedMemory/PhysicsServerSharedMemory.cpp
-  ../SharedMemory/PhysicsDirect.cpp
-  ../SharedMemory/PhysicsDirect.h
-  ../SharedMemory/PhysicsDirectC_API.cpp
-  ../SharedMemory/PhysicsDirectC_API.h
-  ../SharedMemory/SharedMemoryInProcessPhysicsC_API.cpp
-  ../SharedMemory/PhysicsLoopBack.cpp
-  ../SharedMemory/PhysicsLoopBack.h
-  ../SharedMemory/PhysicsLoopBackC_API.cpp
-  ../SharedMemory/PhysicsLoopBackC_API.h
-  ../SharedMemory/PhysicsServerCommandProcessor.cpp
-  ../SharedMemory/PhysicsServerCommandProcessor.h
-  ../SharedMemory/SharedMemoryCommands.h
-  ../SharedMemory/SharedMemoryPublic.h
-  ../SharedMemory/b3PluginManager.cpp
-  ../SharedMemory/b3RobotSimulatorClientAPI_NoGUI.cpp
-  ../SharedMemory/b3RobotSimulatorClientAPI_NoGUI.h
-  ../SharedMemory/b3RobotSimulatorClientAPI_NoDirect.cpp
-  ../SharedMemory/b3RobotSimulatorClientAPI_NoDirect.h
   ../RobotSimulator/b3RobotSimulatorClientAPI.cpp
   ../RobotSimulator/b3RobotSimulatorClientAPI.h
   ../Utils/RobotLoggingUtil.cpp
@@ -119,6 +73,7 @@ target_link_libraries(
           OpenGLWindow
           MultiThreading
           TinyRenderer
+          SharedMemory
           # Demos
           ExtendedTutorials
           BulletRobotics
