@@ -224,6 +224,11 @@ struct QuickCanvas : public Common2dCanvasInterface
 	}
 };
 
+class GwenWrap
+{
+
+};
+
 class OpenGLExampleBrowserInternalData
 {
 	Gwen::Renderer::Base* m_gwenRenderer = nullptr;

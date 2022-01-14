@@ -10,9 +10,13 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
+import pathlib
+HERE = pathlib.Path(__file__).absolute().parent
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+if os.name == 'nt':
+    os.environ['PATH'] = f"{os.environ['PATH']};C:\\Program Files\\Graphviz\\bin"
 
 
 # -- Project information -----------------------------------------------------
