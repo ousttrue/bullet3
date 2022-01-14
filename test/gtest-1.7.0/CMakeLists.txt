@@ -1,16 +1,7 @@
-
-INCLUDE_DIRECTORIES(
-	.
-	include
-)
-
-SET(gtest-1.7.0_SRCS
-	src/gtest-all.cc
-)
-
-#ADD_DEFINITIONS(-DGTEST_HAS_PTHREAD=1)
-ADD_DEFINITIONS(-D_VARIADIC_MAX=10)
-
-FILE(GLOB_RECURSE gtest-1.7.0_HDRS "*.h")
-
-ADD_LIBRARY(gtest ${gtest-1.7.0_SRCS} ${gtest-1.7.0_HDRS})
+set(TARGET_NAME gtest)
+add_library(${TARGET_NAME} src/gtest-all.cc)
+target_include_directories(
+  ${TARGET_NAME}
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_compile_definitions(${TARGET_NAME} PUBLIC _VARIADIC_MAX=10)

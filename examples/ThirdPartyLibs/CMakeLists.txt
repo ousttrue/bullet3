@@ -1,1 +1,1 @@
-subdirs(glad Gwen BussIK stb_image Wavefront)
+subdirs(glad Gwen BussIK stb_image Wavefront tinyxml2)

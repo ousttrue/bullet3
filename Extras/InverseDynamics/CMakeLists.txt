@@ -18,3 +18,4 @@ set_target_properties(${TARGET_NAME} PROPERTIES VERSION ${BULLET_VERSION})
 set_target_properties(${TARGET_NAME} PROPERTIES SOVERSION ${BULLET_VERSION})
 target_link_libraries(${TARGET_NAME} BulletInverseDynamics BulletDynamics
                       BulletCollision Bullet3Common LinearMath)
+target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -40,9 +40,6 @@ add_executable(
   ExampleEntries.h
   ../RobotSimulator/b3RobotSimulatorClientAPI.cpp
   ../RobotSimulator/b3RobotSimulatorClientAPI.h
-  ../Utils/RobotLoggingUtil.cpp
-  ../Utils/RobotLoggingUtil.h
-  ../ThirdPartyLibs/tinyxml2/tinyxml2.cpp
   InProcessExampleBrowser.cpp
   ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
 target_link_libraries(
@@ -55,6 +52,7 @@ target_link_libraries(
           TinyRenderer
           SharedMemory
           GwenGUISupport
+          tinyxml2
           # Demos
           ExtendedTutorials
           BulletRobotics
