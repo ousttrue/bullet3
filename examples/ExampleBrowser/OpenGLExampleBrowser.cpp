@@ -60,6 +60,8 @@
 extern bool useShadowMap;
 #endif
 extern bool gDisableDeactivation;
+int gSharedMemoryKey = -1;
+
 
 struct GL3TexLoader : public MyTextureLoader
 {
@@ -84,6 +86,139 @@ struct FileImporterByExtension
 {
 	std::string m_extension;
 	CommonExampleInterface::CreateFunc* m_createFunc;
+};
+
+using OnButton = std::function<void()>;
+struct MyMenuItemHander : public Gwen::Event::Handler
+{
+	int m_buttonId;
+
+	OnButton m_onButtonB;
+	OnButton m_onButtonD;
+	std::function<void(int)> m_onButtonE;
+
+	MyMenuItemHander(int buttonId,
+					 const OnButton& onButtonB,
+					 const OnButton& onButtonD,
+					 const std::function<void(int)>& onButtonE)
+		: m_buttonId(buttonId), m_onButtonB(onButtonB), m_onButtonD(onButtonD), m_onButtonE(onButtonE)
+	{
+	}
+
+	void onButtonA(Gwen::Controls::Base* pControl)
+	{
+		//const Gwen::String& name = pControl->GetName();
+		Gwen::Controls::TreeNode* node = (Gwen::Controls::TreeNode*)pControl;
+		//	Gwen::Controls::Label* l = node->GetButton();
+
+		Gwen::UnicodeString la = node->GetButton()->GetText();  // node->GetButton()->GetName();// GetText();
+		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+		//	const char* ha = laa.c_str();
+
+		//printf("selected %s\n", ha);
+		//int dep = but->IsDepressed();
+		//int tog = but->GetToggleState();
+		//		if (m_data->m_toggleButtonCallback)
+		//		(*m_data->m_toggleButtonCallback)(m_buttonId, tog);
+	}
+
+	void onButtonB(Gwen::Controls::Base* pControl)
+	{
+		Gwen::Controls::Label* label = (Gwen::Controls::Label*)pControl;
+		Gwen::UnicodeString la = label->GetText();  // node->GetButton()->GetName();// GetText();
+		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+		//const char* ha = laa.c_str();
+
+		m_onButtonB();
+	}
+
+	void onButtonC(Gwen::Controls::Base* pControl)
+	{
+		/*Gwen::Controls::Label* label = (Gwen::Controls::Label*) pControl;
+		Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
+		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+		const char* ha = laa.c_str();
+
+
+		printf("onButtonC ! %s\n", ha);
+		*/
+	}
+	void onButtonD(Gwen::Controls::Base* pControl)
+	{
+		/*		Gwen::Controls::Label* label = (Gwen::Controls::Label*) pControl;
+		Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
+		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+		const char* ha = laa.c_str();
+		*/
+
+		//	printf("onKeyReturn ! \n");
+		m_onButtonD();
+	}
+
+	void onButtonE(Gwen::Controls::Base* pControl)
+	{
+		//	printf("select %d\n",m_buttonId);
+		m_onButtonE(m_buttonId);
+	}
+
+	void onButtonF(Gwen::Controls::Base* pControl)
+	{
+		//printf("selection changed!\n");
+	}
+
+	void onButtonG(Gwen::Controls::Base* pControl)
+	{
+		//printf("onButtonG !\n");
+	}
+};
+
+struct QuickCanvas : public Common2dCanvasInterface
+{
+	GL3TexLoader* m_myTexLoader;
+
+	MyGraphWindow* m_gw[MAX_GRAPH_WINDOWS];
+	GraphingTexture* m_gt[MAX_GRAPH_WINDOWS];
+	int m_curNumGraphWindows;
+
+	QuickCanvas(GL3TexLoader* myTexLoader)
+		: m_myTexLoader(myTexLoader),
+		  m_curNumGraphWindows(0)
+	{
+		for (int i = 0; i < MAX_GRAPH_WINDOWS; i++)
+		{
+			m_gw[i] = 0;
+			m_gt[i] = 0;
+		}
+	}
+	virtual ~QuickCanvas() {}
+	virtual int createCanvas(const char* canvasName, int width, int height, int xPos, int yPos);
+	virtual void destroyCanvas(int canvasId)
+	{
+		btAssert(canvasId >= 0);
+		delete m_gt[canvasId];
+		m_gt[canvasId] = 0;
+		destroyTextureWindow(m_gw[canvasId]);
+		m_gw[canvasId] = 0;
+		m_curNumGraphWindows--;
+	}
+	virtual void setPixel(int canvasId, int x, int y, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+	{
+		btAssert(canvasId >= 0);
+		btAssert(canvasId < m_curNumGraphWindows);
+		m_gt[canvasId]->setPixel(x, y, red, green, blue, alpha);
+	}
+
+	virtual void getPixel(int canvasId, int x, int y, unsigned char& red, unsigned char& green, unsigned char& blue, unsigned char& alpha)
+	{
+		btAssert(canvasId >= 0);
+		btAssert(canvasId < m_curNumGraphWindows);
+		m_gt[canvasId]->getPixel(x, y, red, green, blue, alpha);
+	}
+
+	virtual void refreshImageData(int canvasId)
+	{
+		m_gt[canvasId]->uploadImageData();
+	}
 };
 
 struct OpenGLExampleBrowserInternalData
@@ -137,8 +272,6 @@ struct OpenGLExampleBrowserInternalData
 	bool pauseSimulation = false;
 	bool singleStepSimulation = false;
 	int midiBaseIndex = 176;
-
-	int gSharedMemoryKey = -1;
 
 	///some quick test variable for the OpenCL examples
 
@@ -640,6 +773,30 @@ struct OpenGLExampleBrowserInternalData
 		}
 	}
 
+	void OnButtonB()
+	{
+		if (!gDisableDemoSelection)
+		{
+			selectDemo(sCurrentHightlighted);
+			saveCurrentSettings(sCurrentDemoIndex, startFileName);
+		}
+	}
+
+	void OnButtonD()
+	{
+		if (!gDisableDemoSelection)
+		{
+			selectDemo(sCurrentHightlighted);
+			saveCurrentSettings(sCurrentDemoIndex, startFileName);
+		}
+	}
+
+	void OnButtonE(int buttonId)
+	{
+		sCurrentHightlighted = buttonId;
+		gui2->setExampleDescription(gAllExamples->getExampleDescription(sCurrentHightlighted));
+	}
+
 	void init(int argc, char** argv)
 	{
 		b3CommandLineArgs args(argc, argv);
@@ -805,7 +962,10 @@ struct OpenGLExampleBrowserInternalData
 			//int curDemo = 0;
 			int selectedDemo = 0;
 			Gwen::Controls::TreeNode* curNode = tree;
-			m_handler2 = new MyMenuItemHander(-1);
+			m_handler2 = new MyMenuItemHander(-1,
+											  std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
+											  std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
+											  std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
 
 			char* demoNameFromCommandOption = 0;
 			args.GetCmdLineArgument("start_demo_name", demoNameFromCommandOption);
@@ -859,7 +1019,10 @@ struct OpenGLExampleBrowserInternalData
 					}
 
 #if 1
-					MyMenuItemHander* handler = new MyMenuItemHander(d);
+					MyMenuItemHander* handler = new MyMenuItemHander(d,
+																	 std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
+																	 std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
+																	 std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
 					m_handlers.push_back(handler);
 
 					pNode->onNamePress.Add(handler, &MyMenuItemHander::onButtonA);
@@ -1077,6 +1240,36 @@ struct OpenGLExampleBrowserInternalData
 };
 static OpenGLExampleBrowserInternalData* s_internalData = nullptr;
 
+int QuickCanvas::createCanvas(const char* canvasName, int width, int height, int xPos, int yPos)
+{
+	if (m_curNumGraphWindows < MAX_GRAPH_WINDOWS)
+	{
+		//find a slot
+		int slot = m_curNumGraphWindows;
+		btAssert(slot < MAX_GRAPH_WINDOWS);
+		if (slot >= MAX_GRAPH_WINDOWS)
+			return 0;  //don't crash
+
+		m_curNumGraphWindows++;
+
+		MyGraphInput input(s_internalData->gui2->getInternalData());
+		input.m_width = width;
+		input.m_height = height;
+		input.m_xPos = xPos;
+		input.m_yPos = yPos;
+		input.m_name = canvasName;
+		input.m_texName = canvasName;
+		m_gt[slot] = new GraphingTexture;
+		m_gt[slot]->create(width, height);
+		int texId = m_gt[slot]->getTextureId();
+		m_myTexLoader->m_hashMap.insert(canvasName, texId);
+		m_gw[slot] = setupTextureWindow(input);
+
+		return slot;
+	}
+	return -1;
+}
+
 void OpenGLExampleBrowser::registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc)
 {
 	FileImporterByExtension fi;
@@ -1084,166 +1277,6 @@ void OpenGLExampleBrowser::registerFileImporter(const char* extension, CommonExa
 	fi.m_createFunc = createFunc;
 	s_internalData->gFileImporterByExtension.push_back(fi);
 }
-
-struct MyMenuItemHander : public Gwen::Event::Handler
-{
-	int m_buttonId;
-
-	MyMenuItemHander(int buttonId)
-		: m_buttonId(buttonId)
-	{
-	}
-
-	void onButtonA(Gwen::Controls::Base* pControl)
-	{
-		//const Gwen::String& name = pControl->GetName();
-		Gwen::Controls::TreeNode* node = (Gwen::Controls::TreeNode*)pControl;
-		//	Gwen::Controls::Label* l = node->GetButton();
-
-		Gwen::UnicodeString la = node->GetButton()->GetText();  // node->GetButton()->GetName();// GetText();
-		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
-		//	const char* ha = laa.c_str();
-
-		//printf("selected %s\n", ha);
-		//int dep = but->IsDepressed();
-		//int tog = but->GetToggleState();
-		//		if (m_data->m_toggleButtonCallback)
-		//		(*m_data->m_toggleButtonCallback)(m_buttonId, tog);
-	}
-	void onButtonB(Gwen::Controls::Base* pControl)
-	{
-		Gwen::Controls::Label* label = (Gwen::Controls::Label*)pControl;
-		Gwen::UnicodeString la = label->GetText();  // node->GetButton()->GetName();// GetText();
-		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
-		//const char* ha = laa.c_str();
-
-		if (!gDisableDemoSelection)
-		{
-			selectDemo(sCurrentHightlighted);
-			saveCurrentSettings(sCurrentDemoIndex, startFileName);
-		}
-	}
-	void onButtonC(Gwen::Controls::Base* pControl)
-	{
-		/*Gwen::Controls::Label* label = (Gwen::Controls::Label*) pControl;
-		Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
-		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
-		const char* ha = laa.c_str();
-
-
-		printf("onButtonC ! %s\n", ha);
-		*/
-	}
-	void onButtonD(Gwen::Controls::Base* pControl)
-	{
-		/*		Gwen::Controls::Label* label = (Gwen::Controls::Label*) pControl;
-		Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
-		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
-		const char* ha = laa.c_str();
-		*/
-
-		//	printf("onKeyReturn ! \n");
-		if (!gDisableDemoSelection)
-		{
-			selectDemo(sCurrentHightlighted);
-			saveCurrentSettings(sCurrentDemoIndex, startFileName);
-		}
-	}
-
-	void onButtonE(Gwen::Controls::Base* pControl)
-	{
-		//	printf("select %d\n",m_buttonId);
-		sCurrentHightlighted = m_buttonId;
-		gui2->setExampleDescription(gAllExamples->getExampleDescription(sCurrentHightlighted));
-	}
-
-	void onButtonF(Gwen::Controls::Base* pControl)
-	{
-		//printf("selection changed!\n");
-	}
-
-	void onButtonG(Gwen::Controls::Base* pControl)
-	{
-		//printf("onButtonG !\n");
-	}
-};
-
-struct QuickCanvas : public Common2dCanvasInterface
-{
-	GL3TexLoader* m_myTexLoader;
-
-	MyGraphWindow* m_gw[MAX_GRAPH_WINDOWS];
-	GraphingTexture* m_gt[MAX_GRAPH_WINDOWS];
-	int m_curNumGraphWindows;
-
-	QuickCanvas(GL3TexLoader* myTexLoader)
-		: m_myTexLoader(myTexLoader),
-		  m_curNumGraphWindows(0)
-	{
-		for (int i = 0; i < MAX_GRAPH_WINDOWS; i++)
-		{
-			m_gw[i] = 0;
-			m_gt[i] = 0;
-		}
-	}
-	virtual ~QuickCanvas() {}
-	virtual int createCanvas(const char* canvasName, int width, int height, int xPos, int yPos)
-	{
-		if (m_curNumGraphWindows < MAX_GRAPH_WINDOWS)
-		{
-			//find a slot
-			int slot = m_curNumGraphWindows;
-			btAssert(slot < MAX_GRAPH_WINDOWS);
-			if (slot >= MAX_GRAPH_WINDOWS)
-				return 0;  //don't crash
-
-			m_curNumGraphWindows++;
-
-			MyGraphInput input(gui2->getInternalData());
-			input.m_width = width;
-			input.m_height = height;
-			input.m_xPos = xPos;
-			input.m_yPos = yPos;
-			input.m_name = canvasName;
-			input.m_texName = canvasName;
-			m_gt[slot] = new GraphingTexture;
-			m_gt[slot]->create(width, height);
-			int texId = m_gt[slot]->getTextureId();
-			m_myTexLoader->m_hashMap.insert(canvasName, texId);
-			m_gw[slot] = setupTextureWindow(input);
-
-			return slot;
-		}
-		return -1;
-	}
-	virtual void destroyCanvas(int canvasId)
-	{
-		btAssert(canvasId >= 0);
-		delete m_gt[canvasId];
-		m_gt[canvasId] = 0;
-		destroyTextureWindow(m_gw[canvasId]);
-		m_gw[canvasId] = 0;
-		m_curNumGraphWindows--;
-	}
-	virtual void setPixel(int canvasId, int x, int y, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
-	{
-		btAssert(canvasId >= 0);
-		btAssert(canvasId < m_curNumGraphWindows);
-		m_gt[canvasId]->setPixel(x, y, red, green, blue, alpha);
-	}
-
-	virtual void getPixel(int canvasId, int x, int y, unsigned char& red, unsigned char& green, unsigned char& blue, unsigned char& alpha)
-	{
-		btAssert(canvasId >= 0);
-		btAssert(canvasId < m_curNumGraphWindows);
-		m_gt[canvasId]->getPixel(x, y, red, green, blue, alpha);
-	}
-
-	virtual void refreshImageData(int canvasId)
-	{
-		m_gt[canvasId]->uploadImageData();
-	}
-};
 
 OpenGLExampleBrowser::OpenGLExampleBrowser(class ExampleEntries* examples)
 {
