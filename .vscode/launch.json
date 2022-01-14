@@ -25,6 +25,20 @@
             "cwd": "${fileDirname}",
             "environment": [],
             "console": "integratedTerminal"
-        }
+        },
+        {
+            "name": "gen_typings.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/gen_typings.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "run.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/run.py",
+            "console": "integratedTerminal"
+        },
     ]
 }
