@@ -2,11 +2,11 @@
 #include "EmptyBrowser.h"
 #include <CommonExampleInterface.h>
 
-class OpenGLExampleBrowser : public EmptyBrowser
+class ImGuiExampleBrowser : public EmptyBrowser
 {
 public:
-	OpenGLExampleBrowser(class ExampleEntries* examples);
-	~OpenGLExampleBrowser();
+	ImGuiExampleBrowser(class ExampleEntries* examples);
+	~ImGuiExampleBrowser();
 
 	CommonExampleInterface* getCurrentExample();
 

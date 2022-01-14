@@ -1,13 +1,13 @@
 #include "InProcessExampleBrowser.h"
 
 //#define EXAMPLE_CONSOLE_ONLY
-#ifdef EXAMPLE_CONSOLE_ONLY
+// #ifdef EXAMPLE_CONSOLE_ONLY
 #include "EmptyBrowser.h"
 typedef EmptyBrowser DefaultBrowser;
-#else
-#include "OpenGLExampleBrowser.h"
-typedef OpenGLExampleBrowser DefaultBrowser;
-#endif  //EXAMPLE_CONSOLE_ONLY
+// #else
+// #include "OpenGLExampleBrowser.h"
+// typedef OpenGLExampleBrowser DefaultBrowser;
+// #endif  //EXAMPLE_CONSOLE_ONLY
 
 #include "Bullet3Common/b3CommandLineArgs.h"
 #include "../Utils/b3Clock.h"
@@ -31,7 +31,6 @@ void ExampleBrowserMemoryReleaseFunc(void* ptr);
 #include "../SharedMemory/PhysicsServerExample.h"
 #include "../SharedMemory/PhysicsServerExampleBullet2.h"
 #include "../SharedMemory/GraphicsServerExample.h"
-
 
 #include "../SharedMemory/PhysicsClientExample.h"
 

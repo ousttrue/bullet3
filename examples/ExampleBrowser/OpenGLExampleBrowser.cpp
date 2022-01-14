@@ -60,7 +60,6 @@
 extern bool useShadowMap;
 #endif
 extern bool gDisableDeactivation;
-int gSharedMemoryKey = -1;
 
 
 struct GL3TexLoader : public MyTextureLoader
