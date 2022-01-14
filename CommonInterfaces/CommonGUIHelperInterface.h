@@ -1,5 +1,6 @@
 #ifndef GUI_HELPER_INTERFACE_H
 #define GUI_HELPER_INTERFACE_H
+#include <functional>
 class btRigidBody;
 class btVector3;
 class btCollisionObject;
@@ -17,7 +18,7 @@ struct GUISyncPosition
 	float m_orn[4];
 };
 
-typedef void (*VisualizerFlagCallback)(int flag, bool enable);
+using VisualizerFlagCallback = std::function<void(int flag, bool enable)>;
 
 ///The Bullet 2 GraphicsPhysicsBridge let's the graphics engine create graphics representation and synchronize
 struct GUIHelperInterface
@@ -33,7 +34,7 @@ struct GUIHelperInterface
 	virtual void syncPhysicsToGraphics(const btDiscreteDynamicsWorld* rbWorld) = 0;
 	virtual void syncPhysicsToGraphics2(const btDiscreteDynamicsWorld* rbWorld) {}
 	virtual void syncPhysicsToGraphics2(const GUISyncPosition* positions, int numPositions) {}
-	
+
 	virtual void render(const btDiscreteDynamicsWorld* rbWorld) = 0;
 
 	virtual void createPhysicsDebugDrawer(btDiscreteDynamicsWorld* rbWorld) = 0;
@@ -53,7 +54,6 @@ struct GUIHelperInterface
 	virtual void replaceTexture(int shapeIndex, int textureUid) {}
 	virtual void removeTexture(int textureUid) {}
 	virtual void setBackgroundColor(const double rgbBackground[3]) {}
-	
 
 	virtual Common2dCanvasInterface* get2dCanvasInterface() = 0;
 
@@ -117,23 +117,22 @@ struct GUIHelperInterface
 
 	virtual void removeUserDebugItem(int debugItemUniqueId){};
 	virtual void removeAllUserDebugItems(){};
-	virtual void removeAllUserParameters() {};
-	
+	virtual void removeAllUserParameters(){};
+
 	virtual void setVisualizerFlagCallback(VisualizerFlagCallback callback) {}
 
 	//empty name stops dumping video
 	virtual void dumpFramesToVideo(const char* mp4FileName){};
-	virtual void drawDebugDrawerLines(){}
-	virtual void clearLines(){}
+	virtual void drawDebugDrawerLines() {}
+	virtual void clearLines() {}
 	virtual bool isRemoteVisualizer() { return false; }
 };
 
 ///the DummyGUIHelper does nothing, so we can test the examples without GUI/graphics (in 'console mode')
 struct DummyGUIHelper : public GUIHelperInterface
 {
-	DummyGUIHelper() 
+	DummyGUIHelper()
 	{
-
 	}
 	virtual ~DummyGUIHelper() {}
 

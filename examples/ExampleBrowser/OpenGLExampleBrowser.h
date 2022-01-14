@@ -3,8 +3,6 @@
 
 class OpenGLExampleBrowser
 {
-	struct OpenGLExampleBrowserInternalData* m_internalData;
-
 public:
 	OpenGLExampleBrowser(class ExampleEntries* examples);
 	~OpenGLExampleBrowser();
