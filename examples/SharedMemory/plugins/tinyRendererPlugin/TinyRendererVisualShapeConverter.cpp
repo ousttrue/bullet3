@@ -13,11 +13,11 @@ subject to the following restrictions:
 
 #include "TinyRendererVisualShapeConverter.h"
 
-#include "../Importers/ImportURDFDemo/URDFImporterInterface.h"
+#include <ImportURDFDemo/URDFImporterInterface.h>
 #include "btBulletCollisionCommon.h"
-#include "../Importers/ImportObjDemo/LoadMeshFromObj.h"
-#include "../Importers/ImportSTLDemo/LoadMeshFromSTL.h"
-#include "../Importers/ImportColladaDemo/LoadMeshFromCollada.h"
+#include <ImportObjDemo/LoadMeshFromObj.h>
+#include <ImportSTLDemo/LoadMeshFromSTL.h>
+#include <ImportColladaDemo/LoadMeshFromCollada.h>
 #include "BulletCollision/CollisionShapes/btShapeHull.h"  //to create a tesselation of a generic btConvexShape
 #include <CommonGUIHelperInterface.h>
 #include "Bullet3Common/b3FileUtils.h"

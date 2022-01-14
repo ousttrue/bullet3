@@ -25,7 +25,9 @@ subdirs(
   RollingFrictionDemo
   RoboticsLearning
   BasicDemo
-  RigidBody)
+  RigidBody
+  Importers
+  )
 
 set(TARGET_NAME Demos)
 add_library(${TARGET_NAME} INTERFACE)

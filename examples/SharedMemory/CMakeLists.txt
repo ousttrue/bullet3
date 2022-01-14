@@ -134,7 +134,7 @@ set(SharedMemory_SRCS
     # ../MultiThreading/b3ThreadSupportInterface.h
 )
 add_library(${TARGET_NAME} ${SharedMemory_SRCS})
-target_link_libraries(${TARGET_NAME} PRIVATE CommonInterfaces BussIK BulletDynamics BulletSoftBody
+target_link_libraries(${TARGET_NAME} PRIVATE CommonInterfaces BussIK BulletDynamics BulletSoftBody Importers
                                              tiny_obj_loader TinyRenderer stb_image OpenGLWindow Utils)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
