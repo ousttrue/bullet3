@@ -1,5 +1,5 @@
 subdirs(ThirdPartyLibs)
-subdirs(CommonInterfaces Demos Importers MultiThreading TinyRenderer SharedMemory)
+subdirs(CommonInterfaces Demos Importers MultiThreading TinyRenderer SharedMemory Utils)
 subdirs(HelloWorld OpenGLWindow ExampleBrowser)
 # IF(BUILD_BULLET3) SUBDIRS(  RobotSimulator SharedMemory ThirdPartyLibs/Gwen
 # ThirdPartyLibs/BussIK ThirdPartyLibs/clsocket OpenGLWindow TwoJoint ) ENDIF()

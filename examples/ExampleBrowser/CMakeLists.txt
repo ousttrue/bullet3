@@ -8,14 +8,6 @@ add_library(
   GL_ShapeDrawer.cpp
   CollisionShape2TriangleMesh.cpp
   CollisionShape2TriangleMesh.h
-  ../Utils/b3Clock.cpp
-  ../Utils/b3Clock.h
-  ../Utils/ChromeTraceUtil.cpp
-  ../Utils/ChromeTraceUtil.h
-  ../Utils/b3ResourcePath.cpp
-  ../Utils/b3ResourcePath.h
-  ../Utils/b3ERPCFMHelper.hpp
-  ../Utils/b3ReferenceFrameHelper.hpp
   ${GwenGUISupport_SRCS}
   ${GwenGUISupport_HDRS})
 
@@ -55,20 +47,10 @@ add_executable(
   ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
 target_link_libraries(
   ${TARGET_NAME}
-  PRIVATE # ThirdParty
-          gwen
-          glad
-          # bullet
-          Bullet3Common
-          BulletSoftBody
-          BulletDynamics
-          BulletCollision
-          BulletInverseDynamics
-          LinearMath
-          # extras
-          BulletFileLoader
-          BulletWorldImporter
+  PRIVATE 
+ 
           # support lib
+          Utils
           BulletExampleBrowserLib
           OpenGLWindow
           MultiThreading
@@ -103,6 +85,19 @@ target_link_libraries(
           RoboticsLearning
           BasicDemo
           RigidBody
+          # extras
+          BulletFileLoader
+          BulletWorldImporter
+          # bullet
+          Bullet3Common
+          BulletSoftBody
+          BulletDynamics
+          BulletCollision
+          BulletInverseDynamics
+          LinearMath
+          # ThirdParty
+          gwen
+          glad
           )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS

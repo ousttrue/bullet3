@@ -1,0 +1,12 @@
+set(TARGET_NAME Utils)
+add_library(
+  ${TARGET_NAME}
+  b3Clock.cpp
+  b3Clock.h
+  ChromeTraceUtil.cpp
+  ChromeTraceUtil.h
+  b3ResourcePath.cpp
+  b3ResourcePath.h
+  b3ERPCFMHelper.hpp
+  b3ReferenceFrameHelper.hpp)
+target_link_libraries(${TARGET_NAME} PRIVATE Bullet3Common)
