@@ -7,8 +7,8 @@
 #ifndef GWEN_RENDERERS_OPENGL_DEBUGFONT_H
 #define GWEN_RENDERERS_OPENGL_DEBUGFONT_H
 
-#include "../ThirdPartyLibs/Gwen/Gwen.h"
-#include "../ThirdPartyLibs/Gwen/Renderers/OpenGL.h"
+#include <Gwen/Gwen.h>
+#include "OpenGL.h"
 
 void restoreOpenGLState();
 void saveOpenGLState(int screenWidth, int screenHeight);

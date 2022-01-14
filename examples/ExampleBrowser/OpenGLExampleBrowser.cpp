@@ -20,7 +20,7 @@
 #endif  //BT_USE_EGL
 #endif  //_WIN32
 #endif  //__APPLE__
-#include "../ThirdPartyLibs/Gwen/Renderers/OpenGL_DebugFont.h"
+#include <Gwen/Renderers/OpenGL_DebugFont.h>
 #include "LinearMath/btThreads.h"
 #include "Bullet3Common/b3Vector3.h"
 #include "assert.h"
