@@ -3,11 +3,11 @@
 #include "LinearMath/btAlignedObjectArray.h"
 #include "EmptyExample.h"
 #include <Heightfield/HeightfieldExample.h>
-#include "../RenderingExamples/RenderInstancingDemo.h"
-#include "../RenderingExamples/CoordinateSystemDemo.h"
-#include "../RenderingExamples/RaytracerSetup.h"
-#include "../RenderingExamples/TinyRendererSetup.h"
-#include "../RenderingExamples/DynamicTexturedCubeDemo.h"
+#include <RenderingExamples/RenderInstancingDemo.h>
+#include <RenderingExamples/CoordinateSystemDemo.h>
+#include <RenderingExamples/RaytracerSetup.h>
+#include <RenderingExamples/TinyRendererSetup.h>
+#include <RenderingExamples/DynamicTexturedCubeDemo.h>
 #include "../SharedMemory/GraphicsServerExample.h"
 #include "../SharedMemory/GraphicsClientExample.h"
 
@@ -64,7 +64,7 @@
 #include "../SharedMemory/PhysicsServerExample.h"
 #include "../SharedMemory/PhysicsClientExample.h"
 #include <Constraints/TestHingeTorque.h>
-#include "../RenderingExamples/TimeSeriesExample.h"
+#include <RenderingExamples/TimeSeriesExample.h>
 #include <Tutorial/Tutorial.h>
 #include <Tutorial/Dof6ConstraintTutorial.h>
 #include <MultiThreadedDemo/MultiThreadingExample.h>

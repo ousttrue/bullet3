@@ -98,28 +98,12 @@ add_executable(
   ../BasicDemo/BasicExample.h
   ../RollingFrictionDemo/RollingFrictionDemo.cpp
   ../RollingFrictionDemo/RollingFrictionDemo.h
-  ../RenderingExamples/TinyRendererSetup.cpp
-  ../RenderingExamples/TimeSeriesCanvas.cpp
-  ../RenderingExamples/TimeSeriesCanvas.h
-  ../RenderingExamples/TimeSeriesFontData.cpp
-  ../RenderingExamples/TimeSeriesFontData.h
-  ../RenderingExamples/DynamicTexturedCubeDemo.cpp
-  ../RenderingExamples/DynamicTexturedCubeDemo.h
-  ../RenderingExamples/TinyVRGui.cpp
-  ../RenderingExamples/TinyVRGui.h
   ../RoboticsLearning/GripperGraspExample.cpp
   ../RoboticsLearning/GripperGraspExample.h
   ../RoboticsLearning/R2D2GraspExample.cpp
   ../RoboticsLearning/R2D2GraspExample.h
   ../RoboticsLearning/KukaGraspExample.cpp
   ../RoboticsLearning/KukaGraspExample.h
-  ../RenderingExamples/CoordinateSystemDemo.cpp
-  ../RenderingExamples/CoordinateSystemDemo.h
-  ../RenderingExamples/RaytracerSetup.cpp
-  ../RenderingExamples/RaytracerSetup.h
-  ../RenderingExamples/RenderInstancingDemo.cpp
-  ../RenderingExamples/RenderInstancingDemo.h
-  ../RenderingExamples/TimeSeriesExample.cpp
   ../Utils/RobotLoggingUtil.cpp
   ../Utils/RobotLoggingUtil.h
   ../RigidBody/RigidBodySoftContact.cpp
@@ -129,24 +113,27 @@ add_executable(
   ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
 target_link_libraries(
   ${TARGET_NAME}
-  PRIVATE BulletExampleBrowserLib
+  PRIVATE # ThirdParty
+          gwen
+          glad
+          # bullet
           Bullet3Common
           BulletSoftBody
           BulletDynamics
           BulletCollision
           BulletInverseDynamics
           LinearMath
-          OpenGLWindow
-          gwen
-          glad
-          #
+          # extras
           BulletFileLoader
           BulletWorldImporter
-          MultiThreading       
-          #
+          # support lib
+          BulletExampleBrowserLib
+          OpenGLWindow
+          MultiThreading
+          TinyRenderer
+          # Demos
           ExtendedTutorials
           BulletRobotics
-          TinyRenderer
           ForkLift
           Constraints
           DeformableDemo
@@ -168,7 +155,7 @@ target_link_libraries(
           Raycast
           Collision
           Tutorial
-          )
+          RenderingExamples)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)

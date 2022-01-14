@@ -7,7 +7,7 @@
 #include <CommonRenderInterface.h>
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
-#include "GwenGUISupport/GraphingTexture.h"
+// #include "GwenGUISupport/GraphingTexture.h"
 
 #include <Common2dCanvasInterface.h>
 #include "../RenderingExamples/TimeSeriesCanvas.h"

@@ -1,7 +1,6 @@
 subdirs(
   ExtendedTutorials
   BulletRobotics
-  TinyRenderer
   ForkLift
   Constraints
   DeformableDemo
@@ -22,4 +21,5 @@ subdirs(
   Raycast
   Collision
   Tutorial
+  RenderingExamples
   )
