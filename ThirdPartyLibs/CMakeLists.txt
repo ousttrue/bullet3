@@ -1,0 +1,1 @@
+subdirs(stb_image)

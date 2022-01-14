@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "stb_image/stb_image_write.h"
+#include <stb_image_write.h>
 
 static unsigned int s_indexData[INDEX_COUNT];
 static GLuint s_indexArrayObject, s_indexBuffer;

@@ -40,7 +40,7 @@
 #include "Bullet3Common/b3HashMap.h"
 #include "../Utils/ChromeTraceUtil.h"
 #include "SharedMemoryPublic.h"
-#include "stb_image/stb_image.h"
+#include <stb_image.h>
 #include "BulletInverseDynamics/MultiBodyTree.hpp"
 #include "IKTrajectoryHelper.h"
 #include "btBulletDynamicsCommon.h"

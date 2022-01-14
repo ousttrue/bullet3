@@ -101,7 +101,7 @@ struct caster2
 #include "Shaders/linesVS.h"
 
 #include "GLRenderToTexture.h"
-#include "stb_image/stb_image_write.h"
+#include <stb_image_write.h>
 
 static const char* triangleVertexShaderText =
 	"#version 330\n"
