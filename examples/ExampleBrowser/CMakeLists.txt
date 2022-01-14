@@ -94,8 +94,6 @@ add_executable(
   ../SharedMemory/b3RobotSimulatorClientAPI_NoDirect.h
   ../RobotSimulator/b3RobotSimulatorClientAPI.cpp
   ../RobotSimulator/b3RobotSimulatorClientAPI.h
-  ../BasicDemo/BasicExample.cpp
-  ../BasicDemo/BasicExample.h
   ../Utils/RobotLoggingUtil.cpp
   ../Utils/RobotLoggingUtil.h
   ../RigidBody/RigidBodySoftContact.cpp
@@ -149,7 +147,9 @@ target_link_libraries(
           Tutorial
           RenderingExamples
           RollingFrictionDemo
-          RoboticsLearning)
+          RoboticsLearning
+          BasicDemo
+          )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)
