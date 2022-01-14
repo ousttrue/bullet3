@@ -1,31 +1,5 @@
-
-INCLUDE_DIRECTORIES(
-	.
-	../../../src
-	../../gtest-1.7.0/include
-)
-
-
-ADD_DEFINITIONS(-DUSE_GTEST)
-ADD_DEFINITIONS(-D_VARIADIC_MAX=10)
-
-LINK_LIBRARIES(
- BulletDynamics BulletCollision LinearMath gtest
-)
-
-IF (NOT WIN32)
-	FIND_PACKAGE(Threads)
-	LINK_LIBRARIES( ${CMAKE_THREAD_LIBS_INIT} )
-ENDIF()
-
-	ADD_EXECUTABLE(Test_BulletDynamics
-		 ../../../examples/MultiBody/Pendulum.cpp
-	)
-
-ADD_TEST(Test_BulletDynamics_PASS Test_BulletDynamics)
-
-IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
-			SET_TARGET_PROPERTIES(Test_BulletDynamics PROPERTIES  DEBUG_POSTFIX "_Debug")
-			SET_TARGET_PROPERTIES(Test_BulletDynamics PROPERTIES  MINSIZEREL_POSTFIX "_MinsizeRel")
-			SET_TARGET_PROPERTIES(Test_BulletDynamics PROPERTIES  RELWITHDEBINFO_POSTFIX "_RelWithDebugInfo")
-ENDIF(INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
+set(TARGET_NAME Test_BulletDynamics)
+add_executable(${TARGET_NAME} ../../../examples/Demos/MultiBody/Pendulum.cpp)
+target_compile_definitions(${TARGET_NAME} PRIVATE USE_GTEST _VARIADIC_MAX=10)
+target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics BulletCollision
+                                             LinearMath gtest CommonInterfaces)
