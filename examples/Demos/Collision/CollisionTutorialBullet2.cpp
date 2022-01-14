@@ -8,7 +8,7 @@
 
 #include <CommonGUIHelperInterface.h>
 #include "../RenderingExamples/TimeSeriesCanvas.h"
-#include "stb_image/stb_image.h"
+#include <stb_image.h>
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3Matrix3x3.h"
 #include <CommonParameterInterface.h>

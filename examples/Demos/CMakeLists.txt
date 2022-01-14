@@ -20,4 +20,5 @@ subdirs(
   Evolution
   Planar2D
   Raycast
+  Collision
   )

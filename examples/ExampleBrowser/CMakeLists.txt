@@ -100,15 +100,6 @@ add_executable(
   ../Tutorial/Tutorial.h
   ../Tutorial/Dof6ConstraintTutorial.cpp
   ../Tutorial/Dof6ConstraintTutorial.h
-  ../Collision/CollisionSdkC_Api.cpp
-  ../Collision/CollisionSdkC_Api.h
-  ../Collision/CollisionTutorialBullet2.cpp
-  ../Collision/CollisionTutorialBullet2.h
-  ../Collision/Internal/Bullet2CollisionSdk.cpp
-  ../Collision/Internal/Bullet2CollisionSdk.h
-  ../Collision/Internal/CollisionSdkInterface.h
-  ../Collision/Internal/RealTimeBullet3CollisionSdk.cpp
-  ../Collision/Internal/RealTimeBullet3CollisionSdk.h
   ../RollingFrictionDemo/RollingFrictionDemo.cpp
   ../RollingFrictionDemo/RollingFrictionDemo.h
   ../MultiThreading/MultiThreadingExample.cpp
@@ -163,7 +154,6 @@ target_link_libraries(
           OpenGLWindow
           gwen
           glad
-          BussIK
           #
           ExtendedTutorials
           BulletRobotics
@@ -186,7 +176,9 @@ target_link_libraries(
           Vehicles
           Evolution
           Planar2D
-          Raycast)
+          Raycast
+          Collision
+          )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)
