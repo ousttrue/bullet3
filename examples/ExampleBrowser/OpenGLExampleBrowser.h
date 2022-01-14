@@ -1,29 +1,25 @@
-#ifndef OPENGL_BROWSER_GUI_H
-#define OPENGL_BROWSER_GUI_H
+#pragma once
+#include <CommonExampleInterface.h>
 
-#include "ExampleBrowserInterface.h"
-
-class OpenGLExampleBrowser : public ExampleBrowserInterface
+class OpenGLExampleBrowser
 {
 	struct OpenGLExampleBrowserInternalData* m_internalData;
 
 public:
 	OpenGLExampleBrowser(class ExampleEntries* examples);
-	virtual ~OpenGLExampleBrowser();
+	~OpenGLExampleBrowser();
 
-	virtual CommonExampleInterface* getCurrentExample();
+	CommonExampleInterface* getCurrentExample();
 
-	virtual bool init(int argc, char* argv[]);
+	bool init(int argc, char* argv[]);
 
-	virtual void update(float deltaTime);
+	void update(float deltaTime);
 
-	virtual void updateGraphics();
+	void updateGraphics();
 
-	virtual bool requestedExit();
+	bool requestedExit();
 
-	virtual void setSharedMemoryInterface(class SharedMemoryInterface* sharedMem);
+	void setSharedMemoryInterface(class SharedMemoryInterface* sharedMem);
 
 	static void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc);
 };
-
-#endif  //OPENGL_BROWSER_GUI_H
