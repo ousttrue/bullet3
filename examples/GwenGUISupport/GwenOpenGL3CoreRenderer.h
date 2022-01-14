@@ -2,8 +2,8 @@
 #ifndef __GWEN_OPENGL3_CORE_RENDERER_H
 #define __GWEN_OPENGL3_CORE_RENDERER_H
 
-#include "Gwen/Gwen.h"
-#include "Gwen/BaseRender.h"
+#include <Gwen/Gwen.h>
+#include <Gwen/BaseRender.h>
 #include "GLPrimitiveRenderer.h"
 #include <OpenGLInclude.h>
 

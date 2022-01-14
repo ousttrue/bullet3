@@ -20,7 +20,7 @@
 #endif  //BT_USE_EGL
 #endif  //_WIN32
 #endif  //__APPLE__
-#include <Gwen/Renderers/OpenGL_DebugFont.h>
+// #include <Gwen/Renderers/OpenGL_DebugFont.h>
 #include "LinearMath/btThreads.h"
 #include "Bullet3Common/b3Vector3.h"
 #include "assert.h"
@@ -119,7 +119,6 @@ bool gDisableDemoSelection = false;
 int gRenderDevice = -1;
 int gWindowBackend = 0;
 static class ExampleEntries* gAllExamples = 0;
-bool sUseOpenGL2 = false;
 #ifndef USE_OPENGL3
 extern bool useShadowMap;
 #endif
@@ -428,7 +427,7 @@ void openFileDemo(const char* filename)
 {
 	deleteDemo();
 
-	s_guiHelper = new OpenGLGuiHelper(s_app, sUseOpenGL2);
+	s_guiHelper = new OpenGLGuiHelper(s_app, false);
 	s_guiHelper->setVisualizerFlagCallback(OpenGLExampleBrowserVisualizerFlagCallback);
 
 	s_parameterInterface->removeAllParameters();
@@ -475,7 +474,7 @@ void selectDemo(int demoIndex)
 			s_parameterInterface->removeAllParameters();
 		}
 		int option = gAllExamples->getExampleOption(demoIndex);
-		s_guiHelper = new OpenGLGuiHelper(s_app, sUseOpenGL2);
+		s_guiHelper = new OpenGLGuiHelper(s_app, false);
 		s_guiHelper->setVisualizerFlagCallback(OpenGLExampleBrowserVisualizerFlagCallback);
 
 		CommonExampleOptions options(s_guiHelper, option);
@@ -527,10 +526,6 @@ static void saveCurrentSettings(int currentEntry, const char* startFileName)
 		{
 			fprintf(f, "--enable_experimental_opencl\n");
 		}
-		//		if (sUseOpenGL2 )
-		//		{
-		//			fprintf(f,"--opengl2\n");
-		//		}
 
 		fclose(f);
 	}
@@ -880,14 +875,9 @@ bool OpenGLExampleBrowser::init(int argc, char* argv[])
 		args.GetCmdLineArgument("height", height);
 	}
 
-#ifndef NO_OPENGL3
 	SimpleOpenGL3App* simpleApp = 0;
-	sUseOpenGL2 = args.CheckCmdLineFlag("opengl2");
 	args.GetCmdLineArgument("render_device", gRenderDevice);
 	args.GetCmdLineArgument("window_backend", gWindowBackend);
-#else
-	sUseOpenGL2 = true;
-#endif
 	const char* appTitle = "Bullet Physics ExampleBrowser";
 #if defined(_DEBUG) || defined(DEBUG)
 	const char* optMode = "Debug build (slow)";
@@ -901,23 +891,11 @@ bool OpenGLExampleBrowser::init(int argc, char* argv[])
 	const char* glContext = "[btgl]";
 #endif
 
-	if (sUseOpenGL2)
-	{
-		char title[1024];
-		sprintf(title, "%s using limited OpenGL2 fallback %s %s", appTitle, glContext, optMode);
-		s_app = new SimpleOpenGL2App(title, width, height);
-		s_app->m_renderer = new SimpleOpenGL2Renderer(width, height);
-	}
+	char title[1024];
+	sprintf(title, "%s using OpenGL3+ %s %s", appTitle, glContext, optMode);
+	simpleApp = new SimpleOpenGL3App(title, width, height, gAllowRetina, gWindowBackend, gRenderDevice);
+	s_app = simpleApp;
 
-#ifndef NO_OPENGL3
-	else
-	{
-		char title[1024];
-		sprintf(title, "%s using OpenGL3+ %s %s", appTitle, glContext, optMode);
-		simpleApp = new SimpleOpenGL3App(title, width, height, gAllowRetina, gWindowBackend, gRenderDevice);
-		s_app = simpleApp;
-	}
-#endif
 	m_internalData->m_app = s_app;
 	char* gVideoFileName = 0;
 	args.GetCmdLineArgument("mp4", gVideoFileName);
@@ -982,17 +960,8 @@ bool OpenGLExampleBrowser::init(int argc, char* argv[])
 		GL3TexLoader* myTexLoader = new GL3TexLoader;
 		m_internalData->m_myTexLoader = myTexLoader;
 
-		if (sUseOpenGL2)
-		{
-			m_internalData->m_gwenRenderer = new Gwen::Renderer::OpenGL_DebugFont(s_window->getRetinaScale());
-		}
-#ifndef NO_OPENGL3
-		else
-		{
-			sth_stash* fontstash = simpleApp->getFontStash();
-			m_internalData->m_gwenRenderer = new GwenOpenGL3CoreRenderer(simpleApp->m_primRenderer, fontstash, width, height, s_window->getRetinaScale(), myTexLoader);
-		}
-#endif
+		sth_stash* fontstash = simpleApp->getFontStash();
+		m_internalData->m_gwenRenderer = new GwenOpenGL3CoreRenderer(simpleApp->m_primRenderer, fontstash, width, height, s_window->getRetinaScale(), myTexLoader);
 
 		gui2 = new GwenUserInterface;
 
@@ -1168,7 +1137,6 @@ void OpenGLExampleBrowser::updateGraphics()
 
 void OpenGLExampleBrowser::update(float deltaTime)
 {
-
 	b3ChromeUtilsEnableProfiling();
 
 	if (!gEnableRenderLoop && !singleStepSimulation)
@@ -1231,7 +1199,6 @@ void OpenGLExampleBrowser::update(float deltaTime)
 
 			if (gFixedTimeStep > 0)
 			{
-				
 				sCurrentDemo->stepSimulation(gFixedTimeStep);
 			}
 			else
@@ -1298,10 +1265,6 @@ void OpenGLExampleBrowser::update(float deltaTime)
 
 		{
 			B3_PROFILE("updateOpenGL");
-			if (sUseOpenGL2)
-			{
-				saveOpenGLState(s_instancingRenderer->getScreenWidth() * s_window->getRetinaScale(), s_instancingRenderer->getScreenHeight() * s_window->getRetinaScale());
-			}
 
 			if (m_internalData->m_gui)
 			{
@@ -1309,11 +1272,6 @@ void OpenGLExampleBrowser::update(float deltaTime)
 				m_internalData->m_gui->draw(s_instancingRenderer->getScreenWidth(), s_instancingRenderer->getScreenHeight());
 
 				gBlockGuiMessages = false;
-			}
-
-			if (sUseOpenGL2)
-			{
-				restoreOpenGLState();
 			}
 		}
 	}

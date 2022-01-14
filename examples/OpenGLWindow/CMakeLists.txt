@@ -27,5 +27,4 @@ target_link_libraries(
          CommonInterfaces
          OpenGL32.lib
          stb_image
-         gwen
          glad)

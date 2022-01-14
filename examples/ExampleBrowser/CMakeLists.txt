@@ -22,7 +22,6 @@ target_link_libraries(
          OpenGLWindow
          GwenGUISupport
          # 3rd
-         gwen
          BussIK
          Utils
          )
@@ -93,7 +92,6 @@ target_link_libraries(
           BulletInverseDynamics
           LinearMath
           # ThirdParty
-          gwen
           glad)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
