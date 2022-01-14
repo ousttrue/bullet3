@@ -128,13 +128,6 @@ add_executable(
   ../RenderingExamples/RenderInstancingDemo.cpp
   ../RenderingExamples/RenderInstancingDemo.h
   ../RenderingExamples/TimeSeriesExample.cpp
-  ../../Extras/Serialize/BulletWorldImporter/btWorldImporter.cpp
-  ../../Extras/Serialize/BulletWorldImporter/btMultiBodyWorldImporter.cpp
-  ../../Extras/Serialize/BulletWorldImporter/btBulletWorldImporter.cpp
-  ../../Extras/Serialize/BulletFileLoader/bChunk.cpp
-  ../../Extras/Serialize/BulletFileLoader/bFile.cpp
-  ../../Extras/Serialize/BulletFileLoader/bDNA.cpp
-  ../../Extras/Serialize/BulletFileLoader/btBulletFile.cpp
   ../Utils/RobotLoggingUtil.cpp
   ../Utils/RobotLoggingUtil.h
   ../RigidBody/RigidBodySoftContact.cpp
@@ -154,6 +147,9 @@ target_link_libraries(
           OpenGLWindow
           gwen
           glad
+          #
+          BulletFileLoader
+          BulletWorldImporter
           #
           ExtendedTutorials
           BulletRobotics
