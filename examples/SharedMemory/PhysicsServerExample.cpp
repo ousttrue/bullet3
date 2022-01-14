@@ -19,7 +19,7 @@
 #endif  //BT_ENABLE_VR
 
 #include <CommonParameterInterface.h>
-#include "../Importers/ImportURDFDemo/urdfStringSplit.h"
+#include <urdfStringSplit.h>
 
 //@todo(erwincoumans) those globals are hacks for a VR demo, move this to Python/pybullet!
 bool gEnablePicking = true;

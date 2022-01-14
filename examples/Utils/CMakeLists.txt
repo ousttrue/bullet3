@@ -10,6 +10,8 @@ add_library(
   b3ERPCFMHelper.hpp
   b3ReferenceFrameHelper.hpp
   RobotLoggingUtil.cpp
-  RobotLoggingUtil.h)
-target_link_libraries(${TARGET_NAME} PRIVATE Bullet3Common)
+  RobotLoggingUtil.h
+  urdfStringSplit.cpp
+  urdfStringSplit.h)
+target_link_libraries(${TARGET_NAME} PRIVATE Bullet3Common BulletDynamics)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

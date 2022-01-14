@@ -1,6 +1,6 @@
 #include "UrdfParser.h"
 #include "../../ThirdPartyLibs/tinyxml2/tinyxml2.h"
-#include "urdfStringSplit.h"
+#include <urdfStringSplit.h>
 #include "urdfLexicalCast.h"
 #include "UrdfFindMeshFile.h"
 

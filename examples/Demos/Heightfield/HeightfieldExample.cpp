@@ -23,7 +23,7 @@ subject to the following restrictions:
 #include <CommonParameterInterface.h>
 #include <GLInstanceGraphicsShape.h>
 #include "../Utils/b3BulletDefaultFileIO.h"
-#include "../Importers/ImportURDFDemo/urdfStringSplit.h"
+#include <urdfStringSplit.h>
 #include <stb_image.h>
 
 // constants -------------------------------------------------------------------

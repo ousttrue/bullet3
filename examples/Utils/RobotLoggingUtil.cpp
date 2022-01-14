@@ -1,8 +1,7 @@
 #include "RobotLoggingUtil.h"
 #include <stdio.h>
 #include "LinearMath/btAlignedObjectArray.h"
-
-#include "../Importers/ImportURDFDemo/urdfStringSplit.h"
+#include "urdfStringSplit.h"
 
 static bool readLine(FILE* file, btAlignedObjectArray<char>& line)
 {

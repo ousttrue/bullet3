@@ -14,7 +14,7 @@
 #include "../../Utils/b3ResourcePath.h"
 #include "../ImportURDFDemo/URDF2Bullet.h"
 #include "../ImportURDFDemo/UrdfParser.h"
-#include "../ImportURDFDemo/urdfStringSplit.h"
+#include <urdfStringSplit.h>
 #include "../ImportURDFDemo/urdfLexicalCast.h"
 #include "../ImportObjDemo/LoadMeshFromObj.h"
 #include "../ImportSTLDemo/LoadMeshFromSTL.h"
