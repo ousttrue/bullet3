@@ -61,7 +61,6 @@ extern bool useShadowMap;
 #endif
 extern bool gDisableDeactivation;
 
-
 struct GL3TexLoader : public MyTextureLoader
 {
 	b3HashMap<b3HashString, GLint> m_hashMap;
@@ -173,14 +172,17 @@ struct MyMenuItemHander : public Gwen::Event::Handler
 
 struct QuickCanvas : public Common2dCanvasInterface
 {
+	OpenGLExampleBrowserInternalData* m_internalData;
+
 	GL3TexLoader* m_myTexLoader;
 
 	MyGraphWindow* m_gw[MAX_GRAPH_WINDOWS];
 	GraphingTexture* m_gt[MAX_GRAPH_WINDOWS];
 	int m_curNumGraphWindows;
 
-	QuickCanvas(GL3TexLoader* myTexLoader)
-		: m_myTexLoader(myTexLoader),
+	QuickCanvas(OpenGLExampleBrowserInternalData* internalData, GL3TexLoader* myTexLoader)
+		: m_internalData(internalData),
+		  m_myTexLoader(myTexLoader),
 		  m_curNumGraphWindows(0)
 	{
 		for (int i = 0; i < MAX_GRAPH_WINDOWS; i++)
@@ -951,7 +953,7 @@ struct OpenGLExampleBrowserInternalData
 			gui2->setFocus();
 
 			s_parameterInterface = s_app->m_parameterInterface = new GwenParameterInterface(gui2->getInternalData());
-			s_app->m_2dCanvasInterface = new QuickCanvas(m_myTexLoader);
+			s_app->m_2dCanvasInterface = new QuickCanvas(this, m_myTexLoader);
 
 			///add some demos to the gAllExamples
 
@@ -1237,7 +1239,6 @@ struct OpenGLExampleBrowserInternalData
 		}
 	}
 };
-static OpenGLExampleBrowserInternalData* s_internalData = nullptr;
 
 int QuickCanvas::createCanvas(const char* canvasName, int width, int height, int xPos, int yPos)
 {
@@ -1251,7 +1252,7 @@ int QuickCanvas::createCanvas(const char* canvasName, int width, int height, int
 
 		m_curNumGraphWindows++;
 
-		MyGraphInput input(s_internalData->gui2->getInternalData());
+		MyGraphInput input(m_internalData->gui2->getInternalData());
 		input.m_width = width;
 		input.m_height = height;
 		input.m_xPos = xPos;
@@ -1274,56 +1275,56 @@ void OpenGLExampleBrowser::registerFileImporter(const char* extension, CommonExa
 	FileImporterByExtension fi;
 	fi.m_extension = extension;
 	fi.m_createFunc = createFunc;
-	s_internalData->gFileImporterByExtension.push_back(fi);
+	m_internalData->gFileImporterByExtension.push_back(fi);
 }
 
 OpenGLExampleBrowser::OpenGLExampleBrowser(class ExampleEntries* examples)
 {
-	s_internalData = new OpenGLExampleBrowserInternalData(examples);
+	m_internalData = new OpenGLExampleBrowserInternalData(examples);
 }
 
 OpenGLExampleBrowser::~OpenGLExampleBrowser()
 {
-	delete s_internalData;
-	s_internalData = nullptr;
+	delete m_internalData;
+	m_internalData = nullptr;
 }
 
 bool OpenGLExampleBrowser::init(int argc, char* argv[])
 {
-	s_internalData->init(argc, argv);
+	m_internalData->init(argc, argv);
 	return true;
 }
 
 CommonExampleInterface* OpenGLExampleBrowser::getCurrentExample()
 {
-	btAssert(s_internalData->sCurrentDemo);
-	return s_internalData->sCurrentDemo;
+	btAssert(m_internalData->sCurrentDemo);
+	return m_internalData->sCurrentDemo;
 }
 
 bool OpenGLExampleBrowser::requestedExit()
 {
-	return s_internalData->s_window->requestedExit();
+	return m_internalData->s_window->requestedExit();
 }
 
 void OpenGLExampleBrowser::updateGraphics()
 {
-	if (s_internalData->sCurrentDemo)
+	if (m_internalData->sCurrentDemo)
 	{
-		if (!s_internalData->pauseSimulation || s_internalData->singleStepSimulation)
+		if (!m_internalData->pauseSimulation || m_internalData->singleStepSimulation)
 		{
 			//B3_PROFILE("sCurrentDemo->updateGraphics");
-			s_internalData->sCurrentDemo->updateGraphics();
+			m_internalData->sCurrentDemo->updateGraphics();
 		}
 	}
 }
 
 void OpenGLExampleBrowser::update(float deltaTime)
 {
-	s_internalData->update(deltaTime);
+	m_internalData->update(deltaTime);
 }
 
 void OpenGLExampleBrowser::setSharedMemoryInterface(class SharedMemoryInterface* sharedMem)
 {
-	s_internalData->gDisableDemoSelection = true;
-	s_internalData->sSharedMem = sharedMem;
+	m_internalData->gDisableDemoSelection = true;
+	m_internalData->sSharedMem = sharedMem;
 }

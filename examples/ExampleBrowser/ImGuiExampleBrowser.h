@@ -20,5 +20,5 @@ public:
 
 	void setSharedMemoryInterface(class SharedMemoryInterface* sharedMem);
 
-	static void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc);
+	void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc);
 };

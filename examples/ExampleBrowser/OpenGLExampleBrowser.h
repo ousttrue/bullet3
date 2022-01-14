@@ -4,6 +4,8 @@
 
 class OpenGLExampleBrowser : public EmptyBrowser
 {
+	struct OpenGLExampleBrowserInternalData* m_internalData;
+
 public:
 	OpenGLExampleBrowser(class ExampleEntries* examples);
 	~OpenGLExampleBrowser();
@@ -20,5 +22,5 @@ public:
 
 	void setSharedMemoryInterface(class SharedMemoryInterface* sharedMem);
 
-	static void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc);
+	void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc);
 };

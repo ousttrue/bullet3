@@ -41,6 +41,10 @@ public:
 	virtual void setSharedMemoryInterface(class SharedMemoryInterface* sharedMem)
 	{
 	}
+
+	virtual void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc)
+	{		
+	}
 };
 
 #endif  //EMPTY_BROWSER
