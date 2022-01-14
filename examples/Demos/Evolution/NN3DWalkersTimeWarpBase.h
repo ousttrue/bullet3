@@ -34,7 +34,7 @@
 #include "BulletDynamics/MLCPSolvers/btLemkeSolver.h"
 #include "BulletDynamics/MLCPSolvers/btMLCPSolver.h"
 
-#include "../Utils/b3ERPCFMHelper.hpp"  // ERP/CFM setting utils
+#include <b3ERPCFMHelper.hpp>  // ERP/CFM setting utils
 
 static btScalar gSimulationSpeed = 1;  // default simulation speed at startup
 

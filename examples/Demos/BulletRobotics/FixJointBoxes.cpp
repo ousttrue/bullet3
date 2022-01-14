@@ -5,9 +5,9 @@
 #include <CommonRenderInterface.h>
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
-#include "../SharedMemory/PhysicsServerSharedMemory.h"
-#include "../SharedMemory/PhysicsClientC_API.h"
-#include "../SharedMemory/SharedMemoryPublic.h"
+#include <PhysicsServerSharedMemory.h>
+#include <PhysicsClientC_API.h>
+#include <SharedMemoryPublic.h>
 #include <CommonParameterInterface.h>
 #include <string>
 #include <vector>

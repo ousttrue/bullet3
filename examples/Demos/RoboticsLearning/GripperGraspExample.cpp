@@ -7,8 +7,8 @@
 #include <CommonRenderInterface.h>
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
-#include "../SharedMemory/PhysicsServerSharedMemory.h"
-#include "../SharedMemory/PhysicsClientC_API.h"
+#include <PhysicsServerSharedMemory.h>
+#include <PhysicsClientC_API.h>
 #include <CommonParameterInterface.h>
 #include "../SharedMemory/SharedMemoryPublic.h"
 #include <string>

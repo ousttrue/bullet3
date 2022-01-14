@@ -33,7 +33,7 @@ subject to the following restrictions:
 #include <stdio.h>  //printf debugging
 
 #include <CommonRigidBodyBase.h>
-#include "../Utils/b3ResourcePath.h"
+#include <b3ResourcePath.h>
 
 ///The RollingFrictionDemo shows the use of rolling friction.
 ///Spheres will come to a rest on a sloped plane using a constraint. Damping cannot achieve the same.

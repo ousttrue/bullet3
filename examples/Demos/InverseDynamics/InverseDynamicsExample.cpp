@@ -19,7 +19,7 @@ subject to the following restrictions:
 #include "BulletDynamics/Featherstone/btMultiBodyJointMotor.h"
 #include "BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h"
 #include <CommonParameterInterface.h>
-#include "../Utils/b3ResourcePath.h"
+#include <b3ResourcePath.h>
 #include "../Importers/ImportURDFDemo/BulletUrdfImporter.h"
 #include "../Importers/ImportURDFDemo/URDF2Bullet.h"
 #include "../Importers/ImportURDFDemo/MyMultiBodyCreator.h"

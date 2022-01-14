@@ -23,7 +23,7 @@
 #include <stdio.h>  //printf debugging
 
 #include <CommonDeformableBodyBase.h>
-#include "../Utils/b3ResourcePath.h"
+#include <b3ResourcePath.h>
 
 ///The ClothFriction shows the use of deformable friction.
 class ClothFriction : public CommonDeformableBodyBase

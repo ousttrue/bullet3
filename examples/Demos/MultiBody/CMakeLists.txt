@@ -11,4 +11,4 @@ add_library(
   KinematicMultiBodyExample.cpp
   MultiDofDemo.cpp
   MultiDofDemo.h)
-target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics CommonInterfaces)
+target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics CommonInterfaces OpenGLWindow)
