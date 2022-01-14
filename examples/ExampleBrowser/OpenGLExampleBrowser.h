@@ -4,7 +4,7 @@
 
 class OpenGLExampleBrowser : public EmptyBrowser
 {
-	struct OpenGLExampleBrowserInternalData* m_internalData;
+	class OpenGLExampleBrowserInternalData* m_internalData;
 
 public:
 	OpenGLExampleBrowser(class ExampleEntries* examples);

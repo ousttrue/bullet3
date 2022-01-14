@@ -55,6 +55,7 @@
 #include <string.h>
 #include <stdio.h>
 #define MAX_GRAPH_WINDOWS 5
+#define DEMO_SELECTION_COMBOBOX 13
 
 #ifndef USE_OPENGL3
 extern bool useShadowMap;
@@ -222,7 +223,7 @@ struct QuickCanvas : public Common2dCanvasInterface
 	}
 };
 
-struct OpenGLExampleBrowserInternalData
+class OpenGLExampleBrowserInternalData
 {
 	Gwen::Renderer::Base* m_gwenRenderer = nullptr;
 	btAlignedObjectArray<Gwen::Controls::TreeNode*> m_nodes;
@@ -233,27 +234,23 @@ struct OpenGLExampleBrowserInternalData
 
 	CommonGraphicsApp* s_app = 0;
 
-	CommonWindowInterface* s_window = 0;
 	CommonParameterInterface* s_parameterInterface = 0;
 	CommonRenderInterface* s_instancingRenderer = 0;
 	OpenGLGuiHelper* s_guiHelper = 0;
 #ifndef BT_NO_PROFILE
 	MyProfileWindow* s_profWindow = 0;
 #endif  //BT_NO_PROFILE
-	SharedMemoryInterface* sSharedMem = 0;
 
-#define DEMO_SELECTION_COMBOBOX 13
 	const char* startFileName = "0_Bullet3Demo.txt";
 	char staticPngFileName[1024];
-	//GwenUserInterface* gui  = 0;
-	GwenUserInterface* gui2 = 0;
+
+private:
 	int sCurrentDemoIndex = -1;
 	int sCurrentHightlighted = 0;
-	CommonExampleInterface* sCurrentDemo = 0;
 	b3AlignedObjectArray<const char*> allNames;
 	float gFixedTimeStep = 0;
 	bool gAllowRetina = true;
-	bool gDisableDemoSelection = false;
+
 	int gRenderDevice = -1;
 	int gWindowBackend = 0;
 	class ExampleEntries* gAllExamples = 0;
@@ -270,8 +267,6 @@ struct OpenGLExampleBrowserInternalData
 	bool gEnableDefaultMousePicking = true;
 
 	int gDebugDrawFlags = 0;
-	bool pauseSimulation = false;
-	bool singleStepSimulation = false;
 	int midiBaseIndex = 176;
 
 	///some quick test variable for the OpenCL examples
@@ -288,11 +283,21 @@ struct OpenGLExampleBrowserInternalData
 	b3MouseMoveCallback prevMouseMoveCallback = 0;
 	b3MouseButtonCallback prevMouseButtonCallback = 0;
 
+public:
+	bool pauseSimulation = false;
+	bool singleStepSimulation = false;
 	btAlignedObjectArray<FileImporterByExtension> gFileImporterByExtension;
+	CommonWindowInterface* s_window = 0;
+	GwenUserInterface* gui2 = 0;
+	CommonExampleInterface* sCurrentDemo = 0;
+	bool gDisableDemoSelection = false;
+	SharedMemoryInterface* sSharedMem = 0;
 
+private:
 	//in case of multi-threading, don't submit messages while the GUI is rendering (causing crashes)
 	bool gBlockGuiMessages = false;
 
+public:
 	OpenGLExampleBrowserInternalData(ExampleEntries* examples)
 		: gAllExamples(examples)
 	{
@@ -334,6 +339,7 @@ struct OpenGLExampleBrowserInternalData
 		gAllExamples = 0;
 	}
 
+private:
 	void deleteDemo()
 	{
 		if (sCurrentDemo)
@@ -798,6 +804,7 @@ struct OpenGLExampleBrowserInternalData
 		gui2->setExampleDescription(gAllExamples->getExampleDescription(sCurrentHightlighted));
 	}
 
+public:
 	void init(int argc, char** argv)
 	{
 		b3CommandLineArgs args(argc, argv);
