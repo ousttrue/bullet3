@@ -23,4 +23,5 @@ subdirs(
   Tutorial
   RenderingExamples
   RollingFrictionDemo
+  RoboticsLearning
   )

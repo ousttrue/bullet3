@@ -69,9 +69,9 @@
 #include <Tutorial/Dof6ConstraintTutorial.h>
 #include <MultiThreadedDemo/MultiThreadingExample.h>
 #include <InverseDynamics/InverseDynamicsExample.h>
-#include "../RoboticsLearning/R2D2GraspExample.h"
-#include "../RoboticsLearning/KukaGraspExample.h"
-#include "../RoboticsLearning/GripperGraspExample.h"
+#include <RoboticsLearning/R2D2GraspExample.h>
+#include <RoboticsLearning/KukaGraspExample.h>
+#include <RoboticsLearning/GripperGraspExample.h>
 #include <InverseKinematics/InverseKinematicsExample.h>
 
 #ifdef B3_ENABLE_TINY_AUDIO

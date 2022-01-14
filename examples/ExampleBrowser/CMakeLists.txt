@@ -96,12 +96,6 @@ add_executable(
   ../RobotSimulator/b3RobotSimulatorClientAPI.h
   ../BasicDemo/BasicExample.cpp
   ../BasicDemo/BasicExample.h
-  ../RoboticsLearning/GripperGraspExample.cpp
-  ../RoboticsLearning/GripperGraspExample.h
-  ../RoboticsLearning/R2D2GraspExample.cpp
-  ../RoboticsLearning/R2D2GraspExample.h
-  ../RoboticsLearning/KukaGraspExample.cpp
-  ../RoboticsLearning/KukaGraspExample.h
   ../Utils/RobotLoggingUtil.cpp
   ../Utils/RobotLoggingUtil.h
   ../RigidBody/RigidBodySoftContact.cpp
@@ -154,8 +148,8 @@ target_link_libraries(
           Collision
           Tutorial
           RenderingExamples
-          RollingFrictionDemo          
-          )
+          RollingFrictionDemo
+          RoboticsLearning)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)
