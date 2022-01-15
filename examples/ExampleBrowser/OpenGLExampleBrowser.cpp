@@ -3,7 +3,7 @@
 #include <ChromeTraceUtil.h>
 #include <SharedMemoryPublic.h>
 #include <OpenGLGuiHelper.h>
-#include <SimpleOpenGL3App.h>
+#include <GlfwApp.h>
 #include <CommonCallbacks.h>
 #include <CommonParameterInterface.h>
 #include <CommonRenderInterface.h>
@@ -33,7 +33,7 @@ class OpenGLExampleBrowserInternalData
 {
 	GwenImpl* m_gwen = nullptr;
 
-	SimpleOpenGL3App* s_app = 0;
+	GlfwApp* s_app = 0;
 
 	CommonParameterInterface* s_parameterInterface = 0;
 	CommonRenderInterface* s_instancingRenderer = 0;
@@ -626,7 +626,7 @@ public:
 
 		char title[1024];
 		sprintf(title, "%s using OpenGL3+ %s %s", appTitle, glContext, optMode);
-		s_app = new SimpleOpenGL3App(title, width, height, gAllowRetina, gWindowBackend, gRenderDevice);
+		s_app = new GlfwApp(title, width, height, gAllowRetina);
 
 		char* gVideoFileName = 0;
 		args.GetCmdLineArgument("mp4", gVideoFileName);

@@ -1,13 +1,8 @@
 #include "Wavefront2GLInstanceGraphicsShape.h"
-
-#include "../../OpenGLWindow/GLInstancingRenderer.h"
-#include "../../OpenGLWindow/GLInstanceGraphicsShape.h"
-//#include "btBulletDynamicsCommon.h"
-#include "LinearMath/btVector3.h"
-#include "../../OpenGLWindow/SimpleOpenGL3App.h"
-#include "Wavefront2GLInstanceGraphicsShape.h"
-#include "../../OpenGLWindow/GLInstancingRenderer.h"
-#include "../../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include <LinearMath/btVector3.h>
+#include <Bullet3Common/b3MinMax.h>
+#include <GLInstancingRenderer.h>
+#include <GLInstanceGraphicsShape.h>
 
 GLInstanceGraphicsShape* btgCreateGraphicsShapeFromWavefrontObj(const tinyobj::attrib_t& attribute, std::vector<tinyobj::shape_t>& shapes, bool flatShading)
 {

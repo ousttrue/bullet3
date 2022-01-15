@@ -1,5 +1,4 @@
 #include "MultiDofDemo.h"
-#include <SimpleOpenGL3App.h>
 #include "btBulletDynamicsCommon.h"
 
 #include "BulletDynamics/MLCPSolvers/btDantzigSolver.h"

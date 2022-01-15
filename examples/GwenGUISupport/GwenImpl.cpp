@@ -11,7 +11,7 @@
 #include <GwenParameterInterface.h>
 #include <GwenTextureWindow.h>
 #include <GraphingTexture.h>
-#include <SimpleOpenGL3App.h>
+#include <GlfwApp.h>
 
 #define MAX_GRAPH_WINDOWS 5
 
@@ -202,14 +202,12 @@ struct QuickCanvas : public Common2dCanvasInterface
 ///
 /// GwenImpl
 ///
-GwenImpl::GwenImpl(SimpleOpenGL3App* s_app, int width, int height, float retinaScale)
+GwenImpl::GwenImpl(GlfwApp* s_app, int width, int height, float retinaScale)
 {
 	m_myTexLoader = new GL3TexLoader;
 
-	sth_stash* fontstash = s_app->getFontStash();
-	m_gwenRenderer = new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, retinaScale,
-												 // s_window->getRetinaScale(),
-												 m_myTexLoader);
+	auto fontstash = s_app->getFontStash();
+	m_gwenRenderer = new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, retinaScale, m_myTexLoader);
 	m_gui = new GwenUserInterface;
 	m_gui->init(width, height, m_gwenRenderer, retinaScale);
 }
@@ -233,7 +231,7 @@ GwenImpl::~GwenImpl()
 	delete m_myTexLoader;
 }
 
-std::tuple<GwenImpl*, int> GwenImpl::Create(SimpleOpenGL3App* app, int width, int height, float reginaScale, ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
+std::tuple<GwenImpl*, int> GwenImpl::Create(GlfwApp* app, int width, int height, float reginaScale, ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
 											const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE)
 {
 	auto m_gwen = new GwenImpl(app, width, height, reginaScale);

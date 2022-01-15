@@ -15,9 +15,9 @@ subject to the following restrictions:
 
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
+#include <GlfwApp.h>
 #include "../Utils/b3Clock.h"
 
-#include <SimpleOpenGL3App.h>
 #include <stdio.h>
 #include "../ExampleBrowser/OpenGLGuiHelper.h"
 
@@ -66,7 +66,7 @@ public:
 };
 int main(int argc, char* argv[])
 {
-	SimpleOpenGL3App* app = new SimpleOpenGL3App("Bullet Standalone Example", 1024, 768, true);
+	auto app = new GlfwApp("Bullet Standalone Example", 1024, 768, true);
 
 	prevMouseButtonCallback = app->m_window->getMouseButtonCallback();
 	prevMouseMoveCallback = app->m_window->getMouseMoveCallback();

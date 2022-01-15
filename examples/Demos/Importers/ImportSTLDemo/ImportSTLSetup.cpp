@@ -3,7 +3,6 @@
 #include <GLInstancingRenderer.h>
 #include <GLInstanceGraphicsShape.h>
 #include "btBulletDynamicsCommon.h"
-#include <SimpleOpenGL3App.h>
 #include "LoadMeshFromSTL.h"
 #include <CommonRigidBodyBase.h>
 #include "../../Utils/b3ResourcePath.h"
