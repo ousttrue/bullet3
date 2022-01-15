@@ -26,11 +26,11 @@ class GwenImpl
 	btAlignedObjectArray<Gwen::Controls::TreeNode*> m_nodes;
 	btAlignedObjectArray<MyMenuItemHander*> m_handlers;
 
-	GwenImpl(struct GlfwApp* s_app, int width, int height, float retinaScale);
+	GwenImpl(class GlfwApp* s_app, int width, int height, float retinaScale);
 
 public:
 	~GwenImpl();
-	static std::tuple<GwenImpl*, int> Create(struct GlfwApp* app, int width, int height, float reginaScale, class ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
+	static std::tuple<GwenImpl*, int> Create(class GlfwApp* app, int width, int height, float reginaScale, class ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
 											 const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE);
 	struct CommonParameterInterface* CreateCommonParameterInterface();
 	struct Common2dCanvasInterface* CreateCommon2dCanvasInterface();
