@@ -6,12 +6,15 @@ target_compile_definitions(${TARGET_NAME} PRIVATE EXAMPLE_CONSOLE_ONLY)
 set(TARGET_NAME App_ExampleBrowser)
 add_executable(
   ${TARGET_NAME}
-  main.cpp OpenGLGuiHelper.cpp CollisionShape2TriangleMesh.cpp
+  main.cpp 
+  OpenGLGuiHelper.cpp CollisionShape2TriangleMesh.cpp
   OpenGLExampleBrowser.cpp ExampleEntries.cpp
-  ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
+  ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc
+  )
 target_link_libraries(
   ${TARGET_NAME}
-  PRIVATE Demos
+  PRIVATE glfw
+          Demos
           # support lib
           Utils
           OpenGLWindow
@@ -25,7 +28,8 @@ target_link_libraries(
           BulletFileLoader
           BulletWorldImporter
           # bullet
-          BulletInverseDynamicsUtils)
+          BulletInverseDynamicsUtils
+          )
 
 target_compile_definitions(${TARGET_NAME} PRIVATE INCLUDE_CLOTH_DEMOS
                                                   GLEW_STATIC)
