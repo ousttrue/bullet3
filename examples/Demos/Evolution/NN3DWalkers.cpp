@@ -18,7 +18,7 @@ subject to the following restrictions:
 #include <cmath>
 
 #include "btBulletDynamicsCommon.h"
-
+#include <Bullet3Common/b3Logging.h>
 #include "LinearMath/btIDebugDraw.h"
 #include "LinearMath/btAlignedObjectArray.h"
 #include "LinearMath/btHashMap.h"

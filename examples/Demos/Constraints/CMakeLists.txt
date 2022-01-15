@@ -9,4 +9,4 @@ add_library(
   Dof6Spring2Setup.h
   ConstraintPhysicsSetup.cpp
   ConstraintPhysicsSetup.h)
-target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics CommonInterfaces)
+target_link_libraries(${TARGET_NAME} PRIVATE CommonRigidBodyBase)

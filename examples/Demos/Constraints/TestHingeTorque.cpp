@@ -2,6 +2,7 @@
 
 #include <CommonRigidBodyBase.h>
 #include <CommonParameterInterface.h>
+#include <Bullet3Common/b3Logging.h>
 
 int collisionFilterGroup = int(btBroadphaseProxy::CharacterFilter);
 int collisionFilterMask = int(btBroadphaseProxy::AllFilter ^ (btBroadphaseProxy::CharacterFilter));

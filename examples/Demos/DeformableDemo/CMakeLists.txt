@@ -29,4 +29,4 @@ add_library(
   DeformableClothAnchor.h
   MultibodyClothAnchor.cpp
   MultibodyClothAnchor.h)
-target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics CommonInterfaces Utils)
+target_link_libraries(${TARGET_NAME} PRIVATE CommonRigidBodyBase Utils)

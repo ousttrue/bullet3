@@ -1,6 +1,6 @@
 set(TARGET_NAME BasicDemo)
 add_library(${TARGET_NAME} BasicExample.cpp BasicExample.h)
-target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics CommonInterfaces)
+target_link_libraries(${TARGET_NAME} PRIVATE CommonRigidBodyBase)
 
 # ##############################################################################
 # App_BasicExample is a minimal sample creating, stepping and deleting a Bullet

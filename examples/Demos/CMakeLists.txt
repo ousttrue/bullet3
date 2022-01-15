@@ -1,3 +1,9 @@
+set(TARGET_NAME CommonRigidBodyBase)
+add_library(${TARGET_NAME} CommonRigidBodyBase.cpp)
+target_link_libraries(${TARGET_NAME} PUBLIC CommonInterfaces BulletDynamics
+                                            BulletCollision)
+target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
 subdirs(
   ExtendedTutorials
   BulletRobotics
@@ -26,8 +32,7 @@ subdirs(
   RoboticsLearning
   BasicDemo
   RigidBody
-  Importers
-  )
+  Importers)
 
 set(TARGET_NAME Demos)
 add_library(${TARGET_NAME} INTERFACE)

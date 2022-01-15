@@ -45,6 +45,6 @@ add_library(
   ImportMeshUtility/b3ImportMeshUtility.h)
 target_link_libraries(
   ${TARGET_NAME}
-  PRIVATE BulletDynamics CommonInterfaces stb_image OpenGLWindow tinyxml2 Utils
+  PRIVATE CommonRigidBodyBase stb_image OpenGLWindow tinyxml2 Utils
   PUBLIC tiny_obj_loader)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
