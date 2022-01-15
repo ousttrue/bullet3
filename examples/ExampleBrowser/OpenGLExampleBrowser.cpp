@@ -234,7 +234,6 @@ class GwenImpl
 	btAlignedObjectArray<Gwen::Controls::TreeNode*> m_nodes;
 	btAlignedObjectArray<MyMenuItemHander*> m_handlers;
 
-public:
 	GwenImpl(SimpleOpenGL3App* s_app, int width, int height, float retinaScale)
 	{
 		m_myTexLoader = new GL3TexLoader;
@@ -246,6 +245,7 @@ public:
 		m_gui = new GwenUserInterface;
 		m_gui->init(width, height, m_gwenRenderer, retinaScale);
 	}
+public:
 	~GwenImpl()
 	{
 		for (int i = 0; i < m_nodes.size(); i++)
@@ -264,6 +264,64 @@ public:
 		delete m_gwenRenderer;
 		delete m_myTexLoader;
 	}
+	static std::tuple<GwenImpl*, int> Create(SimpleOpenGL3App* app, int width, int height, float reginaScale, ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
+											 const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE)
+	{
+		auto m_gwen = new GwenImpl(app, width, height, reginaScale);
+
+		auto onE = [_onE, m_gwen, gAllExamples](int id)
+		{
+			_onE(id);
+			auto desc = gAllExamples->getExampleDescription(id);
+			m_gwen->SetDescription(desc);
+		};
+
+		m_gwen->Setup(onB, onD, onE);
+
+		int numDemos = gAllExamples->getNumRegisteredExamples();
+		int selectedDemo = 0;
+		if (demoNameFromCommandOption)
+		{
+			selectedDemo = -1;
+		}
+		int firstAvailableDemoIndex = -1;
+		for (int d = 0; d < numDemos; d++)
+		{
+			if (demoNameFromCommandOption)
+			{
+				const char* demoName = gAllExamples->getExampleName(d);
+				int res = strcmp(demoName, demoNameFromCommandOption);
+				if (res == 0)
+				{
+					selectedDemo = d;
+				}
+			}
+			bool selected = m_gwen->AddDemo(d, gAllExamples->getExampleName(d), gAllExamples->getExampleCreateFunc(d), selectedDemo,
+											onB, onD, onE);
+			if (selected)
+			{
+				firstAvailableDemoIndex = d;
+			}
+		}
+
+		// if (sCurrentDemo == 0)
+		{
+			if (firstAvailableDemoIndex >= 0)
+			{
+				m_gwen->ExpandSelected();
+			}
+		}
+
+		// btAssert(sCurrentDemo != 0);
+		// if (sCurrentDemo == 0)
+		// {
+		// 	printf("Error, no demo/example\n");
+		// 	exit(0);
+		// }
+
+		return {m_gwen, firstAvailableDemoIndex};
+	}
+
 	CommonParameterInterface* CreateCommonParameterInterface()
 	{
 		return new GwenParameterInterface(m_gui->getInternalData());
@@ -300,7 +358,7 @@ public:
 	Gwen::Controls::TreeControl* tree = nullptr;
 	Gwen::Controls::TreeNode* curNode = nullptr;
 	Gwen::Controls::TreeNode* firstNode = 0;
-	bool AddDemo(int d, const char* name, void* f, int selectedDemo,
+	bool AddDemo(int d, const char* name, CommonExampleInterface::CreateFunc* f, int selectedDemo,
 				 const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& onE)
 	{
 		bool isSelected = false;
@@ -964,7 +1022,6 @@ private:
 	void OnButtonE(int buttonId)
 	{
 		sCurrentHightlighted = buttonId;
-		m_gwen->SetDescription(gAllExamples->getExampleDescription(sCurrentHightlighted));
 	}
 
 public:
@@ -1093,72 +1150,26 @@ public:
 
 		assert(glGetError() == GL_NO_ERROR);
 
-		// init Gwen
-		m_gwen = new GwenImpl(s_app, width, height, s_window->getRetinaScale());
-
-		{
-			s_parameterInterface = s_app->m_parameterInterface = m_gwen->CreateCommonParameterInterface();
-			s_app->m_2dCanvasInterface = m_gwen->CreateCommon2dCanvasInterface();
-		}
-
 		char* demoNameFromCommandOption = 0;
 		args.GetCmdLineArgument("start_demo_name", demoNameFromCommandOption);
-		int selectedDemo = 0;
-		if (demoNameFromCommandOption)
+
+		int demo_index;
+		std::tie(m_gwen, demo_index) = GwenImpl::Create(s_app, width, height, s_window->getRetinaScale(), gAllExamples, demoNameFromCommandOption,
+														std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
+														std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
+														std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
+		s_parameterInterface = s_app->m_parameterInterface = m_gwen->CreateCommonParameterInterface();
+		s_app->m_2dCanvasInterface = m_gwen->CreateCommon2dCanvasInterface();
+		m_gwen->RegisterFileOpen(std::bind(&OpenGLExampleBrowserInternalData::fileOpenCallback, this));
+		m_gwen->RegisterQuit(std::bind(&OpenGLExampleBrowserInternalData::quitCallback, this));
+
+		// auto demo_index = setup_gui(width, height, demoNameFromCommandOption);
+		if (demo_index >= 0)
 		{
-			selectedDemo = -1;
-		}
-
-		m_gwen->Setup(
-			std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
-			std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
-			std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
-
-		int numDemos = gAllExamples->getNumRegisteredExamples();
-
-		int firstAvailableDemoIndex = -1;
-		for (int d = 0; d < numDemos; d++)
-		{
-			if (demoNameFromCommandOption)
-			{
-				const char* demoName = gAllExamples->getExampleName(d);
-				int res = strcmp(demoName, demoNameFromCommandOption);
-				if (res == 0)
-				{
-					selectedDemo = d;
-				}
-			}
-			bool selected = m_gwen->AddDemo(d, gAllExamples->getExampleName(d), gAllExamples->getExampleCreateFunc(d), selectedDemo,
-											std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
-											std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
-											std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
-			if (selected)
-			{
-				firstAvailableDemoIndex = d;
-			}
-		}
-
-		// TODO:
-		if (sCurrentDemo == 0)
-		{
-			if (firstAvailableDemoIndex >= 0)
-			{
-				m_gwen->ExpandSelected();
-				selectDemo(firstAvailableDemoIndex);
-			}
+			selectDemo(demo_index);
 		}
 		free(demoNameFromCommandOption);
 		demoNameFromCommandOption = 0;
-
-		btAssert(sCurrentDemo != 0);
-		if (sCurrentDemo == 0)
-		{
-			printf("Error, no demo/example\n");
-			exit(0);
-		}
-
-		m_gwen->RegisterFileOpen(std::bind(&OpenGLExampleBrowserInternalData::fileOpenCallback, this));
-		m_gwen->RegisterQuit(std::bind(&OpenGLExampleBrowserInternalData::quitCallback, this));
 	}
 
 	void update(float deltaTime)
