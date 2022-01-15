@@ -485,6 +485,8 @@ GlfwApp::GlfwApp(const char* title, int width, int height, float retinaScale)
 
 	m_window->setResizeCallback([gApp = this](int width, int height)
 								{
+									glViewport(0, 0, width, height);
+
 									if (gApp->m_instancingRenderer)
 										gApp->m_instancingRenderer->resize(width, height);
 									if (gApp->m_primRenderer)
