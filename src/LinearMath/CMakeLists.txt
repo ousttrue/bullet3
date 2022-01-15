@@ -47,6 +47,7 @@ add_library(
   btVector3.h
   TaskScheduler/btThreadSupportInterface.h)
 target_compile_options(${TARGET_NAME} PRIVATE /wd4267)
+target_compile_definitions(${TARGET_NAME} PUBLIC BT_NO_PROFILE)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
 set_target_properties(${TARGET_NAME} PROPERTIES VERSION ${BULLET_VERSION})
 set_target_properties(${TARGET_NAME} PROPERTIES SOVERSION ${BULLET_VERSION})
