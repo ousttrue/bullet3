@@ -1,5 +1,6 @@
 #include "OpenGLExampleBrowser.h"
 #include "CommonGraphicsAppInterface.h"
+#include "CommonParameterInterface.h"
 #include "LinearMath/btQuickprof.h"
 #include <OpenGLInclude.h>
 #include <SimpleOpenGL2App.h>
@@ -109,17 +110,17 @@ struct MyMenuItemHander : public Gwen::Event::Handler
 	{
 		//const Gwen::String& name = pControl->GetName();
 		Gwen::Controls::TreeNode* node = (Gwen::Controls::TreeNode*)pControl;
-		//	Gwen::Controls::Label* l = node->GetButton();
+		// Gwen::Controls::Label* l = node->GetButton();
 
 		Gwen::UnicodeString la = node->GetButton()->GetText();  // node->GetButton()->GetName();// GetText();
 		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
-		//	const char* ha = laa.c_str();
+		// const char* ha = laa.c_str();
 
 		//printf("selected %s\n", ha);
 		//int dep = but->IsDepressed();
 		//int tog = but->GetToggleState();
-		//		if (m_data->m_toggleButtonCallback)
-		//		(*m_data->m_toggleButtonCallback)(m_buttonId, tog);
+		//  if (m_data->m_toggleButtonCallback)
+		//  (*m_data->m_toggleButtonCallback)(m_buttonId, tog);
 	}
 
 	void onButtonB(Gwen::Controls::Base* pControl)
@@ -135,29 +136,29 @@ struct MyMenuItemHander : public Gwen::Event::Handler
 	void onButtonC(Gwen::Controls::Base* pControl)
 	{
 		/*Gwen::Controls::Label* label = (Gwen::Controls::Label*) pControl;
-		Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
-		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
-		const char* ha = laa.c_str();
+        Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
+        Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+        const char* ha = laa.c_str();
 
 
-		printf("onButtonC ! %s\n", ha);
-		*/
+        printf("onButtonC ! %s\n", ha);
+        */
 	}
 	void onButtonD(Gwen::Controls::Base* pControl)
 	{
-		/*		Gwen::Controls::Label* label = (Gwen::Controls::Label*) pControl;
-		Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
-		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
-		const char* ha = laa.c_str();
-		*/
+		/*  Gwen::Controls::Label* label = (Gwen::Controls::Label*) pControl;
+        Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
+        Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+        const char* ha = laa.c_str();
+        */
 
-		//	printf("onKeyReturn ! \n");
+		// printf("onKeyReturn ! \n");
 		m_onButtonD();
 	}
 
 	void onButtonE(Gwen::Controls::Base* pControl)
 	{
-		//	printf("select %d\n",m_buttonId);
+		// printf("select %d\n",m_buttonId);
 		m_onButtonE(m_buttonId);
 	}
 
@@ -174,7 +175,7 @@ struct MyMenuItemHander : public Gwen::Event::Handler
 
 struct QuickCanvas : public Common2dCanvasInterface
 {
-	OpenGLExampleBrowserInternalData* m_internalData;
+	GwenUserInterface* m_internalData;
 
 	GL3TexLoader* m_myTexLoader;
 
@@ -182,7 +183,7 @@ struct QuickCanvas : public Common2dCanvasInterface
 	GraphingTexture* m_gt[MAX_GRAPH_WINDOWS];
 	int m_curNumGraphWindows;
 
-	QuickCanvas(OpenGLExampleBrowserInternalData* internalData, GL3TexLoader* myTexLoader)
+	QuickCanvas(GwenUserInterface* internalData, GL3TexLoader* myTexLoader)
 		: m_internalData(internalData),
 		  m_myTexLoader(myTexLoader),
 		  m_curNumGraphWindows(0)
@@ -224,19 +225,211 @@ struct QuickCanvas : public Common2dCanvasInterface
 	}
 };
 
-class GwenWrap
+class GwenImpl
 {
+	GL3TexLoader* m_myTexLoader = nullptr;
+	Gwen::Renderer::Base* m_gwenRenderer = nullptr;
+	GwenUserInterface* m_gui = nullptr;
+	GwenUserInterface* gui2 = 0;
+	struct MyMenuItemHander* m_handler2 = nullptr;
+	btAlignedObjectArray<Gwen::Controls::TreeNode*> m_nodes;
+	btAlignedObjectArray<MyMenuItemHander*> m_handlers;
 
+public:
+	GwenImpl(SimpleOpenGL3App* s_app, int width, int height, float retinaScale)
+	{
+		m_myTexLoader = new GL3TexLoader;
+
+		sth_stash* fontstash = s_app->getFontStash();
+		m_gwenRenderer = new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, retinaScale,
+													 // s_window->getRetinaScale(),
+													 m_myTexLoader);
+
+		gui2 = new GwenUserInterface;
+
+		m_gui = gui2;
+
+		gui2->init(width, height, m_gwenRenderer, retinaScale);
+	}
+	~GwenImpl()
+	{
+		for (int i = 0; i < m_nodes.size(); i++)
+		{
+			delete m_nodes[i];
+		}
+		delete m_handler2;
+		for (int i = 0; i < m_handlers.size(); i++)
+		{
+			delete m_handlers[i];
+		}
+		m_handlers.clear();
+		m_nodes.clear();
+		m_gui->exit();
+		delete m_gui;
+		delete m_gwenRenderer;
+		delete m_myTexLoader;
+	}
+	CommonParameterInterface* CreateCommonParameterInterface()
+	{
+		return new GwenParameterInterface(gui2->getInternalData());
+	}
+	QuickCanvas* CreateCommon2dCanvasInterface()
+	{
+		return new QuickCanvas(gui2, m_myTexLoader);
+	}
+	void Setup(
+		const std::function<void()>& b, const std::function<void()>& d, const std::function<void(int)>& e)
+	{
+		// gui->getInternalData()->m_explorerPage
+		tree = gui2->getInternalData()->m_explorerTreeCtrl;
+
+		//gui->getInternalData()->pRenderer->setTextureLoader(myTexLoader);
+
+#ifndef BT_NO_PROFILE
+		s_profWindow = setupProfileWindow(gui2->getInternalData());
+		m_internalData->m_profWindow = s_profWindow;
+		profileWindowSetVisible(s_profWindow, false);
+#endif  //BT_NO_PROFILE
+		gui2->setFocus();
+
+		///add some demos to the gAllExamples
+
+		//char nodeText[1024];
+		//int curDemo = 0;
+		m_handler2 = new MyMenuItemHander(-1, b, d, e);
+
+		curNode = tree;
+		tree->onReturnKeyDown.Add(m_handler2, &MyMenuItemHander::onButtonD);
+	}
+
+	Gwen::Controls::TreeControl* tree = nullptr;
+	Gwen::Controls::TreeNode* curNode = nullptr;
+	Gwen::Controls::TreeNode* firstNode = 0;
+	bool AddDemo(int d, const char* name, void* f, int selectedDemo,
+				 const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& onE)
+	{
+		bool isSelected = false;
+
+		//  sprintf(nodeText, "Node %d", i);
+		Gwen::UnicodeString nodeUText = Gwen::Utility::StringToUnicode(name);
+		if (f)  //was test for gAllExamples[d].m_menuLevel==1
+		{
+			Gwen::Controls::TreeNode* pNode = curNode->AddNode(nodeUText);
+
+			if (!firstNode)
+			{
+				firstNode = pNode;
+				isSelected = true;
+			}
+
+			if (d == selectedDemo)
+			{
+				firstNode = pNode;
+				isSelected = true;
+				//pNode->SetSelected(true);
+				//tree->ExpandAll();
+				// tree->ForceUpdateScrollBars();
+				//tree->OnKeyLeft(true);
+				// tree->OnKeyRight(true);
+
+				//tree->ExpandAll();
+
+				// selectDemo(d);
+			}
+
+#if 1
+			MyMenuItemHander* handler = new MyMenuItemHander(d,
+															 onB,
+															 onD,
+															 onE);
+			m_handlers.push_back(handler);
+
+			pNode->onNamePress.Add(handler, &MyMenuItemHander::onButtonA);
+			pNode->GetButton()->onDoubleClick.Add(handler, &MyMenuItemHander::onButtonB);
+			pNode->GetButton()->onDown.Add(handler, &MyMenuItemHander::onButtonC);
+			pNode->onSelect.Add(handler, &MyMenuItemHander::onButtonE);
+			pNode->onReturnKeyDown.Add(handler, &MyMenuItemHander::onButtonG);
+			pNode->onSelectChange.Add(handler, &MyMenuItemHander::onButtonF);
+
+#endif
+			//   pNode->onKeyReturn.Add(handler, &MyMenuItemHander::onButtonD);
+			//   pNode->GetButton()->onKeyboardReturn.Add(handler, &MyMenuItemHander::onButtonD);
+			//  pNode->onNamePress.Add(handler, &MyMenuItemHander::onButtonD);
+			//   pNode->onKeyboardPressed.Add(handler, &MyMenuItemHander::onButtonD);
+			//   pNode->OnKeyPress
+		}
+		else
+		{
+			curNode = tree->AddNode(nodeUText);
+			m_nodes.push_back(curNode);
+		}
+
+		return isSelected;
+	}
+	void ExpandSelected()
+	{
+		firstNode->SetSelected(true);
+		while (firstNode != tree)
+		{
+			firstNode->ExpandAll();
+			firstNode = (Gwen::Controls::TreeNode*)firstNode->GetParent();
+		}
+	}
+	bool OnKeyboard(int key, int state)
+	{
+		return gui2->keyboardCallback(key, state);
+	}
+	bool OnMouseMove(int x, int y)
+	{
+		return gui2->mouseMoveCallback(x, y);
+	}
+	bool OnMouseButton(int button, int state, int x, int y)
+	{
+		return gui2->mouseButtonCallback(button, state, x, y);
+	}
+	void SetDescription(const char* description)
+	{
+		gui2->setStatusBarMessage("Status: OK", false);
+		gui2->setExampleDescription(description);
+	}
+	void ShowMessage(const char* msg)
+	{
+		gui2->textOutput(msg);
+		gui2->forceUpdateScrollBars();
+	}
+	void SetStatusbarMessage(const char* msg)
+	{
+		bool isLeft = true;
+		gui2->setStatusBarMessage(msg, isLeft);
+	}
+	void ShowErrorMessage(const char* msg)
+	{
+		bool isLeft = false;
+		gui2->setStatusBarMessage(msg, isLeft);
+		gui2->textOutput(msg);
+		gui2->forceUpdateScrollBars();
+	}
+	void RegisterFileOpen(const std::function<void()>& callback)
+	{
+		gui2->registerFileOpenCallback(callback);
+	}
+	void RegisterQuit(const std::function<void()>& callback)
+	{
+		gui2->registerQuitCallback(callback);
+	}
+	void Render(int w, int h)
+	{
+		m_gui->draw(w, h);
+	}
+	void ForceUpdateScrollBars()
+	{
+		gui2->forceUpdateScrollBars();
+	}
 };
 
 class OpenGLExampleBrowserInternalData
 {
-	Gwen::Renderer::Base* m_gwenRenderer = nullptr;
-	btAlignedObjectArray<Gwen::Controls::TreeNode*> m_nodes;
-	GwenUserInterface* m_gui = nullptr;
-	GL3TexLoader* m_myTexLoader = nullptr;
-	struct MyMenuItemHander* m_handler2 = nullptr;
-	btAlignedObjectArray<MyMenuItemHander*> m_handlers;
+	GwenImpl* m_gwen = nullptr;
 
 	SimpleOpenGL3App* s_app = 0;
 
@@ -294,7 +487,6 @@ public:
 	bool singleStepSimulation = false;
 	btAlignedObjectArray<FileImporterByExtension> gFileImporterByExtension;
 	CommonWindowInterface* s_window = 0;
-	GwenUserInterface* gui2 = 0;
 	CommonExampleInterface* sCurrentDemo = 0;
 	bool gDisableDemoSelection = false;
 	SharedMemoryInterface* sSharedMem = 0;
@@ -312,17 +504,6 @@ public:
 	~OpenGLExampleBrowserInternalData()
 	{
 		deleteDemo();
-		for (int i = 0; i < m_nodes.size(); i++)
-		{
-			delete m_nodes[i];
-		}
-		delete m_handler2;
-		for (int i = 0; i < m_handlers.size(); i++)
-		{
-			delete m_handlers[i];
-		}
-		m_handlers.clear();
-		m_nodes.clear();
 		delete s_parameterInterface;
 		s_parameterInterface = 0;
 		delete s_app->m_2dCanvasInterface;
@@ -332,11 +513,8 @@ public:
 		destroyProfileWindow(m_profWindow);
 #endif
 
-		m_gui->exit();
-
-		delete m_gui;
-		delete m_gwenRenderer;
-		delete m_myTexLoader;
+		delete m_gwen;
+		m_gwen = nullptr;
 
 		delete s_app;
 		s_app = 0;
@@ -357,7 +535,7 @@ private:
 			delete s_guiHelper;
 			s_guiHelper = 0;
 
-			//		CProfileManager::CleanupMemory();
+			//  CProfileManager::CleanupMemory();
 		}
 	}
 
@@ -365,12 +543,10 @@ private:
 	{
 		//b3Printf("key=%d, state=%d", key, state);
 		bool handled = false;
-		if (renderGui)
+
+		if (renderGui && m_gwen && !handled)
 		{
-			if (gui2 && !handled)
-			{
-				handled = gui2->keyboardCallback(key, state);
-			}
+			handled = m_gwen->OnKeyboard(key, state);
 		}
 
 		if (!handled && sCurrentDemo)
@@ -380,7 +556,7 @@ private:
 
 		//checkout: is it desired to ignore keys, if the demo already handles them?
 		//if (handled)
-		//	return;
+		// return;
 
 		if (gEnableDefaultKeyboardShortcuts)
 		{
@@ -497,10 +673,9 @@ private:
 		bool handled = false;
 		if (sCurrentDemo)
 			handled = sCurrentDemo->mouseMoveCallback(x, y);
-		if (renderGui)
+		if (renderGui && !handled && m_gwen)
 		{
-			if (!handled && gui2)
-				handled = gui2->mouseMoveCallback(x, y);
+			handled = m_gwen->OnMouseMove(x, y);
 		}
 		if (!handled)
 		{
@@ -516,17 +691,16 @@ private:
 		if (sCurrentDemo)
 			handled = sCurrentDemo->mouseButtonCallback(button, state, x, y);
 
-		if (renderGui)
+		if (renderGui && m_gwen && !handled)
 		{
-			if (!handled && gui2)
-				handled = gui2->mouseButtonCallback(button, state, x, y);
+			handled = m_gwen->OnMouseButton(button, state, x, y);
 		}
 		if (!handled)
 		{
 			if (prevMouseButtonCallback)
 				prevMouseButtonCallback(button, state, x, y);
 		}
-		//	b3DefaultMouseButtonCallback(button,state,x,y);
+		// b3DefaultMouseButtonCallback(button,state,x,y);
 	}
 
 	void OpenGLExampleBrowserVisualizerFlagCallback(int flag, bool enable)
@@ -651,15 +825,8 @@ private:
 			sCurrentDemo = (*func)(options);
 			if (sCurrentDemo)
 			{
-				if (gui2)
-				{
-					gui2->setStatusBarMessage("Status: OK", false);
-				}
 				b3Printf("Selected demo: %s", gAllExamples->getExampleName(demoIndex));
-				if (gui2)
-				{
-					gui2->setExampleDescription(gAllExamples->getExampleDescription(demoIndex));
-				}
+				m_gwen->SetDescription(gAllExamples->getExampleDescription(demoIndex));
 
 				sCurrentDemo->initPhysics();
 				if (resetCamera)
@@ -741,8 +908,7 @@ private:
 		printf("b3Printf: %s\n", msg);
 		if (!gDisableDemoSelection && !gBlockGuiMessages)
 		{
-			gui2->textOutput(msg);
-			gui2->forceUpdateScrollBars();
+			m_gwen->ShowMessage(msg);
 		}
 	}
 
@@ -751,8 +917,7 @@ private:
 		printf("b3Printf: %s\n", msg);
 		if (!gDisableDemoSelection && !gBlockGuiMessages)
 		{
-			bool isLeft = true;
-			gui2->setStatusBarMessage(msg, isLeft);
+			m_gwen->SetStatusbarMessage(msg);
 		}
 	}
 
@@ -761,10 +926,7 @@ private:
 		printf("Warning: %s\n", msg);
 		if (!gDisableDemoSelection && !gBlockGuiMessages)
 		{
-			bool isLeft = false;
-			gui2->setStatusBarMessage(msg, isLeft);
-			gui2->textOutput(msg);
-			gui2->forceUpdateScrollBars();
+			m_gwen->ShowErrorMessage(msg);
 		}
 		btAssert(0);
 	}
@@ -807,7 +969,7 @@ private:
 	void OnButtonE(int buttonId)
 	{
 		sCurrentHightlighted = buttonId;
-		gui2->setExampleDescription(gAllExamples->getExampleDescription(sCurrentHightlighted));
+		m_gwen->SetDescription(gAllExamples->getExampleDescription(sCurrentHightlighted));
 	}
 
 public:
@@ -937,155 +1099,71 @@ public:
 		assert(glGetError() == GL_NO_ERROR);
 
 		// init Gwen
+		m_gwen = new GwenImpl(s_app, width, height, s_window->getRetinaScale());
+
 		{
-			m_myTexLoader = new GL3TexLoader;
-
-			sth_stash* fontstash = s_app->getFontStash();
-			m_gwenRenderer = new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, s_window->getRetinaScale(), m_myTexLoader);
-
-			gui2 = new GwenUserInterface;
-
-			m_gui = gui2;
-
-			gui2->init(width, height, m_gwenRenderer, s_window->getRetinaScale());
+			s_parameterInterface = s_app->m_parameterInterface = m_gwen->CreateCommonParameterInterface();
+			s_app->m_2dCanvasInterface = m_gwen->CreateCommon2dCanvasInterface();
 		}
 
-		if (gui2)
+		char* demoNameFromCommandOption = 0;
+		args.GetCmdLineArgument("start_demo_name", demoNameFromCommandOption);
+		int selectedDemo = 0;
+		if (demoNameFromCommandOption)
 		{
-			//	gui->getInternalData()->m_explorerPage
-			Gwen::Controls::TreeControl* tree = gui2->getInternalData()->m_explorerTreeCtrl;
+			selectedDemo = -1;
+		}
 
-			//gui->getInternalData()->pRenderer->setTextureLoader(myTexLoader);
+		m_gwen->Setup(
+			std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
+			std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
+			std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
 
-#ifndef BT_NO_PROFILE
-			s_profWindow = setupProfileWindow(gui2->getInternalData());
-			m_internalData->m_profWindow = s_profWindow;
-			profileWindowSetVisible(s_profWindow, false);
-#endif  //BT_NO_PROFILE
-			gui2->setFocus();
+		int numDemos = gAllExamples->getNumRegisteredExamples();
 
-			s_parameterInterface = s_app->m_parameterInterface = new GwenParameterInterface(gui2->getInternalData());
-			s_app->m_2dCanvasInterface = new QuickCanvas(this, m_myTexLoader);
-
-			///add some demos to the gAllExamples
-
-			int numDemos = gAllExamples->getNumRegisteredExamples();
-
-			//char nodeText[1024];
-			//int curDemo = 0;
-			int selectedDemo = 0;
-			Gwen::Controls::TreeNode* curNode = tree;
-			m_handler2 = new MyMenuItemHander(-1,
-											  std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
-											  std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
-											  std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
-
-			char* demoNameFromCommandOption = 0;
-			args.GetCmdLineArgument("start_demo_name", demoNameFromCommandOption);
+		int firstAvailableDemoIndex = -1;
+		for (int d = 0; d < numDemos; d++)
+		{
 			if (demoNameFromCommandOption)
 			{
-				selectedDemo = -1;
-			}
-
-			tree->onReturnKeyDown.Add(m_handler2, &MyMenuItemHander::onButtonD);
-			int firstAvailableDemoIndex = -1;
-			Gwen::Controls::TreeNode* firstNode = 0;
-
-			for (int d = 0; d < numDemos; d++)
-			{
-				//		sprintf(nodeText, "Node %d", i);
-				Gwen::UnicodeString nodeUText = Gwen::Utility::StringToUnicode(gAllExamples->getExampleName(d));
-				if (gAllExamples->getExampleCreateFunc(d))  //was test for gAllExamples[d].m_menuLevel==1
+				const char* demoName = gAllExamples->getExampleName(d);
+				int res = strcmp(demoName, demoNameFromCommandOption);
+				if (res == 0)
 				{
-					Gwen::Controls::TreeNode* pNode = curNode->AddNode(nodeUText);
-
-					if (firstAvailableDemoIndex < 0)
-					{
-						firstAvailableDemoIndex = d;
-						firstNode = pNode;
-					}
-
-					if (d == selectedDemo)
-					{
-						firstAvailableDemoIndex = d;
-						firstNode = pNode;
-						//pNode->SetSelected(true);
-						//tree->ExpandAll();
-						//	tree->ForceUpdateScrollBars();
-						//tree->OnKeyLeft(true);
-						//	tree->OnKeyRight(true);
-
-						//tree->ExpandAll();
-
-						//	selectDemo(d);
-					}
-
-					if (demoNameFromCommandOption)
-					{
-						const char* demoName = gAllExamples->getExampleName(d);
-						int res = strcmp(demoName, demoNameFromCommandOption);
-						if (res == 0)
-						{
-							firstAvailableDemoIndex = d;
-							firstNode = pNode;
-						}
-					}
-
-#if 1
-					MyMenuItemHander* handler = new MyMenuItemHander(d,
-																	 std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
-																	 std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
-																	 std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
-					m_handlers.push_back(handler);
-
-					pNode->onNamePress.Add(handler, &MyMenuItemHander::onButtonA);
-					pNode->GetButton()->onDoubleClick.Add(handler, &MyMenuItemHander::onButtonB);
-					pNode->GetButton()->onDown.Add(handler, &MyMenuItemHander::onButtonC);
-					pNode->onSelect.Add(handler, &MyMenuItemHander::onButtonE);
-					pNode->onReturnKeyDown.Add(handler, &MyMenuItemHander::onButtonG);
-					pNode->onSelectChange.Add(handler, &MyMenuItemHander::onButtonF);
-
-#endif
-					//			pNode->onKeyReturn.Add(handler, &MyMenuItemHander::onButtonD);
-					//			pNode->GetButton()->onKeyboardReturn.Add(handler, &MyMenuItemHander::onButtonD);
-					//		pNode->onNamePress.Add(handler, &MyMenuItemHander::onButtonD);
-					//			pNode->onKeyboardPressed.Add(handler, &MyMenuItemHander::onButtonD);
-					//			pNode->OnKeyPress
-				}
-				else
-				{
-					curNode = tree->AddNode(nodeUText);
-					m_nodes.push_back(curNode);
+					selectedDemo = d;
 				}
 			}
-
-			if (sCurrentDemo == 0)
+			bool selected = m_gwen->AddDemo(d, gAllExamples->getExampleName(d), gAllExamples->getExampleCreateFunc(d), selectedDemo,
+											std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
+											std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
+											std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
+			if (selected)
 			{
-				if (firstAvailableDemoIndex >= 0)
-				{
-					firstNode->SetSelected(true);
-					while (firstNode != tree)
-					{
-						firstNode->ExpandAll();
-						firstNode = (Gwen::Controls::TreeNode*)firstNode->GetParent();
-					}
-
-					selectDemo(firstAvailableDemoIndex);
-				}
+				firstAvailableDemoIndex = d;
 			}
-			free(demoNameFromCommandOption);
-			demoNameFromCommandOption = 0;
-
-			btAssert(sCurrentDemo != 0);
-			if (sCurrentDemo == 0)
-			{
-				printf("Error, no demo/example\n");
-				exit(0);
-			}
-
-			gui2->registerFileOpenCallback(std::bind(&OpenGLExampleBrowserInternalData::fileOpenCallback, this));
-			gui2->registerQuitCallback(std::bind(&OpenGLExampleBrowserInternalData::quitCallback, this));
 		}
+
+		// TODO:
+		if (sCurrentDemo == 0)
+		{
+			if (firstAvailableDemoIndex >= 0)
+			{
+				m_gwen->ExpandSelected();
+				selectDemo(firstAvailableDemoIndex);
+			}
+		}
+		free(demoNameFromCommandOption);
+		demoNameFromCommandOption = 0;
+
+		btAssert(sCurrentDemo != 0);
+		if (sCurrentDemo == 0)
+		{
+			printf("Error, no demo/example\n");
+			exit(0);
+		}
+
+		m_gwen->RegisterFileOpen(std::bind(&OpenGLExampleBrowserInternalData::fileOpenCallback, this));
+		m_gwen->RegisterQuit(std::bind(&OpenGLExampleBrowserInternalData::quitCallback, this));
 	}
 
 	void update(float deltaTime)
@@ -1177,7 +1255,7 @@ public:
 		}
 
 		{
-			if (gui2 && s_guiHelper && s_guiHelper->getRenderInterface() && s_guiHelper->getRenderInterface()->getActiveCamera())
+			if (s_guiHelper && s_guiHelper->getRenderInterface() && s_guiHelper->getRenderInterface()->getActiveCamera())
 			{
 				B3_PROFILE("setStatusBarMessage");
 				char msg[1024];
@@ -1189,7 +1267,11 @@ public:
 				s_guiHelper->getRenderInterface()->getActiveCamera()->getCameraPosition(camPos);
 				s_guiHelper->getRenderInterface()->getActiveCamera()->getCameraTargetPosition(camTarget);
 				sprintf(msg, "camTargetPos=%2.2f,%2.2f,%2.2f, dist=%2.2f, pitch=%2.2f, yaw=%2.2f", camTarget[0], camTarget[1], camTarget[2], camDist, pitch, yaw);
-				gui2->setStatusBarMessage(msg, true);
+
+				if (m_gwen)
+				{
+					m_gwen->SetStatusbarMessage(msg);
+				}
 			}
 		}
 
@@ -1211,11 +1293,10 @@ public:
 			{
 				B3_PROFILE("updateOpenGL");
 
-				if (m_gui)
+				if (m_gwen)
 				{
 					gBlockGuiMessages = true;
-					m_gui->draw(s_instancingRenderer->getScreenWidth(), s_instancingRenderer->getScreenHeight());
-
+					m_gwen->Render(s_instancingRenderer->getScreenWidth(), s_instancingRenderer->getScreenHeight());
 					gBlockGuiMessages = false;
 				}
 			}
@@ -1236,10 +1317,10 @@ public:
 			s_app->swapBuffer();
 		}
 
-		if (gui2)
+		if (m_gwen)
 		{
 			B3_PROFILE("forceUpdateScrollBars");
-			gui2->forceUpdateScrollBars();
+			m_gwen->ForceUpdateScrollBars();
 		}
 	}
 };
@@ -1256,7 +1337,7 @@ int QuickCanvas::createCanvas(const char* canvasName, int width, int height, int
 
 		m_curNumGraphWindows++;
 
-		MyGraphInput input(m_internalData->gui2->getInternalData());
+		MyGraphInput input(m_internalData->getInternalData());
 		input.m_width = width;
 		input.m_height = height;
 		input.m_xPos = xPos;
