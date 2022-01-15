@@ -13,23 +13,50 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <list>
 
+static void SimpleResizeCallback(GLFWwindow* window, int width, int height);
+static void SimpleKeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void SimpleMouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+static void SimpleMouseMoveCallback(GLFWwindow* window, double x, double y);
+static void SimpleWheelCallback(GLFWwindow* window, double deltax, double deltay);
 struct GlfwWindowInterface : public CommonWindowInterface
 {
-	bool m_OpenGLInitialized;
+	GLFWwindow* m_window = nullptr;
+	float m_retinaScale = 1.0f;
 
-	GLFWwindow* m_window;
-	float m_retinaScale;
-
-public:
-	GlfwWindowInterface(GLFWwindow* window, float retinaScale)
-		: m_window(window), m_retinaScale(retinaScale)
+	GlfwWindowInterface(float retinaScale)
+		: m_retinaScale(retinaScale)
 	{
 	}
-	void createWindow(const b3gWindowConstructionInfo& ci) override {}
+	~GlfwWindowInterface()
+	{
+		closeWindow();
+	}
+	void createWindow(const b3gWindowConstructionInfo& ci) override
+	{
+		m_window = glfwCreateWindow(ci.m_width, ci.m_height, ci.m_title, NULL, NULL);
+		if (!m_window)
+		{
+			throw std::runtime_error("glfwInit");
+		}
+		glfwSetWindowUserPointer(m_window, this);
+		glfwSetWindowSizeCallback(m_window, SimpleResizeCallback);
+		glfwSetCursorPosCallback(m_window, SimpleMouseMoveCallback);
+		glfwSetMouseButtonCallback(m_window, SimpleMouseButtonCallback);
+		glfwSetKeyCallback(m_window, SimpleKeyboardCallback);
+		glfwSetScrollCallback(m_window, SimpleWheelCallback);
+		glfwMakeContextCurrent(m_window);
+		gladLoadGL(glfwGetProcAddress);
+		glfwSwapInterval(1);
+	}
 	void closeWindow() override
 	{
-		glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+		if (m_window)
+		{
+			glfwDestroyWindow(m_window);
+			m_window = nullptr;
+		}
 	}
 	void runMainLoop() override {}
 	float getTimeInSeconds() override
@@ -42,10 +69,15 @@ public:
 	}
 	void setRequestExit() override
 	{
-		closeWindow();
+		glfwSetWindowShouldClose(m_window, GLFW_TRUE);
 	}
 	void startRendering() override
 	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		//glCullFace(GL_BACK);
+		//glFrontFace(GL_CCW);
+		glEnable(GL_DEPTH_TEST);
 		glfwPollEvents();
 	}
 	void endRendering() override
@@ -54,37 +86,64 @@ public:
 	}
 	bool isModifierKeyPressed(int key) override
 	{
-		return false;
+		return glfwGetKey(m_window, GLFW_KEY_LEFT_ALT);
 	}
-
+	// onMove
+	b3MouseMoveCallback m_onMove;
 	void setMouseMoveCallback(b3MouseMoveCallback mouseCallback) override
 	{
+		m_onMove = mouseCallback;
 	}
 	b3MouseMoveCallback getMouseMoveCallback() override
 	{
-		return {};
+		return m_onMove;
 	}
-	void setMouseButtonCallback(b3MouseButtonCallback mouseCallback) override {}
+	// onButton
+	b3MouseButtonCallback m_onBUtton;
+	void setMouseButtonCallback(b3MouseButtonCallback mouseCallback) override
+	{
+		m_onBUtton = mouseCallback;
+	}
 	b3MouseButtonCallback getMouseButtonCallback() override
 	{
-		return {};
+		return m_onBUtton;
 	}
-	void setResizeCallback(b3ResizeCallback resizeCallback) override {}
+	// onResize
+	b3ResizeCallback m_onResize;
+	void setResizeCallback(b3ResizeCallback resizeCallback) override
+	{
+		m_onResize = resizeCallback;
+	}
 	b3ResizeCallback getResizeCallback() override
 	{
-		return {};
+		return m_onResize;
 	}
-	void setWheelCallback(b3WheelCallback wheelCallback) override {}
+	// onWheel
+	b3WheelCallback m_onWheel;
+	void setWheelCallback(b3WheelCallback wheelCallback) override
+	{
+		m_onWheel = wheelCallback;
+	}
 	b3WheelCallback getWheelCallback() override
 	{
-		return {};
+		return m_onWheel;
 	}
-	void setKeyboardCallback(b3KeyboardCallback keyboardCallback) override {}
+	// onKey
+	b3KeyboardCallback m_onKey;
+	void setKeyboardCallback(b3KeyboardCallback keyboardCallback) override
+	{
+		m_onKey = keyboardCallback;
+	}
 	b3KeyboardCallback getKeyboardCallback() override
 	{
-		return {};
+		return m_onKey;
 	}
-	void setRenderCallback(b3RenderCallback renderCallback) override {}
+	// render
+	b3RenderCallback m_render;
+	void setRenderCallback(b3RenderCallback renderCallback) override
+	{
+		m_render = renderCallback;
+	}
 	void setWindowTitle(const char* title) override {}
 	float getRetinaScale() const override { return m_retinaScale; }
 	void setAllowRetina(bool /*allowRetina*/) override{};
@@ -107,6 +166,51 @@ public:
 		return 0;
 	}
 };
+
+static void SimpleResizeCallback(GLFWwindow* window, int width, int height)
+{
+	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
+	gApp->m_onResize(width, height);
+}
+
+static void SimpleKeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
+	gApp->m_onKey(key, action);
+}
+
+int s_x = 0;
+int s_y = 0;
+static void SimpleMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
+	switch (button)
+	{
+		case GLFW_MOUSE_BUTTON_LEFT:
+			break;
+		case GLFW_MOUSE_BUTTON_RIGHT:
+			button = 2;
+			break;
+		case GLFW_MOUSE_BUTTON_MIDDLE:
+			button = 1;
+			break;
+	}
+	gApp->m_onBUtton(button, action, s_x, s_y);
+}
+
+static void SimpleMouseMoveCallback(GLFWwindow* window, double x, double y)
+{
+	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
+	s_x = x;
+	s_y = y;
+	gApp->m_onMove(x, y);
+}
+
+static void SimpleWheelCallback(GLFWwindow* window, double deltax, double deltay)
+{
+	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
+	gApp->m_onWheel(deltax, deltay);
+}
 
 struct SimpleInternalData
 {
@@ -152,50 +256,6 @@ struct SimpleInternalData
 	{
 	}
 };
-
-static void SimpleResizeCallback(GLFWwindow* window, int width, int height)
-{
-	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
-	if (gApp->m_instancingRenderer)
-		gApp->m_instancingRenderer->resize(width, height);
-	if (gApp->m_primRenderer)
-		gApp->m_primRenderer->setScreenSize(width, height);
-}
-
-static void SimpleKeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
-	if (key == B3G_ESCAPE && gApp && gApp->m_window)
-	{
-		gApp->m_window->setRequestExit();
-	}
-	else
-	{
-		//gApp->defaultKeyboardCallback(key,state);
-	}
-}
-
-static int s_x = 0;
-static int s_y = 0;
-static void SimpleMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-{
-	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
-	gApp->defaultMouseButtonCallback(button, action, s_x, s_y);
-}
-
-static void SimpleMouseMoveCallback(GLFWwindow* window, double x, double y)
-{
-	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
-	s_x = x;
-	s_y = y;
-	gApp->defaultMouseMoveCallback(x, y);
-}
-
-static void SimpleWheelCallback(GLFWwindow* window, double deltax, double deltay)
-{
-	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
-	gApp->defaultWheelCallback(deltax, deltay);
-}
 
 static GLuint BindFont(const CTexFont* _Font)
 {
@@ -373,6 +433,12 @@ static void error_callback(int error, const char* description)
 	fprintf(stderr, "Error: %s\n", description);
 }
 
+static void printGLString(const char* name, GLenum s)
+{
+	const char* v = (const char*)glGetString(s);
+	printf("%s = %s\n", name, v);
+}
+
 // bool sOpenGLVerbose = true;
 
 ///
@@ -381,31 +447,66 @@ static void error_callback(int error, const char* description)
 GlfwApp::GlfwApp(const char* title, int width, int height, float retinaScale)
 {
 	glfwSetErrorCallback(error_callback);
-
 	if (!glfwInit())
 	{
 		throw std::runtime_error("glfwInit");
 	}
 
-	/* Create a windowed mode window and its OpenGL context */
-	m_glfw = glfwCreateWindow(width, height, title, NULL, NULL);
-	if (!m_glfw)
-	{
-		throw std::runtime_error("glfwInit");
-	}
-	glfwSetWindowUserPointer(m_glfw, this);
-	glfwSetWindowSizeCallback(m_glfw, SimpleResizeCallback);
-	glfwSetCursorPosCallback(m_glfw, SimpleMouseMoveCallback);
-	glfwSetMouseButtonCallback(m_glfw, SimpleMouseButtonCallback);
-	glfwSetKeyCallback(m_glfw, SimpleKeyboardCallback);
-	glfwSetScrollCallback(m_glfw, SimpleWheelCallback);
+	m_window = new GlfwWindowInterface(retinaScale);
+	// m_window->setAllowRetina(allowRetina);
 
-	glfwMakeContextCurrent(m_glfw);
-	gladLoadGL(glfwGetProcAddress);
-	glfwSwapInterval(1);
+	b3gWindowConstructionInfo ci;
+	ci.m_title = title;
+	ci.m_width = width;
+	ci.m_height = height;
+	// ci.m_renderDevice = renderDevice;
+	m_window->createWindow(ci);
+
+	m_window->setWindowTitle(title);
+
+	b3Assert(glGetError() == GL_NO_ERROR);
+
+	{
+		printGLString("Version", GL_VERSION);
+		printGLString("Vendor", GL_VENDOR);
+		printGLString("Renderer", GL_RENDERER);
+	}
+
+	glClearColor(m_backgroundColorRGB[0],
+				 m_backgroundColorRGB[1],
+				 m_backgroundColorRGB[2],
+				 1.f);
+
+	m_window->startRendering();
+	width = m_window->getWidth();
+	height = m_window->getHeight();
+
+	b3Assert(glGetError() == GL_NO_ERROR);
+
+	m_window->setResizeCallback([gApp = this](int width, int height)
+								{
+									if (gApp->m_instancingRenderer)
+										gApp->m_instancingRenderer->resize(width, height);
+									if (gApp->m_primRenderer)
+										gApp->m_primRenderer->setScreenSize(width, height); });
+	m_window->setMouseMoveCallback([gApp = this](int x, int y)
+								   { gApp->defaultMouseMoveCallback(x, y); });
+	m_window->setMouseButtonCallback([gApp = this](int button, int state, float x, float y)
+									 { gApp->defaultMouseButtonCallback(button, state, x, y); });
+	m_window->setKeyboardCallback([gApp = this](int keycode, int state)
+								  {
+									  if (keycode == B3G_ESCAPE && gApp->m_window)
+									  {
+										  gApp->m_window->setRequestExit();
+									  }
+									  else
+									  {
+										  //gApp->defaultKeyboardCallback(key,state);
+									  } });
+	m_window->setWheelCallback([gApp = this](float deltax, float deltay)
+							   { gApp->defaultWheelCallback(deltax, deltay); });
 
 	m_data = new SimpleInternalData;
-	m_window = new GlfwWindowInterface(m_glfw, retinaScale);
 
 	glClearColor(m_backgroundColorRGB[0],
 				 m_backgroundColorRGB[1],

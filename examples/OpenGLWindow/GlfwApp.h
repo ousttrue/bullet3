@@ -2,11 +2,8 @@
 #include "GLInstancingRenderer.h"
 #include "GLPrimitiveRenderer.h"
 
-class GlfwApp : public CommonGraphicsApp
+struct GlfwApp : public CommonGraphicsApp
 {
-	struct GLFWwindow* m_glfw = nullptr;
-
-public:
 	struct SimpleInternalData* m_data;
 	class GLPrimitiveRenderer* m_primRenderer;
 	class GLInstancingRenderer* m_instancingRenderer;
