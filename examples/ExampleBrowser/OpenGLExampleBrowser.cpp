@@ -230,7 +230,6 @@ class GwenImpl
 	GL3TexLoader* m_myTexLoader = nullptr;
 	Gwen::Renderer::Base* m_gwenRenderer = nullptr;
 	GwenUserInterface* m_gui = nullptr;
-	GwenUserInterface* gui2 = 0;
 	struct MyMenuItemHander* m_handler2 = nullptr;
 	btAlignedObjectArray<Gwen::Controls::TreeNode*> m_nodes;
 	btAlignedObjectArray<MyMenuItemHander*> m_handlers;
@@ -244,12 +243,8 @@ public:
 		m_gwenRenderer = new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, retinaScale,
 													 // s_window->getRetinaScale(),
 													 m_myTexLoader);
-
-		gui2 = new GwenUserInterface;
-
-		m_gui = gui2;
-
-		gui2->init(width, height, m_gwenRenderer, retinaScale);
+		m_gui = new GwenUserInterface;
+		m_gui->init(width, height, m_gwenRenderer, retinaScale);
 	}
 	~GwenImpl()
 	{
@@ -271,26 +266,26 @@ public:
 	}
 	CommonParameterInterface* CreateCommonParameterInterface()
 	{
-		return new GwenParameterInterface(gui2->getInternalData());
+		return new GwenParameterInterface(m_gui->getInternalData());
 	}
 	QuickCanvas* CreateCommon2dCanvasInterface()
 	{
-		return new QuickCanvas(gui2, m_myTexLoader);
+		return new QuickCanvas(m_gui, m_myTexLoader);
 	}
 	void Setup(
 		const std::function<void()>& b, const std::function<void()>& d, const std::function<void(int)>& e)
 	{
 		// gui->getInternalData()->m_explorerPage
-		tree = gui2->getInternalData()->m_explorerTreeCtrl;
+		tree = m_gui->getInternalData()->m_explorerTreeCtrl;
 
 		//gui->getInternalData()->pRenderer->setTextureLoader(myTexLoader);
 
 #ifndef BT_NO_PROFILE
-		s_profWindow = setupProfileWindow(gui2->getInternalData());
+		s_profWindow = setupProfileWindow(m_gui->getInternalData());
 		m_internalData->m_profWindow = s_profWindow;
 		profileWindowSetVisible(s_profWindow, false);
 #endif  //BT_NO_PROFILE
-		gui2->setFocus();
+		m_gui->setFocus();
 
 		///add some demos to the gAllExamples
 
@@ -377,45 +372,45 @@ public:
 	}
 	bool OnKeyboard(int key, int state)
 	{
-		return gui2->keyboardCallback(key, state);
+		return m_gui->keyboardCallback(key, state);
 	}
 	bool OnMouseMove(int x, int y)
 	{
-		return gui2->mouseMoveCallback(x, y);
+		return m_gui->mouseMoveCallback(x, y);
 	}
 	bool OnMouseButton(int button, int state, int x, int y)
 	{
-		return gui2->mouseButtonCallback(button, state, x, y);
+		return m_gui->mouseButtonCallback(button, state, x, y);
 	}
 	void SetDescription(const char* description)
 	{
-		gui2->setStatusBarMessage("Status: OK", false);
-		gui2->setExampleDescription(description);
+		m_gui->setStatusBarMessage("Status: OK", false);
+		m_gui->setExampleDescription(description);
 	}
 	void ShowMessage(const char* msg)
 	{
-		gui2->textOutput(msg);
-		gui2->forceUpdateScrollBars();
+		m_gui->textOutput(msg);
+		m_gui->forceUpdateScrollBars();
 	}
 	void SetStatusbarMessage(const char* msg)
 	{
 		bool isLeft = true;
-		gui2->setStatusBarMessage(msg, isLeft);
+		m_gui->setStatusBarMessage(msg, isLeft);
 	}
 	void ShowErrorMessage(const char* msg)
 	{
 		bool isLeft = false;
-		gui2->setStatusBarMessage(msg, isLeft);
-		gui2->textOutput(msg);
-		gui2->forceUpdateScrollBars();
+		m_gui->setStatusBarMessage(msg, isLeft);
+		m_gui->textOutput(msg);
+		m_gui->forceUpdateScrollBars();
 	}
 	void RegisterFileOpen(const std::function<void()>& callback)
 	{
-		gui2->registerFileOpenCallback(callback);
+		m_gui->registerFileOpenCallback(callback);
 	}
 	void RegisterQuit(const std::function<void()>& callback)
 	{
-		gui2->registerQuitCallback(callback);
+		m_gui->registerQuitCallback(callback);
 	}
 	void Render(int w, int h)
 	{
@@ -423,7 +418,7 @@ public:
 	}
 	void ForceUpdateScrollBars()
 	{
-		gui2->forceUpdateScrollBars();
+		m_gui->forceUpdateScrollBars();
 	}
 };
 
