@@ -11,7 +11,7 @@ public:
 	class MyMenuItems2* m_menuItems;
 
 	MyGraphWindow(const MyGraphInput& input)
-		: Gwen::Controls::WindowControl(input.m_data->pCanvas),
+		: Gwen::Controls::WindowControl(input.m_data->pCanvas.get()),
 		  m_menuItems(0)
 	{
 		Gwen::UnicodeString str = Gwen::Utility::StringToUnicode(input.m_name);

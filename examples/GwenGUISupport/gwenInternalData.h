@@ -27,9 +27,8 @@
 #include <Gwen/Controls/ImagePanel.h>
 #include <Gwen/Controls/ColorPicker.h>
 #include <Gwen/Controls/TreeNode.h>
-//#include "Gwen/Skins/TexturedBase.h"
-// #include "gwenUserInterface.h"
-#include <LinearMath/btAlignedObjectArray.h>
+#include <list>
+#include <memory>
 
 using b3ComboBoxCallback = std::function<void(int combobox, const char* item)>;
 using b3ToggleButtonCallback = std::function<void(int button, int state)>;
@@ -38,36 +37,38 @@ using b3QuitCallback = std::function<void()>;
 
 class GwenInternalData
 {
-public:
-	struct GL3TexLoader* m_myTexLoader = nullptr;
-	struct MyMenuItemHander* m_handler2 = nullptr;
-	btAlignedObjectArray<Gwen::Controls::TreeNode*> m_nodes;
-	btAlignedObjectArray<MyMenuItemHander*> m_nodeHandlers;
-
+	std::unique_ptr<struct MyMenuItemHander> m_handler2;
+	std::unique_ptr<struct GL3TexLoader> m_myTexLoader;
 	//struct sth_stash;
 	//class GwenOpenGL3CoreRenderer*	pRenderer;
-	Gwen::Renderer::Base* pRenderer;
+	std::unique_ptr<Gwen::Renderer::Base> pRenderer;
 	Gwen::Skin::Simple skin;
-	Gwen::Controls::Canvas* pCanvas;
+
+public:
+	std::unique_ptr<Gwen::Controls::Canvas> pCanvas;
 	//GLPrimitiveRenderer* m_primRenderer;
 	Gwen::Controls::TabButton* m_demoPage;
 	Gwen::Controls::TabButton* m_explorerPage;
 	Gwen::Controls::TreeControl* m_explorerTreeCtrl;
 	Gwen::Controls::MenuItem* m_viewMenu;
 	class MyMenuItems* m_menuItems;
-	Gwen::Controls::ListBox* m_TextOutput;
 	Gwen::Controls::Label* m_exampleInfoGroupBox;
 	Gwen::Controls::ListBox* m_exampleInfoTextOutput;
-	struct MyTestMenuBar* m_menubar;
-	Gwen::Controls::StatusBar* m_bar;
-	Gwen::Controls::ScrollControl* m_windowRight;
-	Gwen::Controls::TabControl* m_tab;
 
+private:
+	std::unique_ptr<Gwen::Controls::ListBox> m_TextOutput;
+	std::unique_ptr<struct MyTestMenuBar> m_menubar;
+	std::unique_ptr<Gwen::Controls::StatusBar> m_bar;
+	std::unique_ptr<Gwen::Controls::Label> m_rightStatusBar;
+	std::unique_ptr<Gwen::Controls::Label> m_leftStatusBar;
+	std::unique_ptr<Gwen::Controls::ScrollControl> m_windowRight;
+	std::unique_ptr<Gwen::Controls::TabControl> m_tab;
+
+	std::list<std::unique_ptr<Gwen::Controls::TreeNode>> m_nodes;
+	std::list<std::unique_ptr<MyMenuItemHander>> m_nodeHandlers;
+public:
+	std::list<std::unique_ptr<class Gwen::Event::Handler>> m_handlers;
 	int m_curYposition;
-
-	Gwen::Controls::Label* m_rightStatusBar;
-	Gwen::Controls::Label* m_leftStatusBar;
-	b3AlignedObjectArray<class Gwen::Event::Handler*> m_handlers;
 
 public:
 	b3ToggleButtonCallback m_toggleButtonCallback;

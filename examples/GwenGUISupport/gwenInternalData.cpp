@@ -1,6 +1,8 @@
 #include "gwenInternalData.h"
+#include "Gwen/Controls/TreeNode.h"
 #include "GwenTextureWindow.h"
 #include "GraphingTexture.h"
+#include <memory>
 #include <tuple>
 #include <functional>
 #include <Common2dCanvasInterface.h>
@@ -295,7 +297,7 @@ struct MyButtonHander : public Gwen::Event::Handler
 //
 GwenInternalData::GwenInternalData(GlfwApp* s_app, int width, int height, float retinaScale)
 {
-	m_myTexLoader = new GL3TexLoader;
+	m_myTexLoader.reset(new GL3TexLoader);
 
 	auto fontstash = s_app->getFontStash();
 
@@ -305,39 +307,35 @@ GwenInternalData::GwenInternalData(GlfwApp* s_app, int width, int height, float 
 
 	m_curYposition = 20;
 	//m_primRenderer = new GLPrimitiveRenderer(width,height);
-	pRenderer = new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, retinaScale, m_myTexLoader);
+	pRenderer.reset(new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, retinaScale, m_myTexLoader.get()));
 
-	skin.SetRender(pRenderer);
+	skin.SetRender(pRenderer.get());
 
-	pCanvas = new Gwen::Controls::Canvas(&skin);
+	pCanvas.reset(new Gwen::Controls::Canvas(&skin));
 	pCanvas->SetSize(width, height);
 	pCanvas->SetDrawBackground(false);
 	pCanvas->SetBackgroundColor(Gwen::Color(150, 170, 170, 255));
 
-	MyTestMenuBar* menubar = new MyTestMenuBar(pCanvas);
-	m_viewMenu = menubar->m_viewMenu;
-	m_menuItems = menubar->m_menuItems;
-	m_menubar = menubar;
+	m_menubar.reset(new MyTestMenuBar(pCanvas.get()));
+	m_viewMenu = m_menubar->m_viewMenu;
+	m_menuItems = m_menubar->m_menuItems;
 
-	Gwen::Controls::StatusBar* bar = new Gwen::Controls::StatusBar(pCanvas);
-	m_bar = bar;
-
-	m_rightStatusBar = new Gwen::Controls::Label(bar);
+	m_bar.reset(new Gwen::Controls::StatusBar(pCanvas.get()));
+	m_rightStatusBar.reset(new Gwen::Controls::Label(m_bar.get()));
 
 	m_rightStatusBar->SetWidth(width / 2);
 	//m_rightStatusBar->SetText( L"Label Added to Right" );
-	bar->AddControl(m_rightStatusBar, true);
+	m_bar->AddControl(m_rightStatusBar.get(), true);
 
-	m_TextOutput = new Gwen::Controls::ListBox(pCanvas);
+	m_TextOutput.reset(new Gwen::Controls::ListBox(pCanvas.get()));
 
 	m_TextOutput->Dock(Gwen::Pos::Bottom);
 	m_TextOutput->SetHeight(100);
-
-	m_leftStatusBar = new Gwen::Controls::Label(bar);
+	m_leftStatusBar.reset(new Gwen::Controls::Label(m_bar.get()));
 
 	//m_leftStatusBar->SetText( L"Label Added to Left" );
 	m_leftStatusBar->SetWidth(width / 2);
-	bar->AddControl(m_leftStatusBar, false);
+	m_bar->AddControl(m_leftStatusBar.get(), false);
 
 	//Gwen::KeyboardFocus
 	/*Gwen::Controls::GroupBox* box = new Gwen::Controls::GroupBox(pCanvas);
@@ -346,26 +344,24 @@ GwenInternalData::GwenInternalData(GlfwApp* s_app, int width, int height, float 
 	box->SetHeight(500);
 	*/
 
-	Gwen::Controls::ScrollControl* windowRight = new Gwen::Controls::ScrollControl(pCanvas);
-	windowRight->Dock(Gwen::Pos::Right);
-	windowRight->SetWidth(250);
-	windowRight->SetHeight(250);
-	windowRight->SetScroll(false, true);
-	m_windowRight = windowRight;
+	m_windowRight.reset(new Gwen::Controls::ScrollControl(pCanvas.get()));
+	m_windowRight->Dock(Gwen::Pos::Right);
+	m_windowRight->SetWidth(250);
+	m_windowRight->SetHeight(250);
+	m_windowRight->SetScroll(false, true);
 
 	//windowLeft->SetSkin(
-	Gwen::Controls::TabControl* tab = new Gwen::Controls::TabControl(windowRight);
-	m_tab = tab;
+	m_tab.reset(new Gwen::Controls::TabControl(m_windowRight.get()));
 
 	//tab->SetHeight(300);
-	tab->SetWidth(240);
-	tab->SetHeight(13250);
+	m_tab->SetWidth(240);
+	m_tab->SetHeight(13250);
 	//tab->Dock(Gwen::Pos::Left);
-	tab->Dock(Gwen::Pos::Fill);
+	m_tab->Dock(Gwen::Pos::Fill);
 	//tab->SetMargin( Gwen::Margin( 2, 2, 2, 2 ) );
 
 	Gwen::UnicodeString str1(L"Params");
-	m_demoPage = tab->AddPage(str1);
+	m_demoPage = m_tab->AddPage(str1);
 
 	//	Gwen::UnicodeString str2(L"OpenCL");
 	//	tab->AddPage(str2);
@@ -393,7 +389,7 @@ GwenInternalData::GwenInternalData(GlfwApp* s_app, int width, int height, float 
 
 	*/
 
-	Gwen::Controls::ScrollControl* windowLeft = new Gwen::Controls::ScrollControl(pCanvas);
+	Gwen::Controls::ScrollControl* windowLeft = new Gwen::Controls::ScrollControl(pCanvas.get());
 	windowLeft->Dock(Gwen::Pos::Left);
 	//	windowLeft->SetTitle("title");
 	windowLeft->SetScroll(false, false);
@@ -450,48 +446,16 @@ GwenInternalData::GwenInternalData(GlfwApp* s_app, int width, int height, float 
 
 GwenInternalData::~GwenInternalData()
 {
-	for (int i = 0; i < m_nodes.size(); i++)
-	{
-		delete m_nodes[i];
-	}
-	m_nodes.clear();
-
-	delete m_handler2;
-
-	for (int i = 0; i < m_nodeHandlers.size(); i++)
-	{
-		delete m_nodeHandlers[i];
-	}
-	m_nodeHandlers.clear();
-
-	for (int i = 0; i < m_handlers.size(); i++)
-	{
-		delete m_handlers[i];
-	}
-	m_handlers.clear();
-
-	//m_menubar->RemoveAllChildren();
-	delete m_tab;
-	delete m_windowRight;
-	delete m_leftStatusBar;
-	delete m_rightStatusBar;
-	delete m_TextOutput;
-	delete m_bar;
-	delete m_menubar;
-	delete pRenderer;
-	delete pCanvas;
-	delete m_myTexLoader;
 }
 
 int GwenInternalData::setup(ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
 							const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& onE)
 {
 	auto tree = m_explorerTreeCtrl;
-
-	m_handler2 = new MyMenuItemHander(-1, onB, onD, onE);
+	m_handler2.reset(new MyMenuItemHander(-1, onB, onD, onE));
 
 	auto curNode = (Gwen::Controls::TreeNode*)tree;
-	tree->onReturnKeyDown.Add(m_handler2, &MyMenuItemHander::onButtonD);
+	tree->onReturnKeyDown.Add(m_handler2.get(), &MyMenuItemHander::onButtonD);
 
 	int numDemos = gAllExamples->getNumRegisteredExamples();
 	int selectedDemo = 0;
@@ -545,18 +509,20 @@ int GwenInternalData::setup(ExampleEntries* gAllExamples, const char* demoNameFr
 			}
 
 #if 1
-			MyMenuItemHander* handler = new MyMenuItemHander(d,
-															 onB,
-															 onD,
-															 onE);
-			m_nodeHandlers.push_back(handler);
+			std::unique_ptr<MyMenuItemHander> handler;
+			handler.reset(new MyMenuItemHander(d,
+											   onB,
+											   onD,
+											   onE));
 
-			pNode->onNamePress.Add(handler, &MyMenuItemHander::onButtonA);
-			pNode->GetButton()->onDoubleClick.Add(handler, &MyMenuItemHander::onButtonB);
-			pNode->GetButton()->onDown.Add(handler, &MyMenuItemHander::onButtonC);
-			pNode->onSelect.Add(handler, &MyMenuItemHander::onButtonE);
-			pNode->onReturnKeyDown.Add(handler, &MyMenuItemHander::onButtonG);
-			pNode->onSelectChange.Add(handler, &MyMenuItemHander::onButtonF);
+			pNode->onNamePress.Add(handler.get(), &MyMenuItemHander::onButtonA);
+			pNode->GetButton()->onDoubleClick.Add(handler.get(), &MyMenuItemHander::onButtonB);
+			pNode->GetButton()->onDown.Add(handler.get(), &MyMenuItemHander::onButtonC);
+			pNode->onSelect.Add(handler.get(), &MyMenuItemHander::onButtonE);
+			pNode->onReturnKeyDown.Add(handler.get(), &MyMenuItemHander::onButtonG);
+			pNode->onSelectChange.Add(handler.get(), &MyMenuItemHander::onButtonF);
+
+			m_nodeHandlers.push_back(std::move(handler));
 
 #endif
 			//   pNode->onKeyReturn.Add(handler, &MyMenuItemHander::onButtonD);
@@ -567,8 +533,9 @@ int GwenInternalData::setup(ExampleEntries* gAllExamples, const char* demoNameFr
 		}
 		else
 		{
-			curNode = tree->AddNode(nodeUText);
-			m_nodes.push_back(curNode);
+			std::unique_ptr<Gwen::Controls::TreeNode> curNode;
+			curNode.reset(tree->AddNode(nodeUText));
+			m_nodes.push_back(std::move(curNode));
 		}
 
 		if (isSelected)
@@ -598,7 +565,7 @@ int GwenInternalData::setup(ExampleEntries* gAllExamples, const char* demoNameFr
 	// 	exit(0);
 	// }
 
-    return firstAvailableDemoIndex;
+	return firstAvailableDemoIndex;
 }
 
 void GwenInternalData::resize(int width, int height)
@@ -722,10 +689,11 @@ void GwenInternalData::registerToggleButton2(int buttonId, const char* name)
 	but->SetWidth(200);
 	//but->SetBounds( 200, 30, 300, 200 );
 
-	MyButtonHander* handler = new MyButtonHander(this, buttonId);
-	m_handlers.push_back(handler);
+	std::unique_ptr<MyButtonHander> handler;
+	handler.reset(new MyButtonHander(this, buttonId));
+	m_handlers.push_back(std::move(handler));
 	m_curYposition += 22;
-	but->onToggle.Add(handler, &MyButtonHander::onButtonA);
+	but->onToggle.Add(handler.get(), &MyButtonHander::onButtonA);
 	but->SetIsToggle(true);
 	but->SetToggleState(false);
 	but->SetText(name);
@@ -744,10 +712,11 @@ b3ComboBoxCallback GwenInternalData::getComboBoxCallback()
 void GwenInternalData::registerComboBox2(int comboboxId, int numItems, const char** items, int startItem)
 {
 	Gwen::Controls::ComboBox* combobox = new Gwen::Controls::ComboBox(m_demoPage->GetPage());
-	MyComboBoxHander* handler = new MyComboBoxHander(this, comboboxId);
-	m_handlers.push_back(handler);
+	std::unique_ptr<MyComboBoxHander> handler;
+	handler.reset(new MyComboBoxHander(this, comboboxId));
+	m_handlers.push_back(std::move(handler));
 
-	combobox->onSelection.Add(handler, &MyComboBoxHander::onSelect);
+	combobox->onSelection.Add(handler.get(), &MyComboBoxHander::onSelect);
 	int ypos = m_curYposition;
 	combobox->SetPos(10, ypos);
 	combobox->SetWidth(100);
@@ -777,7 +746,7 @@ void GwenInternalData::render(int width, int height)
 
 Common2dCanvasInterface* GwenInternalData::createCommon2dCanvasInterface()
 {
-	return new QuickCanvas(this, m_myTexLoader);
+	return new QuickCanvas(this, m_myTexLoader.get());
 }
 
 bool GwenInternalData::onMouseMove(int x, int y)

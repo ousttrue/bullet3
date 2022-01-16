@@ -203,10 +203,11 @@ void GwenParameterInterface::registerComboBox(ComboBoxParams& params)
 {
 	Gwen::Controls::ComboBox* combobox = new Gwen::Controls::ComboBox(m_gwenInternalData->m_demoPage->GetPage());
 	m_paramInternalData->m_comboBoxes.push_back(combobox);
-	MyComboBoxHander2* handler = new MyComboBoxHander2(m_gwenInternalData, params.m_comboboxId, params.m_callback, params.m_userPointer);
-	m_gwenInternalData->m_handlers.push_back(handler);
+	std::unique_ptr<MyComboBoxHander2> handler;
+	handler.reset(new MyComboBoxHander2(m_gwenInternalData, params.m_comboboxId, params.m_callback, params.m_userPointer));
+	m_gwenInternalData->m_handlers.push_back(std::move(handler));
 
-	combobox->onSelection.Add(handler, &MyComboBoxHander2::onSelect);
+	combobox->onSelection.Add(handler.get(), &MyComboBoxHander2::onSelect);
 	int ypos = m_gwenInternalData->m_curYposition;
 	m_gwenInternalData->m_curYposition += 22;
 	combobox->SetPos(5, ypos);
@@ -310,9 +311,5 @@ void GwenParameterInterface::removeAllParameters()
 	m_paramInternalData->m_comboBoxes.clear();
 
 	m_gwenInternalData->m_curYposition = this->m_paramInternalData->m_savedYposition;
-	for (int i = 0; i < m_gwenInternalData->m_handlers.size(); i++)
-	{
-		delete m_gwenInternalData->m_handlers[i];
-	}
 	m_gwenInternalData->m_handlers.clear();
 }
