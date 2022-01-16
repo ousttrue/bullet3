@@ -31,8 +31,6 @@ subject to the following restrictions:
 #include "BulletSoftBody/btSoftBodyHelpers.h"
 
 #include "SoftDemo.h"
-// #include "GL_ShapeDrawer.h"
-
 #include "LinearMath/btAlignedObjectArray.h"
 #include "BulletSoftBody/btSoftBody.h"
 

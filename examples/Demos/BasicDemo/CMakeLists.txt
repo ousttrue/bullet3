@@ -20,8 +20,6 @@ add_executable(
   ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc
   ../../StandaloneMain/main_opengl_single_example.cpp
   ../../ExampleBrowser/OpenGLGuiHelper.cpp
-  ../../ExampleBrowser/GL_ShapeDrawer.cpp
   ../../ExampleBrowser/CollisionShape2TriangleMesh.cpp
-  ../../Utils/b3Clock.cpp
-  )
+  ../../Utils/b3Clock.cpp)
 target_link_libraries(${TARGET_NAME} BasicDemo OpenGLWindow)

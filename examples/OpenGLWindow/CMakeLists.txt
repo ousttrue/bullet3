@@ -17,5 +17,12 @@ target_include_directories(
   ${TARGET_NAME}
   PRIVATE ${BULLET_PHYSICS_SOURCE_DIR}/examples/ThirdPartyLibs
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(${TARGET_NAME} PUBLIC glad Bullet3Common CommonInterfaces
-                                            OpenGL32.lib stb_image glad glfw)
+target_link_libraries(
+  ${TARGET_NAME}
+  PUBLIC glad
+         Bullet3Common
+         CommonInterfaces
+         OpenGL32.lib
+         stb_image
+         glad
+         glfw)
