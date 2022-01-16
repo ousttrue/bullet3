@@ -5,26 +5,18 @@ set(SharedMemory_SRCS
     plugins/pdControlPlugin/pdControlPlugin.cpp
     plugins/pdControlPlugin/pdControlPlugin.h
     plugins/tinyRendererPlugin/tinyRendererPlugin.cpp
-    plugins/tinyRendererPlugin/TinyRendererVisualShapeConverter.cpp	
-	IKTrajectoryHelper.cpp
+    plugins/tinyRendererPlugin/TinyRendererVisualShapeConverter.cpp
+    IKTrajectoryHelper.cpp
     IKTrajectoryHelper.h
     PhysicsServer.cpp
     PhysicsClientSharedMemory.cpp
     PhysicsClientSharedMemory_C_API.cpp
     PhysicsClient.cpp
     PhysicsClientC_API.cpp
-
-    # PhysicsClient.cpp
-    # PhysicsClientSharedMemory.cpp
-    # PhysicsClientExample.cpp
-    # PhysicsServerExample.cpp
-    # PhysicsServerExampleBullet2.cpp
-    # PhysicsServerSharedMemory.cpp
-    # PhysicsServerSharedMemory.h
-    # PhysicsServer.cpp
-    # PhysicsServer.h
-    # PhysicsClientC_API.cpp
-
+    # PhysicsClient.cpp PhysicsClientSharedMemory.cpp PhysicsClientExample.cpp
+    # PhysicsServerExample.cpp PhysicsServerExampleBullet2.cpp
+    # PhysicsServerSharedMemory.cpp PhysicsServerSharedMemory.h
+    # PhysicsServer.cpp PhysicsServer.h PhysicsClientC_API.cpp
     GraphicsServerExample.cpp
     GraphicsClientExample.cpp
     RemoteGUIHelper.cpp
@@ -33,15 +25,10 @@ set(SharedMemory_SRCS
     RemoteGUIHelper.h
     GraphicsSharedMemoryCommands.h
     GraphicsSharedMemoryPublic.h
-
-    # GraphicsClientExample.cpp
-    # GraphicsClientExample.h
-    # GraphicsServerExample.cpp
-    # GraphicsServerExample.h
-    # GraphicsSharedMemoryBlock.h
-    # GraphicsSharedMemoryCommands.h
+    # GraphicsClientExample.cpp GraphicsClientExample.h
+    # GraphicsServerExample.cpp GraphicsServerExample.h
+    # GraphicsSharedMemoryBlock.h GraphicsSharedMemoryCommands.h
     # GraphicsSharedMemoryPublic.h
-
     PhysicsServerExample.cpp
     PhysicsServerExampleBullet2.cpp
     PhysicsClientExample.cpp
@@ -134,34 +121,29 @@ set(SharedMemory_SRCS
     # ../MultiThreading/b3ThreadSupportInterface.h
 )
 add_library(${TARGET_NAME} ${SharedMemory_SRCS})
-target_link_libraries(${TARGET_NAME} PRIVATE CommonInterfaces BussIK BulletDynamics BulletSoftBody Importers
-                                             tiny_obj_loader TinyRenderer stb_image OpenGLWindow Utils)
+target_link_libraries(
+  ${TARGET_NAME}
+  PRIVATE CommonInterfaces
+          BussIK
+          BulletDynamics
+          BulletSoftBody
+          Importers
+          tiny_obj_loader
+          TinyRenderer
+          stb_image
+          OpenGLWindow
+          Utils)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-# IF (WIN32) ADD_EXECUTABLE(App_PhysicsServer_SharedMemory ${SharedMemory_SRCS}
-# main.cpp ../MultiThreading/b3Win32ThreadSupport.cpp
-# ../MultiThreading/b3Win32ThreadSupport.h
-# ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc ) ELSE(WIN32)
-# FIND_PACKAGE(Threads) LINK_LIBRARIES( ${CMAKE_THREAD_LIBS_INIT} ${DL} )
-# IF(APPLE) ADD_EXECUTABLE(App_PhysicsServer_SharedMemory ${SharedMemory_SRCS}
-# ../MultiThreading/b3PosixThreadSupport.cpp
-# ../MultiThreading/b3PosixThreadSupport.h main.cpp )
-
-# ELSE(APPLE) ADD_EXECUTABLE(App_PhysicsServer_SharedMemory ${SharedMemory_SRCS}
-# ../MultiThreading/b3PosixThreadSupport.cpp
-# ../MultiThreading/b3PosixThreadSupport.h main.cpp ) ENDIF(APPLE) ENDIF(WIN32)
-
-# IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
-# SET_TARGET_PROPERTIES(App_PhysicsServer_SharedMemory PROPERTIES  DEBUG_POSTFIX
-# "_Debug") SET_TARGET_PROPERTIES(App_PhysicsServer_SharedMemory PROPERTIES
-# MINSIZEREL_POSTFIX "_MinsizeRel")
-# SET_TARGET_PROPERTIES(App_PhysicsServer_SharedMemory PROPERTIES
-# RELWITHDEBINFO_POSTFIX "_RelWithDebugInfo")
-# ENDIF(INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
-
-# INCLUDE_DIRECTORIES( ${BULLET_PHYSICS_SOURCE_DIR}/src
-# ${BULLET_PHYSICS_SOURCE_DIR}/examples/ThirdPartyLibs
-# ${BULLET_PHYSICS_SOURCE_DIR}/examples/ThirdPartyLibs/glad )
+# ##############################################################################
+set(TARGET_NAME App_PhysicsServer_SharedMemory)
+add_executable(
+  ${TARGET_NAME} main.cpp ../MultiThreading/b3Win32ThreadSupport.cpp
+                 ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
+target_link_libraries(
+  ${TARGET_NAME}
+  PRIVATE SharedMemory Bullet3Common CommonInterfaces
+          BulletInverseDynamicsUtils BulletWorldImporter MultiThreading)
 
 # ADD_DEFINITIONS(-DB3_USE_STANDALONE_EXAMPLE)
 
@@ -172,16 +154,15 @@ target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # IF (WIN32) ADD_DEFINITIONS(-DGLEW_STATIC) LINK_LIBRARIES( ${OPENGL_gl_LIBRARY}
 # ${OPENGL_glu_LIBRARY} )
 
-# ADD_EXECUTABLE(App_PhysicsServer_SharedMemory_GUI ${SharedMemory_SRCS}
-# ../StandaloneMain/main_opengl_single_example.cpp
-# ../ExampleBrowser/OpenGLGuiHelper.cpp ../ExampleBrowser/GL_ShapeDrawer.cpp
-# ../ExampleBrowser/CollisionShape2TriangleMesh.cpp
-# ../MultiThreading/b3Win32ThreadSupport.cpp
-# ../MultiThreading/b3Win32ThreadSupport.h
-# ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc ) ELSE(WIN32)
-# FIND_PACKAGE(Threads) LINK_LIBRARIES( ${CMAKE_THREAD_LIBS_INIT} ${DL} )
-# IF(APPLE) FIND_LIBRARY(COCOA NAMES Cocoa) MESSAGE(${COCOA})
-# LINK_LIBRARIES(${COCOA} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY})
+# ##############################################################################
+set(TARGET_NAME App_PhysicsServer_SharedMemory_GUI)
+add_executable(${TARGET_NAME} ../StandaloneMain/main_opengl_single_example.cpp
+                              ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
+target_link_libraries(
+  ${TARGET_NAME}
+  PRIVATE SharedMemory Bullet3Common CommonInterfaces
+          BulletInverseDynamicsUtils BulletWorldImporter MultiThreading OpenGLWindow Utils)
+target_compile_definitions(${TARGET_NAME} PRIVATE B3_USE_STANDALONE_EXAMPLE)
 
 # ADD_EXECUTABLE(App_PhysicsServer_SharedMemory_GUI ${SharedMemory_SRCS}
 # ../StandaloneMain/main_opengl_single_example.cpp

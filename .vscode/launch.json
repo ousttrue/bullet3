@@ -27,6 +27,17 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "App_PhysicsServer_SharedMemory",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/bin/App_PhysicsServer_SharedMemory.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "App_BasicExampleGui",
             "type": "cppvsdbg",
             "request": "launch",
@@ -49,6 +60,13 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/scripts/run.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "hello.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/hello.py",
             "console": "integratedTerminal"
         },
     ]

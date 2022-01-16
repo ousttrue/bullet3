@@ -1,8 +1,6 @@
 set(TARGET_NAME ExampleBrowserLib)
-add_library(
-  ${TARGET_NAME}
-  EmptyBrowser.cpp InProcessExampleBrowser.cpp OpenGLGuiHelper.cpp
-  CollisionShape2TriangleMesh.cpp ExampleEntries.cpp OpenGLExampleBrowser.cpp)
+add_library(${TARGET_NAME} EmptyBrowser.cpp InProcessExampleBrowser.cpp
+                           ExampleEntries.cpp OpenGLExampleBrowser.cpp)
 target_link_libraries(
   ${TARGET_NAME}
   PUBLIC CommonInterfaces

@@ -10,7 +10,9 @@ add_library(
   opengl_fontstashcallbacks.cpp
   OpenSans.cpp
   SimpleCamera.cpp
-  TwFonts.cpp)
+  TwFonts.cpp
+  OpenGLGuiHelper.cpp
+  CollisionShape2TriangleMesh.cpp)
 target_compile_definitions(${TARGET_NAME} PUBLIC GLEW_STATIC)
 target_compile_options(${TARGET_NAME} PRIVATE /wd4244)
 target_include_directories(

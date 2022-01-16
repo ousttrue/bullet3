@@ -12,11 +12,11 @@
 #include "LinearMath/btAlignedObjectArray.h"
 #include "btBulletCollisionCommon.h"
 #include <CommonGUIHelperInterface.h>
-#include "../ExampleBrowser/CollisionShape2TriangleMesh.h"
-#include "../Importers/ImportMeshUtility/b3ImportMeshUtility.h"
+#include <CollisionShape2TriangleMesh.h>
+#include <ImportMeshUtility/b3ImportMeshUtility.h>
 #include <GLInstanceGraphicsShape.h>
 #include <CommonParameterInterface.h>
-#include "../Utils/b3BulletDefaultFileIO.h"
+#include <b3BulletDefaultFileIO.h>
 struct TinyRendererSetupInternalData
 {
 	TGAImage m_rgbColorBuffer;

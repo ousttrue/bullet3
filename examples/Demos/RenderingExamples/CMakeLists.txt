@@ -17,5 +17,12 @@ add_library(
   DynamicTexturedCubeDemo.h
   TinyVRGui.cpp
   TinyVRGui.h)
-target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics Bullet3Common
-                                             CommonInterfaces TinyRenderer OpenGLWindow)
+target_link_libraries(
+  ${TARGET_NAME}
+  PRIVATE BulletDynamics
+          Bullet3Common
+          CommonInterfaces
+          TinyRenderer
+          OpenGLWindow
+          Importers
+          Utils)

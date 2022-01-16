@@ -16,10 +16,6 @@ target_link_libraries(${TARGET_NAME} PRIVATE BasicDemo CommonInterfaces)
 set(TARGET_NAME App_BasicExampleGui)
 add_executable(
   ${TARGET_NAME}
-  CreateFunc.cpp
-  ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc
-  ../../StandaloneMain/main_opengl_single_example.cpp
-  ../../ExampleBrowser/OpenGLGuiHelper.cpp
-  ../../ExampleBrowser/CollisionShape2TriangleMesh.cpp
-  ../../Utils/b3Clock.cpp)
-target_link_libraries(${TARGET_NAME} BasicDemo OpenGLWindow)
+  CreateFunc.cpp ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc
+  ../../StandaloneMain/main_opengl_single_example.cpp)
+target_link_libraries(${TARGET_NAME} BasicDemo OpenGLWindow Utils)

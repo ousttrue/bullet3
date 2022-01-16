@@ -20,10 +20,11 @@ subject to the following restrictions:
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
 #include "SharedMemoryCommon.h"
+#include <iostream>
 
 #include <stdlib.h>
 
-int gSharedMemoryKey = -1;
+int gSharedMemoryKey = 11347;
 
 static SharedMemoryCommon* example = NULL;
 static bool interrupted = false;
@@ -76,6 +77,7 @@ int main(int argc, char* argv[])
 
 	// options.m_option |= PHYSICS_SERVER_ENABLE_COMMAND_LOGGING;
 	// options.m_option |= PHYSICS_SERVER_REPLAY_FROM_COMMAND_LOG;
+	std::cout << "sharedMemoryKey: " << gSharedMemoryKey << std::endl;
 
 	example = (SharedMemoryCommon*)PhysicsServerCreateFuncBullet2(options);
 

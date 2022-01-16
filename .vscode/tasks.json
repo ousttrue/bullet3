@@ -14,6 +14,13 @@
             },
             "problemMatcher": [],
             "isBackground": true
+        },
+        {
+            "label": "SharedMemory Server",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/Debug/bin/App_PhysicsServer_SharedMemory.exe",
+            "problemMatcher": [],
+            "isBackground": true
         }
     ]
 }

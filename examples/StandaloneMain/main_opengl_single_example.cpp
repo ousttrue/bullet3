@@ -16,10 +16,9 @@ subject to the following restrictions:
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
 #include <GlfwApp.h>
-#include "../Utils/b3Clock.h"
-
+#include <b3Clock.h>
+#include <OpenGLGuiHelper.h>
 #include <stdio.h>
-#include "../ExampleBrowser/OpenGLGuiHelper.h"
 
 CommonExampleInterface* example;
 int gSharedMemoryKey = -1;
