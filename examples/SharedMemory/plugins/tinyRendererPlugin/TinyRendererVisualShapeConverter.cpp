@@ -13,23 +13,23 @@ subject to the following restrictions:
 
 #include "TinyRendererVisualShapeConverter.h"
 
-#include <ImportURDFDemo/URDFImporterInterface.h>
-#include "btBulletCollisionCommon.h"
-#include <ImportObjDemo/LoadMeshFromObj.h>
-#include <ImportSTLDemo/LoadMeshFromSTL.h>
-#include <ImportColladaDemo/LoadMeshFromCollada.h>
+#include <URDFImporterInterface.h>
+#include <btBulletCollisionCommon.h>
+#include <LoadMeshFromObj.h>
+#include <LoadMeshFromSTL.h>
+#include <LoadMeshFromCollada.h>
 #include "BulletCollision/CollisionShapes/btShapeHull.h"  //to create a tesselation of a generic btConvexShape
 #include <CommonGUIHelperInterface.h>
 #include "Bullet3Common/b3FileUtils.h"
 #include <string>
-#include "../Utils/b3ResourcePath.h"
+#include <b3ResourcePath.h>
 #include <TinyRenderer/TinyRenderer.h>
 #include <SimpleCamera.h>
-#include "../Importers/ImportMeshUtility/b3ImportMeshUtility.h"
+#include <b3ImportMeshUtility.h>
 #include <iostream>
 #include <fstream>
-#include "../Importers/ImportURDFDemo/UrdfParser.h"
-#include "../SharedMemory/SharedMemoryPublic.h"  //for b3VisualShapeData
+#include <UrdfParser.h>
+#include "../../SharedMemoryPublic.h"  //for b3VisualShapeData
 #include <TinyRenderer/model.h>
 #include <stb_image.h>
 #include <ShapeData.h>

@@ -20,9 +20,9 @@ subject to the following restrictions:
 #include "BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h"
 #include <CommonParameterInterface.h>
 #include <b3ResourcePath.h>
-#include "../Importers/ImportURDFDemo/BulletUrdfImporter.h"
-#include "../Importers/ImportURDFDemo/URDF2Bullet.h"
-#include "../Importers/ImportURDFDemo/MyMultiBodyCreator.h"
+#include <BulletUrdfImporter.h>
+#include <URDF2Bullet.h>
+#include <MyMultiBodyCreator.h>
 
 #include <CommonMultiBodyBase.h>
 

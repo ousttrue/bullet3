@@ -7,12 +7,17 @@ add_library(
   GLPrimitiveRenderer.cpp
   GLRenderToTexture.cpp
   LoadShader.cpp
+  LoadMeshFromObj.cpp
+  Wavefront2GLInstanceGraphicsShape.cpp
+  LoadMeshFromCollada.cpp
   opengl_fontstashcallbacks.cpp
   OpenSans.cpp
   SimpleCamera.cpp
   TwFonts.cpp
   OpenGLGuiHelper.cpp
-  CollisionShape2TriangleMesh.cpp)
+  CollisionShape2TriangleMesh.cpp
+  b3ImportMeshUtility.cpp
+  )
 target_compile_definitions(${TARGET_NAME} PUBLIC GLEW_STATIC)
 target_compile_options(${TARGET_NAME} PRIVATE /wd4244)
 target_include_directories(
@@ -27,4 +32,6 @@ target_link_libraries(
          OpenGL32.lib
          stb_image
          glad
-         glfw)
+         glfw
+         tiny_obj_loader
+         Utils)

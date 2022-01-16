@@ -24,11 +24,11 @@
 #include <stdio.h>  //printf debugging
 
 #include <CommonDeformableBodyBase.h>
-#include "../Utils/b3ResourcePath.h"
-#include "../Importers/ImportURDFDemo/BulletUrdfImporter.h"
-#include "../Importers/ImportURDFDemo/MyMultiBodyCreator.h"
-#include "../Importers/ImportURDFDemo/URDF2Bullet.h"
-#include "../Utils/b3BulletDefaultFileIO.h"
+#include <b3ResourcePath.h>
+#include <BulletUrdfImporter.h>
+#include <MyMultiBodyCreator.h>
+#include <URDF2Bullet.h>
+#include <b3BulletDefaultFileIO.h>
 #include <CommonMultiBodyBase.h>
 #include <CommonGraphicsAppInterface.h>
 #include <CommonParameterInterface.h>

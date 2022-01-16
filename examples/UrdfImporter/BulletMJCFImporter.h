@@ -1,8 +1,8 @@
 #ifndef BULLET_MJCF_IMPORTER_H
 #define BULLET_MJCF_IMPORTER_H
 
-#include "../ImportURDFDemo/URDFImporterInterface.h"
-#include "../ImportURDFDemo/UrdfRenderingInterface.h"
+#include "URDFImporterInterface.h"
+#include "UrdfRenderingInterface.h"
 
 struct MJCFErrorLogger
 {

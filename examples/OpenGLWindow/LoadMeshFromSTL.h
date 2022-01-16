@@ -1,11 +1,11 @@
 #ifndef LOAD_MESH_FROM_STL_H
 #define LOAD_MESH_FROM_STL_H
 
-#include "../../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include "GLInstanceGraphicsShape.h"
 #include <stdio.h>  //fopen
-#include "Bullet3Common/b3AlignedObjectArray.h"
-#include "../../CommonInterfaces/CommonFileIOInterface.h"
-#include <string.h> //memcpy
+#include <Bullet3Common/b3AlignedObjectArray.h>
+#include <CommonFileIOInterface.h>
+#include <string.h>  //memcpy
 struct MySTLTriangle
 {
 	float normal[3];
@@ -19,12 +19,12 @@ static GLInstanceGraphicsShape* LoadMeshFromSTL(const char* relativeFileName, st
 	GLInstanceGraphicsShape* shape = 0;
 
 	int fileHandle = fileIO->fileOpen(relativeFileName, "rb");
-	if (fileHandle>=0)
+	if (fileHandle >= 0)
 	{
 		int size = 0;
 		size = fileIO->getFileSize(fileHandle);
 		{
-			if (size>=0)
+			if (size >= 0)
 			{
 				//b3Warning("Open STL file of %d bytes\n",size);
 				char* memoryBuffer = new char[size + 1];

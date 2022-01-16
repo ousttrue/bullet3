@@ -1,24 +1,16 @@
 
 #include "ImportSDFSetup.h"
 #include "BulletDynamics/ConstraintSolver/btGeneric6DofSpring2Constraint.h"
-
 #include "BulletDynamics/Featherstone/btMultiBodyLinkCollider.h"
 #include "Bullet3Common/b3FileUtils.h"
-
 #include "BulletDynamics/Featherstone/btMultiBodyJointMotor.h"
 #include "BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h"
 #include <CommonParameterInterface.h>
-#include "../../Utils/b3ResourcePath.h"
-
-#include "../ImportURDFDemo/BulletUrdfImporter.h"
-
-#include "../ImportURDFDemo/URDF2Bullet.h"
-
-//#include "urdf_samples.h"
-
+#include <b3ResourcePath.h>
+#include <BulletUrdfImporter.h>
+#include <URDF2Bullet.h>
 #include <CommonMultiBodyBase.h>
-
-#include "../ImportURDFDemo/MyMultiBodyCreator.h"
+#include <MyMultiBodyCreator.h>
 
 class ImportSDFSetup : public CommonMultiBodyBase
 {

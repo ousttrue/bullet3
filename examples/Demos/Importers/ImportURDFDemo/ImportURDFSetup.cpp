@@ -9,7 +9,7 @@
 #include "BulletDynamics/Featherstone/btMultiBodyJointMotor.h"
 #include "BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h"
 #include <CommonParameterInterface.h>
-#include "../../Utils/b3ResourcePath.h"
+#include <b3ResourcePath.h>
 
 #include "BulletUrdfImporter.h"
 

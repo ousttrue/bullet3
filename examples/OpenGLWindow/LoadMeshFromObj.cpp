@@ -1,6 +1,6 @@
 #include "LoadMeshFromObj.h"
 
-#include "../../OpenGLWindow/GLInstanceGraphicsShape.h"
+#include "GLInstanceGraphicsShape.h"
 #include <stdio.h>  //fopen
 #include "Bullet3Common/b3AlignedObjectArray.h"
 #include <string>

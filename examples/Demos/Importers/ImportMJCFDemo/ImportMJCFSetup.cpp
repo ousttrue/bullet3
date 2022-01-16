@@ -1,21 +1,17 @@
-
 #include "ImportMJCFSetup.h"
 #include "BulletDynamics/ConstraintSolver/btGeneric6DofSpring2Constraint.h"
 //#define TEST_MULTIBODY_SERIALIZATION 1
-
 #include "BulletDynamics/Featherstone/btMultiBodyLinkCollider.h"
 #include "Bullet3Common/b3FileUtils.h"
-
 #include "BulletDynamics/Featherstone/btMultiBodyJointMotor.h"
 #include "BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h"
 #include <CommonParameterInterface.h>
-#include "../../Utils/b3ResourcePath.h"
-#include "../../Utils/b3BulletDefaultFileIO.h"
+#include <b3ResourcePath.h>
+#include <b3BulletDefaultFileIO.h>
 #include <CommonMultiBodyBase.h>
-
-#include "../ImportURDFDemo/MyMultiBodyCreator.h"
-#include "BulletMJCFImporter.h"
-#include "../ImportURDFDemo/URDF2Bullet.h"
+#include <MyMultiBodyCreator.h>
+#include <BulletMJCFImporter.h>
+#include <URDF2Bullet.h>
 
 class ImportMJCFSetup : public CommonMultiBodyBase
 {

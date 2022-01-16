@@ -25,5 +25,5 @@ add_library(
   MultiPendulum.h
   NewtonsRopeCradle.cpp
   NewtonsRopeCradle.h)
-target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics CommonInterfaces tiny_obj_loader OpenGLWindow)
+target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics CommonInterfaces tiny_obj_loader OpenGLWindow UrdfImporter)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)

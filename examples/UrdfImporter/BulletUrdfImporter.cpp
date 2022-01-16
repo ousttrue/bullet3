@@ -12,26 +12,26 @@ subject to the following restrictions:
 */
 
 #include "BulletUrdfImporter.h"
-#include "../../CommonInterfaces/CommonRenderInterface.h"
+#include <CommonRenderInterface.h>
 #include <tiny_obj_loader.h>
 #include "URDFImporterInterface.h"
 #include "btBulletCollisionCommon.h"
-#include "../ImportObjDemo/LoadMeshFromObj.h"
-#include "../ImportSTLDemo/LoadMeshFromSTL.h"
-#include "../ImportColladaDemo/LoadMeshFromCollada.h"
+#include <LoadMeshFromObj.h>
+#include <LoadMeshFromSTL.h>
+#include <LoadMeshFromCollada.h>
 #include "BulletCollision/CollisionShapes/btShapeHull.h"  //to create a tesselation of a generic btConvexShape
 #include "BulletCollision/CollisionShapes/btSdfCollisionShape.h"
-#include "../../CommonInterfaces/CommonGUIHelperInterface.h"
-#include "../../CommonInterfaces/CommonFileIOInterface.h"
+#include <CommonGUIHelperInterface.h>
+#include <CommonFileIOInterface.h>
 #include "Bullet3Common/b3FileUtils.h"
 #include <string>
-#include "../../Utils/b3ResourcePath.h"
-#include "../../Utils/b3BulletDefaultFileIO.h"
+#include <b3ResourcePath.h>
+#include <b3BulletDefaultFileIO.h>
 
 #include <ShapeData.h>
 
 #include "URDF2Bullet.h"  //for flags
-#include "../ImportMeshUtility/b3ImportMeshUtility.h"
+#include <b3ImportMeshUtility.h>
 
 static btScalar gUrdfDefaultCollisionMargin = 0.001;
 

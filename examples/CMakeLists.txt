@@ -1,4 +1,6 @@
+subdirs(UrdfParser)
 subdirs(OpenGLWindow)
+subdirs(UrdfImporter)
 subdirs(TinyRenderer)
 subdirs(GwenGUISupport)
 subdirs(ImGuiInterface)

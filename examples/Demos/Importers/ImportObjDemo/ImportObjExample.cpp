@@ -5,14 +5,12 @@
 #include <GLInstanceGraphicsShape.h>
 #include "btBulletDynamicsCommon.h"
 #include "Wavefront2GLInstanceGraphicsShape.h"
-#include "../../Utils/b3ResourcePath.h"
-#include "../../Utils/b3BulletDefaultFileIO.h"
+#include <b3ResourcePath.h>
+#include <b3BulletDefaultFileIO.h>
 #include "Bullet3Common/b3FileUtils.h"
-
 #include <stb_image.h>
-
 #include <CommonRigidBodyBase.h>
-#include "../ImportMeshUtility/b3ImportMeshUtility.h"
+#include <b3ImportMeshUtility.h>
 
 class ImportObjSetup : public CommonRigidBodyBase
 {

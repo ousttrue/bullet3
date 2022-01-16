@@ -1,7 +1,7 @@
 #ifndef TINY_RENDERER_VISUAL_SHAPE_CONVERTER_H
 #define TINY_RENDERER_VISUAL_SHAPE_CONVERTER_H
 
-#include "../Demos/Importers/ImportURDFDemo/UrdfRenderingInterface.h"
+#include <UrdfRenderingInterface.h>
 
 struct TinyRendererVisualShapeConverter : public UrdfRenderingInterface
 {

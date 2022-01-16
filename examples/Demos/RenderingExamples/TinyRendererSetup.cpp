@@ -13,7 +13,7 @@
 #include "btBulletCollisionCommon.h"
 #include <CommonGUIHelperInterface.h>
 #include <CollisionShape2TriangleMesh.h>
-#include <ImportMeshUtility/b3ImportMeshUtility.h>
+#include <b3ImportMeshUtility.h>
 #include <GLInstanceGraphicsShape.h>
 #include <CommonParameterInterface.h>
 #include <b3BulletDefaultFileIO.h>

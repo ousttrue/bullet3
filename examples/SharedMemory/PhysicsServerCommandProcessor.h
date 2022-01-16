@@ -5,7 +5,7 @@
 #include "LinearMath/btVector3.h"
 
 #include "PhysicsCommandProcessorInterface.h"
-#include "../Importers/ImportURDFDemo/UrdfParser.h"
+#include <UrdfParser.h>
 
 struct SharedMemLines
 {

@@ -1,15 +1,14 @@
 #include "b3ImportMeshUtility.h"
-
+#include "Wavefront2GLInstanceGraphicsShape.h"
+#include "LoadMeshFromObj.h"
 #include <vector>
 #include <tiny_obj_loader.h>
-#include "LinearMath/btVector3.h"
-#include "../ImportObjDemo/Wavefront2GLInstanceGraphicsShape.h"
-#include "../../Utils/b3ResourcePath.h"
-#include "Bullet3Common/b3FileUtils.h"
+#include <LinearMath/btVector3.h>
+#include <b3ResourcePath.h>
+#include <Bullet3Common/b3FileUtils.h>
 #include <stb_image.h>
-#include "../ImportObjDemo/LoadMeshFromObj.h"
-#include "Bullet3Common/b3HashMap.h"
-#include "../../CommonInterfaces/CommonFileIOInterface.h"
+#include <Bullet3Common/b3HashMap.h>
+#include <CommonFileIOInterface.h>
 
 struct CachedTextureResult
 {
@@ -91,7 +90,7 @@ bool b3ImportMeshUtility::loadAndRegisterMeshFromFileInternal(const std::string&
 				meshData.m_specularColor[2] = shape.material.specular[2];
 				meshData.m_specularColor[3] = 1;
 				meshData.m_flags |= B3_IMPORT_MESH_HAS_SPECULAR_COLOR;
-				
+
 				if (shape.material.diffuse_texname.length() > 0)
 				{
 					int width, height, n;
@@ -125,17 +124,16 @@ bool b3ImportMeshUtility::loadAndRegisterMeshFromFileInternal(const std::string&
 
 							if (image == 0)
 							{
-
 								b3AlignedObjectArray<char> buffer;
 								buffer.reserve(1024);
-								int fileId = fileIO->fileOpen(relativeFileName,"rb");
-								if (fileId>=0)
+								int fileId = fileIO->fileOpen(relativeFileName, "rb");
+								if (fileId >= 0)
 								{
 									int size = fileIO->getFileSize(fileId);
-									if (size>0)
+									if (size > 0)
 									{
 										buffer.resize(size);
-										int actual = fileIO->fileRead(fileId,&buffer[0],size);
+										int actual = fileIO->fileRead(fileId, &buffer[0], size);
 										if (actual != size)
 										{
 											b3Warning("STL filesize mismatch!\n");
