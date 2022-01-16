@@ -6,6 +6,20 @@
 #else
 #define safe_printf snprintf
 #endif
+
+namespace Gwen
+{
+namespace Renderer
+{
+class Base;
+}
+namespace Controls
+{
+class TreeNode;
+class TreeControl;
+}  // namespace Controls
+}  // namespace Gwen
+
 struct MyButtonEventHandler : public Gwen::Event::Handler
 {
 	Gwen::Controls::Button* m_buttonControl;

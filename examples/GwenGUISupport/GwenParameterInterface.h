@@ -1,23 +1,16 @@
-#ifndef GWEN_PARAMETER_INTERFACE_H
-#define GWEN_PARAMETER_INTERFACE_H
-
+#pragma once
 #include <CommonParameterInterface.h>
 
 struct GwenParameterInterface : public CommonParameterInterface
 {
-	struct GwenInternalData* m_gwenInternalData;
-
+	class GwenInternalData* m_gwenInternalData;
 	struct GwenParameters* m_paramInternalData;
-
-	GwenParameterInterface(struct GwenInternalData* gwenInternalData);
-	virtual ~GwenParameterInterface();
-	virtual void registerSliderFloatParameter(SliderParams& params);
-	virtual void registerButtonParameter(ButtonParams& params);
-	virtual void registerComboBox(ComboBoxParams& params);
-
-	virtual void setSliderValue(int sliderIndex, double sliderValue);
-	virtual void syncParameters();
-	virtual void removeAllParameters();
+	GwenParameterInterface(class GwenInternalData* gwenInternalData);
+	~GwenParameterInterface() override;
+	void registerSliderFloatParameter(SliderParams& params) override;
+	void registerButtonParameter(ButtonParams& params) override;
+	void registerComboBox(ComboBoxParams& params) override;
+	void setSliderValue(int sliderIndex, double sliderValue) override;
+	void syncParameters() override;
+	void removeAllParameters() override;
 };
-
-#endif  //GWEN_PARAMETER_INTERFACE_H

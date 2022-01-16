@@ -5,7 +5,7 @@
 
 struct MyGraphInput
 {
-	struct GwenInternalData* m_data;
+	class GwenInternalData* m_data;
 	int m_xPos;
 	int m_yPos;
 	int m_width;
@@ -13,7 +13,7 @@ struct MyGraphInput
 	int m_borderWidth;
 	const char* m_name;
 	const char* m_texName;
-	MyGraphInput(struct GwenInternalData* data)
+	MyGraphInput(class GwenInternalData* data)
 		: m_data(data),
 		  m_xPos(0),
 		  m_yPos(0),

@@ -1,7 +1,7 @@
 #ifndef GWEN_PROFILE_WINDOW_H
 #define GWEN_PROFILE_WINDOW_H
 
-class MyProfileWindow* setupProfileWindow(struct GwenInternalData* data);
+class MyProfileWindow* setupProfileWindow(class GwenInternalData* data);
 void processProfileData(MyProfileWindow* window, bool idle);
 void profileWindowSetVisible(MyProfileWindow* window, bool visible);
 bool isProfileWindowVisible(MyProfileWindow* window);
