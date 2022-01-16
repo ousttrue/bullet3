@@ -2,7 +2,8 @@
 #include <LinearMath/btAlignedObjectArray.h>
 #include <tuple>
 #include <functional>
-#include "Common2dCanvasInterface.h"
+#include <Common2dCanvasInterface.h>
+#include <CommonGUIInterface.h>
 
 namespace Gwen
 {
@@ -17,7 +18,7 @@ class TreeControl;
 }  // namespace Controls
 }  // namespace Gwen
 
-class GwenImpl
+class GwenImpl : public CommonGUIInterface
 {
 	struct GL3TexLoader* m_myTexLoader = nullptr;
 	Gwen::Renderer::Base* m_gwenRenderer = nullptr;
@@ -29,20 +30,20 @@ class GwenImpl
 	GwenImpl(struct GlfwApp* s_app, int width, int height, float retinaScale);
 
 public:
-	~GwenImpl();
+	~GwenImpl() override;
 	static std::tuple<GwenImpl*, int> Create(struct GlfwApp* app, int width, int height, float reginaScale, class ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
 											 const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE);
-	struct CommonParameterInterface* CreateCommonParameterInterface();
-	struct Common2dCanvasInterface* CreateCommon2dCanvasInterface();
-	bool OnKeyboard(int key, int state);
-	bool OnMouseMove(int x, int y);
-	bool OnMouseButton(int button, int state, int x, int y);
-	void SetDescription(const char* description);
-	void ShowMessage(const char* msg);
-	void SetStatusbarMessage(const char* msg);
-	void ShowErrorMessage(const char* msg);
-	void RegisterFileOpen(const std::function<void()>& callback);
-	void RegisterQuit(const std::function<void()>& callback);
-	void Render(int w, int h);
-	void ForceUpdateScrollBars();
+	struct CommonParameterInterface* CreateCommonParameterInterface() override;
+	struct Common2dCanvasInterface* CreateCommon2dCanvasInterface() override;
+	bool OnKeyboard(int key, int state) override;
+	bool OnMouseMove(int x, int y) override;
+	bool OnMouseButton(int button, int state, int x, int y) override;
+	void SetDescription(const char* description) override;
+	void ShowMessage(const char* msg) override;
+	void SetStatusbarMessage(const char* msg) override;
+	void ShowErrorMessage(const char* msg) override;
+	void RegisterFileOpen(const std::function<void()>& callback) override;
+	void RegisterQuit(const std::function<void()>& callback) override;
+	void Render(int w, int h) override;
+	void ForceUpdateScrollBars() override;
 };

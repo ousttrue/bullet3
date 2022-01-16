@@ -31,7 +31,7 @@ struct FileImporterByExtension
 
 class OpenGLExampleBrowserInternalData
 {
-	GwenImpl* m_gwen = nullptr;
+	CommonGUIInterface* m_gwen = nullptr;
 
 	GlfwApp* s_app = 0;
 
