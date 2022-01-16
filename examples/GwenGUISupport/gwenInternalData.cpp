@@ -533,9 +533,7 @@ int GwenInternalData::setup(ExampleEntries* gAllExamples, const char* demoNameFr
 		}
 		else
 		{
-			std::unique_ptr<Gwen::Controls::TreeNode> curNode;
-			curNode.reset(tree->AddNode(nodeUText));
-			m_nodes.push_back(std::move(curNode));
+			curNode = tree->AddNode(nodeUText);
 		}
 
 		if (isSelected)

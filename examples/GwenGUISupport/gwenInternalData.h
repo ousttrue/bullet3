@@ -64,7 +64,7 @@ private:
 	std::unique_ptr<Gwen::Controls::ScrollControl> m_windowRight;
 	std::unique_ptr<Gwen::Controls::TabControl> m_tab;
 
-	std::list<std::unique_ptr<Gwen::Controls::TreeNode>> m_nodes;
+	// std::list<std::unique_ptr<Gwen::Controls::TreeNode>> m_nodes;
 	std::list<std::unique_ptr<MyMenuItemHander>> m_nodeHandlers;
 public:
 	std::list<std::unique_ptr<class Gwen::Event::Handler>> m_handlers;
