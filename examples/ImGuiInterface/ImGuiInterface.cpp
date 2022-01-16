@@ -9,7 +9,7 @@ std::tuple<ImGuiInterface*, int> ImGuiInterface::Create(struct GlfwApp* app, int
 {
 	auto p = new ImGuiInterface(reginaScale);
 
-	return {p, 0};
+	return {p, 1};
 }
 
 ImGuiInterface::~ImGuiInterface() {}
@@ -22,7 +22,6 @@ struct CommonParameterInterface* ImGuiInterface::CreateCommonParameterInterface(
 struct Common2dCanvasInterface* ImGuiInterface::CreateCommon2dCanvasInterface()
 {
 	return nullptr;
-	;
 }
 
 bool ImGuiInterface::OnKeyboard(int key, int state)
@@ -33,13 +32,11 @@ bool ImGuiInterface::OnKeyboard(int key, int state)
 bool ImGuiInterface::OnMouseMove(int x, int y)
 {
 	return false;
-	;
 }
 
 bool ImGuiInterface::OnMouseButton(int button, int state, int x, int y)
 {
 	return false;
-	;
 }
 
 void ImGuiInterface::RegisterFileOpen(const std::function<void()>& callback)
