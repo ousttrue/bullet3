@@ -1,7 +1,8 @@
 #ifndef EMPTY_BROWSER
 #define EMPTY_BROWSER
 
-#include "EmptyExample.h"
+#include <EmptyExample.h>
+#include <CommonGUIInterface.h>
 
 extern int gSharedMemoryKey;
 
@@ -19,7 +20,11 @@ public:
 	{
 	}
 
-	virtual bool init(int /*argc*/, char* argv[])
+	virtual ~EmptyBrowser()
+	{
+	}
+
+	virtual bool init(int /*argc*/, char* argv[], const CommonGUIInterface::Factory& factory = {})
 	{
 		return true;
 	}
@@ -43,7 +48,7 @@ public:
 	}
 
 	virtual void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc)
-	{		
+	{
 	}
 };
 

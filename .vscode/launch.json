@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "App_ExampleBrowser",
+            "name": "App_ExampleBrowserGwen",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/bin/App_ExampleBrowser.exe",
+            "program": "${workspaceFolder}/build/Debug/bin/App_ExampleBrowserGwen.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

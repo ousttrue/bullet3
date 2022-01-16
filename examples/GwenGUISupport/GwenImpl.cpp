@@ -1,5 +1,6 @@
 #include <LinearMath/btHashMap.h>
 #include <Bullet3Common/b3HashMap.h>
+#include "CommonGUIInterface.h"
 #include "Gwen/Controls/TreeNode.h"
 #include "GwenImpl.h"
 #include "GwenOpenGL3CoreRenderer.h"
@@ -231,7 +232,7 @@ GwenImpl::~GwenImpl()
 	delete m_myTexLoader;
 }
 
-std::tuple<GwenImpl*, int> GwenImpl::Create(GlfwApp* app, int width, int height, float reginaScale, ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
+std::tuple<CommonGUIInterface*, int> GwenImpl::Create(GlfwApp* app, int width, int height, float reginaScale, ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
 											const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE)
 {
 	auto m_gwen = new GwenImpl(app, width, height, reginaScale);

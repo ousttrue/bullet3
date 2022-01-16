@@ -1,5 +1,4 @@
 #include "OpenGLExampleBrowser.h"
-#include <GwenImpl.h>
 #include <ChromeTraceUtil.h>
 #include <SharedMemoryPublic.h>
 #include <OpenGLGuiHelper.h>
@@ -565,7 +564,7 @@ private:
 	}
 
 public:
-	void init(int argc, char** argv)
+	void init(const CommonGUIInterface::Factory& factory, int argc, char** argv)
 	{
 		b3CommandLineArgs args(argc, argv);
 
@@ -694,10 +693,11 @@ public:
 		args.GetCmdLineArgument("start_demo_name", demoNameFromCommandOption);
 
 		int demo_index;
-		std::tie(m_gwen, demo_index) = GwenImpl::Create(s_app, width, height, s_window->getRetinaScale(), gAllExamples, demoNameFromCommandOption,
-														std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
-														std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
-														std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
+		std::tie(m_gwen, demo_index) = factory(s_app, width, height, s_window->getRetinaScale(),
+											   gAllExamples, demoNameFromCommandOption,
+											   std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
+											   std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
+											   std::bind(&OpenGLExampleBrowserInternalData::OnButtonE, this, std::placeholders::_1));
 		s_parameterInterface = s_app->m_parameterInterface = m_gwen->CreateCommonParameterInterface();
 		s_app->m_2dCanvasInterface = m_gwen->CreateCommon2dCanvasInterface();
 		m_gwen->RegisterFileOpen(std::bind(&OpenGLExampleBrowserInternalData::fileOpenCallback, this));
@@ -890,9 +890,9 @@ OpenGLExampleBrowser::~OpenGLExampleBrowser()
 	m_internalData = nullptr;
 }
 
-bool OpenGLExampleBrowser::init(int argc, char* argv[])
+bool OpenGLExampleBrowser::init(int argc, char* argv[], const CommonGUIInterface::Factory& factory)
 {
-	m_internalData->init(argc, argv);
+	m_internalData->init(factory, argc, argv);
 	return true;
 }
 

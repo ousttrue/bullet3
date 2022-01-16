@@ -1,7 +1,5 @@
-#ifndef EMPTY_EXAMPLE_H
-#define EMPTY_EXAMPLE_H
-
-#include <CommonExampleInterface.h>
+#pragma once
+#include "CommonExampleInterface.h"
 
 class EmptyExample : public CommonExampleInterface
 {
@@ -23,5 +21,3 @@ public:
 	virtual bool mouseButtonCallback(int button, int state, float x, float y) { return false; }
 	virtual bool keyboardCallback(int key, int state) { return false; }
 };
-
-#endif  //EMPTY_EXAMPLE_H

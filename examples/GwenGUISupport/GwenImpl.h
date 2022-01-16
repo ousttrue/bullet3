@@ -31,8 +31,8 @@ class GwenImpl : public CommonGUIInterface
 
 public:
 	~GwenImpl() override;
-	static std::tuple<GwenImpl*, int> Create(struct GlfwApp* app, int width, int height, float reginaScale, class ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
-											 const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE);
+	static std::tuple<CommonGUIInterface*, int> Create(struct GlfwApp* app, int width, int height, float reginaScale, class ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
+													   const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE);
 	struct CommonParameterInterface* CreateCommonParameterInterface() override;
 	struct Common2dCanvasInterface* CreateCommon2dCanvasInterface() override;
 	bool OnKeyboard(int key, int state) override;

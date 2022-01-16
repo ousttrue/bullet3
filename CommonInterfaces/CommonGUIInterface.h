@@ -3,6 +3,8 @@
 
 struct CommonGUIInterface
 {
+	using Factory = std::function<std::tuple<CommonGUIInterface*, int>(struct GlfwApp* app, int width, int height, float reginaScale, class ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
+																	   const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE)>;
 	virtual ~CommonGUIInterface() {}
 	virtual struct CommonParameterInterface* CreateCommonParameterInterface() = 0;
 	virtual struct Common2dCanvasInterface* CreateCommon2dCanvasInterface() = 0;

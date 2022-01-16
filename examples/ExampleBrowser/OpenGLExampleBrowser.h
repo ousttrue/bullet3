@@ -8,19 +8,12 @@ class OpenGLExampleBrowser : public EmptyBrowser
 
 public:
 	OpenGLExampleBrowser(class ExampleEntries* examples);
-	~OpenGLExampleBrowser();
-
-	CommonExampleInterface* getCurrentExample();
-
-	bool init(int argc, char* argv[]);
-
-	void update(float deltaTime);
-
-	void updateGraphics();
-
-	bool requestedExit();
-
-	void setSharedMemoryInterface(class SharedMemoryInterface* sharedMem);
-
-	void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc);
+	~OpenGLExampleBrowser() override;
+	CommonExampleInterface* getCurrentExample() override;
+	bool init(int argc, char* argv[], const CommonGUIInterface::Factory& factory) override;
+	void update(float deltaTime) override;
+	void updateGraphics() override;
+	bool requestedExit() override;
+	void setSharedMemoryInterface(class SharedMemoryInterface* sharedMem) override;
+	void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc) override;
 };

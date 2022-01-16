@@ -1,5 +1,6 @@
 #include "OpenGLExampleBrowser.h"
 #include "ExampleEntries.h"
+#include <GwenImpl.h>
 #include <Bullet3Common/b3CommandLineArgs.h>
 #include <b3Clock.h>
 #include <ImportObjDemo/ImportObjExample.h>
@@ -21,7 +22,7 @@ int main(int argc, char* argv[])
 	examples.initExampleEntries();
 
 	OpenGLExampleBrowser exampleBrowser(&examples);
-	if (!exampleBrowser.init(argc, argv))
+	if (!exampleBrowser.init(argc, argv, GwenImpl::Create))
 	{
 		return 1;
 	}

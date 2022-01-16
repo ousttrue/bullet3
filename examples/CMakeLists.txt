@@ -1,6 +1,7 @@
 subdirs(OpenGLWindow)
 subdirs(TinyRenderer)
 subdirs(GwenGUISupport)
+subdirs(ImGuiInterface)
 subdirs(SharedMemory)
 subdirs(MultiThreading)
 subdirs(Utils)

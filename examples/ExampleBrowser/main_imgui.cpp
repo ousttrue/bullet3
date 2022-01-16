@@ -1,4 +1,5 @@
-#include "ImGuiExampleBrowser.h"
+#include "OpenGLExampleBrowser.h"
+#include "ImGuiInterface.h"
 #include "ExampleEntries.h"
 #include <Bullet3Common/b3CommandLineArgs.h>
 #include <b3Clock.h>
@@ -20,8 +21,8 @@ int main(int argc, char* argv[])
 	ExampleEntriesAll examples;
 	examples.initExampleEntries();
 
-	ImGuiExampleBrowser exampleBrowser(&examples);
-	if (!exampleBrowser.init(argc, argv))
+	OpenGLExampleBrowser exampleBrowser(&examples);
+	if (!exampleBrowser.init(argc, argv, ImGuiInterface::Create))
 	{
 		return 1;
 	}
