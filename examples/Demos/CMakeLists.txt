@@ -32,7 +32,9 @@ subdirs(
   RoboticsLearning
   BasicDemo
   RigidBody
-  Importers)
+  Importers
+  SharedMemoryDemo
+  )
 
 set(TARGET_NAME Demos)
 add_library(${TARGET_NAME} INTERFACE)
@@ -66,4 +68,6 @@ target_link_libraries(
             RollingFrictionDemo
             RoboticsLearning
             BasicDemo
-            RigidBody)
+            RigidBody            
+            SharedMemoryDemo
+            )

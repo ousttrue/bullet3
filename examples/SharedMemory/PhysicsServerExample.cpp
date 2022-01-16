@@ -9,8 +9,8 @@
 #include "Bullet3Common/b3CommandLineArgs.h"
 #include "SharedMemoryCommon.h"
 #include "Bullet3Common/b3Matrix3x3.h"
-#include "../Utils/b3Clock.h"
-#include "../MultiThreading/b3ThreadSupportInterface.h"
+#include <b3Clock.h>
+#include <b3ThreadSupportInterface.h>
 #include "SharedMemoryPublic.h"
 //#define BT_ENABLE_VR
 #define SYNC_CAMERA_USING_GUI_CS

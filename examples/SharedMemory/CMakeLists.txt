@@ -2,80 +2,47 @@ set(TARGET_NAME SharedMemory)
 add_library(
   ${TARGET_NAME}
   plugins/collisionFilterPlugin/collisionFilterPlugin.cpp
-  plugins/collisionFilterPlugin/collisionFilterPlugin.h
   plugins/pdControlPlugin/pdControlPlugin.cpp
-  plugins/pdControlPlugin/pdControlPlugin.h
   plugins/tinyRendererPlugin/tinyRendererPlugin.cpp
   plugins/tinyRendererPlugin/TinyRendererVisualShapeConverter.cpp
   IKTrajectoryHelper.cpp
-  IKTrajectoryHelper.h
   PhysicsServer.cpp
   PhysicsClientSharedMemory.cpp
   PhysicsClientSharedMemory_C_API.cpp
   PhysicsClient.cpp
   PhysicsClientC_API.cpp
-  GraphicsServerExample.cpp
-  GraphicsClientExample.cpp
   RemoteGUIHelper.cpp
-  GraphicsServerExample.h
-  GraphicsClientExample.h
-  RemoteGUIHelper.h
-  GraphicsSharedMemoryCommands.h
-  GraphicsSharedMemoryPublic.h
-  PhysicsServerExample.cpp
-  PhysicsServerExampleBullet2.cpp
-  PhysicsClientExample.cpp
   PosixSharedMemory.cpp
   Win32SharedMemory.cpp
   InProcessMemory.cpp
   PhysicsServerSharedMemory.cpp
   PhysicsDirect.cpp
-  PhysicsDirect.h
   PhysicsDirectC_API.cpp
-  PhysicsDirectC_API.h
   SharedMemoryInProcessPhysicsC_API.cpp
+  PhysicsServerExample.cpp
+  PhysicsServerExampleBullet2.cpp
   PhysicsLoopBack.cpp
-  PhysicsLoopBack.h
   PhysicsLoopBackC_API.cpp
-  PhysicsLoopBackC_API.h
   PhysicsServerCommandProcessor.cpp
-  PhysicsServerCommandProcessor.h
-  SharedMemoryCommands.h
-  SharedMemoryPublic.h
   b3PluginManager.cpp
   b3RobotSimulatorClientAPI_NoGUI.cpp
-  b3RobotSimulatorClientAPI_NoGUI.h
   b3RobotSimulatorClientAPI_NoDirect.cpp
-  b3RobotSimulatorClientAPI_NoDirect.h
   #
-  SharedMemoryCommands.h
-  SharedMemoryPublic.h
   PhysicsServer.cpp
   PosixSharedMemory.cpp
   Win32SharedMemory.cpp
   InProcessMemory.cpp
   PhysicsDirect.cpp
-  PhysicsDirect.h
   PhysicsDirectC_API.cpp
-  PhysicsDirectC_API.h
   PhysicsLoopBack.cpp
-  PhysicsLoopBack.h
   PhysicsLoopBackC_API.cpp
-  PhysicsLoopBackC_API.h
   PhysicsClientSharedMemory_C_API.cpp
-  PhysicsClientSharedMemory_C_API.h
   PhysicsClientSharedMemory2_C_API.cpp
-  PhysicsClientSharedMemory2_C_API.h
   PhysicsClientSharedMemory2.cpp
-  PhysicsClientSharedMemory2.h
   SharedMemoryCommandProcessor.cpp
-  SharedMemoryCommandProcessor.h
   PhysicsServerCommandProcessor.cpp
-  PhysicsServerCommandProcessor.h
   plugins/tinyRendererPlugin/tinyRendererPlugin.cpp
   plugins/tinyRendererPlugin/TinyRendererVisualShapeConverter.cpp
-  SharedMemoryCommands.h
-  SharedMemoryPublic.h
   b3PluginManager.cpp)
 target_link_libraries(
   ${TARGET_NAME}
@@ -89,43 +56,28 @@ target_link_libraries(
           stb_image
           OpenGLWindow
           Utils
-          UrdfParser
           UrdfImporter
-          BulletInverseDynamicsUtils)
+          BulletInverseDynamicsUtils
+          MultiThreading
+  PUBLIC UrdfParser)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+# #
 # ##############################################################################
-set(TARGET_NAME App_PhysicsServer_SharedMemory)
-add_executable(
-  ${TARGET_NAME} main.cpp ../MultiThreading/b3Win32ThreadSupport.cpp
-                 ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
-target_link_libraries(
-  ${TARGET_NAME}
-  PRIVATE SharedMemory
-          Bullet3Common
-          CommonInterfaces
-          UrdfParser
-          BulletInverseDynamicsUtils
-          BulletWorldImporter
-          MultiThreading)
+# set(TARGET_NAME App_PhysicsServer_SharedMemory) add_executable( ${TARGET_NAME}
+# main.cpp ../MultiThreading/b3Win32ThreadSupport.cpp
+# ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc) target_link_libraries(
+# ${TARGET_NAME} PRIVATE SharedMemory Bullet3Common CommonInterfaces UrdfParser
+# BulletInverseDynamicsUtils BulletWorldImporter MultiThreading )
 
 # ##############################################################################
 # set(TARGET_NAME App_PhysicsServer_SharedMemory_GUI)
 # add_executable(${TARGET_NAME} ../StandaloneMain/main_opengl_single_example.cpp
-#                               ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc)
-# target_link_libraries(
-#   ${TARGET_NAME}
-#   PRIVATE SharedMemory
-#           Bullet3Common
-#           CommonInterfaces
-#           UrdfParser
-#           UrdfImporter
-#           BulletInverseDynamicsUtils
-#           BulletWorldImporter
-#           MultiThreading
-#           OpenGLWindow
-#           Utils)
-# target_compile_definitions(${TARGET_NAME} PRIVATE B3_USE_STANDALONE_EXAMPLE)
+# ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc) target_link_libraries(
+# ${TARGET_NAME} PRIVATE SharedMemory Bullet3Common CommonInterfaces UrdfParser
+# UrdfImporter BulletInverseDynamicsUtils BulletWorldImporter MultiThreading
+# OpenGLWindow Utils) target_compile_definitions(${TARGET_NAME} PRIVATE
+# B3_USE_STANDALONE_EXAMPLE)
 
 # ADD_EXECUTABLE(App_PhysicsServer_SharedMemory_GUI ${SharedMemory_SRCS}
 # ../StandaloneMain/main_opengl_single_example.cpp

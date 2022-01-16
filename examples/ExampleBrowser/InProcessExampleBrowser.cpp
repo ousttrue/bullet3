@@ -28,11 +28,10 @@ void ExampleBrowserMemoryReleaseFunc(void* ptr);
 #include "LinearMath/btAlignedObjectArray.h"
 #include "EmptyExample.h"
 
-#include "../SharedMemory/PhysicsServerExample.h"
-#include "../SharedMemory/PhysicsServerExampleBullet2.h"
-#include "../SharedMemory/GraphicsServerExample.h"
-
-#include "../SharedMemory/PhysicsClientExample.h"
+#include <PhysicsServerExample.h>
+#include <PhysicsServerExampleBullet2.h>
+#include <GraphicsServerExample.h>
+#include <PhysicsClientExample.h>
 
 #ifndef _WIN32
 #include "../MultiThreading/b3PosixThreadSupport.h"

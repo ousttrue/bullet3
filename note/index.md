@@ -13,4 +13,6 @@
 ```{toctree}
 examples/index
 pybullet/index
+format/index
+SharedMemory/index
 ```
