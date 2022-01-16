@@ -25,7 +25,7 @@ public:
 	// GUI
 	void SetDescription(const char* description) override;
 	void ShowMessage(const char* msg) override;
-	void SetStatusbarMessage(const char* msg) override;
+	void SetStatusbarMessage(const char* msg, bool isLeft) override;
 	void ShowErrorMessage(const char* msg) override;
 	void Render(int w, int h) override;
 	void ForceUpdateScrollBars() override;

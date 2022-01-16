@@ -54,7 +54,7 @@ void ImGuiInterface::SetDescription(const char* description) {}
 
 void ImGuiInterface::ShowMessage(const char* msg) {}
 
-void ImGuiInterface::SetStatusbarMessage(const char* msg) {}
+void ImGuiInterface::SetStatusbarMessage(const char* msg, bool isLeft) {}
 
 void ImGuiInterface::ShowErrorMessage(const char* msg) {}
 

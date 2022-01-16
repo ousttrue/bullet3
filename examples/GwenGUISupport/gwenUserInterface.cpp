@@ -1,18 +1,23 @@
 
 #include "gwenUserInterface.h"
 #include "gwenInternalData.h"
-#include "Gwen/Controls/ImagePanel.h"
-#include "Gwen/Controls/ColorPicker.h"
-//#include "Gwen/Controls/HSVColorPicker.h"
+#include "GwenOpenGL3CoreRenderer.h"
+#include "GwenParameterInterface.h"
+#include "GwenTextureWindow.h"
+#include "GraphingTexture.h"
+#include <CommonWindowInterface.h>
+#include <CommonGUIInterface.h>
+#include <Common2dCanvasInterface.h>
+#include <CommonExampleInterface.h>
+#include <LinearMath/btHashMap.h>
+#include <Bullet3Common/b3HashMap.h>
+#include <OpenGLInclude.h>
+#include <Gwen/Controls/ImagePanel.h>
+#include <Gwen/Controls/ColorPicker.h>
+#include <Gwen/Controls/TreeNode.h>
+#include <GlfwApp.h>
 
-class MyGraphWindow* graphWindow = 0;
-
-GwenUserInterface::GwenUserInterface()
-{
-	m_data = new GwenInternalData();
-	m_data->m_toggleButtonCallback = 0;
-	m_data->m_comboBoxCallback = 0;
-}
+#define MAX_GRAPH_WINDOWS 5
 
 class MyMenuItems : public Gwen::Controls::Base
 {
@@ -67,177 +72,209 @@ struct MyTestMenuBar : public Gwen::Controls::MenuStrip
 	}
 };
 
-void GwenUserInterface::exit()
+struct GL3TexLoader : public MyTextureLoader
 {
-	//m_data->m_menubar->RemoveAllChildren();
-	delete m_data->m_tab;
-	delete m_data->m_windowRight;
-	delete m_data->m_leftStatusBar;
-	delete m_data->m_TextOutput;
-	delete m_data->m_rightStatusBar;
-	delete m_data->m_bar;
-	delete m_data->m_menubar;
+	b3HashMap<b3HashString, GLint> m_hashMap;
 
-	m_data->m_menubar = 0;
-	delete m_data->pCanvas;
-	m_data->pCanvas = 0;
-}
-
-GwenUserInterface::~GwenUserInterface()
-{
-	for (int i = 0; i < m_data->m_handlers.size(); i++)
+	virtual void LoadTexture(Gwen::Texture* pTexture)
 	{
-		delete m_data->m_handlers[i];
+		Gwen::String namestr = pTexture->name.Get();
+		const char* n = namestr.c_str();
+		GLint* texIdPtr = m_hashMap[n];
+		if (texIdPtr)
+		{
+			pTexture->m_intData = *texIdPtr;
+		}
 	}
-
-	m_data->m_handlers.clear();
-
-	delete m_data;
-}
-
-void GwenUserInterface::resize(int width, int height)
-{
-	m_data->pCanvas->SetSize(width, height);
-}
-
-struct MyComboBoxHander : public Gwen::Event::Handler
-{
-	GwenInternalData* m_data;
-	int m_buttonId;
-
-	MyComboBoxHander(GwenInternalData* data, int buttonId)
-		: m_data(data),
-		  m_buttonId(buttonId)
+	virtual void FreeTexture(Gwen::Texture* pTexture)
 	{
-	}
-
-	void onSelect(Gwen::Controls::Base* pControl)
-	{
-		Gwen::Controls::ComboBox* but = (Gwen::Controls::ComboBox*)pControl;
-
-		Gwen::String str = Gwen::Utility::UnicodeToString(but->GetSelectedItem()->GetText());
-
-		if (m_data->m_comboBoxCallback)
-			(m_data->m_comboBoxCallback)(m_buttonId, str.c_str());
 	}
 };
 
-struct MyButtonHander : public Gwen::Event::Handler
+using OnButton = std::function<void()>;
+struct MyMenuItemHander : public Gwen::Event::Handler
 {
-	GwenInternalData* m_data;
 	int m_buttonId;
 
-	MyButtonHander(GwenInternalData* data, int buttonId)
-		: m_data(data),
-		  m_buttonId(buttonId)
+	OnButton m_onButtonB;
+	OnButton m_onButtonD;
+	std::function<void(int)> m_onButtonE;
+
+	MyMenuItemHander(int buttonId,
+					 const OnButton& onButtonB,
+					 const OnButton& onButtonD,
+					 const std::function<void(int)>& onButtonE)
+		: m_buttonId(buttonId), m_onButtonB(onButtonB), m_onButtonD(onButtonD), m_onButtonE(onButtonE)
 	{
 	}
 
 	void onButtonA(Gwen::Controls::Base* pControl)
 	{
-		Gwen::Controls::Button* but = (Gwen::Controls::Button*)pControl;
-		//		int dep = but->IsDepressed();
-		int tog = but->GetToggleState();
-		if (m_data->m_toggleButtonCallback)
-			(m_data->m_toggleButtonCallback)(m_buttonId, tog);
+		//const Gwen::String& name = pControl->GetName();
+		Gwen::Controls::TreeNode* node = (Gwen::Controls::TreeNode*)pControl;
+		// Gwen::Controls::Label* l = node->GetButton();
+
+		Gwen::UnicodeString la = node->GetButton()->GetText();  // node->GetButton()->GetName();// GetText();
+		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+		// const char* ha = laa.c_str();
+
+		//printf("selected %s\n", ha);
+		//int dep = but->IsDepressed();
+		//int tog = but->GetToggleState();
+		//  if (m_data->m_toggleButtonCallback)
+		//  (*m_data->m_toggleButtonCallback)(m_buttonId, tog);
+	}
+
+	void onButtonB(Gwen::Controls::Base* pControl)
+	{
+		Gwen::Controls::Label* label = (Gwen::Controls::Label*)pControl;
+		Gwen::UnicodeString la = label->GetText();  // node->GetButton()->GetName();// GetText();
+		Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+		//const char* ha = laa.c_str();
+
+		m_onButtonB();
+	}
+
+	void onButtonC(Gwen::Controls::Base* pControl)
+	{
+		/*Gwen::Controls::Label* label = (Gwen::Controls::Label*) pControl;
+        Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
+        Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+        const char* ha = laa.c_str();
+
+
+        printf("onButtonC ! %s\n", ha);
+        */
+	}
+	void onButtonD(Gwen::Controls::Base* pControl)
+	{
+		/*  Gwen::Controls::Label* label = (Gwen::Controls::Label*) pControl;
+        Gwen::UnicodeString la = label->GetText();// node->GetButton()->GetName();// GetText();
+        Gwen::String laa = Gwen::Utility::UnicodeToString(la);
+        const char* ha = laa.c_str();
+        */
+
+		// printf("onKeyReturn ! \n");
+		m_onButtonD();
+	}
+
+	void onButtonE(Gwen::Controls::Base* pControl)
+	{
+		// printf("select %d\n",m_buttonId);
+		m_onButtonE(m_buttonId);
+	}
+
+	void onButtonF(Gwen::Controls::Base* pControl)
+	{
+		//printf("selection changed!\n");
+	}
+
+	void onButtonG(Gwen::Controls::Base* pControl)
+	{
+		//printf("onButtonG !\n");
 	}
 };
 
-void GwenUserInterface::textOutput(const char* message)
+struct QuickCanvas : public Common2dCanvasInterface
 {
-	Gwen::UnicodeString msg = Gwen::Utility::StringToUnicode(message);
-	m_data->m_TextOutput->AddItem(msg);
-	m_data->m_TextOutput->Scroller()->ScrollToBottom();
-}
+	GwenUserInterface* m_internalData;
 
-void GwenUserInterface::setExampleDescription(const char* message)
-{
-	//Gwen apparently doesn't have text/word wrap, so do rudimentary brute-force implementation here.
+	GL3TexLoader* m_myTexLoader;
 
-	std::string wrapmessage = message;
-	int startPos = 0;
+	MyGraphWindow* m_gw[MAX_GRAPH_WINDOWS];
+	GraphingTexture* m_gt[MAX_GRAPH_WINDOWS];
+	int m_curNumGraphWindows;
 
-	std::string lastFit = "";
-	bool hasSpace = false;
-	std::string lastFitSpace = "";
-	int spacePos = 0;
-
-	m_data->m_exampleInfoTextOutput->Clear();
-	int fixedWidth = m_data->m_exampleInfoTextOutput->GetBounds().w - 25;
-	int wrapLen = int(wrapmessage.length());
-	for (int endPos = 0; endPos <= wrapLen; endPos++)
+	QuickCanvas(GwenUserInterface* internalData, GL3TexLoader* myTexLoader)
+		: m_internalData(internalData),
+		  m_myTexLoader(myTexLoader),
+		  m_curNumGraphWindows(0)
 	{
-		std::string sub = wrapmessage.substr(startPos, (endPos - startPos));
-		Gwen::Point pt = m_data->pRenderer->MeasureText(m_data->pCanvas->GetSkin()->GetDefaultFont(), sub);
-
-		if (pt.x <= fixedWidth)
+		for (int i = 0; i < MAX_GRAPH_WINDOWS; i++)
 		{
-			lastFit = sub;
-
-			if (message[endPos] == ' ' || message[endPos] == '.' || message[endPos] == ',')
-			{
-				hasSpace = true;
-				lastFitSpace = sub;
-				spacePos = endPos;
-			}
-		}
-		else
-		{
-			//submit and
-			if (hasSpace)
-			{
-				endPos = spacePos + 1;
-				hasSpace = false;
-				lastFit = lastFitSpace;
-				startPos = endPos;
-			}
-			else
-			{
-				startPos = endPos - 1;
-			}
-			Gwen::UnicodeString msg = Gwen::Utility::StringToUnicode(lastFit);
-
-			m_data->m_exampleInfoTextOutput->AddItem(msg);
-			m_data->m_exampleInfoTextOutput->Scroller()->ScrollToBottom();
+			m_gw[i] = 0;
+			m_gt[i] = 0;
 		}
 	}
-
-	if (lastFit.length())
+	virtual ~QuickCanvas() {}
+	virtual int createCanvas(const char* canvasName, int width, int height, int xPos, int yPos)
 	{
-		Gwen::UnicodeString msg = Gwen::Utility::StringToUnicode(lastFit);
-		m_data->m_exampleInfoTextOutput->AddItem(msg);
-		m_data->m_exampleInfoTextOutput->Scroller()->ScrollToBottom();
-	}
-}
+		if (m_curNumGraphWindows < MAX_GRAPH_WINDOWS)
+		{
+			//find a slot
+			int slot = m_curNumGraphWindows;
+			btAssert(slot < MAX_GRAPH_WINDOWS);
+			if (slot >= MAX_GRAPH_WINDOWS)
+				return 0;  //don't crash
 
-void GwenUserInterface::setStatusBarMessage(const char* message, bool isLeft)
-{
-	Gwen::UnicodeString msg = Gwen::Utility::StringToUnicode(message);
-	if (isLeft)
+			m_curNumGraphWindows++;
+
+			MyGraphInput input(m_internalData->getInternalData());
+			input.m_width = width;
+			input.m_height = height;
+			input.m_xPos = xPos;
+			input.m_yPos = yPos;
+			input.m_name = canvasName;
+			input.m_texName = canvasName;
+			m_gt[slot] = new GraphingTexture;
+			m_gt[slot]->create(width, height);
+			int texId = m_gt[slot]->getTextureId();
+			m_myTexLoader->m_hashMap.insert(canvasName, texId);
+			m_gw[slot] = setupTextureWindow(input);
+
+			return slot;
+		}
+		return -1;
+	}
+
+	virtual void destroyCanvas(int canvasId)
 	{
-		m_data->m_leftStatusBar->SetText(msg);
+		btAssert(canvasId >= 0);
+		delete m_gt[canvasId];
+		m_gt[canvasId] = 0;
+		destroyTextureWindow(m_gw[canvasId]);
+		m_gw[canvasId] = 0;
+		m_curNumGraphWindows--;
 	}
-	else
+	virtual void setPixel(int canvasId, int x, int y, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
 	{
-		m_data->m_rightStatusBar->SetText(msg);
+		btAssert(canvasId >= 0);
+		btAssert(canvasId < m_curNumGraphWindows);
+		m_gt[canvasId]->setPixel(x, y, red, green, blue, alpha);
 	}
-}
 
-void GwenUserInterface::registerFileOpenCallback(b3FileOpenCallback callback)
-{
-	m_data->m_menuItems->m_fileOpenCallback = callback;
-}
+	virtual void getPixel(int canvasId, int x, int y, unsigned char& red, unsigned char& green, unsigned char& blue, unsigned char& alpha)
+	{
+		btAssert(canvasId >= 0);
+		btAssert(canvasId < m_curNumGraphWindows);
+		m_gt[canvasId]->getPixel(x, y, red, green, blue, alpha);
+	}
 
-void GwenUserInterface::registerQuitCallback(b3QuitCallback callback)
-{
-	m_data->m_menuItems->m_quitCallback = callback;
-}
+	virtual void refreshImageData(int canvasId)
+	{
+		m_gt[canvasId]->uploadImageData();
+	}
+};
 
-void GwenUserInterface::init(int width, int height, Gwen::Renderer::Base* renderer, float retinaScale)
+class MyGraphWindow* graphWindow = 0;
+
+GwenUserInterface::GwenUserInterface(GlfwApp* s_app, int width, int height, float retinaScale)
 {
+	m_data = new GwenInternalData();
+	m_data->m_toggleButtonCallback = 0;
+	m_data->m_comboBoxCallback = 0;
+
+	m_myTexLoader = new GL3TexLoader;
+
+	auto fontstash = s_app->getFontStash();
+
+	// m_gui = new GwenUserInterface;
+	// init(width, height, m_gwenRenderer, retinaScale);
+	// void GwenUserInterface::init(int width, int height, Gwen::Renderer::Base* renderer, float retinaScale)
+
 	m_data->m_curYposition = 20;
 	//m_data->m_primRenderer = new GLPrimitiveRenderer(width,height);
-	m_data->pRenderer = renderer;  //new GwenOpenGL3CoreRenderer(m_data->m_primRenderer,stash,width,height,retinaScale);
+	m_data->pRenderer = new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, retinaScale, m_myTexLoader);
 
 	m_data->skin.SetRender(m_data->pRenderer);
 
@@ -377,7 +414,326 @@ void GwenUserInterface::init(int width, int height, Gwen::Renderer::Base* render
 	m_data->m_exampleInfoTextOutput->SetWidth(233);
 }
 
-void GwenUserInterface::forceUpdateScrollBars()
+GwenUserInterface::~GwenUserInterface()
+{
+	for (int i = 0; i < m_nodes.size(); i++)
+	{
+		delete m_nodes[i];
+	}
+	delete m_handler2;
+	for (int i = 0; i < m_handlers.size(); i++)
+	{
+		delete m_handlers[i];
+	}
+	m_handlers.clear();
+	m_nodes.clear();
+
+	// exit();
+	//m_data->m_menubar->RemoveAllChildren();
+	delete m_data->m_tab;
+	delete m_data->m_windowRight;
+	delete m_data->m_leftStatusBar;
+	delete m_data->m_TextOutput;
+	delete m_data->m_rightStatusBar;
+	delete m_data->m_bar;
+	delete m_data->m_menubar;
+
+	m_data->m_menubar = 0;
+	delete m_data->pCanvas;
+	m_data->pCanvas = 0;
+	delete m_data->pRenderer;
+	delete m_myTexLoader;
+
+	for (int i = 0; i < m_data->m_handlers.size(); i++)
+	{
+		delete m_data->m_handlers[i];
+	}
+	m_data->m_handlers.clear();
+
+	delete m_data;
+}
+
+std::tuple<CommonGUIInterface*, int> GwenUserInterface::Create(GlfwApp* app, int width, int height, float reginaScale, ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
+													  const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE)
+{
+	auto m_gwen = new GwenUserInterface(app, width, height, reginaScale);
+
+	auto onE = [_onE, m_gwen, gAllExamples](int id)
+	{
+		_onE(id);
+		auto desc = gAllExamples->getExampleDescription(id);
+		m_gwen->SetDescription(desc);
+	};
+
+	// m_gwen->Setup(onB, onD, onE);
+	// gui->getInternalData()->m_explorerPage
+	auto tree = m_gwen->getInternalData()->m_explorerTreeCtrl;
+
+	//gui->getInternalData()->pRenderer->setTextureLoader(myTexLoader);
+
+	// #ifndef BT_NO_PROFILE
+	// 	s_profWindow = setupProfileWindow(m_gui->getInternalData());
+	// 	m_internalData->m_profWindow = s_profWindow;
+	// 	profileWindowSetVisible(s_profWindow, false);
+	// #endif  //BT_NO_PROFILE
+	m_gwen->setFocus();
+
+	///add some demos to the gAllExamples
+
+	//char nodeText[1024];
+	//int curDemo = 0;
+	m_gwen->m_handler2 = new MyMenuItemHander(-1, onB, onD, _onE);
+
+	auto curNode = (Gwen::Controls::TreeNode*)tree;
+	tree->onReturnKeyDown.Add(m_gwen->m_handler2, &MyMenuItemHander::onButtonD);
+
+	int numDemos = gAllExamples->getNumRegisteredExamples();
+	int selectedDemo = 0;
+	if (demoNameFromCommandOption)
+	{
+		selectedDemo = -1;
+	}
+	int firstAvailableDemoIndex = -1;
+	Gwen::Controls::TreeNode* firstNode = 0;
+	for (int d = 0; d < numDemos; d++)
+	{
+		if (demoNameFromCommandOption)
+		{
+			const char* demoName = gAllExamples->getExampleName(d);
+			int res = strcmp(demoName, demoNameFromCommandOption);
+			if (res == 0)
+			{
+				selectedDemo = d;
+			}
+		}
+		// bool selected = m_gwen->AddDemo(d, gAllExamples->getExampleName(d), gAllExamples->getExampleCreateFunc(d), selectedDemo,
+		// 								onB, onD, onE);
+		bool isSelected = false;
+
+		//  sprintf(nodeText, "Node %d", i);
+		Gwen::UnicodeString nodeUText = Gwen::Utility::StringToUnicode(gAllExamples->getExampleName(d));
+		auto f = gAllExamples->getExampleCreateFunc(d);
+		if (f)  //was test for gAllExamples[d].m_menuLevel==1
+		{
+			Gwen::Controls::TreeNode* pNode = curNode->AddNode(nodeUText);
+
+			if (!firstNode)
+			{
+				firstNode = pNode;
+				isSelected = true;
+			}
+
+			if (d == selectedDemo)
+			{
+				firstNode = pNode;
+				isSelected = true;
+				//pNode->SetSelected(true);
+				//tree->ExpandAll();
+				// tree->ForceUpdateScrollBars();
+				//tree->OnKeyLeft(true);
+				// tree->OnKeyRight(true);
+
+				//tree->ExpandAll();
+
+				// selectDemo(d);
+			}
+
+#if 1
+			MyMenuItemHander* handler = new MyMenuItemHander(d,
+															 onB,
+															 onD,
+															 onE);
+			m_gwen->m_handlers.push_back(handler);
+
+			pNode->onNamePress.Add(handler, &MyMenuItemHander::onButtonA);
+			pNode->GetButton()->onDoubleClick.Add(handler, &MyMenuItemHander::onButtonB);
+			pNode->GetButton()->onDown.Add(handler, &MyMenuItemHander::onButtonC);
+			pNode->onSelect.Add(handler, &MyMenuItemHander::onButtonE);
+			pNode->onReturnKeyDown.Add(handler, &MyMenuItemHander::onButtonG);
+			pNode->onSelectChange.Add(handler, &MyMenuItemHander::onButtonF);
+
+#endif
+			//   pNode->onKeyReturn.Add(handler, &MyMenuItemHander::onButtonD);
+			//   pNode->GetButton()->onKeyboardReturn.Add(handler, &MyMenuItemHander::onButtonD);
+			//  pNode->onNamePress.Add(handler, &MyMenuItemHander::onButtonD);
+			//   pNode->onKeyboardPressed.Add(handler, &MyMenuItemHander::onButtonD);
+			//   pNode->OnKeyPress
+		}
+		else
+		{
+			curNode = tree->AddNode(nodeUText);
+			m_gwen->m_nodes.push_back(curNode);
+		}
+
+		if (isSelected)
+		{
+			firstAvailableDemoIndex = d;
+		}
+	}
+
+	// if (sCurrentDemo == 0)
+	{
+		if (firstAvailableDemoIndex >= 0)
+		{
+			// m_gwen->ExpandSelected();
+			firstNode->SetSelected(true);
+			while (firstNode != tree)
+			{
+				firstNode->ExpandAll();
+				firstNode = (Gwen::Controls::TreeNode*)firstNode->GetParent();
+			}
+		}
+	}
+
+	// btAssert(sCurrentDemo != 0);
+	// if (sCurrentDemo == 0)
+	// {
+	// 	printf("Error, no demo/example\n");
+	// 	exit(0);
+	// }
+
+	return {m_gwen, firstAvailableDemoIndex};
+}
+
+void GwenUserInterface::resize(int width, int height)
+{
+	m_data->pCanvas->SetSize(width, height);
+}
+
+struct MyComboBoxHander : public Gwen::Event::Handler
+{
+	GwenInternalData* m_data;
+	int m_buttonId;
+
+	MyComboBoxHander(GwenInternalData* data, int buttonId)
+		: m_data(data),
+		  m_buttonId(buttonId)
+	{
+	}
+
+	void onSelect(Gwen::Controls::Base* pControl)
+	{
+		Gwen::Controls::ComboBox* but = (Gwen::Controls::ComboBox*)pControl;
+
+		Gwen::String str = Gwen::Utility::UnicodeToString(but->GetSelectedItem()->GetText());
+
+		if (m_data->m_comboBoxCallback)
+			(m_data->m_comboBoxCallback)(m_buttonId, str.c_str());
+	}
+};
+
+struct MyButtonHander : public Gwen::Event::Handler
+{
+	GwenInternalData* m_data;
+	int m_buttonId;
+
+	MyButtonHander(GwenInternalData* data, int buttonId)
+		: m_data(data),
+		  m_buttonId(buttonId)
+	{
+	}
+
+	void onButtonA(Gwen::Controls::Base* pControl)
+	{
+		Gwen::Controls::Button* but = (Gwen::Controls::Button*)pControl;
+		//		int dep = but->IsDepressed();
+		int tog = but->GetToggleState();
+		if (m_data->m_toggleButtonCallback)
+			(m_data->m_toggleButtonCallback)(m_buttonId, tog);
+	}
+};
+
+void GwenUserInterface::textOutput(const char* message)
+{
+	Gwen::UnicodeString msg = Gwen::Utility::StringToUnicode(message);
+	m_data->m_TextOutput->AddItem(msg);
+	m_data->m_TextOutput->Scroller()->ScrollToBottom();
+}
+
+void GwenUserInterface::setExampleDescription(const char* message)
+{
+	//Gwen apparently doesn't have text/word wrap, so do rudimentary brute-force implementation here.
+
+	std::string wrapmessage = message;
+	int startPos = 0;
+
+	std::string lastFit = "";
+	bool hasSpace = false;
+	std::string lastFitSpace = "";
+	int spacePos = 0;
+
+	m_data->m_exampleInfoTextOutput->Clear();
+	int fixedWidth = m_data->m_exampleInfoTextOutput->GetBounds().w - 25;
+	int wrapLen = int(wrapmessage.length());
+	for (int endPos = 0; endPos <= wrapLen; endPos++)
+	{
+		std::string sub = wrapmessage.substr(startPos, (endPos - startPos));
+		Gwen::Point pt = m_data->pRenderer->MeasureText(m_data->pCanvas->GetSkin()->GetDefaultFont(), sub);
+
+		if (pt.x <= fixedWidth)
+		{
+			lastFit = sub;
+
+			if (message[endPos] == ' ' || message[endPos] == '.' || message[endPos] == ',')
+			{
+				hasSpace = true;
+				lastFitSpace = sub;
+				spacePos = endPos;
+			}
+		}
+		else
+		{
+			//submit and
+			if (hasSpace)
+			{
+				endPos = spacePos + 1;
+				hasSpace = false;
+				lastFit = lastFitSpace;
+				startPos = endPos;
+			}
+			else
+			{
+				startPos = endPos - 1;
+			}
+			Gwen::UnicodeString msg = Gwen::Utility::StringToUnicode(lastFit);
+
+			m_data->m_exampleInfoTextOutput->AddItem(msg);
+			m_data->m_exampleInfoTextOutput->Scroller()->ScrollToBottom();
+		}
+	}
+
+	if (lastFit.length())
+	{
+		Gwen::UnicodeString msg = Gwen::Utility::StringToUnicode(lastFit);
+		m_data->m_exampleInfoTextOutput->AddItem(msg);
+		m_data->m_exampleInfoTextOutput->Scroller()->ScrollToBottom();
+	}
+}
+
+void GwenUserInterface::SetStatusbarMessage(const char* message, bool isLeft)
+{
+	Gwen::UnicodeString msg = Gwen::Utility::StringToUnicode(message);
+	if (isLeft)
+	{
+		m_data->m_leftStatusBar->SetText(msg);
+	}
+	else
+	{
+		m_data->m_rightStatusBar->SetText(msg);
+	}
+}
+
+void GwenUserInterface::RegisterFileOpen(const std::function<void()>& callback)
+{
+	m_data->m_menuItems->m_fileOpenCallback = callback;
+}
+
+void GwenUserInterface::RegisterQuit(const std::function<void()>& callback)
+{
+	m_data->m_menuItems->m_quitCallback = callback;
+}
+
+void GwenUserInterface::ForceUpdateScrollBars()
 {
 	b3Assert(m_data);
 	b3Assert(m_data->m_explorerTreeCtrl);
@@ -458,7 +814,7 @@ void GwenUserInterface::registerComboBox2(int comboboxId, int numItems, const ch
 	m_data->m_curYposition += 22;
 }
 
-void GwenUserInterface::draw(int width, int height)
+void GwenUserInterface::Render(int width, int height)
 {
 	//	printf("width = %d, height=%d\n", width,height);
 	if (m_data->pCanvas)
@@ -471,7 +827,7 @@ void GwenUserInterface::draw(int width, int height)
 	}
 }
 
-bool GwenUserInterface::mouseMoveCallback(float x, float y)
+bool GwenUserInterface::OnMouseMove(int x, int y)
 {
 	bool handled = false;
 
@@ -489,9 +845,8 @@ bool GwenUserInterface::mouseMoveCallback(float x, float y)
 	}
 	return handled;
 }
-#include <CommonWindowInterface.h>
 
-bool GwenUserInterface::keyboardCallback(int bulletKey, int state)
+bool GwenUserInterface::OnKeyboard(int bulletKey, int state)
 {
 	int gwenKey = -1;
 	if (m_data->pCanvas)
@@ -576,7 +931,7 @@ bool GwenUserInterface::keyboardCallback(int bulletKey, int state)
 	return false;
 }
 
-bool GwenUserInterface::mouseButtonCallback(int button, int state, float x, float y)
+bool GwenUserInterface::OnMouseButton(int button, int state, int x, int y)
 {
 	bool handled = false;
 	if (m_data->pCanvas)
@@ -594,4 +949,34 @@ bool GwenUserInterface::mouseButtonCallback(int button, int state, float x, floa
 		}
 	}
 	return handled;
+}
+
+CommonParameterInterface* GwenUserInterface::CreateCommonParameterInterface()
+{
+	return new GwenParameterInterface(getInternalData());
+}
+
+Common2dCanvasInterface* GwenUserInterface::CreateCommon2dCanvasInterface()
+{
+	return new QuickCanvas(this, m_myTexLoader);
+}
+
+void GwenUserInterface::SetDescription(const char* description)
+{
+	SetStatusbarMessage("Status: OK", false);
+	setExampleDescription(description);
+}
+
+void GwenUserInterface::ShowMessage(const char* msg)
+{
+	textOutput(msg);
+	ForceUpdateScrollBars();
+}
+
+void GwenUserInterface::ShowErrorMessage(const char* msg)
+{
+	bool isLeft = false;
+	SetStatusbarMessage(msg, isLeft);
+	textOutput(msg);
+	ForceUpdateScrollBars();
 }

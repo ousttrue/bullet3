@@ -18,7 +18,7 @@ struct CommonGUIInterface
 	// GUI
 	virtual void SetDescription(const char* description) = 0;
 	virtual void ShowMessage(const char* msg) = 0;
-	virtual void SetStatusbarMessage(const char* msg) = 0;
+	virtual void SetStatusbarMessage(const char* msg, bool isLeft = true) = 0;
 	virtual void ShowErrorMessage(const char* msg) = 0;
 	virtual void Render(int w, int h) = 0;
 	virtual void ForceUpdateScrollBars() = 0;
