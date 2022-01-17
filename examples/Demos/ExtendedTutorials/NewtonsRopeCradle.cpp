@@ -59,23 +59,6 @@ struct NewtonsRopeCradleExample : public CommonRigidBodyBase
 	virtual void stepSimulation(float deltaTime);
 	virtual void renderScene();
 	virtual void applyPendulumForce(btScalar pendulumForce);
-	void createEmptyDynamicsWorld()
-	{
-		m_collisionConfiguration = new btSoftBodyRigidBodyCollisionConfiguration();
-		m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
-
-		m_broadphase = new btDbvtBroadphase();
-
-		m_solver = new btSequentialImpulseConstraintSolver;
-
-		m_dynamicsWorld = new btSoftRigidDynamicsWorld(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration);
-		m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
-
-		softBodyWorldInfo.m_broadphase = m_broadphase;
-		softBodyWorldInfo.m_dispatcher = m_dispatcher;
-		softBodyWorldInfo.m_gravity = m_dynamicsWorld->getGravity();
-		softBodyWorldInfo.m_sparsesdf.Initialize();
-	}
 
 	virtual void createRopePendulum(btSphereShape* colShape,
 									const btVector3& position, const btQuaternion& pendulumOrientation, btScalar width, btScalar height, btScalar mass);
@@ -87,7 +70,7 @@ struct NewtonsRopeCradleExample : public CommonRigidBodyBase
 	{
 		///just make it a btSoftRigidDynamicsWorld please
 		///or we will add type checking
-		return (btSoftRigidDynamicsWorld*)m_dynamicsWorld;
+		return (btSoftRigidDynamicsWorld*)m_physics->getDynamicsWorld();
 	}
 	void resetCamera()
 	{
@@ -187,7 +170,14 @@ void NewtonsRopeCradleExample::initPhysics()
 
 	m_guiHelper->setUpAxis(1);
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
+	m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
+
+	softBodyWorldInfo.m_broadphase = m_physics->getBroadphase();
+	softBodyWorldInfo.m_dispatcher = m_physics->getDispatcher();
+	softBodyWorldInfo.m_gravity = m_dynamicsWorld->getGravity();
+	softBodyWorldInfo.m_sparsesdf.Initialize();
 
 	// create a debug drawer
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
@@ -203,7 +193,7 @@ void NewtonsRopeCradleExample::initPhysics()
 
 		// Re-using the same collision is better for memory usage and performance
 		btSphereShape* pendulumShape = new btSphereShape(gSphereRadius);
-		m_collisionShapes.push_back(pendulumShape);
+		m_physics->m_collisionShapes.push_back(pendulumShape);
 
 		for (int i = 0; i < std::floor(gPendulaQty); i++)
 		{
@@ -240,9 +230,9 @@ void NewtonsRopeCradleExample::stepSimulation(float deltaTime)
 {
 	applyRForceWithForceScalar(gForceScalar);  // apply force defined by apply force slider
 
-	if (m_dynamicsWorld)
+	if (m_physics)
 	{
-		m_dynamicsWorld->stepSimulation(deltaTime);
+		m_physics->getDynamicsWorld()->stepSimulation(deltaTime);
 	}
 }
 
@@ -268,21 +258,21 @@ void NewtonsRopeCradleExample::createRopePendulum(btSphereShape* colShape,
 	startTransform.setRotation(pendulumOrientation);                         // pendulum rotation
 	startTransform.setOrigin(startTransform * topSphere1RelPosition);        // rotate this position
 	startTransform.setOrigin(position + startTransform.getOrigin());         // add non-rotated position to the relative position
-	btRigidBody* topSphere1 = createRigidBody(0, startTransform, colShape);  // make top sphere static
+	btRigidBody* topSphere1 = m_physics->createRigidBody(0, startTransform, colShape);  // make top sphere static
 
 	// position the top sphere above ground with appropriate orientation
 	startTransform.setOrigin(btVector3(0, 0, 0));                            // no translation intitially
 	startTransform.setRotation(pendulumOrientation);                         // pendulum rotation
 	startTransform.setOrigin(startTransform * topSphere2RelPosition);        // rotate this position
 	startTransform.setOrigin(position + startTransform.getOrigin());         // add non-rotated position to the relative position
-	btRigidBody* topSphere2 = createRigidBody(0, startTransform, colShape);  // make top sphere static
+	btRigidBody* topSphere2 = m_physics->createRigidBody(0, startTransform, colShape);  // make top sphere static
 
 	// position the bottom sphere below the top sphere
 	startTransform.setOrigin(btVector3(0, 0, 0));                        // no translation intitially
 	startTransform.setRotation(pendulumOrientation);                     // pendulum rotation
 	startTransform.setOrigin(startTransform * bottomSphereRelPosition);  // rotate this position
 	startTransform.setOrigin(position + startTransform.getOrigin());     // add non-rotated position to the relative position
-	btRigidBody* bottomSphere = createRigidBody(mass, startTransform, colShape);
+	btRigidBody* bottomSphere = m_physics->createRigidBody(mass, startTransform, colShape);
 	bottomSphere->setFriction(0);  // we do not need friction here
 	pendula.push_back(bottomSphere);
 

@@ -19,6 +19,7 @@ subject to the following restrictions:
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
 #include <CommonRigidBodyBase.h>
+#include <vcruntime_new.h>
 
 struct CompoundBoxesExample : public CommonRigidBodyBase
 {
@@ -43,7 +44,8 @@ void CompoundBoxesExample::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 
@@ -51,22 +53,22 @@ void CompoundBoxesExample::initPhysics()
 		m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
 
 	///create a few basic rigid bodies
-	btBoxShape* groundShape = createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-	m_collisionShapes.push_back(groundShape);
+	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(0, -50, 0));
 	{
 		btScalar mass(0.);
-		createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
+		m_physics->createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
 	}
 
 	{
 		//create a few dynamic rigidbodies
 		// Re-using the same collision is better for memory usage and performance
-		btBoxShape* cube = createBoxShape(btVector3(0.5, 0.5, 0.5));
-		m_collisionShapes.push_back(cube);
+		btBoxShape* cube = m_physics->createBoxShape(btVector3(0.5, 0.5, 0.5));
+		m_physics->m_collisionShapes.push_back(cube);
 
 		// create a new compound shape for making an L-beam from `cube`s
 		btCompoundShape* compoundShape = new btCompoundShape();
@@ -93,7 +95,7 @@ void CompoundBoxesExample::initPhysics()
 
 		// new compund shape to store
 		btCompoundShape* compound2 = new btCompoundShape();
-		m_collisionShapes.push_back(compound2);
+		m_physics->m_collisionShapes.push_back(compound2);
 #if 0
 		// less efficient way to add the entire compund shape 
 		// to a new compund shape as a child
@@ -108,7 +110,7 @@ void CompoundBoxesExample::initPhysics()
 
 		transform.setIdentity();
 		transform.setOrigin(btVector3(0, 10, 0));
-		createRigidBody(1.0, transform, compound2);
+		m_physics->createRigidBody(1.0, transform, compound2);
 	}
 
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);

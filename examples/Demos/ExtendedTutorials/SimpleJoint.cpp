@@ -43,7 +43,8 @@ void SimpleJointExample::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 
@@ -51,23 +52,23 @@ void SimpleJointExample::initPhysics()
 		m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
 
 	///create a few basic rigid bodies
-	btBoxShape* groundShape = createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-	m_collisionShapes.push_back(groundShape);
+	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(0, -50, 0));
 	{
 		btScalar mass(0.);
-		createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
+		m_physics->createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
 	}
 
 	{
 		//create a few dynamic rigidbodies
 		// Re-using the same collision is better for memory usage and performance
-		btBoxShape* colShape = createBoxShape(btVector3(1, 1, 1));
+		btBoxShape* colShape = m_physics->createBoxShape(btVector3(1, 1, 1));
 
-		m_collisionShapes.push_back(colShape);
+		m_physics->m_collisionShapes.push_back(colShape);
 
 		/// Create Dynamic Objects
 		btTransform startTransform;
@@ -86,7 +87,7 @@ void SimpleJointExample::initPhysics()
 			btScalar(0),
 			btScalar(10),
 			btScalar(0)));
-		btRigidBody* dynamicBox = createRigidBody(mass, startTransform, colShape);
+		btRigidBody* dynamicBox = m_physics->createRigidBody(mass, startTransform, colShape);
 
 		//create a static rigid body
 		mass = 0;
@@ -95,7 +96,7 @@ void SimpleJointExample::initPhysics()
 			btScalar(20),
 			btScalar(0)));
 
-		btRigidBody* staticBox = createRigidBody(mass, startTransform, colShape);
+		btRigidBody* staticBox = m_physics->createRigidBody(mass, startTransform, colShape);
 
 		//create a simple p2pjoint constraint
 		btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*dynamicBox, *staticBox, btVector3(0, 3, 0), btVector3(0, 0, 0));

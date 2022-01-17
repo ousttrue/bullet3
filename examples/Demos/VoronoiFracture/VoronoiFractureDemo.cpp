@@ -57,17 +57,6 @@ class btDefaultCollisionConfiguration;
 
 class VoronoiFractureDemo : public CommonRigidBodyBase
 {
-	//keep the collision shapes, for deletion/cleanup
-	btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
-
-	btBroadphaseInterface* m_broadphase;
-
-	btCollisionDispatcher* m_dispatcher;
-
-	btConstraintSolver* m_solver;
-
-	btDefaultCollisionConfiguration* m_collisionConfiguration;
-
 	btClock m_perfmTimer;
 
 public:
@@ -78,7 +67,7 @@ public:
 	}
 	virtual ~VoronoiFractureDemo()
 	{
-		btAssert(m_dynamicsWorld == 0);
+		btAssert(m_physics == 0);
 	}
 
 	void initPhysics();
@@ -112,6 +101,7 @@ public:
 
 void VoronoiFractureDemo::attachFixedConstraints()
 {
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	btAlignedObjectArray<btRigidBody*> bodies;
 
 	int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
@@ -400,7 +390,7 @@ void VoronoiFractureDemo::voronoiBBShatter(const btAlignedObjectArray<btVector3>
 		// Create Bullet Physics rigid body shards
 		btCollisionShape* shardShape = new btConvexHullShape(&(convexHC->vertices[0].getX()), convexHC->vertices.size());
 		shardShape->setMargin(CONVEX_MARGIN);  // for this demo; note convexHC has optional margin parameter for this
-		m_collisionShapes.push_back(shardShape);
+		m_physics->m_collisionShapes.push_back(shardShape);
 		btTransform shardTransform;
 		shardTransform.setIdentity();
 		shardTransform.setOrigin(curVoronoiPoint + com);  // Shard's adjusted location
@@ -410,7 +400,7 @@ void VoronoiFractureDemo::voronoiBBShatter(const btAlignedObjectArray<btVector3>
 		shardShape->calculateLocalInertia(shardMass, shardInertia);
 		btRigidBody::btRigidBodyConstructionInfo shardRBInfo(shardMass, shardMotionState, shardShape, shardInertia);
 		btRigidBody* shardBody = new btRigidBody(shardRBInfo);
-		m_dynamicsWorld->addRigidBody(shardBody);
+		m_physics->getDynamicsWorld()->addRigidBody(shardBody);
 
 		cellnum++;
 	}
@@ -554,7 +544,7 @@ void VoronoiFractureDemo::voronoiConvexHullShatter(const btAlignedObjectArray<bt
 		// Create Bullet Physics rigid body shards
 		btCollisionShape* shardShape = new btConvexHullShape(&(convexHC->vertices[0].getX()), convexHC->vertices.size());
 		shardShape->setMargin(CONVEX_MARGIN);  // for this demo; note convexHC has optional margin parameter for this
-		m_collisionShapes.push_back(shardShape);
+		m_physics->m_collisionShapes.push_back(shardShape);
 		btTransform shardTransform;
 		shardTransform.setIdentity();
 		shardTransform.setOrigin(curVoronoiPoint + com);  // Shard's adjusted location
@@ -564,7 +554,7 @@ void VoronoiFractureDemo::voronoiConvexHullShatter(const btAlignedObjectArray<bt
 		shardShape->calculateLocalInertia(shardMass, shardInertia);
 		btRigidBody::btRigidBodyConstructionInfo shardRBInfo(shardMass, shardMotionState, shardShape, shardInertia);
 		btRigidBody* shardBody = new btRigidBody(shardRBInfo);
-		m_dynamicsWorld->addRigidBody(shardBody);
+		m_physics->getDynamicsWorld()->addRigidBody(shardBody);
 
 		cellnum++;
 	}
@@ -639,17 +629,12 @@ void VoronoiFractureDemo::initPhysics()
 	useGenericConstraint = !useGenericConstraint;
 	printf("useGenericConstraint = %d\n", useGenericConstraint);
 
-	///collision configuration contains default setup for memory, collision setup
-	m_collisionConfiguration = new btDefaultCollisionConfiguration();
-	//m_collisionConfiguration->setConvexConvexMultipointIterations();
-
-	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
-	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
+	m_physics = new Physics();
 
 	useMpr = 1 - useMpr;
-
 	if (useMpr)
 	{
+		auto m_dispatcher = m_physics->getDispatcher();
 		printf("using GJK+MPR convex-convex collision detection\n");
 		btConvexConvexMprAlgorithm::CreateFunc* cf = new btConvexConvexMprAlgorithm::CreateFunc;
 		m_dispatcher->registerCollisionCreateFunc(CONVEX_HULL_SHAPE_PROXYTYPE, CONVEX_HULL_SHAPE_PROXYTYPE, cf);
@@ -661,13 +646,8 @@ void VoronoiFractureDemo::initPhysics()
 		printf("using default (GJK+EPA) convex-convex collision detection\n");
 	}
 
-	m_broadphase = new btDbvtBroadphase();
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
-	///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
-	btSequentialImpulseConstraintSolver* sol = new btSequentialImpulseConstraintSolver;
-	m_solver = sol;
-
-	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration);
 	m_dynamicsWorld->getSolverInfo().m_splitImpulse = true;
 
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
@@ -678,7 +658,7 @@ void VoronoiFractureDemo::initPhysics()
 	btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
 	//	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),50);
 
-	m_collisionShapes.push_back(groundShape);
+	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
@@ -767,68 +747,6 @@ void VoronoiFractureDemo::initPhysics()
 
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
-
-void VoronoiFractureDemo::exitPhysics()
-{
-	//cleanup in the reverse order of creation/initialization
-
-	int i;
-	//remove all constraints
-	for (i = m_dynamicsWorld->getNumConstraints() - 1; i >= 0; i--)
-	{
-		btTypedConstraint* constraint = m_dynamicsWorld->getConstraint(i);
-		m_dynamicsWorld->removeConstraint(constraint);
-		delete constraint;
-	}
-
-	//remove the rigidbodies from the dynamics world and delete them
-
-	for (i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
-	{
-		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		if (body && body->getMotionState())
-		{
-			delete body->getMotionState();
-		}
-		m_dynamicsWorld->removeCollisionObject(obj);
-		delete obj;
-	}
-
-	//delete collision shapes
-	for (int j = 0; j < m_collisionShapes.size(); j++)
-	{
-		btCollisionShape* shape = m_collisionShapes[j];
-		delete shape;
-	}
-	m_collisionShapes.clear();
-
-	delete m_dynamicsWorld;
-	m_dynamicsWorld = 0;
-
-	delete m_solver;
-	m_solver = 0;
-
-	delete m_broadphase;
-	m_broadphase = 0;
-
-	delete m_dispatcher;
-	m_dispatcher = 0;
-
-	delete m_collisionConfiguration;
-	m_collisionConfiguration = 0;
-}
-
-/*
-static DemoApplication* Create()
-	{
-		VoronoiFractureDemo* demo = new VoronoiFractureDemo;
-		demo->myinit();
-		demo->initPhysics();
-		return demo;
-	}
-
-*/
 
 CommonExampleInterface* VoronoiFractureCreateFunc(struct CommonExampleOptions& options)
 {

@@ -142,7 +142,8 @@ void MultiPendulumExample::initPhysics()
 
 	m_guiHelper->setUpAxis(1);
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	// create a debug drawer
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
@@ -157,7 +158,7 @@ void MultiPendulumExample::initPhysics()
 
 		// Re-using the same collision is better for memory usage and performance
 		btSphereShape* pendulumShape = new btSphereShape(gSphereRadius);
-		m_collisionShapes.push_back(pendulumShape);
+		m_physics->m_collisionShapes.push_back(pendulumShape);
 
 		// create multi-pendulum
 		createMultiPendulum(pendulumShape, std::floor(gPendulaQty), position,
@@ -171,9 +172,9 @@ void MultiPendulumExample::stepSimulation(float deltaTime)
 {
 	applyMForceWithForceScalar(gForceScalar);  // apply force defined by apply force slider
 
-	if (m_dynamicsWorld)
+	if (m_physics)
 	{
-		m_dynamicsWorld->stepSimulation(deltaTime);
+		m_physics->getDynamicsWorld()->stepSimulation(deltaTime);
 	}
 }
 
@@ -201,7 +202,7 @@ void MultiPendulumExample::createMultiPendulum(btSphereShape* colShape,
 
 	startTransform.setRotation(btQuaternion(0, 0, 0, 1));  // zero rotation
 
-	btRigidBody* topSphere = createRigidBody(mass, startTransform, colShape);
+	btRigidBody* topSphere = m_physics->createRigidBody(mass, startTransform, colShape);
 
 	// disable the deactivation when object does not move anymore
 	topSphere->setActivationState(DISABLE_DEACTIVATION);
@@ -215,6 +216,7 @@ void MultiPendulumExample::createMultiPendulum(btSphereShape* colShape,
 	p2pconst->setDbgDrawSize(btScalar(5.f));  // set the size of the debug drawing
 
 	// add the constraint to the world
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	m_dynamicsWorld->addConstraint(p2pconst, true);
 
 	btRigidBody* parentSphere = topSphere;  // set the top sphere as the parent sphere for the next sphere to be created
@@ -229,7 +231,7 @@ void MultiPendulumExample::createMultiPendulum(btSphereShape* colShape,
 
 		startTransform.setRotation(btQuaternion(0, 0, 0, 1));  // zero rotation
 
-		btRigidBody* jointSphere = createRigidBody(mass, startTransform,
+		btRigidBody* jointSphere = m_physics->createRigidBody(mass, startTransform,
 												   colShape);
 		jointSphere->setFriction(0);  // we do not need friction here
 
@@ -268,7 +270,7 @@ void MultiPendulumExample::createMultiPendulum(btSphereShape* colShape,
 
 		startTransform.setRotation(btQuaternion(0, 0, 0, 1));  // zero rotation
 
-		btRigidBody* childSphere = createRigidBody(mass, startTransform,
+		btRigidBody* childSphere = m_physics->createRigidBody(mass, startTransform,
 												   colShape);
 		childSphere->setFriction(0);  // we do not need friction here
 		pendula.push_back(childSphere);

@@ -27,19 +27,14 @@ subject to the following restrictions:
 class AllConstraintDemo : public CommonRigidBodyBase
 {
 	//keep track of variables to delete memory at the end
-
 	void setupEmptyDynamicsWorld();
 
 public:
 	AllConstraintDemo(struct GUIHelperInterface* helper);
-
-	virtual ~AllConstraintDemo();
-
-	virtual void initPhysics();
-
-	virtual void exitPhysics();
-
-	virtual void resetCamera()
+	~AllConstraintDemo() override;
+	void initPhysics() override;
+	void exitPhysics() override;
+	void resetCamera() override
 	{
 		float dist = 27;
 		float pitch = -30;
@@ -47,18 +42,15 @@ public:
 		float targetPos[3] = {2, 0, -10};
 		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
 	}
-
-	virtual bool keyboardCallback(int key, int state);
+	virtual bool keyboardCallback(int key, int state) override;
 
 	// for cone-twist motor driving
-	float m_Time;
-	class btConeTwistConstraint* m_ctc;
+	float m_Time = 0;
+	class btConeTwistConstraint* m_ctc = nullptr;
 };
 
 #define ENABLE_ALL_DEMOS 1
-
 #define CUBE_HALF_EXTENTS 1.f
-
 #define SIMD_PI_2 ((SIMD_PI)*0.5f)
 #define SIMD_PI_4 ((SIMD_PI)*0.25f)
 
@@ -74,37 +66,28 @@ btGeneric6DofConstraint* spSlider6Dof = NULL;
 
 static bool s_bTestConeTwistMotor = false;
 
-void AllConstraintDemo::setupEmptyDynamicsWorld()
-{
-	m_collisionConfiguration = new btDefaultCollisionConfiguration();
-	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
-	m_broadphase = new btDbvtBroadphase();
-	m_solver = new btSequentialImpulseConstraintSolver();
-	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration);
-}
-
 void AllConstraintDemo::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
 
-	m_Time = 0;
-
-	setupEmptyDynamicsWorld();
+	m_physics = new Physics();
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 
 	//btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(50.),btScalar(40.),btScalar(50.)));
 	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 40);
+	m_physics->m_collisionShapes.push_back(groundShape);
 
-	m_collisionShapes.push_back(groundShape);
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(0, -56, 0));
 	btRigidBody* groundBody;
-	groundBody = createRigidBody(0, groundTransform, groundShape);
+	groundBody = m_physics->createRigidBody(0, groundTransform, groundShape);
 
 	btCollisionShape* shape = new btBoxShape(btVector3(CUBE_HALF_EXTENTS, CUBE_HALF_EXTENTS, CUBE_HALF_EXTENTS));
-	m_collisionShapes.push_back(shape);
+	m_physics->m_collisionShapes.push_back(shape);
+
 	btTransform trans;
 	trans.setIdentity();
 	trans.setOrigin(btVector3(0, 20, 0));
@@ -184,10 +167,10 @@ void AllConstraintDemo::initPhysics()
 	{
 		trans.setIdentity();
 		trans.setOrigin(btVector3(1, 30, -5));
-		createRigidBody(mass, trans, shape);
+		m_physics->createRigidBody(mass, trans, shape);
 		trans.setOrigin(btVector3(0, 0, -5));
 
-		btRigidBody* body0 = createRigidBody(mass, trans, shape);
+		btRigidBody* body0 = m_physics->createRigidBody(mass, trans, shape);
 		trans.setOrigin(btVector3(2 * CUBE_HALF_EXTENTS, 20, 0));
 		mass = 1.f;
 		//	btRigidBody* body1 = 0;//createRigidBody( mass,trans,shape);
@@ -202,7 +185,7 @@ void AllConstraintDemo::initPhysics()
 #if ENABLE_ALL_DEMOS
 	//point to point constraint (ball socket)
 	{
-		btRigidBody* body0 = createRigidBody(mass, trans, shape);
+		btRigidBody* body0 = m_physics->createRigidBody(mass, trans, shape);
 		trans.setOrigin(btVector3(2 * CUBE_HALF_EXTENTS, 20, 0));
 
 		mass = 1.f;
@@ -252,14 +235,14 @@ void AllConstraintDemo::initPhysics()
 		frameInA = btTransform::getIdentity();
 		frameInB = btTransform::getIdentity();
 
-		btRigidBody* pRbA1 = createRigidBody(mass, trans, shape);
+		btRigidBody* pRbA1 = m_physics->createRigidBody(mass, trans, shape);
 		//	btRigidBody* pRbA1 = createRigidBody(0.f, trans, shape);
 		pRbA1->setActivationState(DISABLE_DEACTIVATION);
 
 		// add dynamic rigid body B1
 		worldPos.setValue(-30, 0, 30);
 		trans.setOrigin(worldPos);
-		btRigidBody* pRbB1 = createRigidBody(mass, trans, shape);
+		btRigidBody* pRbB1 = m_physics->createRigidBody(mass, trans, shape);
 		//	btRigidBody* pRbB1 = createRigidBody(0.f, trans, shape);
 		pRbB1->setActivationState(DISABLE_DEACTIVATION);
 
@@ -295,9 +278,9 @@ void AllConstraintDemo::initPhysics()
 		//trans.setBasis(sliderOrientation);
 		sliderTransform = trans;
 
-		d6body0 = createRigidBody(mass, trans, shape);
+		d6body0 = m_physics->createRigidBody(mass, trans, shape);
 		d6body0->setActivationState(DISABLE_DEACTIVATION);
-		btRigidBody* fixedBody1 = createRigidBody(0, trans, 0);
+		btRigidBody* fixedBody1 = m_physics->createRigidBody(0, trans, 0);
 		m_dynamicsWorld->addRigidBody(fixedBody1);
 
 		btTransform frameInA, frameInB;
@@ -331,11 +314,11 @@ void AllConstraintDemo::initPhysics()
 #if ENABLE_ALL_DEMOS
 	{  // create a door using hinge constraint attached to the world
 		btCollisionShape* pDoorShape = new btBoxShape(btVector3(2.0f, 5.0f, 0.2f));
-		m_collisionShapes.push_back(pDoorShape);
+		m_physics->m_collisionShapes.push_back(pDoorShape);
 		btTransform doorTrans;
 		doorTrans.setIdentity();
 		doorTrans.setOrigin(btVector3(-5.0f, -2.0f, 0.0f));
-		btRigidBody* pDoorBody = createRigidBody(1.0, doorTrans, pDoorShape);
+		btRigidBody* pDoorBody = m_physics->createRigidBody(1.0, doorTrans, pDoorShape);
 		pDoorBody->setActivationState(DISABLE_DEACTIVATION);
 		const btVector3 btPivotA(10.f + 2.1f, -2.0f, 0.0f);  // right next to the door slightly outside
 		btVector3 btAxisA(0.0f, 1.0f, 0.0f);                 // pointing upwards, aka Y-axis
@@ -367,14 +350,14 @@ void AllConstraintDemo::initPhysics()
 		tr.setOrigin(btVector3(btScalar(10.), btScalar(6.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
 		//		btRigidBody* pBodyA = createRigidBody( mass, tr, shape);
-		btRigidBody* pBodyA = createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyA = m_physics->createRigidBody(0.0, tr, shape);
 		//		btRigidBody* pBodyA = createRigidBody( 0.0, tr, 0);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(0.), btScalar(6.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyB = createRigidBody(mass, tr, shape);
+		btRigidBody* pBodyB = m_physics->createRigidBody(mass, tr, shape);
 		//		btRigidBody* pBodyB = createRigidBody(0.f, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 
@@ -429,14 +412,14 @@ void AllConstraintDemo::initPhysics()
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-10.), btScalar(5.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyA = createRigidBody(1.0, tr, shape);
+		btRigidBody* pBodyA = m_physics->createRigidBody(1.0, tr, shape);
 		//		btRigidBody* pBodyA = createRigidBody( 0.0, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-10.), btScalar(-5.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyB = createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyB = m_physics->createRigidBody(0.0, tr, shape);
 		//		btRigidBody* pBodyB = createRigidBody(1.0, tr, shape);
 
 		btTransform frameInA, frameInB;
@@ -462,7 +445,7 @@ void AllConstraintDemo::initPhysics()
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
-		btRigidBody* pBody = createRigidBody(1.0, tr, shape);
+		btRigidBody* pBody = m_physics->createRigidBody(1.0, tr, shape);
 		pBody->setActivationState(DISABLE_DEACTIVATION);
 		const btVector3 btPivotA(10.0f, 0.0f, 0.0f);
 		btVector3 btAxisA(0.0f, 0.0f, 1.0f);
@@ -483,12 +466,12 @@ void AllConstraintDemo::initPhysics()
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(20.), btScalar(4.), btScalar(0.)));
-		btRigidBody* pBodyA = createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyA = m_physics->createRigidBody(0.0, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 		// dynamic bodyB (child) below it :
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(20.), btScalar(0.), btScalar(0.)));
-		btRigidBody* pBodyB = createRigidBody(1.0, tr, shape);
+		btRigidBody* pBodyB = m_physics->createRigidBody(1.0, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 		// add some (arbitrary) data to build constraint frames
 		btVector3 parentAxis(1.f, 0.f, 0.f);
@@ -512,13 +495,13 @@ void AllConstraintDemo::initPhysics()
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-20.), btScalar(16.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyA = createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyA = m_physics->createRigidBody(0.0, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-10.), btScalar(16.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyB = createRigidBody(1.0, tr, shape);
+		btRigidBody* pBodyB = m_physics->createRigidBody(1.0, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 
 		btTransform frameInA, frameInB;
@@ -554,12 +537,12 @@ void AllConstraintDemo::initPhysics()
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-20.), btScalar(4.), btScalar(0.)));
-		btRigidBody* pBodyA = createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyA = m_physics->createRigidBody(0.0, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 		// dynamic bodyB (child) below it :
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-20.), btScalar(0.), btScalar(0.)));
-		btRigidBody* pBodyB = createRigidBody(1.0, tr, shape);
+		btRigidBody* pBodyB = m_physics->createRigidBody(1.0, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 		// add some data to build constraint frames
 		btVector3 parentAxis(0.f, 1.f, 0.f);
@@ -582,12 +565,12 @@ void AllConstraintDemo::initPhysics()
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-20.), btScalar(-2.), btScalar(0.)));
-		btRigidBody* pBodyA = createRigidBody(1.0f, tr, shape);
+		btRigidBody* pBodyA = m_physics->createRigidBody(1.0f, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 		// dynamic bodyB:
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-30.), btScalar(-2.), btScalar(0.)));
-		btRigidBody* pBodyB = createRigidBody(10.0, tr, shape);
+		btRigidBody* pBodyB = m_physics->createRigidBody(10.0, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 		// add some data to build constraint frames
 		btVector3 axisA(0.f, 1.f, 0.f);
@@ -608,7 +591,7 @@ void AllConstraintDemo::initPhysics()
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(10.), btScalar(-15.), btScalar(0.)));
-		btRigidBody* pBody = createRigidBody(1.0, tr, shape);
+		btRigidBody* pBody = m_physics->createRigidBody(1.0, tr, shape);
 		pBody->setActivationState(DISABLE_DEACTIVATION);
 		btTransform frameB;
 		frameB.setIdentity();
@@ -632,55 +615,7 @@ void AllConstraintDemo::initPhysics()
 
 void AllConstraintDemo::exitPhysics()
 {
-	int i;
-
-	//removed/delete constraints
-	for (i = m_dynamicsWorld->getNumConstraints() - 1; i >= 0; i--)
-	{
-		btTypedConstraint* constraint = m_dynamicsWorld->getConstraint(i);
-		m_dynamicsWorld->removeConstraint(constraint);
-		delete constraint;
-	}
-	m_ctc = NULL;
-
-	//remove the rigidbodies from the dynamics world and delete them
-	for (i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
-	{
-		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		if (body && body->getMotionState())
-		{
-			delete body->getMotionState();
-		}
-		m_dynamicsWorld->removeCollisionObject(obj);
-		delete obj;
-	}
-
-	//delete collision shapes
-	for (int j = 0; j < m_collisionShapes.size(); j++)
-	{
-		btCollisionShape* shape = m_collisionShapes[j];
-		delete shape;
-	}
-
-	m_collisionShapes.clear();
-
-	//delete dynamics world
-	delete m_dynamicsWorld;
-	m_dynamicsWorld = 0;
-
-	//delete solver
-	delete m_solver;
-	m_solver = 0;
-
-	//delete broadphase
-	delete m_broadphase;
-	m_broadphase = 0;
-
-	//delete dispatcher
-	delete m_dispatcher;
-
-	delete m_collisionConfiguration;
+	delete m_physics;
 }
 
 AllConstraintDemo::AllConstraintDemo(struct GUIHelperInterface* helper)
@@ -690,9 +625,6 @@ AllConstraintDemo::AllConstraintDemo(struct GUIHelperInterface* helper)
 
 AllConstraintDemo::~AllConstraintDemo()
 {
-	//cleanup in the reverse order of creation/initialization
-
-	btAssert(m_dynamicsWorld == 0);
 }
 
 #if 0

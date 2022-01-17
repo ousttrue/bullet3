@@ -283,9 +283,9 @@ public:
 		// legs
 		for (i = 0; i < NUM_LEGS; i++)
 		{
-			float footAngle = 2 * SIMD_PI * i / NUM_LEGS;  // legs are uniformly distributed around the root body
-			float footYUnitPosition = std::sin(footAngle); // y position of the leg on the unit circle
-			float footXUnitPosition = std::cos(footAngle); // x position of the leg on the unit circle
+			float footAngle = 2 * SIMD_PI * i / NUM_LEGS;   // legs are uniformly distributed around the root body
+			float footYUnitPosition = std::sin(footAngle);  // y position of the leg on the unit circle
+			float footXUnitPosition = std::cos(footAngle);  // x position of the leg on the unit circle
 
 			transform.setIdentity();
 			btVector3 legCOM = btVector3(btScalar(footXUnitPosition * (gRootBodyRadius + 0.5 * gLegLength)), btScalar(rootAboveGroundHeight), btScalar(footYUnitPosition * (gRootBodyRadius + 0.5 * gLegLength)));
@@ -549,11 +549,11 @@ bool legContactProcessedCallback(btManifoldPoint& cp, void* body0, void* body1)
 	{
 		// Make a circle with a 0.9 radius at (0,0,0)
 		// with RGB color (1,0,0).
-		if (nn3DWalkers->m_dynamicsWorld->getDebugDrawer() != NULL)
+		if (nn3DWalkers->m_physics->getDynamicsWorld()->getDebugDrawer() != NULL)
 		{
 			if (!nn3DWalkers->mIsHeadless)
 			{
-				nn3DWalkers->m_dynamicsWorld->getDebugDrawer()->drawSphere(cp.getPositionWorldOnA(), 0.1, btVector3(1., 0., 0.));
+				nn3DWalkers->m_physics->getDynamicsWorld()->getDebugDrawer()->drawSphere(cp.getPositionWorldOnA(), 0.1, btVector3(1., 0., 0.));
 			}
 		}
 
@@ -601,7 +601,8 @@ void NN3DWalkersExample::initPhysics()
 
 	m_Time = 0;
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	m_dynamicsWorld->setInternalTickCallback(evaluationUpdatePreTickCallback, this, true);
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
@@ -696,11 +697,11 @@ void NN3DWalkersExample::initPhysics()
 	// Setup a big ground box
 	{
 		btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(200.), btScalar(10.), btScalar(200.)));
-		m_collisionShapes.push_back(groundShape);
+		m_physics->m_collisionShapes.push_back(groundShape);
 		btTransform groundTransform;
 		groundTransform.setIdentity();
 		groundTransform.setOrigin(btVector3(0, -10, 0));
-		btRigidBody* ground = createRigidBody(btScalar(0.), groundTransform, groundShape);
+		btRigidBody* ground = m_physics->createRigidBody(btScalar(0.), groundTransform, groundShape);
 		ground->setFriction(5);
 		ground->setUserPointer(GROUND_ID);
 	}
@@ -738,18 +739,19 @@ void NN3DWalkersExample::initPhysics()
 
 void NN3DWalkersExample::spawnWalker(int index, const btVector3& startOffset, bool bFixed)
 {
-	NNWalker* walker = new NNWalker(index, m_dynamicsWorld, startOffset, bFixed);
+	NNWalker* walker = new NNWalker(index, m_physics->getDynamicsWorld(), startOffset, bFixed);
 	m_walkersInPopulation.push_back(walker);
 }
 
 bool NN3DWalkersExample::detectCollisions()
 {
 	bool collisionDetected = false;
-	if (m_dynamicsWorld)
+	if (m_physics)
 	{
-		m_dynamicsWorld->performDiscreteCollisionDetection();  // let the collisions be calculated
+		m_physics->getDynamicsWorld()->performDiscreteCollisionDetection();  // let the collisions be calculated
 	}
 
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)
 	{
@@ -1067,7 +1069,7 @@ void NN3DWalkersExample::scheduleEvaluations()
 			}
 
 			m_walkersInPopulation[i]->addToWorld();
-			m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
+			m_guiHelper->autogenerateGraphicsObjects(m_physics->getDynamicsWorld());
 		}
 	}
 
@@ -1099,9 +1101,9 @@ void NN3DWalkersExample::drawMarkings()
 
 		for (int i = 2; i < 50; i += 2)
 		{  // draw distance circles
-			if (m_dynamicsWorld->getDebugDrawer())
+			if (m_physics->getDynamicsWorld()->getDebugDrawer())
 			{
-				m_dynamicsWorld->getDebugDrawer()->drawArc(btVector3(0, 0, 0), btVector3(0, 1, 0), btVector3(1, 0, 0), btScalar(i), btScalar(i), btScalar(0), btScalar(SIMD_2_PI), btVector3(10 * i, 0, 0), false);
+				m_physics->getDynamicsWorld()->getDebugDrawer()->drawArc(btVector3(0, 0, 0), btVector3(0, 1, 0), btVector3(1, 0, 0), btScalar(i), btScalar(i), btScalar(0), btScalar(SIMD_2_PI), btVector3(10 * i, 0, 0), false);
 			}
 		}
 	}

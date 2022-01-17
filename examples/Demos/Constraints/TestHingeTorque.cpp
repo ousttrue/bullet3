@@ -1,5 +1,4 @@
 #include "TestHingeTorque.h"
-
 #include <CommonRigidBodyBase.h>
 #include <CommonParameterInterface.h>
 #include <Bullet3Common/b3Logging.h>
@@ -44,6 +43,7 @@ TestHingeTorque::~TestHingeTorque()
 
 void TestHingeTorque::stepSimulation(float deltaTime)
 {
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	if (0)  //m_once)
 	{
 		m_once = false;
@@ -97,7 +97,9 @@ void TestHingeTorque::initPhysics()
 	int upAxis = 1;
 	m_guiHelper->setUpAxis(upAxis);
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics();
+
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	m_dynamicsWorld->getSolverInfo().m_splitImpulse = false;
 
 	m_dynamicsWorld->setGravity(btVector3(0, 0, -10));
@@ -125,7 +127,7 @@ void TestHingeTorque::initPhysics()
 		float baseMass = 0.f;
 		float linkMass = 1.f;
 
-		btRigidBody* base = createRigidBody(baseMass, baseWorldTrans, baseBox);
+		btRigidBody* base = m_physics->createRigidBody(baseMass, baseWorldTrans, baseBox);
 		m_dynamicsWorld->removeRigidBody(base);
 		base->setDamping(0, 0);
 		m_dynamicsWorld->addRigidBody(base, collisionFilterGroup, collisionFilterMask);
@@ -151,7 +153,7 @@ void TestHingeTorque::initPhysics()
 			{
 				colOb = linkSphere;
 			}
-			btRigidBody* linkBody = createRigidBody(linkMass, linkTrans, colOb);
+			btRigidBody* linkBody = m_physics->createRigidBody(linkMass, linkTrans, colOb);
 			m_dynamicsWorld->removeRigidBody(linkBody);
 			m_dynamicsWorld->addRigidBody(linkBody, collisionFilterGroup, collisionFilterMask);
 			linkBody->setDamping(0, 0);
@@ -213,7 +215,7 @@ void TestHingeTorque::initPhysics()
 		groundOrigin[2] -= 0.6;
 		start.setOrigin(groundOrigin);
 		//	start.setRotation(groundOrn);
-		btRigidBody* body = createRigidBody(0, start, box);
+		btRigidBody* body = m_physics->createRigidBody(0, start, box);
 		body->setFriction(0);
 	}
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);

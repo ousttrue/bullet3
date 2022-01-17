@@ -281,17 +281,13 @@ void MotorDemo::initPhysics()
 	// currently solver uses 10 iterations, so:
 	m_fMuscleStrength = 0.5f;
 
-	m_collisionConfiguration = new btDefaultCollisionConfiguration();
-
-	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
-
 	btVector3 worldAabbMin(-10000, -10000, -10000);
 	btVector3 worldAabbMax(10000, 10000, 10000);
-	m_broadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
+	auto broadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
 
-	m_solver = new btSequentialImpulseConstraintSolver;
+	m_physics = new Physics(broadphase);
 
-	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration);
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	m_dynamicsWorld->setInternalTickCallback(motorPreTickCallback, this, true);
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
@@ -299,11 +295,11 @@ void MotorDemo::initPhysics()
 	// Setup a big ground box
 	{
 		btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(200.), btScalar(10.), btScalar(200.)));
-		m_collisionShapes.push_back(groundShape);
+		m_physics->m_collisionShapes.push_back(groundShape);
 		btTransform groundTransform;
 		groundTransform.setIdentity();
 		groundTransform.setOrigin(btVector3(0, -10, 0));
-		createRigidBody(btScalar(0.), groundTransform, groundShape);
+		m_physics->createRigidBody(btScalar(0.), groundTransform, groundShape);
 	}
 
 	// Spawn one ragdoll
@@ -317,7 +313,7 @@ void MotorDemo::initPhysics()
 
 void MotorDemo::spawnTestRig(const btVector3& startOffset, bool bFixed)
 {
-	TestRig* rig = new TestRig(m_dynamicsWorld, startOffset, bFixed);
+	TestRig* rig = new TestRig(m_physics->getDynamicsWorld(), startOffset, bFixed);
 	m_rigs.push_back(rig);
 }
 
@@ -381,50 +377,14 @@ void MotorDemo::keyboardCallback(unsigned char key, int x, int y)
 
 void MotorDemo::exitPhysics()
 {
-	int i;
-
-	for (i = 0; i < m_rigs.size(); i++)
+	for (int i = 0; i < m_rigs.size(); i++)
 	{
 		TestRig* rig = m_rigs[i];
 		delete rig;
 	}
 
 	//cleanup in the reverse order of creation/initialization
-
-	//remove the rigidbodies from the dynamics world and delete them
-
-	for (i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
-	{
-		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		if (body && body->getMotionState())
-		{
-			delete body->getMotionState();
-		}
-		m_dynamicsWorld->removeCollisionObject(obj);
-		delete obj;
-	}
-
-	//delete collision shapes
-	for (int j = 0; j < m_collisionShapes.size(); j++)
-	{
-		btCollisionShape* shape = m_collisionShapes[j];
-		delete shape;
-	}
-
-	//delete dynamics world
-	delete m_dynamicsWorld;
-
-	//delete solver
-	delete m_solver;
-
-	//delete broadphase
-	delete m_broadphase;
-
-	//delete dispatcher
-	delete m_dispatcher;
-
-	delete m_collisionConfiguration;
+	delete m_physics;
 }
 
 class CommonExampleInterface* MotorControlCreateFunc(struct CommonExampleOptions& options)

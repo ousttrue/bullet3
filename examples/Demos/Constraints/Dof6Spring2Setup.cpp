@@ -94,23 +94,15 @@ Dof6Spring2Setup::~Dof6Spring2Setup()
 void Dof6Spring2Setup::initPhysics()
 {
 	// Setup the basic world
-
 	m_guiHelper->setUpAxis(1);
 
-	m_collisionConfiguration = new btDefaultCollisionConfiguration();
-	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
 	btVector3 worldAabbMin(-10000, -10000, -10000);
 	btVector3 worldAabbMax(10000, 10000, 10000);
-	m_broadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
+	btBroadphaseInterface* broadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
+	m_physics = new Physics(broadphase, SolverEnumType::NNCGSOLVER);
 
-	/////// uncomment the corresponding line to test a solver.
-	//m_solver = new btSequentialImpulseConstraintSolver;
-	m_solver = new btNNCGConstraintSolver;
-	//m_solver = new btMLCPSolver(new btSolveProjectedGaussSeidel());
-	//m_solver = new btMLCPSolver(new btDantzigSolver());
-	//m_solver = new btMLCPSolver(new btLemkeSolver());
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
-	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration);
 	m_dynamicsWorld->getDispatchInfo().m_useContinuous = true;
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 
@@ -438,6 +430,8 @@ void Dof6Spring2Setup::initPhysics()
 
 void Dof6Spring2Setup::animate()
 {
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
+
 /////// servo motor: flip its target periodically
 #ifdef USE_6DOF2
 	static float servoNextFrame = -1;
@@ -489,7 +483,7 @@ void Dof6Spring2Setup::animate()
 void Dof6Spring2Setup::stepSimulation(float deltaTime)
 {
 	animate();
-	m_dynamicsWorld->stepSimulation(deltaTime);
+	m_physics->getDynamicsWorld()->stepSimulation(deltaTime);
 }
 
 class CommonExampleInterface* Dof6Spring2CreateFunc(CommonExampleOptions& options)

@@ -83,18 +83,6 @@ static bool useSplitImpulse = true;  // split impulse fixes issues with restitut
 // disabling continuous collision detection can also fix issues with restitution, though CCD is disabled by default an only kicks in at higher speeds
 // set CCD speed threshold and testing sphere radius per rigidbody (rb->setCCDSpeedThreshold())
 
-// all supported solvers by bullet
-enum SolverEnumType
-{
-	SEQUENTIALIMPULSESOLVER = 0,
-	GAUSSSEIDELSOLVER = 1,
-	NNCGSOLVER = 2,
-	DANZIGSOLVER = 3,
-	LEMKESOLVER = 4,
-	
-	NUM_SOLVERS = 6
-};
-
 // solvers can be changed by drop down menu
 namespace SolverType
 {
@@ -106,9 +94,9 @@ static char LEMKESOLVER[] = "Lemke Solver";
 
 };  // namespace SolverType
 
-static const char* solverTypes[NUM_SOLVERS];
+static const char* solverTypes[(int)SolverEnumType::NUM_SOLVERS];
 
-static SolverEnumType SOLVER_TYPE = SEQUENTIALIMPULSESOLVER;  // You can switch the solver here
+static SolverEnumType SOLVER_TYPE = SolverEnumType::SEQUENTIALIMPULSESOLVER;  // You can switch the solver here
 
 //TODO:s===
 //TODO: Give specific explanations about solver values
@@ -157,7 +145,7 @@ inline void twxChangeERPCFM(float notUsed, void*)
 
 inline void changeSolver(int comboboxId, const char* item, void* userPointer)
 {  // function to change the solver
-	for (int i = 0; i < NUM_SOLVERS; i++)
+	for (int i = 0; i < (int)SolverEnumType::NUM_SOLVERS; i++)
 	{
 		if (strcmp(solverTypes[i], item) == 0)
 		{  // if the strings are equal
@@ -268,9 +256,30 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 
 		m_guiHelper->setUpAxis(1);  // Set Y axis as Up axis
 
-		createEmptyDynamicsWorld();  // create an empty dynamic world
+		m_physics = new Physics({}, SOLVER_TYPE);
+		auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
-		m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
+		changeERPCFM();  // set appropriate ERP/CFM values according to the string and damper properties of the constraint
+
+		if (useSplitImpulse)
+		{                                                         // If you experience strong repulsion forces in your constraints, it might help to enable the split impulse feature
+			m_dynamicsWorld->getSolverInfo().m_splitImpulse = 1;  //enable split impulse feature
+																  //		m_dynamicsWorld->getSolverInfo().m_splitImpulsePenetrationThreshold =
+																  //			-0.02;
+																  //		m_dynamicsWorld->getSolverInfo().m_erp2 = BulletUtils::getERP(
+																  //			fixedPhysicsStepSizeSec, 10, 1);
+																  //		m_dynamicsWorld->getSolverInfo().m_splitImpulseTurnErp =
+																  //			BulletUtils::getERP(fixedPhysicsStepSizeSec, 10, 1);
+																  //			b3Printf("Using split impulse feature with ERP/TurnERP: (%f,%f)",
+																  //				m_dynamicsWorld->getSolverInfo().m_erp2,
+																  //				m_dynamicsWorld->getSolverInfo().m_splitImpulseTurnErp);
+		}
+
+		m_dynamicsWorld->getSolverInfo().m_numIterations = gSolverIterations;  // set the number of solver iterations for iteration based solvers
+
+		m_dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));  // set gravity to -9.81
+
+		m_guiHelper->autogenerateGraphicsObjects(m_physics->getDynamicsWorld());
 	}
 
 	void setupBasicParamInterface()
@@ -324,13 +333,12 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 		solverTypes[2] = SolverType::NNCGSOLVER;
 		solverTypes[3] = SolverType::DANZIGSOLVER;
 		solverTypes[4] = SolverType::LEMKESOLVER;
-		
 
 		{
 			ComboBoxParams comboParams;
 			comboParams.m_comboboxId = 0;
-			comboParams.m_numItems = NUM_SOLVERS;
-			comboParams.m_startItem = SOLVER_TYPE;
+			comboParams.m_numItems = (int)SolverEnumType::NUM_SOLVERS;
+			comboParams.m_startItem = (int)SOLVER_TYPE;
 			comboParams.m_callback = changeSolver;
 
 			comboParams.m_items = solverTypes;
@@ -448,107 +456,6 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 				m_guiHelper->getParameterInterface()->registerSliderFloatParameter(
 					slider);
 		}
-	}
-
-	void createEmptyDynamicsWorld()
-	{  // create an empty dynamics worlds according to the chosen settings via statics (top section of code)
-
-		///collision configuration contains default setup for memory, collision setup
-		m_collisionConfiguration = new btDefaultCollisionConfiguration();
-		//m_collisionConfiguration->setConvexConvexMultipointIterations();
-
-		///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
-		m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
-
-		// default broadphase
-		m_broadphase = new btDbvtBroadphase();
-
-		// different solvers require different settings
-		switch (SOLVER_TYPE)
-		{
-			case SEQUENTIALIMPULSESOLVER:
-			{
-				//			b3Printf("=%s=",SolverType::SEQUENTIALIMPULSESOLVER);
-				m_solver = new btSequentialImpulseConstraintSolver();
-				break;
-			}
-			case NNCGSOLVER:
-			{
-				//			b3Printf("=%s=",SolverType::NNCGSOLVER);
-				m_solver = new btNNCGConstraintSolver();
-				break;
-			}
-			case DANZIGSOLVER:
-			{
-				//			b3Printf("=%s=",SolverType::DANZIGSOLVER);
-				btDantzigSolver* mlcp = new btDantzigSolver();
-				m_solver = new btMLCPSolver(mlcp);
-				break;
-			}
-			case GAUSSSEIDELSOLVER:
-			{
-				//			b3Printf("=%s=",SolverType::GAUSSSEIDELSOLVER);
-				btSolveProjectedGaussSeidel* mlcp = new btSolveProjectedGaussSeidel();
-				m_solver = new btMLCPSolver(mlcp);
-				break;
-			}
-			case LEMKESOLVER:
-			{
-				//			b3Printf("=%s=",SolverType::LEMKESOLVER);
-				btLemkeSolver* mlcp = new btLemkeSolver();
-				m_solver = new btMLCPSolver(mlcp);
-				break;
-			}
-			
-			default:
-				break;
-		}
-
-		if (1)
-		{
-			//TODO: Set parameters for other solvers
-
-			m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,
-														  m_broadphase, m_solver, m_collisionConfiguration);
-
-			if (SOLVER_TYPE == DANZIGSOLVER || SOLVER_TYPE == GAUSSSEIDELSOLVER)
-			{
-				m_dynamicsWorld->getSolverInfo().m_minimumSolverBatchSize = 1;  //for mlcp solver it is better to have a small A matrix
-			}
-			else
-			{
-				m_dynamicsWorld->getSolverInfo().m_minimumSolverBatchSize = 128;  //for direct solver, it is better to solve multiple objects together, small batches have high overhead
-			}
-
-			m_dynamicsWorld->getDispatchInfo().m_useContinuous = true;  // set continuous collision
-		}
-		else
-		{
-			//use btMultiBodyDynamicsWorld for Featherstone btMultiBody support
-			m_dynamicsWorld = new btMultiBodyDynamicsWorld(m_dispatcher,
-														   m_broadphase, (btMultiBodyConstraintSolver*)m_solver,
-														   m_collisionConfiguration);
-		}
-
-		changeERPCFM();  // set appropriate ERP/CFM values according to the string and damper properties of the constraint
-
-		if (useSplitImpulse)
-		{                                                         // If you experience strong repulsion forces in your constraints, it might help to enable the split impulse feature
-			m_dynamicsWorld->getSolverInfo().m_splitImpulse = 1;  //enable split impulse feature
-																  //		m_dynamicsWorld->getSolverInfo().m_splitImpulsePenetrationThreshold =
-																  //			-0.02;
-																  //		m_dynamicsWorld->getSolverInfo().m_erp2 = BulletUtils::getERP(
-																  //			fixedPhysicsStepSizeSec, 10, 1);
-																  //		m_dynamicsWorld->getSolverInfo().m_splitImpulseTurnErp =
-																  //			BulletUtils::getERP(fixedPhysicsStepSizeSec, 10, 1);
-																  //			b3Printf("Using split impulse feature with ERP/TurnERP: (%f,%f)",
-																  //				m_dynamicsWorld->getSolverInfo().m_erp2,
-																  //				m_dynamicsWorld->getSolverInfo().m_splitImpulseTurnErp);
-		}
-
-		m_dynamicsWorld->getSolverInfo().m_numIterations = gSolverIterations;  // set the number of solver iterations for iteration based solvers
-
-		m_dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));  // set gravity to -9.81
 	}
 
 	btScalar calculatePerformedSpeedup()
@@ -737,7 +644,7 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 
 	void changePhysicsStepsPerSecond(float physicsStepsPerSecond)
 	{  // change the simulation accuracy
-		if (m_dynamicsWorld && physicsStepsPerSecond)
+		if (m_physics && physicsStepsPerSecond)
 		{
 			fixedPhysicsStepSizeSec = 1.0f / physicsStepsPerSecond;
 			fixedPhysicsStepSizeMilli = 1000.0f / physicsStepsPerSecond;
@@ -748,18 +655,18 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 
 	void changeERPCFM()
 	{  // Change ERP/CFM appropriately to the timestep and the ERP/CFM parameters above
-		if (m_dynamicsWorld)
+		if (m_physics)
 		{
-			m_dynamicsWorld->getSolverInfo().m_erp = b3ERPCFMHelper::getERP(  // set the error reduction parameter
-				fixedPhysicsStepSizeSec,                                      // step size per second
-				gERPSpringK,                                                  // k of a spring in the equation F = k * x (x:position)
-				gERPDamperC);                                                 // k of a damper in the equation F = k * v (v:velocity)
+			m_physics->getDynamicsWorld()->getSolverInfo().m_erp = b3ERPCFMHelper::getERP(  // set the error reduction parameter
+				fixedPhysicsStepSizeSec,                                                    // step size per second
+				gERPSpringK,                                                                // k of a spring in the equation F = k * x (x:position)
+				gERPDamperC);                                                               // k of a damper in the equation F = k * v (v:velocity)
 
-			m_dynamicsWorld->getSolverInfo().m_globalCfm = b3ERPCFMHelper::getCFM(  // set the constraint force mixing according to the time step
-				gCFMSingularityAvoidance,                                           // singularity avoidance (if you experience unsolvable constraints, increase this value
-				fixedPhysicsStepSizeSec,                                            // steps size per second
-				gCFMSpringK,                                                        // k of a spring in the equation F = k * x (x:position)
-				gCFMDamperC);                                                       // k of a damper in the equation F = k * v (v:velocity)
+			m_physics->getDynamicsWorld()->getSolverInfo().m_globalCfm = b3ERPCFMHelper::getCFM(  // set the constraint force mixing according to the time step
+				gCFMSingularityAvoidance,                                                         // singularity avoidance (if you experience unsolvable constraints, increase this value
+				fixedPhysicsStepSizeSec,                                                          // steps size per second
+				gCFMSpringK,                                                                      // k of a spring in the equation F = k * x (x:position)
+				gCFMDamperC);                                                                     // k of a damper in the equation F = k * v (v:velocity)
 
 			//			b3Printf("Bullet DynamicsWorld ERP: %f",
 			//				m_dynamicsWorld->getSolverInfo().m_erp);
@@ -771,7 +678,7 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 
 	void changeSolverIterations(int iterations)
 	{  // change the number of iterations
-		m_dynamicsWorld->getSolverInfo().m_numIterations = iterations;
+		m_physics->getDynamicsWorld()->getSolverInfo().m_numIterations = iterations;
 	}
 
 	void changeFPS(float framesPerSecond)
@@ -785,13 +692,13 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 
 		for (int i = 0; i < subSteps; i++)
 		{ /**!< Perform the number of substeps to reach the timestep*/
-			if (timeStep && m_dynamicsWorld)
+			if (timeStep && m_physics)
 			{
 				// since we want to perform all proper steps, we perform no interpolated substeps
 				int subSteps = 1;
 
-				m_dynamicsWorld->stepSimulation(btScalar(timeStep),
-												btScalar(subSteps), btScalar(fixedPhysicsStepSizeSec));
+				m_physics->getDynamicsWorld()->stepSimulation(btScalar(timeStep),
+															  btScalar(subSteps), btScalar(fixedPhysicsStepSizeSec));
 			}
 		}
 	}
@@ -799,10 +706,10 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 	void performInterpolatedSteps(btScalar timeStep)
 	{                                                                         // physics stepping with interpolated substeps
 		int subSteps = 1 + floor((timeStep / fixedPhysicsStepSizeSec) + 0.5); /**!< Calculate the number of full normal time steps we can take, plus 1 for safety of not losing time */
-		if (timeStep && m_dynamicsWorld)
+		if (timeStep && m_physics)
 		{
-			m_dynamicsWorld->stepSimulation(btScalar(timeStep), btScalar(subSteps),
-											btScalar(fixedPhysicsStepSizeSec)); /**!< Perform the number of substeps to reach the timestep*/
+			m_physics->getDynamicsWorld()->stepSimulation(btScalar(timeStep), btScalar(subSteps),
+														  btScalar(fixedPhysicsStepSizeSec)); /**!< Perform the number of substeps to reach the timestep*/
 		}
 	}
 
@@ -885,9 +792,9 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 		{  // while the simulation is not running headlessly, render to screen
 			CommonRigidBodyBase::renderScene();
 
-			if (m_dynamicsWorld->getDebugDrawer())
+			if (m_physics->getDynamicsWorld()->getDebugDrawer())
 			{
-				debugDraw(m_dynamicsWorld->getDebugDrawer()->getDebugMode());
+				m_physics->debugDraw(m_physics->getDynamicsWorld()->getDebugDrawer()->getDebugMode());
 			}
 		}
 		mIsHeadless = gIsHeadless;

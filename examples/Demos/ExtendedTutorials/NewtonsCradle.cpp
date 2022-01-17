@@ -141,7 +141,8 @@ void NewtonsCradleExample::initPhysics()
 
 	m_guiHelper->setUpAxis(1);
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	// create a debug drawer
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
@@ -157,7 +158,7 @@ void NewtonsCradleExample::initPhysics()
 
 		// Re-using the same collision is better for memory usage and performance
 		btSphereShape* pendulumShape = new btSphereShape(gSphereRadius);
-		m_collisionShapes.push_back(pendulumShape);
+		m_physics->m_collisionShapes.push_back(pendulumShape);
 
 		for (int i = 0; i < std::floor(gPendulaQty); i++)
 		{
@@ -176,9 +177,9 @@ void NewtonsCradleExample::stepSimulation(float deltaTime)
 {
 	applyForceWithForceScalar(gForceScalar);  // apply force defined by apply force slider
 
-	if (m_dynamicsWorld)
+	if (m_physics)
 	{
-		m_dynamicsWorld->stepSimulation(deltaTime);
+		m_physics->getDynamicsWorld()->stepSimulation(deltaTime);
 	}
 }
 
@@ -196,7 +197,7 @@ void NewtonsCradleExample::createPendulum(btSphereShape* colShape, const btVecto
 	// position the top sphere above ground with a moving x position
 	startTransform.setOrigin(position);
 	startTransform.setRotation(btQuaternion(0, 0, 0, 1));  // zero rotation
-	btRigidBody* topSphere = createRigidBody(mass, startTransform, colShape);
+	btRigidBody* topSphere = m_physics->createRigidBody(mass, startTransform, colShape);
 
 	// position the bottom sphere below the top sphere
 	startTransform.setOrigin(
@@ -204,7 +205,7 @@ void NewtonsCradleExample::createPendulum(btSphereShape* colShape, const btVecto
 				  position.z()));
 
 	startTransform.setRotation(btQuaternion(0, 0, 0, 1));  // zero rotation
-	btRigidBody* bottomSphere = createRigidBody(mass, startTransform, colShape);
+	btRigidBody* bottomSphere = m_physics->createRigidBody(mass, startTransform, colShape);
 	bottomSphere->setFriction(0);  // we do not need friction here
 	pendula.push_back(bottomSphere);
 
@@ -223,7 +224,7 @@ void NewtonsCradleExample::createPendulum(btSphereShape* colShape, const btVecto
 	p2pconst->setDbgDrawSize(btScalar(5.f));  // set the size of the debug drawing
 
 	// add the constraint to the world
-	m_dynamicsWorld->addConstraint(p2pconst, true);
+	m_physics->getDynamicsWorld()->addConstraint(p2pconst, true);
 
 	//create constraint between spheres
 	// this is represented by the constraint pivot in the local frames of reference of both constrained spheres
@@ -260,7 +261,7 @@ void NewtonsCradleExample::createPendulum(btSphereShape* colShape, const btVecto
 	constraints.push_back(sliderConst);
 
 	// add the constraint to the world
-	m_dynamicsWorld->addConstraint(sliderConst, true);
+	m_physics->getDynamicsWorld()->addConstraint(sliderConst, true);
 }
 
 void NewtonsCradleExample::changePendulaLength(btScalar length)

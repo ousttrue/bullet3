@@ -44,23 +44,24 @@ void BridgeExample::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
 
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 
 	if (m_dynamicsWorld->getDebugDrawer())
 		m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
 
 	///create a few basic rigid bodies
-	btBoxShape* groundShape = createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-	m_collisionShapes.push_back(groundShape);
+	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(0, -50, 0));
 	{
 		btScalar mass(0.);
-		createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
+		m_physics->createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
 	}
 
 	//create two fixed boxes to hold the planks
@@ -76,9 +77,8 @@ void BridgeExample::initPhysics()
 		btScalar bridgeHeight = 5;
 		btScalar halfBridgeWidth = bridgeWidth * 0.5f;
 
-		btBoxShape* colShape = createBoxShape(btVector3(plankWidth, plankHeight, plankBreadth));
-
-		m_collisionShapes.push_back(colShape);
+		btBoxShape* colShape = m_physics->createBoxShape(btVector3(plankWidth, plankHeight, plankBreadth));
+		m_physics->m_collisionShapes.push_back(colShape);
 
 		/// Create Dynamic Objects
 		btTransform startTransform;
@@ -104,7 +104,7 @@ void BridgeExample::initPhysics()
 				btScalar(t),
 				bridgeHeight,
 				btScalar(0)));
-			boxes.push_back(createRigidBody((i == 0 || i == lastBoxIndex) ? 0 : mass, startTransform, colShape));
+			boxes.push_back(m_physics->createRigidBody((i == 0 || i == lastBoxIndex) ? 0 : mass, startTransform, colShape));
 		}
 
 		//add N-1 spring constraints

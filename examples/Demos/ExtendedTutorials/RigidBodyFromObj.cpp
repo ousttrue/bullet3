@@ -50,7 +50,8 @@ void RigidBodyFromObjExample::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 
@@ -58,15 +59,15 @@ void RigidBodyFromObjExample::initPhysics()
 	//	m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe+btIDebugDraw::DBG_DrawContactPoints);
 
 	///create a few basic rigid bodies
-	btBoxShape* groundShape = createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-	m_collisionShapes.push_back(groundShape);
+	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(0, -50, 0));
 	{
 		btScalar mass(0.);
-		createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
+		m_physics->createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
 	}
 
 	//load our obj mesh
@@ -101,7 +102,7 @@ void RigidBodyFromObjExample::initPhysics()
 	}
 
 	//shape->setMargin(0.001);
-	m_collisionShapes.push_back(shape);
+	m_physics->m_collisionShapes.push_back(shape);
 
 	btTransform startTransform;
 	startTransform.setIdentity();
@@ -117,7 +118,7 @@ void RigidBodyFromObjExample::initPhysics()
 	float pos[4] = {0, 3, 0, 0};
 	btVector3 position(pos[0], pos[1], pos[2]);
 	startTransform.setOrigin(position);
-	btRigidBody* body = createRigidBody(mass, startTransform, shape);
+	btRigidBody* body = m_physics->createRigidBody(mass, startTransform, shape);
 
 	bool useConvexHullForRendering = ((m_options & ObjUseConvexHullForRendering) != 0);
 

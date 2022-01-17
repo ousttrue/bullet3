@@ -33,28 +33,11 @@ struct SimpleClothExample : public CommonRigidBodyBase
 	virtual ~SimpleClothExample() {}
 	virtual void initPhysics();
 	virtual void renderScene();
-	void createEmptyDynamicsWorld()
-	{
-		m_collisionConfiguration = new btSoftBodyRigidBodyCollisionConfiguration();
-		m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
-
-		m_broadphase = new btDbvtBroadphase();
-
-		m_solver = new btSequentialImpulseConstraintSolver;
-
-		m_dynamicsWorld = new btSoftRigidDynamicsWorld(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration);
-		m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
-
-		softBodyWorldInfo.m_broadphase = m_broadphase;
-		softBodyWorldInfo.m_dispatcher = m_dispatcher;
-		softBodyWorldInfo.m_gravity = m_dynamicsWorld->getGravity();
-		softBodyWorldInfo.m_sparsesdf.Initialize();
-	}
 	virtual btSoftRigidDynamicsWorld* getSoftDynamicsWorld()
 	{
 		///just make it a btSoftRigidDynamicsWorld please
 		///or we will add type checking
-		return (btSoftRigidDynamicsWorld*)m_dynamicsWorld;
+		return (btSoftRigidDynamicsWorld*)m_physics->getDynamicsWorld();
 	}
 	void resetCamera()
 	{
@@ -73,7 +56,14 @@ void SimpleClothExample::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
+	m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
+
+	softBodyWorldInfo.m_broadphase = m_physics->getBroadphase();
+	softBodyWorldInfo.m_dispatcher = m_physics->getDispatcher();
+	softBodyWorldInfo.m_gravity = m_dynamicsWorld->getGravity();
+	softBodyWorldInfo.m_sparsesdf.Initialize();
 
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 
@@ -81,15 +71,15 @@ void SimpleClothExample::initPhysics()
 		m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
 
 	///create a few basic rigid bodies
-	btBoxShape* groundShape = createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-	m_collisionShapes.push_back(groundShape);
+	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(0, -50, 0));
 	{
 		btScalar mass(0.);
-		createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
+		m_physics->createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
 	}
 
 	{

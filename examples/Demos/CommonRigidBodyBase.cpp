@@ -3,72 +3,102 @@
 #include <CommonRenderInterface.h>
 #include <CommonCameraInterface.h>
 #include <BulletCollision/NarrowPhaseCollision/btRaycastCallback.h>
+#include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
+#include "Evolution/NN3DWalkersTimeWarpBase.h"
 
-CommonRigidBodyBase::CommonRigidBodyBase(struct GUIHelperInterface* helper)
-	: m_guiHelper(helper)
-{
-}
-CommonRigidBodyBase::~CommonRigidBodyBase()
-{
-}
-
-btDiscreteDynamicsWorld* CommonRigidBodyBase::getDynamicsWorld()
-{
-	return m_dynamicsWorld;
-}
-
-void CommonRigidBodyBase::createEmptyDynamicsWorld()
+Physics::Physics(
+	btBroadphaseInterface* broadphase,
+	SolverEnumType solverType,
+	const WorldFactory& factory,
+	bool useSoftbody)
 {
 	///collision configuration contains default setup for memory, collision setup
-	m_collisionConfiguration = new btDefaultCollisionConfiguration();
+	m_collisionConfiguration = useSoftbody
+								   ? new btSoftBodyRigidBodyCollisionConfiguration()
+								   : new btDefaultCollisionConfiguration();
 	//m_collisionConfiguration->setConvexConvexMultipointIterations();
 
 	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
 	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
 
-	m_broadphase = new btDbvtBroadphase();
+	m_broadphase = broadphase ? broadphase : new btDbvtBroadphase();
 
 	///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
-	btSequentialImpulseConstraintSolver* sol = new btSequentialImpulseConstraintSolver;
-	m_solver = sol;
+	// m_solver = solver ? solver : new btSequentialImpulseConstraintSolver();
+	// different solvers require different settings
+	switch (solverType)
+	{
+		case SolverEnumType::SEQUENTIALIMPULSESOLVER:
+		{
+			//			b3Printf("=%s=",SolverType::SEQUENTIALIMPULSESOLVER);
+			m_solver = new btSequentialImpulseConstraintSolver();
+			break;
+		}
+		case SolverEnumType::NNCGSOLVER:
+		{
+			//			b3Printf("=%s=",SolverType::NNCGSOLVER);
+			m_solver = new btNNCGConstraintSolver();
+			break;
+		}
+		case SolverEnumType::DANZIGSOLVER:
+		{
+			//			b3Printf("=%s=",SolverType::DANZIGSOLVER);
+			btDantzigSolver* mlcp = new btDantzigSolver();
+			m_solver = new btMLCPSolver(mlcp);
+			break;
+		}
+		case SolverEnumType::GAUSSSEIDELSOLVER:
+		{
+			//			b3Printf("=%s=",SolverType::GAUSSSEIDELSOLVER);
+			btSolveProjectedGaussSeidel* mlcp = new btSolveProjectedGaussSeidel();
+			m_solver = new btMLCPSolver(mlcp);
+			break;
+		}
+		case SolverEnumType::LEMKESOLVER:
+		{
+			//			b3Printf("=%s=",SolverType::LEMKESOLVER);
+			btLemkeSolver* mlcp = new btLemkeSolver();
+			m_solver = new btMLCPSolver(mlcp);
+			break;
+		}
 
-	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration);
+		default:
+			break;
+	}
+
+	m_dynamicsWorld = factory
+						  ? factory(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration)
+						  : new btDiscreteDynamicsWorld(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration);
+
+	if (SOLVER_TYPE == SolverEnumType::DANZIGSOLVER || SOLVER_TYPE == SolverEnumType::GAUSSSEIDELSOLVER)
+	{
+		m_dynamicsWorld->getSolverInfo().m_minimumSolverBatchSize = 1;  //for mlcp solver it is better to have a small A matrix
+	}
+	else
+	{
+		m_dynamicsWorld->getSolverInfo().m_minimumSolverBatchSize = 128;  //for direct solver, it is better to solve multiple objects together, small batches have high overhead
+	}
+
+	m_dynamicsWorld->getDispatchInfo().m_useContinuous = true;  // set continuous collision
 
 	m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
 }
 
-void CommonRigidBodyBase::stepSimulation(float deltaTime)
-{
-	if (m_dynamicsWorld)
-	{
-		m_dynamicsWorld->stepSimulation(deltaTime);
-	}
-}
-
-void CommonRigidBodyBase::physicsDebugDraw(int debugFlags)
-{
-	if (m_dynamicsWorld && m_dynamicsWorld->getDebugDrawer())
-	{
-		m_dynamicsWorld->getDebugDrawer()->setDebugMode(debugFlags);
-		m_dynamicsWorld->debugDrawWorld();
-	}
-}
-
-void CommonRigidBodyBase::exitPhysics()
+Physics::~Physics()
 {
 	removePickingConstraint();
+
 	//cleanup in the reverse order of creation/initialization
-
-	//remove the rigidbodies from the dynamics world and delete them
-
 	if (m_dynamicsWorld)
 	{
-		int i;
-		for (i = m_dynamicsWorld->getNumConstraints() - 1; i >= 0; i--)
+		for (int i = m_dynamicsWorld->getNumConstraints() - 1; i >= 0; i--)
 		{
-			m_dynamicsWorld->removeConstraint(m_dynamicsWorld->getConstraint(i));
+			auto constraint = m_dynamicsWorld->getConstraint(i);
+			m_dynamicsWorld->removeConstraint(constraint);
+			delete constraint;
 		}
-		for (i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
+		//remove the rigidbodies from the dynamics world and delete them
+		for (int i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 		{
 			btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
 			btRigidBody* body = btRigidBody::upcast(obj);
@@ -80,6 +110,7 @@ void CommonRigidBodyBase::exitPhysics()
 			delete obj;
 		}
 	}
+
 	//delete collision shapes
 	for (int j = 0; j < m_collisionShapes.size(); j++)
 	{
@@ -104,7 +135,7 @@ void CommonRigidBodyBase::exitPhysics()
 	m_collisionConfiguration = 0;
 }
 
-void CommonRigidBodyBase::debugDraw(int debugDrawFlags)
+void Physics::debugDraw(int debugDrawFlags)
 {
 	if (m_dynamicsWorld)
 	{
@@ -116,12 +147,176 @@ void CommonRigidBodyBase::debugDraw(int debugDrawFlags)
 	}
 }
 
+bool Physics::pickBody(const btVector3& rayFromWorld, const btVector3& rayToWorld)
+{
+	if (m_dynamicsWorld == 0)
+		return false;
+
+	btCollisionWorld::ClosestRayResultCallback rayCallback(rayFromWorld, rayToWorld);
+
+	rayCallback.m_flags |= btTriangleRaycastCallback::kF_UseGjkConvexCastRaytest;
+	m_dynamicsWorld->rayTest(rayFromWorld, rayToWorld, rayCallback);
+	if (rayCallback.hasHit())
+	{
+		btVector3 pickPos = rayCallback.m_hitPointWorld;
+		btRigidBody* body = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
+		if (body)
+		{
+			//other exclusions?
+			if (!(body->isStaticObject() || body->isKinematicObject()))
+			{
+				m_pickedBody = body;
+				m_savedState = m_pickedBody->getActivationState();
+				m_pickedBody->setActivationState(DISABLE_DEACTIVATION);
+				//printf("pickPos=%f,%f,%f\n",pickPos.getX(),pickPos.getY(),pickPos.getZ());
+				btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
+				btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body, localPivot);
+				m_dynamicsWorld->addConstraint(p2p, true);
+				m_pickedConstraint = p2p;
+				btScalar mousePickClamping = 30.f;
+				p2p->m_setting.m_impulseClamp = mousePickClamping;
+				//very weak constraint for picking
+				p2p->m_setting.m_tau = 0.001f;
+			}
+		}
+
+		//					pickObject(pickPos, rayCallback.m_collisionObject);
+		m_oldPickingPos = rayToWorld;
+		m_hitPos = pickPos;
+		m_oldPickingDist = (pickPos - rayFromWorld).length();
+		//					printf("hit !\n");
+		//add p2p
+	}
+	return false;
+}
+
+void Physics::removePickingConstraint()
+{
+	if (m_pickedConstraint)
+	{
+		m_pickedBody->forceActivationState(m_savedState);
+		m_pickedBody->activate();
+		m_dynamicsWorld->removeConstraint(m_pickedConstraint);
+		delete m_pickedConstraint;
+		m_pickedConstraint = 0;
+		m_pickedBody = 0;
+	}
+}
+
+bool Physics::movePickedBody(const btVector3& rayFromWorld, const btVector3& rayToWorld)
+{
+	if (m_pickedBody && m_pickedConstraint)
+	{
+		btPoint2PointConstraint* pickCon = static_cast<btPoint2PointConstraint*>(m_pickedConstraint);
+		if (pickCon)
+		{
+			//keep it at the same picking distance
+
+			btVector3 newPivotB;
+
+			btVector3 dir = rayToWorld - rayFromWorld;
+			dir.normalize();
+			dir *= m_oldPickingDist;
+
+			newPivotB = rayFromWorld + dir;
+			pickCon->setPivotB(newPivotB);
+			return true;
+		}
+	}
+	return false;
+}
+
+btBoxShape* Physics::createBoxShape(const btVector3& halfExtents)
+{
+	btBoxShape* box = new btBoxShape(halfExtents);
+	return box;
+}
+
+void Physics::deleteRigidBody(btRigidBody* body, struct GUIHelperInterface* m_guiHelper)
+{
+	int graphicsUid = body->getUserIndex();
+	m_guiHelper->removeGraphicsInstance(graphicsUid);
+	m_dynamicsWorld->removeRigidBody(body);
+	btMotionState* ms = body->getMotionState();
+	delete body;
+	delete ms;
+}
+
+btRigidBody* Physics::createRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape, const btVector4& color)
+{
+	btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
+
+	//rigidbody is dynamic if and only if mass is non zero, otherwise static
+	bool isDynamic = (mass != 0.f);
+
+	btVector3 localInertia(0, 0, 0);
+	if (isDynamic)
+		shape->calculateLocalInertia(mass, localInertia);
+
+		//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+
+#define USE_MOTIONSTATE 1
+#ifdef USE_MOTIONSTATE
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+
+	btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, localInertia);
+
+	btRigidBody* body = new btRigidBody(cInfo);
+	//body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
+
+#else
+	btRigidBody* body = new btRigidBody(mass, 0, shape, localInertia);
+	body->setWorldTransform(startTransform);
+#endif  //
+
+	body->setUserIndex(-1);
+	m_dynamicsWorld->addRigidBody(body);
+	return body;
+}
+
+///
+/// CommonRigidBodyBase
+///
+CommonRigidBodyBase::CommonRigidBodyBase(GUIHelperInterface* helper)
+	: m_guiHelper(helper)
+{
+}
+
+CommonRigidBodyBase::~CommonRigidBodyBase()
+{
+}
+
+void CommonRigidBodyBase::stepSimulation(float deltaTime)
+{
+	if (m_physics)
+	{
+		m_physics->getDynamicsWorld()->stepSimulation(deltaTime);
+	}
+}
+
+void CommonRigidBodyBase::physicsDebugDraw(int debugFlags)
+{
+	if (m_physics)
+	{
+		if (auto drawer = m_physics->getDynamicsWorld()->getDebugDrawer())
+		{
+			drawer->setDebugMode(debugFlags);
+		}
+	}
+}
+
+void CommonRigidBodyBase::exitPhysics()
+{
+	//remove the rigidbodies from the dynamics world and delete them
+	delete m_physics;
+}
+
 bool CommonRigidBodyBase::keyboardCallback(int key, int state)
 {
-	if ((key == B3G_F3) && state && m_dynamicsWorld)
+	if ((key == B3G_F3) && state && m_physics)
 	{
 		btDefaultSerializer* serializer = new btDefaultSerializer();
-		m_dynamicsWorld->serialize(serializer);
+		m_physics->getDynamicsWorld()->serialize(serializer);
 
 		FILE* file = fopen("testFile.bullet", "wb");
 		fwrite(serializer->getBufferPointer(), serializer->getCurrentBufferSize(), 1, file);
@@ -208,7 +403,11 @@ bool CommonRigidBodyBase::mouseMoveCallback(float x, float y)
 	btVector3 rayTo = getRayTo(int(x), int(y));
 	btVector3 rayFrom;
 	renderer->getActiveCamera()->getCameraPosition(rayFrom);
-	movePickedBody(rayFrom, rayTo);
+
+	if (m_physics)
+	{
+		m_physics->movePickedBody(rayFrom, rayTo);
+	}
 
 	return false;
 }
@@ -261,158 +460,36 @@ bool CommonRigidBodyBase::mouseButtonCallback(int button, int state, float x, fl
 			btVector3 rayFrom = camPos;
 			btVector3 rayTo = getRayTo(int(x), int(y));
 
-			pickBody(rayFrom, rayTo);
+			if (m_physics)
+			{
+				m_physics->pickBody(rayFrom, rayTo);
+			}
 		}
 	}
 	else
 	{
 		if (button == 0)
 		{
-			removePickingConstraint();
-			//remove p2p
-		}
-	}
-
-	//printf("button=%d, state=%d\n",button,state);
-	return false;
-}
-
-bool CommonRigidBodyBase::pickBody(const btVector3& rayFromWorld, const btVector3& rayToWorld)
-{
-	if (m_dynamicsWorld == 0)
-		return false;
-
-	btCollisionWorld::ClosestRayResultCallback rayCallback(rayFromWorld, rayToWorld);
-
-	rayCallback.m_flags |= btTriangleRaycastCallback::kF_UseGjkConvexCastRaytest;
-	m_dynamicsWorld->rayTest(rayFromWorld, rayToWorld, rayCallback);
-	if (rayCallback.hasHit())
-	{
-		btVector3 pickPos = rayCallback.m_hitPointWorld;
-		btRigidBody* body = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
-		if (body)
-		{
-			//other exclusions?
-			if (!(body->isStaticObject() || body->isKinematicObject()))
+			if (m_physics)
 			{
-				m_pickedBody = body;
-				m_savedState = m_pickedBody->getActivationState();
-				m_pickedBody->setActivationState(DISABLE_DEACTIVATION);
-				//printf("pickPos=%f,%f,%f\n",pickPos.getX(),pickPos.getY(),pickPos.getZ());
-				btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
-				btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body, localPivot);
-				m_dynamicsWorld->addConstraint(p2p, true);
-				m_pickedConstraint = p2p;
-				btScalar mousePickClamping = 30.f;
-				p2p->m_setting.m_impulseClamp = mousePickClamping;
-				//very weak constraint for picking
-				p2p->m_setting.m_tau = 0.001f;
+				m_physics->removePickingConstraint();
 			}
 		}
-
-		//					pickObject(pickPos, rayCallback.m_collisionObject);
-		m_oldPickingPos = rayToWorld;
-		m_hitPos = pickPos;
-		m_oldPickingDist = (pickPos - rayFromWorld).length();
-		//					printf("hit !\n");
-		//add p2p
 	}
+
 	return false;
-}
-bool CommonRigidBodyBase::movePickedBody(const btVector3& rayFromWorld, const btVector3& rayToWorld)
-{
-	if (m_pickedBody && m_pickedConstraint)
-	{
-		btPoint2PointConstraint* pickCon = static_cast<btPoint2PointConstraint*>(m_pickedConstraint);
-		if (pickCon)
-		{
-			//keep it at the same picking distance
-
-			btVector3 newPivotB;
-
-			btVector3 dir = rayToWorld - rayFromWorld;
-			dir.normalize();
-			dir *= m_oldPickingDist;
-
-			newPivotB = rayFromWorld + dir;
-			pickCon->setPivotB(newPivotB);
-			return true;
-		}
-	}
-	return false;
-}
-void CommonRigidBodyBase::removePickingConstraint()
-{
-	if (m_pickedConstraint)
-	{
-		m_pickedBody->forceActivationState(m_savedState);
-		m_pickedBody->activate();
-		m_dynamicsWorld->removeConstraint(m_pickedConstraint);
-		delete m_pickedConstraint;
-		m_pickedConstraint = 0;
-		m_pickedBody = 0;
-	}
-}
-
-btBoxShape* CommonRigidBodyBase::createBoxShape(const btVector3& halfExtents)
-{
-	btBoxShape* box = new btBoxShape(halfExtents);
-	return box;
-}
-
-void CommonRigidBodyBase::deleteRigidBody(btRigidBody* body)
-{
-	int graphicsUid = body->getUserIndex();
-	m_guiHelper->removeGraphicsInstance(graphicsUid);
-
-	m_dynamicsWorld->removeRigidBody(body);
-	btMotionState* ms = body->getMotionState();
-	delete body;
-	delete ms;
-}
-
-btRigidBody* CommonRigidBodyBase::createRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape, const btVector4& color)
-{
-	btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
-
-	//rigidbody is dynamic if and only if mass is non zero, otherwise static
-	bool isDynamic = (mass != 0.f);
-
-	btVector3 localInertia(0, 0, 0);
-	if (isDynamic)
-		shape->calculateLocalInertia(mass, localInertia);
-
-		//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-
-#define USE_MOTIONSTATE 1
-#ifdef USE_MOTIONSTATE
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-
-	btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, localInertia);
-
-	btRigidBody* body = new btRigidBody(cInfo);
-	//body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
-
-#else
-	btRigidBody* body = new btRigidBody(mass, 0, shape, localInertia);
-	body->setWorldTransform(startTransform);
-#endif  //
-
-	body->setUserIndex(-1);
-	m_dynamicsWorld->addRigidBody(body);
-	return body;
 }
 
 void CommonRigidBodyBase::renderScene()
 {
-	if (m_dynamicsWorld)
+	if (m_physics)
 	{
 		{
-			m_guiHelper->syncPhysicsToGraphics(m_dynamicsWorld);
+			m_guiHelper->syncPhysicsToGraphics(m_physics->getDynamicsWorld());
 		}
 
 		{
-			m_guiHelper->render(m_dynamicsWorld);
+			m_guiHelper->render(m_physics->getDynamicsWorld());
 		}
 	}
 }

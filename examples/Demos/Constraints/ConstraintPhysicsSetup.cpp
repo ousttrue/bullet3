@@ -40,11 +40,11 @@ static btVector3 btAxisA(0, 1, 0);
 void ConstraintPhysicsSetup::stepSimulation(float deltaTime)
 {
 	val = spDoorHinge->getAccumulatedHingeAngle() * SIMD_DEGS_PER_RAD;
-	if (m_dynamicsWorld)
+	if (m_physics)
 	{
 		spDoorHinge->enableAngularMotor(true, targetVel, maxImpulse);
 
-		m_dynamicsWorld->stepSimulation(deltaTime, 10, 1. / 240.);
+		m_physics->getDynamicsWorld()->stepSimulation(deltaTime, 10, 1. / 240.);
 
 		btHingeConstraint* hinge = spDoorHinge;
 
@@ -84,7 +84,8 @@ void ConstraintPhysicsSetup::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
 
-	createEmptyDynamicsWorld();
+	m_physics=new Physics();
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 	int mode = btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawConstraints + btIDebugDraw::DBG_DrawConstraintLimits;
@@ -121,11 +122,11 @@ void ConstraintPhysicsSetup::initPhysics()
 
 	{  // create a door using hinge constraint attached to the world
 		btCollisionShape* pDoorShape = new btBoxShape(btVector3(2.0f, 5.0f, 0.2f));
-		m_collisionShapes.push_back(pDoorShape);
+		m_physics->m_collisionShapes.push_back(pDoorShape);
 		btTransform doorTrans;
 		doorTrans.setIdentity();
 		doorTrans.setOrigin(btVector3(-5.0f, -2.0f, 0.0f));
-		btRigidBody* pDoorBody = createRigidBody(1.0, doorTrans, pDoorShape);
+		btRigidBody* pDoorBody = m_physics->createRigidBody(1.0, doorTrans, pDoorShape);
 		pDoorBody->setActivationState(DISABLE_DEACTIVATION);
 		const btVector3 btPivotA(10.f + 2.1f, -2.0f, 0.0f);  // right next to the door slightly outside
 

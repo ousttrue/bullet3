@@ -163,7 +163,8 @@ void InclinedPlaneExample::initPhysics()
 
 	m_guiHelper->setUpAxis(1);  // set Y axis as up axis
 
-	createEmptyDynamicsWorld();
+	m_physics = new Physics;
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	// create debug drawer
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
@@ -171,20 +172,20 @@ void InclinedPlaneExample::initPhysics()
 		m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
 
 	{  // create a static ground
-		btBoxShape* groundShape = createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-		m_collisionShapes.push_back(groundShape);
+		btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+		m_physics->m_collisionShapes.push_back(groundShape);
 
 		btTransform groundTransform;
 		groundTransform.setIdentity();
 		groundTransform.setOrigin(btVector3(0, -50, 0));
 
 		btScalar mass(0.);
-		createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
+		m_physics->createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
 	}
 
 	{  //create a static inclined plane
-		btBoxShape* inclinedPlaneShape = createBoxShape(btVector3(btScalar(20.), btScalar(1.), btScalar(10.)));
-		m_collisionShapes.push_back(inclinedPlaneShape);
+		btBoxShape* inclinedPlaneShape = m_physics->createBoxShape(btVector3(btScalar(20.), btScalar(1.), btScalar(10.)));
+		m_physics->m_collisionShapes.push_back(inclinedPlaneShape);
 
 		btTransform startTransform;
 		startTransform.setIdentity();
@@ -200,15 +201,15 @@ void InclinedPlaneExample::initPhysics()
 		startTransform.setRotation(incline);
 
 		btScalar mass(0.);
-		ramp = createRigidBody(mass, startTransform, inclinedPlaneShape);
+		ramp = m_physics->createRigidBody(mass, startTransform, inclinedPlaneShape);
 		ramp->setFriction(gRampFriction);
 		ramp->setRestitution(gRampRestitution);
 	}
 
 	{  //create a cube above the inclined plane
-		btBoxShape* boxShape = createBoxShape(btVector3(1, 1, 1));
+		btBoxShape* boxShape = m_physics->createBoxShape(btVector3(1, 1, 1));
 
-		m_collisionShapes.push_back(boxShape);
+		m_physics->m_collisionShapes.push_back(boxShape);
 
 		btTransform startTransform;
 		startTransform.setIdentity();
@@ -218,7 +219,7 @@ void InclinedPlaneExample::initPhysics()
 		startTransform.setOrigin(
 			btVector3(btScalar(0), btScalar(20), btScalar(2)));
 
-		gBox = createRigidBody(boxMass, startTransform, boxShape);
+		gBox = m_physics->createRigidBody(boxMass, startTransform, boxShape);
 		gBox->forceActivationState(DISABLE_DEACTIVATION);  // to prevent the box on the ramp from disabling
 		gBox->setFriction(gBoxFriction);
 		gBox->setRestitution(gBoxRestitution);
@@ -227,7 +228,7 @@ void InclinedPlaneExample::initPhysics()
 	{  //create a sphere above the inclined plane
 		btSphereShape* sphereShape = new btSphereShape(btScalar(1));
 
-		m_collisionShapes.push_back(sphereShape);
+		m_physics->m_collisionShapes.push_back(sphereShape);
 
 		btTransform startTransform;
 		startTransform.setIdentity();
@@ -237,7 +238,7 @@ void InclinedPlaneExample::initPhysics()
 		startTransform.setOrigin(
 			btVector3(btScalar(0), btScalar(20), btScalar(4)));
 
-		gSphere = createRigidBody(sphereMass, startTransform, sphereShape);
+		gSphere = m_physics->createRigidBody(sphereMass, startTransform, sphereShape);
 		gSphere->forceActivationState(DISABLE_DEACTIVATION);  // to prevent the sphere on the ramp from disabling
 		gSphere->setFriction(gSphereFriction);
 		gSphere->setRestitution(gSphereRestitution);
@@ -282,9 +283,9 @@ void InclinedPlaneExample::resetScene()
 
 void InclinedPlaneExample::stepSimulation(float deltaTime)
 {
-	if (m_dynamicsWorld)
+	if (m_physics)
 	{
-		m_dynamicsWorld->stepSimulation(deltaTime);
+		m_physics->getDynamicsWorld()->stepSimulation(deltaTime);
 	}
 }
 
