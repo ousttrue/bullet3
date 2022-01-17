@@ -1,4 +1,4 @@
-# CommonExampleInterface
+# Demos
 
 各デモは以下のようなインターフェースを持つ。
 

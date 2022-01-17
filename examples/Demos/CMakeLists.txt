@@ -1,73 +1,48 @@
-set(TARGET_NAME CommonRigidBodyBase)
-add_library(${TARGET_NAME} CommonRigidBodyBase.cpp)
-target_link_libraries(${TARGET_NAME} PUBLIC CommonInterfaces BulletDynamics
-                                            BulletCollision)
-target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
 subdirs(
-  ExtendedTutorials
+  CommonRigidBodyBase
   BulletRobotics
   ForkLift
-  Constraints
-  DeformableDemo
-  VoronoiFracture
   MultiBody
-  FractureDemo
   Benchmarks
-  DynamicControlDemo
-  SoftDemo
-  GyroscopicDemo
-  InverseDynamics
   InverseKinematics
-  Heightfield
   MultiThreadedDemo
-  Vehicles
-  Evolution
-  Planar2D
-  Raycast
   Collision
-  Tutorial
   RenderingExamples
-  RollingFrictionDemo
-  RoboticsLearning
-  BasicDemo
-  RigidBody
-  Importers
-  SharedMemoryDemo
-  )
+  SharedMemoryDemo)
 
 set(TARGET_NAME Demos)
 add_library(${TARGET_NAME} INTERFACE)
 target_link_libraries(
   ${TARGET_NAME}
   INTERFACE # Demos
-            ExtendedTutorials
-            BulletRobotics
-            ForkLift
+            CommonRigidBodyBase
+            BasicDemo
             Constraints
             DeformableDemo
-            VoronoiFracture
-            MultiBody
-            FractureDemo
-            Benchmarks
             DynamicControlDemo
-            SoftDemo
+            FractureDemo
             GyroscopicDemo
-            InverseDynamics
-            InverseKinematics
             Heightfield
-            MultiThreadedDemo
-            Importers
-            Vehicles
-            Evolution
+            InverseDynamics
             Planar2D
             Raycast
-            Collision
-            Tutorial
-            RenderingExamples
+            RigidBody
             RollingFrictionDemo
-            RoboticsLearning
-            BasicDemo
-            RigidBody            
-            SharedMemoryDemo
-            )
+            SoftDemo
+            Tutorial
+            ExtendedTutorials
+            Evolution
+            Vehicles
+            Importers
+            #
+            BulletRobotics
+            ForkLift
+            MultiBody
+            Benchmarks
+            InverseKinematics
+            MultiThreadedDemo
+            Evolution
+            Collision
+            RenderingExamples
+            SharedMemoryDemo)
+target_include_directories(${TARGET_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

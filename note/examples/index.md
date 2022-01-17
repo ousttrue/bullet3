@@ -1,7 +1,7 @@
 # examples
 
 ```{toctree}
-ExampleBrowser
+:maxdepth: 1
 CommonInterfaces
 CommonExampleInterface/index
 ```

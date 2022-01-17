@@ -11,6 +11,7 @@
 * shared memoery やそのラッパーである pybullet はこっちぽい
 
 ```{toctree}
+:maxdepth: 1
 examples/index
 pybullet/index
 format/index

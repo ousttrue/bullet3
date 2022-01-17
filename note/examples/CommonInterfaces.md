@@ -1,5 +1,9 @@
 # CommonInterfaces
 
+たくさんある `Demo` の選択器。
+Gwen で実装されている。
+
+
 `ExampleBrowser` に関連するインタフェース。
 
 ## ExampleBrowser
@@ -79,7 +83,7 @@ public:
 
 `CommonGUIHelperInterface.h`
 
-## Demo
+## CommonParameterInterface
 
 Demo のパラメーター変更 GUI ？
 
