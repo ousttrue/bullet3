@@ -19,6 +19,11 @@ subject to the following restrictions:
 #include <b3Clock.h>
 #include <OpenGLGuiHelper.h>
 #include <stdio.h>
+#include <BasicDemo/BasicExample.h>
+
+// this define maps StandaloneExampleCreateFunc to the right 'CreateFunc'
+// #define B3_USE_STANDALONE_EXAMPLE 1
+B3_STANDALONE_EXAMPLE(BasicExampleCreateFunc)
 
 CommonExampleInterface* example;
 int gSharedMemoryKey = -1;
@@ -63,6 +68,7 @@ public:
 	{
 	}
 };
+
 int main(int argc, char* argv[])
 {
 	auto app = new GlfwApp("Bullet Standalone Example", 1024, 768, true);
@@ -79,7 +85,7 @@ int main(int argc, char* argv[])
 
 	CommonExampleOptions options(&gui);
 
-	example = StandaloneExampleCreateFunc(options);
+	example = BasicExampleCreateFunc(options);
 	example->processCommandLineArgs(argc, argv);
 
 	example->initPhysics();

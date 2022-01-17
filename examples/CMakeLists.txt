@@ -10,6 +10,7 @@ subdirs(Utils)
 subdirs(Demos)
 subdirs(RobotSimulator)
 subdirs(HelloWorld ExampleBrowser)
+subdirs(App_BasicExampleGui)
 
 # IF(BUILD_BULLET3) SUBDIRS(  RobotSimulator SharedMemory ThirdPartyLibs/Gwen
 # ThirdPartyLibs/BussIK ThirdPartyLibs/clsocket OpenGLWindow TwoJoint ) ENDIF()
