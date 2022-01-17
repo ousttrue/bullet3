@@ -1,7 +1,7 @@
 #pragma once
 
+#include <CommonExampleInterface.h>
 #include <btBulletDynamicsCommon.h>
-#include "CommonExampleInterface.h"
 #include <CommonGUIHelperInterface.h>
 #include <CommonGraphicsAppInterface.h>
 
@@ -9,20 +9,20 @@ struct CommonRigidBodyBase : public CommonExampleInterface
 {
 	//keep the collision shapes, for deletion/cleanup
 	btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
-	btBroadphaseInterface* m_broadphase;
-	btCollisionDispatcher* m_dispatcher;
-	btConstraintSolver* m_solver;
-	btDefaultCollisionConfiguration* m_collisionConfiguration;
-	btDiscreteDynamicsWorld* m_dynamicsWorld;
+	btBroadphaseInterface* m_broadphase = nullptr;
+	btCollisionDispatcher* m_dispatcher = nullptr;
+	btConstraintSolver* m_solver = nullptr;
+	btDefaultCollisionConfiguration* m_collisionConfiguration = nullptr;
+	btDiscreteDynamicsWorld* m_dynamicsWorld = nullptr;
 
 	//data for picking objects
-	class btRigidBody* m_pickedBody;
-	class btTypedConstraint* m_pickedConstraint;
-	int m_savedState;
+	class btRigidBody* m_pickedBody = nullptr;
+	class btTypedConstraint* m_pickedConstraint = nullptr;
+	int m_savedState = 0;
 	btVector3 m_oldPickingPos;
 	btVector3 m_hitPos;
-	btScalar m_oldPickingDist;
-	struct GUIHelperInterface* m_guiHelper;
+	btScalar m_oldPickingDist = 0;
+	struct GUIHelperInterface* m_guiHelper = nullptr;
 
 	CommonRigidBodyBase(struct GUIHelperInterface* helper);
 	virtual ~CommonRigidBodyBase();

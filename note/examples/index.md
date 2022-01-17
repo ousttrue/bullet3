@@ -3,5 +3,5 @@
 ```{toctree}
 ExampleBrowser
 CommonInterfaces
-Demos/index
+CommonExampleInterface/index
 ```

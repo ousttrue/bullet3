@@ -5,14 +5,7 @@
 #include <BulletCollision/NarrowPhaseCollision/btRaycastCallback.h>
 
 CommonRigidBodyBase::CommonRigidBodyBase(struct GUIHelperInterface* helper)
-	: m_broadphase(0),
-	  m_dispatcher(0),
-	  m_solver(0),
-	  m_collisionConfiguration(0),
-	  m_dynamicsWorld(0),
-	  m_pickedBody(0),
-	  m_pickedConstraint(0),
-	  m_guiHelper(helper)
+	: m_guiHelper(helper)
 {
 }
 CommonRigidBodyBase::~CommonRigidBodyBase()
