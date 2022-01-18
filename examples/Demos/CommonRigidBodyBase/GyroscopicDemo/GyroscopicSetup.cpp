@@ -1,6 +1,7 @@
 #include "GyroscopicSetup.h"
 
 #include <CommonRigidBodyBase.h>
+#include "CommonCameraInterface.h"
 
 struct GyroscopicSetup : public CommonRigidBodyBase
 {
@@ -13,13 +14,16 @@ struct GyroscopicSetup : public CommonRigidBodyBase
 
 	virtual void physicsDebugDraw(int debugFlags);
 
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 20;
-		float pitch = -16;
-		float yaw = 180;
-		float targetPos[3] = {-2.4, 0.4, -0.24};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 20;
+		info.pitch = -16;
+		info.yaw = 180;
+		info.camPosX = -2.4;
+		info.camPosY = 0.4;
+		info.camPosZ = -0.24;
+		return info;
 	}
 };
 

@@ -18,6 +18,7 @@ subject to the following restrictions:
 #include <LinearMath/btVector3.h>
 #include <LinearMath/btAlignedObjectArray.h>
 #include <CommonRigidBodyBase.h>
+#include "CommonCameraInterface.h"
 #define ARRAY_SIZE_Y 5
 #define ARRAY_SIZE_X 5
 #define ARRAY_SIZE_Z 5
@@ -107,13 +108,16 @@ struct BasicExample : public CommonRigidBodyBase
 		CommonRigidBodyBase::renderScene();
 	}
 
-	void resetCamera() override
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 4;
-		float pitch = -35;
-		float yaw = 52;
-		float targetPos[3] = {0, 0, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 4;
+		info.pitch = -35;
+		info.yaw = 52;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
 };
 

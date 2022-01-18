@@ -26,6 +26,7 @@ subject to the following restrictions:
 
 #include <CommonMultiBodyBase.h>
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 
 #include "LinearMath/btVector3.h"
@@ -85,13 +86,16 @@ public:
 
 	void setFileName(const char* urdfFileName);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 1.5;
-		float pitch = -10;
-		float yaw = -80;
-		float targetPos[3] = {0, 0, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 1.5;
+		info.pitch = -10;
+		info.yaw = -80;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
 };
 

@@ -3,6 +3,7 @@
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
 #include "Bullet3Common/b3Logging.h"
+#include "CommonCameraInterface.h"
 #include "GraphicsSharedMemoryCommands.h"
 #include "PosixSharedMemory.h"
 #include "Win32SharedMemory.h"
@@ -12,7 +13,6 @@
 class GraphicsClientExample : public CommonExampleInterface
 {
 protected:
-	
 	GUIHelperInterface* m_guiHelper;
 	bool m_waitingForServer;
 	GraphicsSharedMemoryBlock* m_testBlock1;
@@ -28,15 +28,17 @@ public:
 	virtual void initPhysics();
 	virtual void stepSimulation(float deltaTime);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 3.45;
-		float pitch = -16.2;
-		float yaw = 287;
-		float targetPos[3] = {2.05, 0.02, 0.53};  //-3,2.8,-2.5};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 3.45;
+		info.pitch = -16.2;
+		info.yaw = 287;
+		info.camPosX = 2.05;
+		info.camPosY = 0.02;
+		info.camPosZ = 0.53;  //-3,2.8,-2.5};
+		return info;
 	}
-
 
 	virtual bool isConnected()
 	{
@@ -91,7 +93,6 @@ public:
 		return false;
 	}
 
-
 	const GraphicsSharedMemoryStatus* processServerStatus()
 	{
 		// SharedMemoryStatus* stat = 0;
@@ -113,18 +114,17 @@ public:
 			return &m_lastServerStatus;
 		}
 
-
 		if (m_testBlock1->m_numServerCommands >
 			m_testBlock1->m_numProcessedServerCommands)
 		{
 			B3_PROFILE("processServerCMD");
 			b3Assert(m_testBlock1->m_numServerCommands ==
-				m_testBlock1->m_numProcessedServerCommands + 1);
+					 m_testBlock1->m_numProcessedServerCommands + 1);
 
 			const GraphicsSharedMemoryStatus& serverCmd = m_testBlock1->m_serverCommands[0];
 
 			m_lastServerStatus = serverCmd;
-			
+
 			//       EnumSharedMemoryServerStatus s = (EnumSharedMemoryServerStatus)serverCmd.m_type;
 			// consume the command
 			switch (serverCmd.m_type)
@@ -133,7 +133,6 @@ public:
 				{
 					B3_PROFILE("CMD_CLIENT_COMMAND_COMPLETED");
 
-					
 					break;
 				}
 				default:
@@ -144,7 +143,7 @@ public:
 			m_testBlock1->m_numProcessedServerCommands++;
 			// we don't have more than 1 command outstanding (in total, either server or client)
 			b3Assert(m_testBlock1->m_numProcessedServerCommands ==
-				m_testBlock1->m_numServerCommands);
+					 m_testBlock1->m_numServerCommands);
 
 			if (m_testBlock1->m_numServerCommands ==
 				m_testBlock1->m_numProcessedServerCommands)
@@ -155,7 +154,6 @@ public:
 			{
 				m_waitingForServer = true;
 			}
-
 
 			return &m_lastServerStatus;
 		}
@@ -175,7 +173,7 @@ public:
 			{
 				b3Error("Error connecting to shared memory: please start server before client\n");
 				m_sharedMemory->releaseSharedMemory(m_sharedMemoryKey,
-					GRAPHICS_SHARED_MEMORY_SIZE);
+													GRAPHICS_SHARED_MEMORY_SIZE);
 				m_testBlock1 = 0;
 				return false;
 			}
@@ -192,7 +190,6 @@ public:
 		return true;
 	}
 
-
 	void disconnect()
 	{
 		if (m_isConnected && m_sharedMemory)
@@ -203,7 +200,7 @@ public:
 	}
 
 	virtual void exitPhysics(){};
-	
+
 	virtual void physicsDebugDraw(int debugFlags)
 	{
 	}
@@ -223,16 +220,12 @@ public:
 	{
 		return false;
 	}
-
-
 };
-
-
 
 GraphicsClientExample::GraphicsClientExample(GUIHelperInterface* helper, int options)
 	: m_guiHelper(helper),
-	m_waitingForServer(false),
-	m_testBlock1(0)
+	  m_waitingForServer(false),
+	  m_testBlock1(0)
 {
 #ifdef _WIN32
 	m_sharedMemory = new Win32SharedMemoryClient();
@@ -251,7 +244,6 @@ GraphicsClientExample::~GraphicsClientExample()
 	delete m_sharedMemory;
 }
 
-
 void GraphicsClientExample::initPhysics()
 {
 	if (m_guiHelper && m_guiHelper->getParameterInterface())
@@ -259,7 +251,6 @@ void GraphicsClientExample::initPhysics()
 		int upAxis = 2;
 		m_guiHelper->setUpAxis(upAxis);
 	}
-	
 }
 
 void GraphicsClientExample::stepSimulation(float deltaTime)
@@ -281,7 +272,6 @@ void GraphicsClientExample::stepSimulation(float deltaTime)
 class CommonExampleInterface* GraphicsClientCreateFunc(struct CommonExampleOptions& options)
 {
 	GraphicsClientExample* example = new GraphicsClientExample(options.m_guiHelper, options.m_option);
-	
-	
+
 	return example;
 }

@@ -15,6 +15,7 @@ subject to the following restrictions:
 
 #include "InclinedPlane.h"
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
@@ -55,13 +56,16 @@ struct InclinedPlaneExample : public CommonRigidBodyBase
 	virtual void renderScene();
 	virtual void stepSimulation(float deltaTime);
 	virtual bool keyboardCallback(int key, int state);
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 41;
-		float pitch = -35;
-		float yaw = 52;
-		float targetPos[3] = {0, 0.46, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 41;
+		info.pitch = -35;
+		info.yaw = 52;
+		info.camPosX = 0;
+		info.camPosY = 0.46;
+		info.camPosZ = 0;
+		return info;
 	}
 };
 

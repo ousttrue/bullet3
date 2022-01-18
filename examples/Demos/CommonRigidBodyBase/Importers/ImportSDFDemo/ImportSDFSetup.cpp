@@ -5,6 +5,7 @@
 #include "Bullet3Common/b3FileUtils.h"
 #include "BulletDynamics/Featherstone/btMultiBodyJointMotor.h"
 #include "BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h"
+#include "CommonCameraInterface.h"
 #include <CommonParameterInterface.h>
 #include <b3ResourcePath.h>
 #include <BulletUrdfImporter.h>
@@ -31,13 +32,16 @@ public:
 
 	void setFileName(const char* urdfFileName);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 3.5;
-		float pitch = -28;
-		float yaw = -136;
-		float targetPos[3] = {0.47, 0, -0.64};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 3.5;
+		info.pitch = -28;
+		info.yaw = -136;
+		info.camPosX = 0.47;
+		info.camPosY = 0;
+		info.camPosZ = -0.64;
+		return info;
 	}
 };
 

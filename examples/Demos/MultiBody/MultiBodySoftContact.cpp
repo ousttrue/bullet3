@@ -6,6 +6,7 @@
 
 #include <CommonMultiBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
+#include "CommonCameraInterface.h"
 
 //static btScalar radius(0.2);
 
@@ -14,35 +15,25 @@ struct MultiBodySoftContact : public CommonMultiBodyBase
 	btMultiBody* m_multiBody;
 	btAlignedObjectArray<btMultiBodyJointFeedback*> m_jointFeedbacks;
 
-	bool m_once;
+	bool m_once = true;
 
 public:
-	MultiBodySoftContact(struct GUIHelperInterface* helper);
-	virtual ~MultiBodySoftContact();
-
-	virtual void initPhysics();
-
-	virtual void stepSimulation(float deltaTime);
-
-	virtual void resetCamera()
+	MultiBodySoftContact(struct GUIHelperInterface* helper) : CommonMultiBodyBase(helper) {}
+	~MultiBodySoftContact() override {}
+	virtual void initPhysics() override;
+	virtual void stepSimulation(float deltaTime) override;
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 5;
-		float pitch = -21;
-		float yaw = 270;
-		float targetPos[3] = {0, 0, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 5;
+		info.pitch = -21;
+		info.yaw = 270;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
 };
-
-MultiBodySoftContact::MultiBodySoftContact(struct GUIHelperInterface* helper)
-	: CommonMultiBodyBase(helper),
-	  m_once(true)
-{
-}
-
-MultiBodySoftContact::~MultiBodySoftContact()
-{
-}
 
 void MultiBodySoftContact::initPhysics()
 {

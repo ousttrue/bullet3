@@ -190,7 +190,10 @@ public:
 		float dist = 4;
 		float pitch = 52;
 		float yaw = 35;
-		float targetPos[3] = {0, 0, 0};
+		float info.camPosX = 0;
+info.camPosY = 0;
+info.camPosZ = 0;
+
 		m_guiHelper->resetCamera(dist, pitch, yaw, targetPos[0], targetPos[1], targetPos[2]);
 	}
 };

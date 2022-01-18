@@ -725,7 +725,10 @@ public:
 		float dist = 1.5;
 		float pitch = -10;
 		float yaw = 18;
-		float targetPos[3] = {-0.2, 0.8, 0.3};
+		float info.camPosX = -0.2;
+info.camPosY = 0.8;
+info.camPosZ = 0.3;
+
 		if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
 		{
 			m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);

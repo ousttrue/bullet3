@@ -1,5 +1,14 @@
-#ifndef COMMON_CAMERA_INTERFACE_H
-#define COMMON_CAMERA_INTERFACE_H
+#pragma once
+
+struct CameraResetInfo
+{
+	float camDist;
+	float yaw;
+	float pitch;
+	float camPosX;
+	float camPosY;
+	float camPosZ;
+};
 
 struct CommonCameraInterface
 {
@@ -42,5 +51,3 @@ struct CommonCameraInterface
 	virtual float getCameraFrustumFar() const = 0;
 	virtual float getCameraFrustumNear() const = 0;
 };
-
-#endif  //COMMON_CAMERA_INTERFACE_H

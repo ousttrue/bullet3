@@ -18,6 +18,7 @@ subject to the following restrictions:
 
 #include "Hinge2Vehicle.h"
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 
@@ -93,13 +94,16 @@ public:
 	void initPhysics();
 	void exitPhysics();
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 8;
-		float pitch = -32;
-		float yaw = -45;
-		float targetPos[3] = {0, 0, 2};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 8;
+		info.pitch = -32;
+		info.yaw = -45;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 2;
+		return info;
 	}
 
 	/*static DemoApplication* Create()

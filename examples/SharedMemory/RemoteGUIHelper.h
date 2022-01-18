@@ -2,6 +2,7 @@
 #define REMOTE_HELPER_H
 
 #include <CommonGUIHelperInterface.h>
+#include "CommonCameraInterface.h"
 
 ///a RemoteGUIHelper will connect to an existing graphics server through shared memory
 struct RemoteGUIHelper : public GUIHelperInterface
@@ -50,7 +51,7 @@ struct RemoteGUIHelper : public GUIHelperInterface
 
 	virtual void setUpAxis(int axis);
 	
-	virtual void resetCamera(float camDist, float yaw, float pitch, float camPosX, float camPosY, float camPosZ);
+	void resetCamera(const CameraResetInfo &info) override;
 	
 	virtual void copyCameraImageData(const float viewMatrix[16], const float projectionMatrix[16],
 									 unsigned char* pixelsRGBA, int rgbaBufferSizeInPixels,

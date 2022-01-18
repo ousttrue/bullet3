@@ -4,6 +4,7 @@
 #include <CommonGraphicsAppInterface.h>
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3AlignedObjectArray.h"
+#include "CommonCameraInterface.h"
 #include <CommonRenderInterface.h>
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
@@ -115,19 +116,16 @@ public:
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 13;
-		float pitch = -13;
-		float yaw = 50;
-		float targetPos[3] = {-1, 0, -0.3};
-		if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
-		{
-			m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
-			m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
-			m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
-			m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
-		}
+		CameraResetInfo info;
+		info.camDist = 13;
+		info.pitch = -13;
+		info.yaw = 50;
+		info.camPosX = -1;
+		info.camPosY = 0;
+		info.camPosZ = -0.3;
+		return info;
 	}
 };
 

@@ -6,6 +6,7 @@
 
 #include <CommonMultiBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
+#include "CommonCameraInterface.h"
 #include <CommonParameterInterface.h>
 static btScalar radius(0.2);
 static btScalar kp = 100;
@@ -16,38 +17,35 @@ struct InvertedPendulumPDControl : public CommonMultiBodyBase
 {
 	btMultiBody* m_multiBody;
 	btAlignedObjectArray<btMultiBodyJointFeedback*> m_jointFeedbacks;
-	bool m_once;
-	int m_frameCount;
+	bool m_once = true;
+	int m_frameCount = 0;
 
 public:
-	InvertedPendulumPDControl(struct GUIHelperInterface* helper);
-	virtual ~InvertedPendulumPDControl();
+	InvertedPendulumPDControl(struct GUIHelperInterface* helper)
+		: CommonMultiBodyBase(helper)
+	{
+	}
+
+	~InvertedPendulumPDControl() override
+	{
+	}
 
 	virtual void initPhysics();
 
 	virtual void stepSimulation(float deltaTime);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 5;
-		float pitch = -21;
-		float yaw = 270;
-		float targetPos[3] = {-1.34, 1.4, 3.44};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 5;
+		info.pitch = -21;
+		info.yaw = 270;
+		info.camPosX = -1.34;
+		info.camPosY = 1.4;
+		info.camPosZ = 3.44;
+		return info;
 	}
 };
-
-InvertedPendulumPDControl::InvertedPendulumPDControl(struct GUIHelperInterface* helper)
-	: CommonMultiBodyBase(helper),
-	  m_once(true),
-	  m_frameCount(0)
-{
-}
-
-InvertedPendulumPDControl::~InvertedPendulumPDControl()
-{
-}
-
 
 btMultiBody* createInvertedPendulumMultiBody(btMultiBodyDynamicsWorld* world, GUIHelperInterface* guiHelper, const btTransform& baseWorldTrans, bool fixedBase)
 {
@@ -312,8 +310,6 @@ void InvertedPendulumPDControl::initPhysics()
 	}
 
 	int upAxis = 1;
-	
-	
 
 	m_guiHelper->setUpAxis(upAxis);
 

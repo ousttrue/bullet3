@@ -5,6 +5,7 @@
 #include "PhysicsServerExample.h"
 
 #include <Common2dCanvasInterface.h>
+#include "CommonCameraInterface.h"
 #include "PhysicsServerSharedMemory.h"
 #include "Bullet3Common/b3CommandLineArgs.h"
 #include "SharedMemoryCommon.h"
@@ -506,7 +507,6 @@ static void UserButtonToggle(int buttonId, bool buttonState, void* userPointer)
 	param->m_value += 1;
 }
 
-
 struct UserDebugText
 {
 	char m_text[1024];
@@ -673,16 +673,16 @@ public:
 			m_csGUI->unlock();
 		}
 	}
-        virtual void clearLines()
-        {
-			m_csGUI->lock();
-			if (m_debugDraw)
-			{
-				m_debugDraw->clearLines();
-			}
-			m_csGUI->unlock();
+	virtual void clearLines()
+	{
+		m_csGUI->lock();
+		if (m_debugDraw)
+		{
+			m_debugDraw->clearLines();
 		}
-        
+		m_csGUI->unlock();
+	}
+
 	GUIHelperInterface* m_childGuiHelper;
 
 	btHashMap<btHashPtr, int> m_cachedTextureIds;
@@ -737,12 +737,10 @@ public:
 		m_cs3->lock();
 		m_cs3->unlock();
 
-
 		m_csGUI->lock();
 		unsigned int cachedSharedParam = m_cs->getSharedParam(1);
 		m_csGUI->unlock();
 
-		
 		while (cachedSharedParam != eGUIHelperIdle)
 		{
 			b3Clock::usleep(0);
@@ -754,17 +752,17 @@ public:
 
 	MultiThreadedOpenGLGuiHelper(CommonGraphicsApp* app, GUIHelperInterface* guiHelper, int skipGraphicsUpdate)
 		:  //m_app(app),
-		m_cs(0),
-		m_cs2(0),
-		m_cs3(0),
-		m_csGUI(0),
-		m_debugDraw(0),
-		m_uidGenerator(0),
-		m_texels(0),
-		m_shapeIndex(-1),
-		m_textureId(-1),
-		m_instanceId(-1),
-		m_skipGraphicsUpdate(skipGraphicsUpdate)
+		  m_cs(0),
+		  m_cs2(0),
+		  m_cs3(0),
+		  m_csGUI(0),
+		  m_debugDraw(0),
+		  m_uidGenerator(0),
+		  m_texels(0),
+		  m_shapeIndex(-1),
+		  m_textureId(-1),
+		  m_instanceId(-1),
+		  m_skipGraphicsUpdate(skipGraphicsUpdate)
 	{
 		m_cameraUpdated = 0;
 		m_childGuiHelper = guiHelper;
@@ -820,19 +818,19 @@ public:
 	{
 		return m_cs3;
 	}
-	
+
 	b3CriticalSection* getCriticalSectionGUI()
 	{
 		return m_csGUI;
 	}
-	
+
 	btRigidBody* m_body;
 	btVector3 m_color3;
 	virtual void createRigidBodyGraphicsObject(btRigidBody* body, const btVector3& color)
 	{
 		m_cs->lock();
 
-    m_body = body;
+		m_body = body;
 		m_color3 = color;
 		setSharedParam(1, eGUIHelperCreateRigidBodyGraphicsObject);
 		workerThreadWait();
@@ -845,7 +843,7 @@ public:
 	{
 		m_cs->lock();
 
-    m_obj = obj;
+		m_obj = obj;
 		m_color2 = color;
 		setSharedParam(1, eGUIHelperCreateCollisionObjectGraphicsObject);
 		workerThreadWait();
@@ -856,8 +854,8 @@ public:
 	{
 		m_cs->lock();
 
-    m_colShape = collisionShape;
-    setSharedParam(1, eGUIHelperCreateCollisionShapeGraphicsObject);
+		m_colShape = collisionShape;
+		setSharedParam(1, eGUIHelperCreateCollisionShapeGraphicsObject);
 		workerThreadWait();
 	}
 
@@ -870,10 +868,10 @@ public:
 			m_childGuiHelper->syncPhysicsToGraphics(rbWorld);
 		}
 	}
-	
+
 	virtual void syncPhysicsToGraphics2(const btDiscreteDynamicsWorld* rbWorld)
 	{
-		 m_childGuiHelper->syncPhysicsToGraphics2(rbWorld);
+		m_childGuiHelper->syncPhysicsToGraphics2(rbWorld);
 	}
 
 	virtual void syncPhysicsToGraphics2(const GUISyncPosition* positions, int numPositions)
@@ -894,8 +892,8 @@ public:
 			delete m_debugDraw;
 			m_debugDraw = 0;
 		}
-                m_debugDraw = new MultithreadedDebugDrawer(this);
-                rbWorld->setDebugDrawer(m_debugDraw);
+		m_debugDraw = new MultithreadedDebugDrawer(this);
+		rbWorld->setDebugDrawer(m_debugDraw);
 
 		//m_childGuiHelper->createPhysicsDebugDrawer(rbWorld);
 	}
@@ -906,7 +904,7 @@ public:
 	{
 		m_cs->lock();
 
-    m_removeTextureUid = textureUid;
+		m_removeTextureUid = textureUid;
 		setSharedParam(1, eGUIHelperRemoveTexture);
 
 		workerThreadWait();
@@ -919,7 +917,7 @@ public:
 	{
 		m_cs->lock();
 
-    m_updateShapeIndex = shapeIndex;
+		m_updateShapeIndex = shapeIndex;
 		m_updateShapeVertices = vertices;
 		m_updateNumShapeVertices = numVertices;
 		setSharedParam(1, eGUIHelperUpdateShape);
@@ -934,7 +932,7 @@ public:
 		}
 		m_cs->lock();
 
-    m_texels = texels;
+		m_texels = texels;
 		m_textureWidth = width;
 		m_textureHeight = height;
 
@@ -947,21 +945,20 @@ public:
 	virtual int registerGraphicsShape(const float* vertices, int numvertices, const int* indices, int numIndices, int primitiveType, int textureId)
 	{
 		m_cs->lock();
-    m_csGUI->lock();
-    m_vertices = vertices;
+		m_csGUI->lock();
+		m_vertices = vertices;
 		m_numvertices = numvertices;
 		m_indices = indices;
 		m_numIndices = numIndices;
 		m_primitiveType = primitiveType;
 		m_textureId = textureId;
-    m_csGUI->unlock();
+		m_csGUI->unlock();
 		setSharedParam(1, eGUIHelperRegisterGraphicsShape);
 		workerThreadWait();
 
-    m_csGUI->lock();
-    int shapeIndex = m_shapeIndex;
-    m_csGUI->unlock();
-
+		m_csGUI->lock();
+		int shapeIndex = m_shapeIndex;
+		m_csGUI->unlock();
 
 		return shapeIndex;
 	}
@@ -970,17 +967,17 @@ public:
 	int m_visualizerEnable;
 	int m_renderedFrames;
 
-  void setSharedParam(int slot, int param)
-  {
-    m_csGUI->lock();
-    m_cs->setSharedParam(slot, param);
-    m_csGUI->unlock();
-  }
+	void setSharedParam(int slot, int param)
+	{
+		m_csGUI->lock();
+		m_cs->setSharedParam(slot, param);
+		m_csGUI->unlock();
+	}
 	void setVisualizerFlag(int flag, int enable)
 	{
 		m_cs->lock();
 
-    m_visualizerFlag = flag;
+		m_visualizerFlag = flag;
 		m_visualizerEnable = enable;
 
 		setSharedParam(1, eGUIHelperSetVisualizerFlag);
@@ -1008,9 +1005,9 @@ public:
 
 	virtual void removeAllGraphicsInstances()
 	{
-    m_cs->lock();
+		m_cs->lock();
 		m_cachedTextureIds.clear();
-    setSharedParam(1, eGUIHelperRemoveAllGraphicsInstances);
+		setSharedParam(1, eGUIHelperRemoveAllGraphicsInstances);
 		workerThreadWait();
 	}
 
@@ -1059,7 +1056,7 @@ public:
 		m_changeTextureWidth = width;
 		m_changeTextureHeight = height;
 		m_cs->lock();
-	  setSharedParam(1, eGUIHelperChangeTexture);
+		setSharedParam(1, eGUIHelperChangeTexture);
 		workerThreadWait();
 	}
 
@@ -1077,7 +1074,6 @@ public:
 		workerThreadWait();
 	}
 
-	
 	int m_graphicsInstanceFlagsInstanceUid;
 	int m_graphicsInstanceFlags;
 	virtual void changeInstanceFlags(int instanceUid, int flags)
@@ -1096,12 +1092,10 @@ public:
 		m_rgbBackground[0] = rgbBackground[0];
 		m_rgbBackground[1] = rgbBackground[1];
 		m_rgbBackground[2] = rgbBackground[2];
-		
+
 		setSharedParam(1, eGUIHelperSetRgbBackground);
 		workerThreadWait();
-		
 	}
-
 
 	int m_graphicsInstanceChangeScaling;
 	double m_baseScaling[3];
@@ -1153,8 +1147,8 @@ public:
 	{
 		m_childGuiHelper->setUpAxis(axis);
 	}
-	
-	bool  m_cameraUpdated;
+
+	bool m_cameraUpdated;
 	float m_resetCameraCamDist;
 	float m_resetCameraYaw;
 	float m_resetCameraPitch;
@@ -1162,16 +1156,16 @@ public:
 	float m_resetCameraCamPosY;
 	float m_resetCameraCamPosZ;
 
-	virtual void resetCamera(float camDist, float yaw, float pitch, float camPosX, float camPosY, float camPosZ)
+	void resetCamera(const CameraResetInfo& info) override
 	{
 		m_csGUI->lock();
 		m_cameraUpdated = true;
-		m_resetCameraCamDist = camDist;
-		m_resetCameraYaw = yaw;
-		m_resetCameraPitch = pitch;
-		m_resetCameraCamPosX = camPosX;
-		m_resetCameraCamPosY = camPosY;
-		m_resetCameraCamPosZ = camPosZ;
+		m_resetCameraCamDist = info.camDist;
+		m_resetCameraYaw = info.yaw;
+		m_resetCameraPitch = info.pitch;
+		m_resetCameraCamPosX = info.camPosX;
+		m_resetCameraCamPosY = info.camPosY;
+		m_resetCameraCamPosZ = info.camPosZ;
 
 #ifdef SYNC_CAMERA_USING_GUI_CS
 		m_csGUI->unlock();
@@ -1179,7 +1173,7 @@ public:
 		setSharedParam(1, eGUIHelperResetCamera);
 		workerThreadWait();
 		m_childGuiHelper->resetCamera(camDist, yaw, pitch, camPosX, camPosY, camPosZ);
-#endif //SYNC_CAMERA_USING_GUI_CS
+#endif  //SYNC_CAMERA_USING_GUI_CS
 	}
 
 	virtual bool getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float camTarget[3]) const
@@ -1363,7 +1357,7 @@ public:
 		m_tmpParam.m_itemUniqueId = m_uidGenerator++;
 
 		m_cs->lock();
-	  setSharedParam(1, eGUIUserDebugAddParameter);
+		setSharedParam(1, eGUIUserDebugAddParameter);
 		m_userDebugParamUid = -1;
 		workerThreadWait();
 
@@ -1395,20 +1389,20 @@ public:
 		m_tmpLine.m_replaceItemUid = replaceItemUid;
 
 		//don't block when replacing an item
-		if (replaceItemUid>=0 && replaceItemUid<m_userDebugLines.size())
+		if (replaceItemUid >= 0 && replaceItemUid < m_userDebugLines.size())
 		{
 			//find the right slot
 
-			int slot=-1;
-			for (int i=0;i<m_userDebugLines.size();i++)
+			int slot = -1;
+			for (int i = 0; i < m_userDebugLines.size(); i++)
 			{
 				if (replaceItemUid == m_userDebugLines[i].m_itemUniqueId)
 				{
-						slot = i;
+					slot = i;
 				}
 			}
 
-			if (slot>=0)
+			if (slot >= 0)
 			{
 				m_userDebugLines[slot] = m_tmpLine;
 			}
@@ -1416,7 +1410,6 @@ public:
 		}
 		else
 		{
-
 			m_cs->lock();
 			setSharedParam(1, eGUIUserDebugAddLine);
 			m_resultDebugLineUid = -1;
@@ -1447,9 +1440,6 @@ public:
 		setSharedParam(1, eGUIUserDebugRemoveAllParameters);
 		workerThreadWait();
 	}
-
-	
-
 
 	const char* m_mp4FileName;
 	virtual void dumpFramesToVideo(const char* mp4FileName)
@@ -1509,13 +1499,16 @@ public:
 		m_physicsServer.replayFromLogFile("BulletPhysicsCommandLog.bin");
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 5;
-		float pitch = -35;
-		float yaw = 50;
-		float targetPos[3] = {0, 0, 0};  //-3,2.8,-2.5};
-		m_multiThreadedHelper->m_childGuiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 5;
+		info.pitch = -35;
+		info.yaw = 50;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;  //-3,2.8,-2.5};
+		return info;
 	}
 
 	virtual bool wantsTermination();
@@ -1663,7 +1656,7 @@ public:
 				b3KeyboardEvent ev;
 				ev.m_keyCode = key;
 				ev.m_keyState = eButtonIsDown + eButtonTriggered;
-				
+
 				if (keyIndex >= 0)
 				{
 					if (0 == (m_args[0].m_keyboardEvents[keyIndex].m_keyState & eButtonIsDown))
@@ -1675,7 +1668,6 @@ public:
 				{
 					m_args[0].m_keyboardEvents.push_back(ev);
 				}
-				
 			}
 			else
 			{
@@ -1690,7 +1682,6 @@ public:
 				{
 					m_args[0].m_keyboardEvents.push_back(ev);
 				}
-				
 			}
 			m_args[0].m_csGUI->unlock();
 		}
@@ -1929,10 +1920,10 @@ void PhysicsServerExample::initPhysics()
 		}
 	}
 	m_args[0].m_cs->lock();
-  m_args[0].m_csGUI->lock();
+	m_args[0].m_csGUI->lock();
 	m_args[0].m_cs->setSharedParam(1, eGUIHelperIdle);
-  m_args[0].m_csGUI->unlock();
-  m_args[0].m_cs->unlock();
+	m_args[0].m_csGUI->unlock();
+	m_args[0].m_cs->unlock();
 	m_args[0].m_cs2->lock();
 
 	{
@@ -2029,13 +2020,14 @@ void PhysicsServerExample::updateGraphics()
 	if (m_multiThreadedHelper->m_cameraUpdated)
 	{
 		m_multiThreadedHelper->m_cameraUpdated = false;
-		m_multiThreadedHelper->m_childGuiHelper->resetCamera(
-			m_multiThreadedHelper->m_resetCameraCamDist,
-			m_multiThreadedHelper->m_resetCameraYaw,
-			m_multiThreadedHelper->m_resetCameraPitch,
-			m_multiThreadedHelper->m_resetCameraCamPosX,
-			m_multiThreadedHelper->m_resetCameraCamPosY,
-			m_multiThreadedHelper->m_resetCameraCamPosZ);
+		CameraResetInfo info;
+		info.camDist = m_multiThreadedHelper->m_resetCameraCamDist;
+		info.yaw = m_multiThreadedHelper->m_resetCameraYaw;
+		info.pitch = m_multiThreadedHelper->m_resetCameraPitch;
+		info.camPosX = m_multiThreadedHelper->m_resetCameraCamPosX;
+		info.camPosY = m_multiThreadedHelper->m_resetCameraCamPosY;
+		info.camPosZ = m_multiThreadedHelper->m_resetCameraCamPosZ;
+		m_multiThreadedHelper->m_childGuiHelper->resetCamera(info);
 	}
 	m_multiThreadedHelper->getCriticalSectionGUI()->unlock();
 #endif
@@ -2105,13 +2097,11 @@ void PhysicsServerExample::updateGraphics()
 				m_multiThreadedHelper->m_primitiveType,
 				m_multiThreadedHelper->m_textureId);
 
-       m_multiThreadedHelper->getCriticalSectionGUI()->lock();
-       m_multiThreadedHelper->m_shapeIndex = shapeIndex;
-       m_multiThreadedHelper->getCriticalSectionGUI()->unlock();
+			m_multiThreadedHelper->getCriticalSectionGUI()->lock();
+			m_multiThreadedHelper->m_shapeIndex = shapeIndex;
+			m_multiThreadedHelper->getCriticalSectionGUI()->unlock();
 
-
-      m_multiThreadedHelper->mainThreadRelease();
-
+			m_multiThreadedHelper->mainThreadRelease();
 
 			break;
 		}
@@ -2224,7 +2214,6 @@ void PhysicsServerExample::updateGraphics()
 			}
 			break;
 		}
-
 
 		case eGUIHelperSetVisualizerFlagCheckRenderedFrame:
 		{
@@ -2497,13 +2486,14 @@ void PhysicsServerExample::updateGraphics()
 		}
 		case eGUIHelperResetCamera:
 		{
-			m_multiThreadedHelper->m_childGuiHelper->resetCamera(
-				m_multiThreadedHelper->m_resetCameraCamDist,
-				m_multiThreadedHelper->m_resetCameraYaw,
-				m_multiThreadedHelper->m_resetCameraPitch,
-				m_multiThreadedHelper->m_resetCameraCamPosX,
-				m_multiThreadedHelper->m_resetCameraCamPosY,
-				m_multiThreadedHelper->m_resetCameraCamPosZ);
+			CameraResetInfo info;
+			info.camDist = m_multiThreadedHelper->m_resetCameraCamDist;
+			info.yaw = m_multiThreadedHelper->m_resetCameraYaw;
+			info.pitch = m_multiThreadedHelper->m_resetCameraPitch;
+			info.camPosX = m_multiThreadedHelper->m_resetCameraCamPosX;
+			info.camPosY = m_multiThreadedHelper->m_resetCameraCamPosY;
+			info.camPosZ = m_multiThreadedHelper->m_resetCameraCamPosZ;
+			m_multiThreadedHelper->m_childGuiHelper->resetCamera(info);
 			m_multiThreadedHelper->mainThreadRelease();
 			break;
 		}
@@ -2549,7 +2539,7 @@ void PhysicsServerExample::updateGraphics()
 			UserDebugParameter* param = new UserDebugParameter(m_multiThreadedHelper->m_tmpParam);
 			m_multiThreadedHelper->m_userDebugParams.push_back(param);
 
-			if (param->m_rangeMin<= param->m_rangeMax)
+			if (param->m_rangeMin <= param->m_rangeMax)
 			{
 				SliderParams slider(param->m_text, &param->m_value);
 				slider.m_minVal = param->m_rangeMin;
@@ -2566,7 +2556,7 @@ void PhysicsServerExample::updateGraphics()
 				button.m_callback = UserButtonToggle;
 				button.m_userPointer = param;
 				button.m_initialState = false;
-				
+
 				//create a button
 				if (m_multiThreadedHelper->m_childGuiHelper->getParameterInterface())
 					m_multiThreadedHelper->m_childGuiHelper->getParameterInterface()->registerButtonParameter(button);
@@ -2704,7 +2694,6 @@ void PhysicsServerExample::stepSimulation(float deltaTime)
 		}
 	}
 	updateGraphics();
-
 
 	{
 		if (m_multiThreadedHelper->m_childGuiHelper->getRenderInterface())

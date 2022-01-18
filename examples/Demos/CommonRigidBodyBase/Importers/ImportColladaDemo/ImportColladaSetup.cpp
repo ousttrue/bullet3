@@ -19,6 +19,7 @@ subject to the following restrictions:
 #include <vector>
 #include <GLInstancingRenderer.h>
 #include <GLInstanceGraphicsShape.h>
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "LoadMeshFromCollada.h"
 #include "Bullet3Common/b3FileUtils.h"
@@ -33,13 +34,16 @@ public:
 	virtual ~ImportColladaSetup();
 
 	virtual void initPhysics();
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 16;
-		float pitch = -28;
-		float yaw = -140;
-		float targetPos[3] = {-4, -3, -3};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 16;
+		info.pitch = -28;
+		info.yaw = -140;
+		info.camPosX = -4;
+		info.camPosY = -3;
+		info.camPosZ = -3;
+		return info;
 	}
 };
 
@@ -79,7 +83,7 @@ void ImportColladaSetup::initPhysics()
 
 	char relativeFileName[1024];
 
-	if (!b3ResourcePath::findResourcePath(fileName, relativeFileName, 1024,0))
+	if (!b3ResourcePath::findResourcePath(fileName, relativeFileName, 1024, 0))
 		return;
 
 	btVector3 shift(0, 0, 0);
@@ -94,7 +98,7 @@ void ImportColladaSetup::initPhysics()
 		btTransform upAxisTrans;
 		upAxisTrans.setIdentity();
 
-		btVector4 color(0, 0, 1,1);
+		btVector4 color(0, 0, 1, 1);
 
 #ifdef COMPARE_WITH_ASSIMP
 		static int useAssimp = 0;
@@ -120,7 +124,7 @@ void ImportColladaSetup::initPhysics()
 			fileIndex = 0;
 		}
 		b3BulletDefaultFileIO fileIO;
-		LoadMeshFromCollada(relativeFileName, visualShapes, visualShapeInstances, upAxisTrans, unitMeterScaling, upAxis,&fileIO);
+		LoadMeshFromCollada(relativeFileName, visualShapes, visualShapeInstances, upAxisTrans, unitMeterScaling, upAxis, &fileIO);
 #endif  // COMPARE_WITH_ASSIMP
 
 		//at the moment our graphics engine requires instances that share the same visual shape to be added right after registering the shape

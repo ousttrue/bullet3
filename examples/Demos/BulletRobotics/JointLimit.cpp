@@ -14,6 +14,7 @@
 
 #include "../RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "../Utils/b3Clock.h"
+#include "CommonCameraInterface.h"
 
 class JointLimit : public CommonExampleInterface
 {
@@ -92,14 +93,16 @@ public:
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 3;
-		float pitch = -10;
-		float yaw = 18;
-		float targetPos[3] = {0.6, 0.8, 0.3};
-
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 3;
+		info.pitch = -10;
+		info.yaw = 18;
+		info.camPosX = 0.6;
+		info.camPosY = 0.8;
+		info.camPosZ = 0.3;
+		return info;
 	}
 };
 

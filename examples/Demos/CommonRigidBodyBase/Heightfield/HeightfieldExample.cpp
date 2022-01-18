@@ -14,8 +14,9 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "HeightfieldExample.h"		// always include our own header first!
+#include "HeightfieldExample.h"  // always include our own header first!
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include <CommonRigidBodyBase.h>
@@ -27,7 +28,7 @@ subject to the following restrictions:
 #include <stb_image.h>
 
 // constants -------------------------------------------------------------------
-static const btScalar s_gravity = 9.8;		// 9.8 m/s^2
+static const btScalar s_gravity = 9.8;  // 9.8 m/s^2
 
 static int s_gridSize = 16 + 1;  // must be (2^N) + 1
 static btScalar s_gridSpacing = 0.5;
@@ -41,18 +42,16 @@ static btScalar s_gridHeightScale = 0.02;
 static const btScalar s_deltaPhase = 0.25 * 2.0 * SIMD_PI;
 
 // what type of terrain is generated?
-enum eTerrainModel {
-	eRadial = 0,	// deterministic
-	eFractal = 1,	// random
-	eCSVFile = 2,//csv file used in DeepLoco for example
-	eImageFile = 3,//terrain from png/jpg files, asset from https://www.beamng.com/threads/tutorial-adding-heightmap-roads-using-blender.16356/
+enum eTerrainModel
+{
+	eRadial = 0,     // deterministic
+	eFractal = 1,    // random
+	eCSVFile = 2,    //csv file used in DeepLoco for example
+	eImageFile = 3,  //terrain from png/jpg files, asset from https://www.beamng.com/threads/tutorial-adding-heightmap-roads-using-blender.16356/
 
 };
 
-
 typedef unsigned char byte_t;
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -62,41 +61,33 @@ typedef unsigned char byte_t;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-static const char *
-getTerrainTypeName
-(
-	eTerrainModel model
-)
+static const char*
+getTerrainTypeName(
+	eTerrainModel model)
 {
-	switch (model) {
-	case eRadial:
-		return "Radial";
+	switch (model)
+	{
+		case eRadial:
+			return "Radial";
 
-	case eFractal:
-		return "Fractal";
-    case eCSVFile:
-        return "DeepLocoCSV";
-    case eImageFile:
-        return "Image";
-	default:
-		btAssert(!"bad terrain model type");
+		case eFractal:
+			return "Fractal";
+		case eCSVFile:
+			return "DeepLocoCSV";
+		case eImageFile:
+			return "Image";
+		default:
+			btAssert(!"bad terrain model type");
 	}
 
 	return NULL;
 }
 
-
-
-
-
-
 static btVector3
-getUpVector
-(
+getUpVector(
 	int upAxis,
 	btScalar regularValue,
-	btScalar upValue
-)
+	btScalar upValue)
 {
 	btAssert(upAxis >= 0 && upAxis <= 2 && "bad up axis");
 
@@ -106,84 +97,74 @@ getUpVector
 	return v;
 }
 
-
-
 // TODO: it would probably cleaner to have a struct per data type, so
 // 	you could lookup byte sizes, conversion functions, etc.
-static int getByteSize
-(
-	PHY_ScalarType type
-)
+static int getByteSize(
+	PHY_ScalarType type)
 {
 	int size = 0;
 
-	switch (type) {
-	case PHY_FLOAT:
-		size = sizeof(btScalar);
-		break;
+	switch (type)
+	{
+		case PHY_FLOAT:
+			size = sizeof(btScalar);
+			break;
 
-	case PHY_UCHAR:
-		size = sizeof(unsigned char);
-		break;
+		case PHY_UCHAR:
+			size = sizeof(unsigned char);
+			break;
 
-	case PHY_SHORT:
-		size = sizeof(short);
-		break;
+		case PHY_SHORT:
+			size = sizeof(short);
+			break;
 
-	default:
-		btAssert(!"Bad heightfield data type");
+		default:
+			btAssert(!"Bad heightfield data type");
 	}
 
 	return size;
 }
 
-
-
 static btScalar
-convertToFloat
-(
-	const byte_t * p,
-	PHY_ScalarType type
-)
+convertToFloat(
+	const byte_t* p,
+	PHY_ScalarType type)
 {
 	btAssert(p);
 
-	switch (type) {
-	case PHY_FLOAT:
+	switch (type)
 	{
-		btScalar * pf = (btScalar *)p;
-		return *pf;
-	}
+		case PHY_FLOAT:
+		{
+			btScalar* pf = (btScalar*)p;
+			return *pf;
+		}
 
-	case PHY_UCHAR:
-	{
-		unsigned char * pu = (unsigned char *)p;
-		return ((*pu) * s_gridHeightScale);
-	}
+		case PHY_UCHAR:
+		{
+			unsigned char* pu = (unsigned char*)p;
+			return ((*pu) * s_gridHeightScale);
+		}
 
-	case PHY_SHORT:
-	{
-		short * ps = (short *)p;
-		return ((*ps) * s_gridHeightScale);
-	}
+		case PHY_SHORT:
+		{
+			short* ps = (short*)p;
+			return ((*ps) * s_gridHeightScale);
+		}
 
-	default:
-		btAssert(!"bad type");
+		default:
+			btAssert(!"bad type");
 	}
 
 	return 0;
 }
 
-
-
 static btScalar
-getGridHeight
-(
-	byte_t * grid,
+getGridHeight(
+	byte_t* grid,
 	int i,
 	int j,
-	PHY_ScalarType type
-)
+	PHY_ScalarType type)
 {
 	btAssert(grid);
 	btAssert(i >= 0 && i < s_gridSize);
@@ -195,61 +176,54 @@ getGridHeight
 	int idx = (j * s_gridSize) + i;
 	long offset = ((long)bpe) * idx;
 
-	byte_t * p = grid + offset;
+	byte_t* p = grid + offset;
 
 	return convertToFloat(p, type);
 }
 
-
-
 static void
-convertFromFloat
-(
-	byte_t * p,
+convertFromFloat(
+	byte_t* p,
 	btScalar value,
-	PHY_ScalarType type
-)
+	PHY_ScalarType type)
 {
 	btAssert(p && "null");
 
-	switch (type) {
-	case PHY_FLOAT:
+	switch (type)
 	{
-		btScalar * pf = (btScalar *)p;
-		*pf = value;
-	}
-	break;
+		case PHY_FLOAT:
+		{
+			btScalar* pf = (btScalar*)p;
+			*pf = value;
+		}
+		break;
 
-	case PHY_UCHAR:
-	{
-		unsigned char * pu = (unsigned char *)p;
-		*pu = (unsigned char)(value / s_gridHeightScale);
-	}
-	break;
+		case PHY_UCHAR:
+		{
+			unsigned char* pu = (unsigned char*)p;
+			*pu = (unsigned char)(value / s_gridHeightScale);
+		}
+		break;
 
-	case PHY_SHORT:
-	{
-		short * ps = (short *)p;
-		*ps = (short)(value / s_gridHeightScale);
-	}
-	break;
+		case PHY_SHORT:
+		{
+			short* ps = (short*)p;
+			*ps = (short)(value / s_gridHeightScale);
+		}
+		break;
 
-	default:
-		btAssert(!"bad type");
+		default:
+			btAssert(!"bad type");
 	}
 }
 
-
-
 // creates a radially-varying heightfield
 static void
-setRadial
-(
-	byte_t * grid,
+setRadial(
+	byte_t* grid,
 	int bytesPerElement,
 	PHY_ScalarType type,
-	btScalar phase = 0.0
-)
+	btScalar phase = 0.0)
 {
 	btAssert(grid);
 	btAssert(bytesPerElement > 0);
@@ -268,11 +242,13 @@ setRadial
 
 	// center of grid
 	btScalar cx = 0.5 * s_gridSize * s_gridSpacing;
-	btScalar cy = cx;		// assume square grid
-	byte_t * p = grid;
-	for (int i = 0; i < s_gridSize; ++i) {
+	btScalar cy = cx;  // assume square grid
+	byte_t* p = grid;
+	for (int i = 0; i < s_gridSize; ++i)
+	{
 		float x = i * s_gridSpacing;
-		for (int j = 0; j < s_gridSize; ++j) {
+		for (int j = 0; j < s_gridSize; ++j)
+		{
 			float y = j * s_gridSpacing;
 
 			float dx = x - cx;
@@ -281,14 +257,17 @@ setRadial
 			float r = sqrt((dx * dx) + (dy * dy));
 
 			float z = period;
-			if (r < min_r) {
+			if (r < min_r)
+			{
 				r = min_r;
 			}
 			z = (1.0 / r) * sin(period * r + phase);
-			if (z > period) {
+			if (z > period)
+			{
 				z = period;
 			}
-			else if (z < -period) {
+			else if (z < -period)
+			{
 				z = -period;
 			}
 			z = floor + magnitude * z;
@@ -299,17 +278,12 @@ setRadial
 	}
 }
 
-
-
 static float
-randomHeight
-(
-	int step
-)
+randomHeight(
+	int step)
 {
 	return (0.33 * s_gridSpacing * s_gridSize * step * (rand() - (0.5 * RAND_MAX))) / (1.0 * RAND_MAX * s_gridSize);
 }
-
 
 #if 0
 static void
@@ -337,32 +311,26 @@ dumpGrid
 }
 #endif
 
-
 static void
-updateHeight
-(
-	byte_t * p,
+updateHeight(
+	byte_t* p,
 	btScalar new_val,
-	PHY_ScalarType type
-)
+	PHY_ScalarType type)
 {
 	btScalar old_val = convertToFloat(p, type);
-	if (!old_val) {
+	if (!old_val)
+	{
 		convertFromFloat(p, new_val, type);
 	}
 }
 
-
-
 // creates a random, fractal heightfield
 static void
-setFractal
-(
-	byte_t * grid,
+setFractal(
+	byte_t* grid,
 	int bytesPerElement,
 	PHY_ScalarType type,
-	int step
-)
+	int step)
 {
 	btAssert(grid);
 	btAssert(bytesPerElement > 0);
@@ -374,7 +342,8 @@ setFractal
 	//	dumpGrid(grid, bytesPerElement, type, step + 1);
 
 	// special case: starting (must set four corners)
-	if (s_gridSize - 1 == step) {
+	if (s_gridSize - 1 == step)
+	{
 		// pick a non-zero (possibly negative) base elevation for testing
 		btScalar base = randomHeight(step / 2);
 
@@ -409,7 +378,8 @@ setFractal
 	//	dumpGrid(grid, bytesPerElement, type, step + 1);
 
 	// terminate?
-	if (newStep < 2) {
+	if (newStep < 2)
+	{
 		return;
 	}
 
@@ -420,287 +390,289 @@ setFractal
 	setFractal(grid + ((newStep * s_gridSize) + newStep) * bytesPerElement, bytesPerElement, type, newStep);
 }
 
+#define MYLINELENGTH 16 * 32768
 
-#define MYLINELENGTH 16*32768
-
-static byte_t *
-getRawHeightfieldData
-(
+static byte_t*
+getRawHeightfieldData(
 	eTerrainModel model,
 	PHY_ScalarType type,
 	btScalar& minHeight,
-	btScalar& maxHeight
-)
+	btScalar& maxHeight)
 {
+	if (model == eImageFile)
+	{
+		b3BulletDefaultFileIO fileIO;
+		char relativeFileName[1024];
+		int found = fileIO.findFile("heightmaps/wm_height_out.png", relativeFileName, 1024);
 
-    if (model==eImageFile)
-    {
+		b3AlignedObjectArray<char> buffer;
+		buffer.reserve(1024);
+		int fileId = fileIO.fileOpen(relativeFileName, "rb");
+		if (fileId >= 0)
+		{
+			int size = fileIO.getFileSize(fileId);
+			if (size > 0)
+			{
+				buffer.resize(size);
+				int actual = fileIO.fileRead(fileId, &buffer[0], size);
+				if (actual != size)
+				{
+					b3Warning("STL filesize mismatch!\n");
+					buffer.resize(0);
+				}
+			}
+			fileIO.fileClose(fileId);
+		}
 
-        b3BulletDefaultFileIO fileIO;
-        char relativeFileName[1024];
-        int found = fileIO.findFile("heightmaps/wm_height_out.png", relativeFileName, 1024);
-        
+		if (buffer.size())
+		{
+			int width, height, n;
 
-        b3AlignedObjectArray<char> buffer;
-        buffer.reserve(1024);
-        int fileId = fileIO.fileOpen(relativeFileName,"rb");
-        if (fileId>=0)
-        {
-            int size = fileIO.getFileSize(fileId);
-            if (size>0)
-            {
-                buffer.resize(size);
-                int actual = fileIO.fileRead(fileId,&buffer[0],size);
-                if (actual != size)
-                {
-                    b3Warning("STL filesize mismatch!\n");
-                    buffer.resize(0);
-                }
-            }
-            fileIO.fileClose(fileId);
-        }
+			unsigned char* image = stbi_load_from_memory((const unsigned char*)&buffer[0], buffer.size(), &width, &height, &n, 3);
+			if (image)
+			{
+				printf("width=%d, height=%d at %d channels\n", width, height, n);
+				s_gridSize = width;
+				s_gridSpacing = 0.2;
+				s_gridHeightScale = 0.2;
+				fileIO.fileClose(fileId);
+				long nElements = ((long)s_gridSize) * s_gridSize;
+				//	std::cerr << "  nElements = " << nElements << "\n";
 
-        if (buffer.size())
-        {
-            int width, height,n;
+				int bytesPerElement = getByteSize(type);
+				//	std::cerr << "  bytesPerElement = " << bytesPerElement << "\n";
+				btAssert(bytesPerElement > 0 && "bad bytes per element");
 
-            unsigned char* image = stbi_load_from_memory((const unsigned char*)&buffer[0], buffer.size(), &width, &height, &n, 3);
-            if (image)
-            {
-                printf("width=%d, height=%d at %d channels\n", width,height, n);
-                s_gridSize = width;
-                s_gridSpacing = 0.2;
-                s_gridHeightScale = 0.2;
-                fileIO.fileClose(fileId);
-                long nElements = ((long)s_gridSize) * s_gridSize;
-                //	std::cerr << "  nElements = " << nElements << "\n";
+				long nBytes = nElements * bytesPerElement;
+				//	std::cerr << "  nBytes = " << nBytes << "\n";
+				byte_t* raw = new byte_t[nBytes];
+				btAssert(raw && "out of memory");
 
-                int bytesPerElement = getByteSize(type);
-                //	std::cerr << "  bytesPerElement = " << bytesPerElement << "\n";
-                btAssert(bytesPerElement > 0 && "bad bytes per element");
+				byte_t* p = raw;
 
-                long nBytes = nElements * bytesPerElement;
-                //	std::cerr << "  nBytes = " << nBytes << "\n";
-                byte_t * raw = new byte_t[nBytes];
-                btAssert(raw && "out of memory");
-
-                byte_t * p = raw;
-                
 				for (int j = 0; j < width; ++j)
-                {
-                    
+				{
 					for (int i = 0; i < width; ++i)
-                    {
+					{
 						float x = i * s_gridSpacing;
-                        float y = j * s_gridSpacing;
+						float y = j * s_gridSpacing;
 						float heightScaling = (14. / 256.);
-						float z = double(image[(width - 1 - i) * 3 + width*j * 3]) * heightScaling;
-                        convertFromFloat(p, z, type);
+						float z = double(image[(width - 1 - i) * 3 + width * j * 3]) * heightScaling;
+						convertFromFloat(p, z, type);
 						// update min/max
-						if (!i && !j) {
+						if (!i && !j)
+						{
 							minHeight = z;
 							maxHeight = z;
 						}
-						else {
-							if (z < minHeight) {
+						else
+						{
+							if (z < minHeight)
+							{
 								minHeight = z;
 							}
-							if (z > maxHeight) {
+							if (z > maxHeight)
+							{
 								maxHeight = z;
 							}
 						}
 
-                        p += bytesPerElement;
-                    }
-                }
-                return raw;
+						p += bytesPerElement;
+					}
+				}
+				return raw;
+			}
+		}
+	}
 
-            }
+	if (model == eCSVFile)
+	{
+		{
+			b3BulletDefaultFileIO fileIO;
+			char relativePath[1024];
+			int found = fileIO.findFile("heightmaps/ground0.txt", relativePath, 1024);
+			char lineBuffer[MYLINELENGTH];
+			int slot = fileIO.fileOpen(relativePath, "r");
+			int rows = 0;
+			int cols = 0;
 
-        }
+			btAlignedObjectArray<double> allValues;
+			if (slot >= 0)
+			{
+				char* lineChar;
+				while (lineChar = fileIO.readLine(slot, lineBuffer, MYLINELENGTH))
+				{
+					rows = 0;
+					char** values = urdfStrSplit(lineChar, ",");
+					if (values)
+					{
+						int index = 0;
+						char* value;
+						while (value = values[index++])
+						{
+							std::string strval(value);
+							double v;
+							if (sscanf(value, "%lf", &v) == 1)
+							{
+								//printf("strlen = %d\n", strval.length());
+								//printf("value[%d,%d]=%s or (%f)", cols,rows,value, v);
+								allValues.push_back(v);
+								rows++;
+							}
+						}
+					}
+					cols++;
+				}
+				printf("done, rows=%d, cols=%d\n", rows, cols);
+				int width = rows - 1;
+				s_gridSize = rows;
+				s_gridSpacing = 0.2;
+				s_gridHeightScale = 0.2;
+				fileIO.fileClose(slot);
+				long nElements = ((long)s_gridSize) * s_gridSize;
+				//	std::cerr << "  nElements = " << nElements << "\n";
 
+				int bytesPerElement = getByteSize(type);
+				//	std::cerr << "  bytesPerElement = " << bytesPerElement << "\n";
+				btAssert(bytesPerElement > 0 && "bad bytes per element");
 
+				long nBytes = nElements * bytesPerElement;
+				//	std::cerr << "  nBytes = " << nBytes << "\n";
+				byte_t* raw = new byte_t[nBytes];
+				btAssert(raw && "out of memory");
 
-
-
-    }
-
-    if (model==eCSVFile)
-    {
-        {
-            b3BulletDefaultFileIO fileIO;
-            char relativePath[1024];
-            int found = fileIO.findFile("heightmaps/ground0.txt", relativePath, 1024);
-            char lineBuffer[MYLINELENGTH];
-            int slot = fileIO.fileOpen(relativePath, "r");
-            int rows = 0;
-            int cols=0;
-
-            btAlignedObjectArray<double> allValues;
-            if (slot>=0)
-            {
-                char* lineChar;
-                while (lineChar = fileIO.readLine(slot, lineBuffer, MYLINELENGTH))
-                {
-                    rows=0;
-                    char** values = urdfStrSplit(lineChar, ",");
-                    if (values)
-                    {
-                        int index = 0;
-                        char* value;
-                        while (value = values[index++])
-                        {
-                            std::string strval(value);
-                            double v;
-                            if(sscanf(value, "%lf", &v) == 1)
-                            {
-                                //printf("strlen = %d\n", strval.length());
-                                //printf("value[%d,%d]=%s or (%f)", cols,rows,value, v);
-                                allValues.push_back(v);
-                                rows++;
-                            }
-                        }
-                    }
-                    cols++;
-
-                }
-                printf("done, rows=%d, cols=%d\n", rows, cols);
-                int width = rows-1;
-                s_gridSize = rows;
-                s_gridSpacing = 0.2;
-                s_gridHeightScale = 0.2;
-                fileIO.fileClose(slot);
-                long nElements = ((long)s_gridSize) * s_gridSize;
-                //	std::cerr << "  nElements = " << nElements << "\n";
-
-                int bytesPerElement = getByteSize(type);
-                //	std::cerr << "  bytesPerElement = " << bytesPerElement << "\n";
-                btAssert(bytesPerElement > 0 && "bad bytes per element");
-
-                long nBytes = nElements * bytesPerElement;
-                //	std::cerr << "  nBytes = " << nBytes << "\n";
-                byte_t * raw = new byte_t[nBytes];
-                btAssert(raw && "out of memory");
-
-                byte_t * p = raw;
-                for (int i = 0; i < width; ++i)
-                {
-                    float x = i * s_gridSpacing;
-                    for (int j = 0; j < width; ++j)
-                    {
-                        float y = j * s_gridSpacing;
-                        float z = allValues[i+width*j];
-                        convertFromFloat(p, z, type);
+				byte_t* p = raw;
+				for (int i = 0; i < width; ++i)
+				{
+					float x = i * s_gridSpacing;
+					for (int j = 0; j < width; ++j)
+					{
+						float y = j * s_gridSpacing;
+						float z = allValues[i + width * j];
+						convertFromFloat(p, z, type);
 						// update min/max
-						if (!i && !j) {
+						if (!i && !j)
+						{
 							minHeight = z;
 							maxHeight = z;
 						}
-						else {
-							if (z < minHeight) {
+						else
+						{
+							if (z < minHeight)
+							{
 								minHeight = z;
 							}
-							if (z > maxHeight) {
+							if (z > maxHeight)
+							{
 								maxHeight = z;
 							}
 						}
-                        p += bytesPerElement;
-                    }
-                }
-                return raw;
-            }
-            printf("found=%d",found);
-        }
-    } else
-    {
-        if (model==eRadial)
-        {
-            s_gridSize = 16 + 1;  // must be (2^N) + 1
-            s_gridSpacing = 0.5;
-            s_gridHeightScale = 0.02;
-        } else
-        {
-            s_gridSize = 256 + 1;  // must be (2^N) + 1
-            s_gridSpacing = 0.5;
-            s_gridHeightScale = 0.02;
-        }
-        //	std::cerr << "\nRegenerating terrain\n";
-        //	std::cerr << "  model = " << model << "\n";
-        //	std::cerr << "  type = " << type << "\n";
+						p += bytesPerElement;
+					}
+				}
+				return raw;
+			}
+			printf("found=%d", found);
+		}
+	}
+	else
+	{
+		if (model == eRadial)
+		{
+			s_gridSize = 16 + 1;  // must be (2^N) + 1
+			s_gridSpacing = 0.5;
+			s_gridHeightScale = 0.02;
+		}
+		else
+		{
+			s_gridSize = 256 + 1;  // must be (2^N) + 1
+			s_gridSpacing = 0.5;
+			s_gridHeightScale = 0.02;
+		}
+		//	std::cerr << "\nRegenerating terrain\n";
+		//	std::cerr << "  model = " << model << "\n";
+		//	std::cerr << "  type = " << type << "\n";
 
-        long nElements = ((long)s_gridSize) * s_gridSize;
-        //	std::cerr << "  nElements = " << nElements << "\n";
+		long nElements = ((long)s_gridSize) * s_gridSize;
+		//	std::cerr << "  nElements = " << nElements << "\n";
 
-        int bytesPerElement = getByteSize(type);
-        //	std::cerr << "  bytesPerElement = " << bytesPerElement << "\n";
-        btAssert(bytesPerElement > 0 && "bad bytes per element");
+		int bytesPerElement = getByteSize(type);
+		//	std::cerr << "  bytesPerElement = " << bytesPerElement << "\n";
+		btAssert(bytesPerElement > 0 && "bad bytes per element");
 
-        long nBytes = nElements * bytesPerElement;
-        //	std::cerr << "  nBytes = " << nBytes << "\n";
-        byte_t * raw = new byte_t[nBytes];
-        btAssert(raw && "out of memory");
+		long nBytes = nElements * bytesPerElement;
+		//	std::cerr << "  nBytes = " << nBytes << "\n";
+		byte_t* raw = new byte_t[nBytes];
+		btAssert(raw && "out of memory");
 
-        // reseed randomization every 30 seconds
-        //	srand(time(NULL) / 30);
+		// reseed randomization every 30 seconds
+		//	srand(time(NULL) / 30);
 
-        // populate based on model
-        switch (model) {
-        case eRadial:
-            setRadial(raw, bytesPerElement, type);
-            break;
+		// populate based on model
+		switch (model)
+		{
+			case eRadial:
+				setRadial(raw, bytesPerElement, type);
+				break;
 
-        case eFractal:
-            for (int i = 0; i < nBytes; i++)
-            {
-                raw[i] = 0;
-            }
-            setFractal(raw, bytesPerElement, type, s_gridSize - 1);
-            break;
+			case eFractal:
+				for (int i = 0; i < nBytes; i++)
+				{
+					raw[i] = 0;
+				}
+				setFractal(raw, bytesPerElement, type, s_gridSize - 1);
+				break;
 
-        default:
-            btAssert(!"bad model type");
-        }
+			default:
+				btAssert(!"bad model type");
+		}
 
-        //		std::cerr << "final grid:\n";
-        //dumpGrid(raw, bytesPerElement, type, s_gridSize - 1);
+		//		std::cerr << "final grid:\n";
+		//dumpGrid(raw, bytesPerElement, type, s_gridSize - 1);
 
-        // find min/max
-        for (int i = 0; i < s_gridSize; ++i) {
-            for (int j = 0; j < s_gridSize; ++j) {
-                btScalar z = getGridHeight(raw, i, j, type);
-                //			std::cerr << "i=" << i << ", j=" << j << ": z=" << z << "\n";
+		// find min/max
+		for (int i = 0; i < s_gridSize; ++i)
+		{
+			for (int j = 0; j < s_gridSize; ++j)
+			{
+				btScalar z = getGridHeight(raw, i, j, type);
+				//			std::cerr << "i=" << i << ", j=" << j << ": z=" << z << "\n";
 
-                // update min/max
-                if (!i && !j) {
-                    minHeight = z;
-                    maxHeight = z;
-                }
-                else {
-                    if (z < minHeight) {
-                        minHeight = z;
-                    }
-                    if (z > maxHeight) {
-                        maxHeight = z;
-                    }
-                }
-            }
-        }
+				// update min/max
+				if (!i && !j)
+				{
+					minHeight = z;
+					maxHeight = z;
+				}
+				else
+				{
+					if (z < minHeight)
+					{
+						minHeight = z;
+					}
+					if (z > maxHeight)
+					{
+						maxHeight = z;
+					}
+				}
+			}
+		}
 
-        if (maxHeight < -minHeight) {
-            maxHeight = -minHeight;
-        }
-        if (minHeight > -maxHeight) {
-            minHeight = -maxHeight;
-        }
+		if (maxHeight < -minHeight)
+		{
+			maxHeight = -minHeight;
+		}
+		if (minHeight > -maxHeight)
+		{
+			minHeight = -maxHeight;
+		}
 
-        //	std::cerr << "  minHeight = " << minHeight << "\n";
-        //	std::cerr << "  maxHeight = " << maxHeight << "\n";
-        return raw;
-    }
+		//	std::cerr << "  minHeight = " << minHeight << "\n";
+		//	std::cerr << "  maxHeight = " << maxHeight << "\n";
+		return raw;
+	}
 	return 0;
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -709,7 +681,7 @@ getRawHeightfieldData
 ////////////////////////////////////////////////////////////////////////////////
 
 /// class that demonstrates the btHeightfieldTerrainShape object
-class HeightfieldExample : public CommonRigidBodyMTBase//CommonRigidBodyBase
+class HeightfieldExample : public CommonRigidBodyMTBase  //CommonRigidBodyBase
 {
 public:
 	// constructor, destructor ---------------------------------------------
@@ -724,13 +696,16 @@ public:
 
 	void stepSimulation(float deltaTime);
 
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 15;
-		float pitch = -32;
-		float yaw = 35;
-		float targetPos[3] = { 0, 0, 0 };
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 15;
+		info.pitch = -32;
+		info.yaw = 35;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
 
 private:
@@ -739,17 +714,16 @@ private:
 	void clearWorld(void);
 
 	// private data members ------------------------------------------------
-	int					m_upAxis;
-	PHY_ScalarType				m_type;
-	eTerrainModel				m_model;
-	byte_t *				m_rawHeightfieldData;
-	btScalar				m_minHeight;
-	btScalar				m_maxHeight;
-	float					m_phase;	// for dynamics
-	bool					m_isDynamic;
-	btHeightfieldTerrainShape * m_heightfieldShape;
+	int m_upAxis;
+	PHY_ScalarType m_type;
+	eTerrainModel m_model;
+	byte_t* m_rawHeightfieldData;
+	btScalar m_minHeight;
+	btScalar m_maxHeight;
+	float m_phase;  // for dynamics
+	bool m_isDynamic;
+	btHeightfieldTerrainShape* m_heightfieldShape;
 };
-
 
 #define HEIGHTFIELD_TYPE_COUNT 4
 eTerrainModel gHeightfieldType = eRadial;
@@ -767,17 +741,15 @@ void setHeightfieldTypeComboBoxCallback(int combobox, const char* item, void* us
 	}
 }
 
-
-
 HeightfieldExample::HeightfieldExample(struct GUIHelperInterface* helper)
 	: CommonRigidBodyMTBase(helper),
-	m_upAxis(1),
-	m_type(PHY_FLOAT),
-	m_model(eFractal),
-	m_rawHeightfieldData(NULL),
-	m_phase(0.0),
-	m_isDynamic(true),
-	m_heightfieldShape(0)
+	  m_upAxis(1),
+	  m_type(PHY_FLOAT),
+	  m_model(eFractal),
+	  m_rawHeightfieldData(NULL),
+	  m_phase(0.0),
+	  m_isDynamic(true),
+	  m_heightfieldShape(0)
 {
 	{
 		// create a combo box for selecting the solver type
@@ -797,15 +769,10 @@ HeightfieldExample::HeightfieldExample(struct GUIHelperInterface* helper)
 	}
 }
 
-
-
 HeightfieldExample::~HeightfieldExample(void)
 {
 	clearWorld();
-
-
 }
-
 
 class MyTriangleCollector3 : public btTriangleCallback
 {
@@ -838,7 +805,6 @@ public:
 		}
 	}
 };
-
 
 #define NUMRAYS2 500
 #define USE_PARALLEL_RAYCASTS 1
@@ -882,7 +848,6 @@ public:
 
 	btRaycastBar3(btScalar ray_length, btScalar z, btScalar max_y, struct GUIHelperInterface* guiHelper, int upAxisIndex)
 	{
-
 		m_guiHelper = guiHelper;
 		frame_counter = 0;
 		ms = 0;
@@ -939,7 +904,7 @@ public:
 
 	void castRays(btCollisionWorld* cw, int iBegin, int iEnd)
 	{
-		if (m_guiHelper==0)
+		if (m_guiHelper == 0)
 			return;
 
 		for (int i = iBegin; i < iEnd; ++i)
@@ -1043,7 +1008,7 @@ public:
 			btAlignedObjectArray<unsigned int> indices;
 			btAlignedObjectArray<btVector3FloatData> points;
 
-			float lineColor[4] = { 1, 0.4, .4, 1 };
+			float lineColor[4] = {1, 0.4, .4, 1};
 
 			for (int i = 0; i < NUMRAYS2; i++)
 			{
@@ -1062,7 +1027,6 @@ public:
 
 			m_guiHelper->getRenderInterface()->drawLines(&points[0].m_floats[0], lineColor, points.size(), sizeof(btVector3FloatData), &indices[0], indices.size(), 1);
 		}
-
 	}
 };
 
@@ -1091,14 +1055,15 @@ void HeightfieldExample::stepSimulation(float deltaTime)
 		int strideInBytes = 9 * sizeof(float);
 
 		m_phase += s_deltaPhase * deltaTime;
-		if (m_phase > 2.0 * SIMD_PI) {
+		if (m_phase > 2.0 * SIMD_PI)
+		{
 			m_phase -= 2.0 * SIMD_PI;
 		}
 		int bpe = getByteSize(m_type);
 		btAssert(bpe > 0 && "Bad bytes per element");
 		setRadial(m_rawHeightfieldData, bpe, m_type, m_phase);
 
-		MyTriangleCollector3  col;
+		MyTriangleCollector3 col;
 		col.m_pVerticesOut = &gfxVertices;
 		col.m_pIndicesOut = &indices;
 		btVector3 aabbMin, aabbMax;
@@ -1135,12 +1100,11 @@ void HeightfieldExample::initPhysics()
 
 	createEmptyDynamicsWorld();
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
-	m_upAxis = 2;		// start with Y-axis as "up"
+	m_upAxis = 2;  // start with Y-axis as "up"
 	m_guiHelper->setUpAxis(m_upAxis);
 
 	raycastBar = btRaycastBar3(2500.0, 0, 2.0, m_guiHelper, m_upAxis);
 	// set up basic state
-
 
 	m_type = PHY_FLOAT;
 	m_model = gHeightfieldType;
@@ -1150,10 +1114,7 @@ void HeightfieldExample::initPhysics()
 
 	// initialize axis- or type-dependent physics from here
 	this->resetPhysics();
-
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1180,10 +1141,10 @@ void HeightfieldExample::resetPhysics(void)
 	bool flipQuadEdges = false;
 	m_heightfieldShape =
 		new btHeightfieldTerrainShape(s_gridSize, s_gridSize,
-			m_rawHeightfieldData,
-			s_gridHeightScale,
-			m_minHeight, m_maxHeight,
-			m_upAxis, m_type, flipQuadEdges);
+									  m_rawHeightfieldData,
+									  s_gridHeightScale,
+									  m_minHeight, m_maxHeight,
+									  m_upAxis, m_type, flipQuadEdges);
 	btAssert(m_heightfieldShape && "null heightfield");
 
 	// set origin to middle of heightfield
@@ -1191,9 +1152,8 @@ void HeightfieldExample::resetPhysics(void)
 	tr.setIdentity();
 	tr.setOrigin(btVector3(0, 0, -4));
 
-	if (m_model== eImageFile)
+	if (m_model == eImageFile)
 	{
-		
 		b3BulletDefaultFileIO fileIO;
 		char relativeFileName[1024];
 		int found = fileIO.findFile("heightmaps/gimp_overlay_out.png", relativeFileName, 1024);
@@ -1204,7 +1164,7 @@ void HeightfieldExample::resetPhysics(void)
 		if (fileId >= 0)
 		{
 			int size = fileIO.getFileSize(fileId);
-			if (size>0)
+			if (size > 0)
 			{
 				buffer.resize(size);
 				int actual = fileIO.fileRead(fileId, &buffer[0], size);
@@ -1220,7 +1180,6 @@ void HeightfieldExample::resetPhysics(void)
 		if (buffer.size())
 		{
 			int width, height, n;
-
 
 			unsigned char* image = stbi_load_from_memory((const unsigned char*)&buffer[0], buffer.size(), &width, &height, &n, 3);
 			if (image)
@@ -1242,17 +1201,14 @@ void HeightfieldExample::resetPhysics(void)
 	// stash this shape away
 	m_collisionShapes.push_back(m_heightfieldShape);
 
-
-
 	// create ground object
 	float mass = 0.0;
 	btRigidBody* body = createRigidBody(mass, tr, m_heightfieldShape);
-	double color[4]={1,1,1,1};
+	double color[4] = {1, 1, 1, 1};
 
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
-	m_guiHelper->changeRGBAColor(body->getUserIndex(),color);
+	m_guiHelper->changeRGBAColor(body->getUserIndex(), color);
 }
-
 
 /// removes all objects and shapes from the world
 void HeightfieldExample::clearWorld(void)
@@ -1293,4 +1249,3 @@ CommonExampleInterface* HeightfieldExampleCreateFunc(CommonExampleOptions& optio
 }
 
 B3_STANDALONE_EXAMPLE(HeightfieldExampleCreateFunc)
-

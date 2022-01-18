@@ -15,6 +15,7 @@ subject to the following restrictions:
 
 ///btSoftBody implementation by Nathanael Presson
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
 
@@ -82,11 +83,14 @@ public:
 	virtual void resetCamera()
 	{
 		//@todo depends on current_demo?
-		float dist = 45;
-		float pitch = -31;
-		float yaw = 27;
-		float targetPos[3] = {10 - 1, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 45;
+		info.pitch = -31;
+		info.yaw = 27;
+		info.camPosX = 10;
+		info.camPosY = -1;
+		info.camPosZ = 0;
+		m_guiHelper->resetCamera(info);
 	}
 
 	SoftDemo(struct GUIHelperInterface* helper)

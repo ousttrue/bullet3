@@ -6,6 +6,7 @@
 
 #include <CommonMultiBodyBase.h>
 #include "../Utils/b3ResourcePath.h"
+#include "CommonCameraInterface.h"
 
 static btScalar radius(0.2);
 
@@ -13,37 +14,25 @@ struct TestJointTorqueSetup : public CommonMultiBodyBase
 {
 	btMultiBody* m_multiBody;
 	btAlignedObjectArray<btMultiBodyJointFeedback*> m_jointFeedbacks;
-
-	bool m_once;
+	bool m_once = true;
 
 public:
-	TestJointTorqueSetup(struct GUIHelperInterface* helper);
-	virtual ~TestJointTorqueSetup();
-
+	TestJointTorqueSetup(struct GUIHelperInterface* helper) : CommonMultiBodyBase(helper) {}
+	~TestJointTorqueSetup() override {}
 	virtual void initPhysics();
-
 	virtual void stepSimulation(float deltaTime);
-
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 5;
-		float pitch = -21;
-		float yaw = 270;
-		float targetPos[3] = {-1.34, 3.4, -0.44};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 5;
+		info.pitch = -21;
+		info.yaw = 270;
+		info.camPosX = -1.34;
+		info.camPosY = 3.4;
+		info.camPosZ = -0.44;
+		return info;
 	}
 };
-
-TestJointTorqueSetup::TestJointTorqueSetup(struct GUIHelperInterface* helper)
-	: CommonMultiBodyBase(helper),
-	  m_once(true)
-{
-}
-
-TestJointTorqueSetup::~TestJointTorqueSetup()
-{
-}
-
 
 void TestJointTorqueSetup::initPhysics()
 {
@@ -68,7 +57,6 @@ void TestJointTorqueSetup::initPhysics()
 
 	m_dynamicsWorld->getSolverInfo().m_jointFeedbackInWorldSpace = true;
 	m_dynamicsWorld->getSolverInfo().m_jointFeedbackInJointFrame = true;
-
 
 	//create a static ground object
 	if (1)
@@ -345,7 +333,7 @@ void TestJointTorqueSetup::initPhysics()
 	btSerializer* s = new btDefaultSerializer;
 	m_dynamicsWorld->serialize(s);
 	char resourcePath[1024];
-	if (b3ResourcePath::findResourcePath("multibody.bullet", resourcePath, 1024,0))
+	if (b3ResourcePath::findResourcePath("multibody.bullet", resourcePath, 1024, 0))
 	{
 		FILE* f = fopen(resourcePath, "wb");
 		fwrite(s->getBufferPointer(), s->getCurrentBufferSize(), 1, f);

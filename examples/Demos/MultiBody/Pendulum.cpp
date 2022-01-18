@@ -16,6 +16,7 @@ subject to the following restrictions:
 ///Original author: Erwin Coumans, January 2016
 ///Compare the simulation of a pendulum with
 
+#include "CommonCameraInterface.h"
 #ifdef USE_GTEST
 #include <gtest/gtest.h>
 #include "pendulum_gold.h"
@@ -32,28 +33,22 @@ struct Pendulum : public CommonMultiBodyBase
 	btAlignedObjectArray<btMultiBodyJointFeedback*> m_jointFeedbacks;
 
 public:
-	Pendulum(struct GUIHelperInterface* helper);
-	virtual ~Pendulum();
+	Pendulum(struct GUIHelperInterface* helper) : CommonMultiBodyBase(helper) {}
+	Pendulum::~Pendulum() override {}
 	virtual void initPhysics();
 	virtual void stepSimulation(float deltaTime);
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 5;
-		float pitch = -21;
-		float yaw = 270;
-		float targetPos[3] = {0, 0, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 5;
+		info.pitch = -21;
+		info.yaw = 270;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
 };
-
-Pendulum::Pendulum(struct GUIHelperInterface* helper)
-	: CommonMultiBodyBase(helper)
-{
-}
-
-Pendulum::~Pendulum()
-{
-}
 
 void Pendulum::initPhysics()
 {

@@ -83,7 +83,10 @@ void GpuRigidBodyDemo::resetCamera()
 	float dist = 114;
 	float pitch = -35;
 	float yaw = 52;
-	float targetPos[3] = {0, 0, 0};
+	float info.camPosX = 0;
+info.camPosY = 0;
+info.camPosZ = 0;
+
 	m_data->m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
 }
 

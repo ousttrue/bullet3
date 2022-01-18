@@ -2,6 +2,7 @@
 
 #include <CommonRigidBodyBase.h>
 #include <CommonParameterInterface.h>
+#include "CommonCameraInterface.h"
 
 struct ConstraintPhysicsSetup : public CommonRigidBodyBase
 {
@@ -11,13 +12,16 @@ struct ConstraintPhysicsSetup : public CommonRigidBodyBase
 
 	virtual void stepSimulation(float deltaTime);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 7;
-		float pitch = -44;
-		float yaw = 721;
-		float targetPos[3] = {8, 1, -11};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 7;
+		info.pitch = -44;
+		info.yaw = 721;
+		info.camPosX = 8;
+		info.camPosY = 1;
+		info.camPosZ = -11;
+		return info;
 	}
 };
 
@@ -84,7 +88,7 @@ void ConstraintPhysicsSetup::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
 
-	m_physics=new Physics();
+	m_physics = new Physics();
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);

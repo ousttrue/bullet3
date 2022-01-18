@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include "../RobotSimulator/b3RobotSimulatorClientAPI.h"
+#include "CommonCameraInterface.h"
 
 static btScalar numSolverIterations = 1000;
 static btScalar solverId = 0;
@@ -156,13 +157,16 @@ public:
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 1;
-		float pitch = -20;
-		float yaw = -30;
-		float targetPos[3] = {0, 0.2, 0.5};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 1;
+		info.pitch = -20;
+		info.yaw = -30;
+		info.camPosX = 0;
+		info.camPosY = 0.2;
+		info.camPosZ = 0.5;
+		return info;
 	}
 };
 

@@ -15,6 +15,7 @@ subject to the following restrictions:
 
 #include "ImportBspExample.h"
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 
 #include "LinearMath/btQuickprof.h"
@@ -49,13 +50,16 @@ public:
 
 	void initPhysics(const char* bspfilename);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 43;
-		float pitch = -12;
-		float yaw = -175;
-		float targetPos[3] = {4, -25, -6};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 43;
+		info.pitch = -12;
+		info.yaw = -175;
+		info.camPosX = 4;
+		info.camPosY = -25;
+		info.camPosZ = -6;
+		return info;
 	}
 };
 

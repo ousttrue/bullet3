@@ -15,6 +15,7 @@ subject to the following restrictions:
 
 #include "KinematicMultiBodyExample.h"
 //#define USE_MOTIONSTATE 1
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btTransformUtil.h"
 #define ARRAY_SIZE_Y 5
@@ -27,7 +28,8 @@ subject to the following restrictions:
 
 #include <CommonMultiBodyBase.h>
 
-namespace {
+namespace
+{
 
 void kinematicPreTickCallback(btDynamicsWorld* world, btScalar deltaTime)
 {
@@ -69,13 +71,17 @@ struct KinematicMultiBodyExample : public CommonMultiBodyBase
 
 	virtual ~KinematicMultiBodyExample() {}
 	virtual void initPhysics();
-	void resetCamera()
+
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 4;
-		float pitch = -30;
-		float yaw = 50;
-		float targetPos[3] = {0, 0, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 4;
+		info.pitch = -30;
+		info.yaw = 50;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
 };
 
@@ -132,7 +138,7 @@ void KinematicMultiBodyExample::initPhysics()
 		m_dynamicsWorld->addMultiBody(m_groundBody);
 
 		// add collision geometries
-		bool isDynamic = false; // Kinematic is not treated as dynamic here.
+		bool isDynamic = false;  // Kinematic is not treated as dynamic here.
 		int collisionFilterGroup = isDynamic ? int(btBroadphaseProxy::DefaultFilter) : int(btBroadphaseProxy::StaticFilter);
 		int collisionFilterMask = isDynamic ? int(btBroadphaseProxy::AllFilter) : int(btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter);
 
@@ -191,7 +197,7 @@ void KinematicMultiBodyExample::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-}
+}  // namespace
 
 CommonExampleInterface* KinematicMultiBodyExampleCreateFunc(CommonExampleOptions& options)
 {

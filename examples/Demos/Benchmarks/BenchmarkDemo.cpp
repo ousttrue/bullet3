@@ -14,6 +14,7 @@ subject to the following restrictions:
 */
 
 // Collision Radius
+#include "CommonCameraInterface.h"
 #define COLLISION_RADIUS 0.0f
 
 #include "BenchmarkDemo.h"
@@ -99,13 +100,16 @@ public:
 
 	void stepSimulation(float deltaTime);
 
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 120;
-		float pitch = -35;
-		float yaw = 52;
-		float targetPos[3] = {0, 10.46, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 120;
+		info.pitch = -35;
+		info.yaw = 52;
+		info.camPosX = 0;
+		info.camPosY = 10.46;
+		info.camPosZ = 0;
+		return info;
 	}
 };
 
@@ -312,7 +316,6 @@ public:
 
 			m_guiHelper->getRenderInterface()->drawLines(&points[0].m_floats[0], lineColor, points.size(), sizeof(btVector3FloatData), &indices[0], indices.size(), 1);
 		}
-
 	}
 };
 
@@ -1264,21 +1267,24 @@ void BenchmarkDemo::createTest7()
 
 void BenchmarkDemo::createTest8()
 {
-	float dist = 8;
-	float pitch = -15;
-	float yaw = 20;
-	float targetPos[3] = {0, 1, 0};
-	m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+	CameraResetInfo info;
+	info.camDist = 8;
+	info.pitch = -15;
+	info.yaw = 20;
+	info.camPosX = 0;
+	info.camPosY = 1;
+	info.camPosZ = 0;
+	m_guiHelper->resetCamera(info);
 	// Create a shape and rigid body for each Voronoi cell.
 	const float fallHeight = 3.5f;
-	for (int i=0; i<halton_numc; ++i)
+	for (int i = 0; i < halton_numc; ++i)
 	{
 		btConvexHullShape* shp = new btConvexHullShape();
-		const float* verts  = halton_verts[i];
+		const float* verts = halton_verts[i];
 		const float* origin = halton_pos[i];
-		for (int v=0; v<halton_numv[i]; ++v)
+		for (int v = 0; v < halton_numv[i]; ++v)
 		{
-			btVector3 vtx(verts[0],verts[1],verts[2]);
+			btVector3 vtx(verts[0], verts[1], verts[2]);
 			shp->addPoint(vtx);
 			verts += 3;
 		}
@@ -1286,9 +1292,9 @@ void BenchmarkDemo::createTest8()
 		shp->setMargin(0.04f);
 		btTransform transform;
 		transform.setIdentity();
-		transform.setOrigin(btVector3(origin[0],origin[1]+fallHeight,origin[2]));
+		transform.setOrigin(btVector3(origin[0], origin[1] + fallHeight, origin[2]));
 		const float mass = halton_volu[i];
-		btVector3 inertia(0,0,0);
+		btVector3 inertia(0, 0, 0);
 		shp->calculateLocalInertia(mass, inertia);
 		btRigidBody::btRigidBodyConstructionInfo ci(mass, 0, shp, inertia);
 		ci.m_startWorldTransform = transform;
@@ -1297,15 +1303,15 @@ void BenchmarkDemo::createTest8()
 		m_dynamicsWorld->addRigidBody(body);
 	}
 
-        btContactSolverInfo& si = m_dynamicsWorld->getSolverInfo();
+	btContactSolverInfo& si = m_dynamicsWorld->getSolverInfo();
 	si.m_numIterations = 20;
 	si.m_erp = 0.8f;
 	si.m_erp2 = si.m_erp / 2;
 	si.m_globalCfm = 0.015f;
 	// Create a ground plane
-	btCollisionShape* groundplane = new btStaticPlaneShape(btVector3(0,1,0),0);
+	btCollisionShape* groundplane = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
 	groundplane->setMargin(0.04f);
-	btRigidBody::btRigidBodyConstructionInfo rc(0.0f, 0, groundplane, btVector3(0,0,0));
+	btRigidBody::btRigidBodyConstructionInfo rc(0.0f, 0, groundplane, btVector3(0, 0, 0));
 	btRigidBody* groundbody = new btRigidBody(rc);
 	m_dynamicsWorld->addRigidBody(groundbody);
 #if 0

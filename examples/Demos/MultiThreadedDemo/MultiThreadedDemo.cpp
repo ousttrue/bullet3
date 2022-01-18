@@ -14,6 +14,7 @@ subject to the following restrictions:
 */
 
 #include "MultiThreadedDemo.h"
+#include "CommonCameraInterface.h"
 #include "CommonRigidBodyMTBase.h"
 #include <CommonParameterInterface.h>
 #include "btBulletDynamicsCommon.h"
@@ -140,14 +141,16 @@ public:
 	}
 
 	virtual void initPhysics() BT_OVERRIDE;
-	virtual void resetCamera() BT_OVERRIDE
+	CameraResetInfo cameraResetInfo() const override
 	{
-		m_guiHelper->resetCamera(m_cameraDist,
-								 m_cameraYaw,
-								 m_cameraPitch,
-								 m_cameraTargetPos.x(),
-								 m_cameraTargetPos.y(),
-								 m_cameraTargetPos.z());
+		CameraResetInfo info;
+		info.camDist = m_cameraDist;
+		info.yaw = m_cameraYaw;
+		info.pitch = m_cameraPitch;
+		info.camPosX = m_cameraTargetPos.x();
+		info.camPosY = m_cameraTargetPos.y();
+		info.camPosZ = m_cameraTargetPos.z();
+		return info;
 	}
 };
 

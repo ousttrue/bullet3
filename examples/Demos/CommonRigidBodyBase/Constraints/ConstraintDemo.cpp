@@ -15,6 +15,7 @@ subject to the following restrictions:
 
 #include "ConstraintDemo.h"
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btIDebugDraw.h"
 
@@ -34,13 +35,16 @@ public:
 	~AllConstraintDemo() override;
 	void initPhysics() override;
 	void exitPhysics() override;
-	void resetCamera() override
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 27;
-		float pitch = -30;
-		float yaw = 720;
-		float targetPos[3] = {2, 0, -10};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 27;
+		info.pitch = -30;
+		info.yaw = 720;
+		info.camPosX = 2;
+		info.camPosY = 0;
+		info.camPosZ = -10;
+		return info;
 	}
 	virtual bool keyboardCallback(int key, int state) override;
 

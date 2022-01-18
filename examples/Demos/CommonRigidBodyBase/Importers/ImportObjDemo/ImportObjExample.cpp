@@ -3,6 +3,7 @@
 #include <GLInstancingRenderer.h>
 #include <tiny_obj_loader.h>
 #include <GLInstanceGraphicsShape.h>
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "Wavefront2GLInstanceGraphicsShape.h"
 #include <b3ResourcePath.h>
@@ -22,13 +23,16 @@ public:
 
 	virtual void initPhysics();
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 18;
-		float pitch = -46;
-		float yaw = 120;
-		float targetPos[3] = {-2, -2, -2};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 18;
+		info.pitch = -46;
+		info.yaw = 120;
+		info.camPosX = -2;
+		info.camPosY = -2;
+		info.camPosZ = -2;
+		return info;
 	}
 };
 
@@ -55,7 +59,7 @@ int loadAndRegisterMeshFromFile2(const std::string& fileName, CommonRenderInterf
 
 	b3ImportMeshData meshData;
 	b3BulletDefaultFileIO fileIO;
-	if (b3ImportMeshUtility::loadAndRegisterMeshFromFileInternal(fileName, meshData,&fileIO))
+	if (b3ImportMeshUtility::loadAndRegisterMeshFromFileInternal(fileName, meshData, &fileIO))
 	{
 		int textureIndex = -1;
 
@@ -94,7 +98,7 @@ void ImportObjSetup::initPhysics()
 	btQuaternion orn = trans.getRotation();
 
 	btVector3 scaling(1, 1, 1);
-	btVector4 color(1, 1, 1,1);
+	btVector4 color(1, 1, 1, 1);
 
 	int shapeId = loadAndRegisterMeshFromFile2(m_fileName, m_guiHelper->getRenderInterface());
 	if (shapeId >= 0)

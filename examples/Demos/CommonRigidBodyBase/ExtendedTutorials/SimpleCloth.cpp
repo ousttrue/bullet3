@@ -15,6 +15,7 @@ subject to the following restrictions:
 
 #include "SimpleCloth.h"
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
@@ -39,13 +40,16 @@ struct SimpleClothExample : public CommonRigidBodyBase
 		///or we will add type checking
 		return (btSoftRigidDynamicsWorld*)m_physics->getDynamicsWorld();
 	}
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 41;
-		float pitch = -35;
-		float yaw = 52;
-		float targetPos[3] = {0, 0.46, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 41;
+		info.pitch = -35;
+		info.yaw = 52;
+		info.camPosX = 0;
+		info.camPosY = 0.46;
+		info.camPosZ = 0;
+		return info;
 	}
 
 	void createSoftBody(const btScalar size, const int num_x, const int num_z, const int fixed = 1 + 2);

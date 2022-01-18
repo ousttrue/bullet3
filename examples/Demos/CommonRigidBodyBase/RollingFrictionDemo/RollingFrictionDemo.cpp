@@ -14,6 +14,7 @@ subject to the following restrictions:
 */
 
 ///create 125 (5x5x5) dynamic object
+#include "CommonCameraInterface.h"
 #define ARRAY_SIZE_X 5
 #define ARRAY_SIZE_Y 5
 #define ARRAY_SIZE_Z 5
@@ -52,13 +53,16 @@ public:
 
 	void exitPhysics();
 
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 35;
-		float pitch = -14;
-		float yaw = 0;
-		float targetPos[3] = {0, 0, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 35;
+		info.pitch = -14;
+		info.yaw = 0;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
 };
 

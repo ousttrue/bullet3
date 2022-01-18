@@ -19,6 +19,7 @@
 #include <iterator>
 #include <vector>  // TODO: Should I use another data structure?
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
@@ -72,13 +73,16 @@ struct NewtonsRopeCradleExample : public CommonRigidBodyBase
 		///or we will add type checking
 		return (btSoftRigidDynamicsWorld*)m_physics->getDynamicsWorld();
 	}
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 41;
-		float pitch = -35;
-		float yaw = 52;
-		float targetPos[3] = {0, 0.46, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 41;
+		info.pitch = -35;
+		info.yaw = 52;
+		info.camPosX = 0;
+		info.camPosY = 0.46;
+		info.camPosZ = 0;
+		return info;
 	}
 
 	std::vector<btSliderConstraint*> constraints;
@@ -254,17 +258,17 @@ void NewtonsRopeCradleExample::createRopePendulum(btSphereShape* colShape,
 	btVector3 bottomSphereRelPosition(0, -height, 0);
 
 	// position the top sphere above ground with appropriate orientation
-	startTransform.setOrigin(btVector3(0, 0, 0));                            // no translation intitially
-	startTransform.setRotation(pendulumOrientation);                         // pendulum rotation
-	startTransform.setOrigin(startTransform * topSphere1RelPosition);        // rotate this position
-	startTransform.setOrigin(position + startTransform.getOrigin());         // add non-rotated position to the relative position
+	startTransform.setOrigin(btVector3(0, 0, 0));                                       // no translation intitially
+	startTransform.setRotation(pendulumOrientation);                                    // pendulum rotation
+	startTransform.setOrigin(startTransform * topSphere1RelPosition);                   // rotate this position
+	startTransform.setOrigin(position + startTransform.getOrigin());                    // add non-rotated position to the relative position
 	btRigidBody* topSphere1 = m_physics->createRigidBody(0, startTransform, colShape);  // make top sphere static
 
 	// position the top sphere above ground with appropriate orientation
-	startTransform.setOrigin(btVector3(0, 0, 0));                            // no translation intitially
-	startTransform.setRotation(pendulumOrientation);                         // pendulum rotation
-	startTransform.setOrigin(startTransform * topSphere2RelPosition);        // rotate this position
-	startTransform.setOrigin(position + startTransform.getOrigin());         // add non-rotated position to the relative position
+	startTransform.setOrigin(btVector3(0, 0, 0));                                       // no translation intitially
+	startTransform.setRotation(pendulumOrientation);                                    // pendulum rotation
+	startTransform.setOrigin(startTransform * topSphere2RelPosition);                   // rotate this position
+	startTransform.setOrigin(position + startTransform.getOrigin());                    // add non-rotated position to the relative position
 	btRigidBody* topSphere2 = m_physics->createRigidBody(0, startTransform, colShape);  // make top sphere static
 
 	// position the bottom sphere below the top sphere

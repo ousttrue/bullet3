@@ -14,6 +14,7 @@
 
 #include "../RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "../Utils/b3Clock.h"
+#include "CommonCameraInterface.h"
 
 class BoxStackExample : public CommonExampleInterface
 {
@@ -89,27 +90,21 @@ public:
 	{
 		return m_robotSim.mouseButtonCallback(button, state, x, y);
 	}
-	virtual bool keyboardCallback(int key, int state)
+	bool keyboardCallback(int key, int state) override
 	{
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 1.5;
-		float pitch = -10;
-		float yaw = 18;
-		float targetPos[3] = {-0.2, 0.8, 0.3};
-
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
-
-		if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
-		{
-			m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
-			m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
-			m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
-			m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
-		}
+		CameraResetInfo info;
+		info.camDist = 1.5;
+		info.pitch = -10;
+		info.yaw = 18;
+		info.camPosX = -0.2f;
+		info.camPosY = 0.8f;
+		info.camPosZ = 0.3f;
+		return info;
 	}
 };
 

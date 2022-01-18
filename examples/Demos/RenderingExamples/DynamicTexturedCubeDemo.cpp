@@ -14,6 +14,7 @@
 #include "../RenderingExamples/TimeSeriesFontData.h"
 #include <b3ImportMeshUtility.h>
 #include <GLInstanceGraphicsShape.h>
+#include "CommonCameraInterface.h"
 #include "TinyVRGui.h"
 #include <CommonParameterInterface.h>
 
@@ -108,19 +109,16 @@ public:
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 1.15;
-		float pitch = -33.7;
-		float yaw = 396;
-		float targetPos[3] = {-0.5, 0.7, 1.45};
-		if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
-		{
-			m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
-			m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
-			m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
-			m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
-		}
+		CameraResetInfo info;
+		info.camDist = 1.15;
+		info.pitch = -33.7;
+		info.yaw = 396;
+		info.camPosX = -0.5;
+		info.camPosY = 0.7;
+		info.camPosZ = 1.45;
+		return info;
 	}
 };
 

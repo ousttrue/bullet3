@@ -1,5 +1,6 @@
 #include "Dof6ConstraintTutorial.h"
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "BulletDynamics/ConstraintSolver/btNNCGConstraintSolver.h"
 #include "BulletDynamics/MLCPSolvers/btMLCPSolver.h"
@@ -48,13 +49,16 @@ struct Dof6ConstraintTutorial : public CommonRigidBodyBase
 
 	void animate();
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 5;
-		float pitch = -35;
-		float yaw = 722;
-		float targetPos[3] = {4, 2, -11};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 5;
+		info.pitch = -35;
+		info.yaw = 722;
+		info.camPosX = 4;
+		info.camPosY = 2;
+		info.camPosZ = -11;
+		return info;
 	}
 };
 

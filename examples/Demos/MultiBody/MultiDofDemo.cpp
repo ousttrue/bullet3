@@ -1,4 +1,5 @@
 #include "MultiDofDemo.h"
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 
 #include "BulletDynamics/MLCPSolvers/btDantzigSolver.h"
@@ -32,13 +33,16 @@ public:
 
 	virtual void stepSimulation(float deltaTime);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 1;
-		float pitch = -35;
-		float yaw = 50;
-		float targetPos[3] = {-3, 2.8, -2.5};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 1;
+		info.pitch = -35;
+		info.yaw = 50;
+		info.camPosX = -3;
+		info.camPosY = 2.8;
+		info.camPosZ = -2.5;
+		return info;
 	}
 
 	btMultiBody* createFeatherstoneMultiBody_testMultiDof(class btMultiBodyDynamicsWorld* world, int numLinks, const btVector3& basePosition, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents, bool spherical = false, bool floating = false);

@@ -1,5 +1,6 @@
 #include "PhysicsServerCommandProcessor.h"
 #include <CommonRenderInterface.h>
+#include "CommonCameraInterface.h"
 #include "plugins/b3PluginCollisionInterface.h"
 #include <BulletUrdfImporter.h>
 #include <MyMultiBodyCreator.h>
@@ -11514,12 +11515,14 @@ bool PhysicsServerCommandProcessor::processConfigureOpenGLVisualizerCommand(cons
 	}
 	if (clientCmd.m_updateFlags & COV_SET_CAMERA_VIEW_MATRIX)
 	{
-		m_data->m_guiHelper->resetCamera(clientCmd.m_configureOpenGLVisualizerArguments.m_cameraDistance,
-										 clientCmd.m_configureOpenGLVisualizerArguments.m_cameraYaw,
-										 clientCmd.m_configureOpenGLVisualizerArguments.m_cameraPitch,
-										 clientCmd.m_configureOpenGLVisualizerArguments.m_cameraTargetPosition[0],
-										 clientCmd.m_configureOpenGLVisualizerArguments.m_cameraTargetPosition[1],
-										 clientCmd.m_configureOpenGLVisualizerArguments.m_cameraTargetPosition[2]);
+		CameraResetInfo info;
+		info.camDist=clientCmd.m_configureOpenGLVisualizerArguments.m_cameraDistance;
+		info.yaw=clientCmd.m_configureOpenGLVisualizerArguments.m_cameraYaw;
+		info.pitch=clientCmd.m_configureOpenGLVisualizerArguments.m_cameraPitch;
+		info.camPosX=clientCmd.m_configureOpenGLVisualizerArguments.m_cameraTargetPosition[0];
+		info.camPosY=clientCmd.m_configureOpenGLVisualizerArguments.m_cameraTargetPosition[1];
+		info.camPosZ=clientCmd.m_configureOpenGLVisualizerArguments.m_cameraTargetPosition[2];
+		m_data->m_guiHelper->resetCamera(info);
 	}
 	if (m_data->m_guiHelper->getRenderInterface())
 	{

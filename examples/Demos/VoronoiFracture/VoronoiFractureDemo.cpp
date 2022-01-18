@@ -94,7 +94,10 @@ public:
 		float dist = 18;
 		float pitch = -30;
 		float yaw = 129;
-		float targetPos[3] = {-1.5, 4.7, -2};
+		float info.camPosX = -1.5;
+info.camPosY = 4.7;
+info.camPosZ = -2;
+
 		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
 	}
 };

@@ -3,6 +3,7 @@
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
 #include "Bullet3Common/b3Logging.h"
+#include "CommonCameraInterface.h"
 #include "GraphicsSharedMemoryCommands.h"
 #include "PosixSharedMemory.h"
 #include "Win32SharedMemory.h"
@@ -588,7 +589,7 @@ void RemoteGUIHelper::setUpAxis(int axis)
 		}
 	}
 }
-void RemoteGUIHelper::resetCamera(float camDist, float yaw, float pitch, float camPosX, float camPosY, float camPosZ)
+void RemoteGUIHelper::resetCamera(const CameraResetInfo &info)
 {
 }
 

@@ -4,6 +4,7 @@
 #include <CommonRenderInterface.h>
 
 #include <CommonExampleInterface.h>
+#include "CommonCameraInterface.h"
 #include "LinearMath/btTransform.h"
 #include <CommonGUIHelperInterface.h>
 ///quick demo showing the right-handed coordinate system and positive rotations around each axis
@@ -132,19 +133,16 @@ public:
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 3.5;
-		float pitch = -32;
-		float yaw = 136;
-		float targetPos[3] = {0, 0, 0};
-		if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
-		{
-			m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
-			m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
-			m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
-			m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
-		}
+		CameraResetInfo info;
+		info.camDist = 3.5;
+		info.pitch = -32;
+		info.yaw = 136;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
 };
 

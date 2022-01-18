@@ -383,7 +383,7 @@ private:
 		if (sCurrentDemo)
 		{
 			sCurrentDemo->initPhysics();
-			sCurrentDemo->resetCamera();
+			s_guiHelper->resetCamera(sCurrentDemo->cameraResetInfo());
 		}
 	}
 
@@ -423,7 +423,7 @@ private:
 				sCurrentDemo->initPhysics();
 				if (resetCamera)
 				{
-					sCurrentDemo->resetCamera();
+					s_guiHelper->resetCamera(sCurrentDemo->cameraResetInfo());
 				}
 			}
 		}

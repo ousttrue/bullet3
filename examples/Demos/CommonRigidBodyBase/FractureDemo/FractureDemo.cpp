@@ -19,6 +19,7 @@ subject to the following restrictions:
 ///Press the F key to toggle between fracture and glue mode
 ///This is preliminary work
 
+#include "CommonCameraInterface.h"
 #define CUBE_HALF_EXTENTS 1.f
 #define EXTRA_HEIGHT 1.f
 ///scaling of the objects (0.1 = 20 centimeter boxes )
@@ -79,13 +80,16 @@ public:
 
 	virtual bool keyboardCallback(int key, int state);
 
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 41;
-		float pitch = -35;
-		float yaw = 52;
-		float targetPos[3] = {0, 0.46, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 41;
+		info.pitch = -35;
+		info.yaw = 52;
+		info.camPosX = 0;
+		info.camPosY = 0.46;
+		info.camPosZ = 0;
+		return info;
 	}
 };
 

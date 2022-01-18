@@ -38,7 +38,16 @@ int main(int argc, char* argv[])
 	example->processCommandLineArgs(argc, argv);
 
 	example->initPhysics();
-	example->resetCamera();
+
+
+	gui.resetCamera(example->cameraResetInfo());
+	// if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
+	// {
+	// 	m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
+	// 	m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
+	// 	m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
+	// 	m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
+	// }
 
 	b3Clock clock;
 

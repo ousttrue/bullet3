@@ -15,6 +15,7 @@ subject to the following restrictions:
 
 #include "RaytestDemo.h"
 ///btBulletDynamicsCommon.h is the main Bullet include file, contains most common include files.
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/NarrowPhaseCollision/btRaycastCallback.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"
@@ -45,13 +46,16 @@ public:
 
 	virtual void stepSimulation(float deltaTime);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 18;
-		float pitch = -30;
-		float yaw = 129;
-		float targetPos[3] = {-4.6, -4.7, -5.75};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 18;
+		info.pitch = -30;
+		info.yaw = 129;
+		info.camPosX = -4.6;
+		info.camPosY = -4.7;
+		info.camPosZ = -5.75;
+		return info;
 	}
 };
 

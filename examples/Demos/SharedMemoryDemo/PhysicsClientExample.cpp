@@ -3,6 +3,7 @@
 
 #include <CommonMultiBodyBase.h>
 #include <Common2dCanvasInterface.h>
+#include "CommonCameraInterface.h"
 #include "SharedMemoryCommon.h"
 #include <CommonParameterInterface.h>
 #include "PhysicsServerCommandProcessor.h"
@@ -92,13 +93,16 @@ public:
 	}
 	virtual void stepSimulation(float deltaTime);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 3.45;
-		float pitch = -16.2;
-		float yaw = 287;
-		float targetPos[3] = {2.05, 0.02, 0.53};  //-3,2.8,-2.5};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 3.45;
+		info.pitch = -16.2;
+		info.yaw = 287;
+		info.camPosX = 2.05;
+		info.camPosY = 0.02;
+		info.camPosZ = 0.53;  //-3,2.8,-2.5};
+		return info;
 	}
 
 	virtual bool wantsTermination()

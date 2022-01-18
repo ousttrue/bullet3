@@ -1,5 +1,6 @@
 #include "SerializeSetup.h"
 #include "../Extras/Serialize/BulletWorldImporter/btBulletWorldImporter.h"
+#include "CommonCameraInterface.h"
 
 #include <CommonRigidBodyBase.h>
 
@@ -17,13 +18,16 @@ public:
 	{
 		memcpy(m_fileName, fileName, strlen(fileName) + 1);
 	}
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 9.5;
-		float pitch = -20;
-		float yaw = -2.8;
-		float targetPos[3] = {-0.2, -1.4, 3.5};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 9.5;
+		info.pitch = -20;
+		info.yaw = -2.8;
+		info.camPosX = -0.2;
+		info.camPosY = -1.4;
+		info.camPosZ = 3.5;
+		return info;
 	}
 };
 

@@ -1,5 +1,6 @@
 #include "OpenGLGuiHelper.h"
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include <CommonGraphicsAppInterface.h>
@@ -1177,14 +1178,14 @@ void OpenGLGuiHelper::setVisualizerFlag(int flag, int enable)
 		(m_data->m_visualizerFlagCallback)(flag, enable != 0);
 }
 
-void OpenGLGuiHelper::resetCamera(float camDist, float yaw, float pitch, float camPosX, float camPosY, float camPosZ)
+void OpenGLGuiHelper::resetCamera(const CameraResetInfo &resetInfo)
 {
 	if (getRenderInterface() && getRenderInterface()->getActiveCamera())
 	{
-		getRenderInterface()->getActiveCamera()->setCameraDistance(camDist);
-		getRenderInterface()->getActiveCamera()->setCameraPitch(pitch);
-		getRenderInterface()->getActiveCamera()->setCameraYaw(yaw);
-		getRenderInterface()->getActiveCamera()->setCameraTargetPosition(camPosX, camPosY, camPosZ);
+		getRenderInterface()->getActiveCamera()->setCameraDistance(resetInfo.camDist);
+		getRenderInterface()->getActiveCamera()->setCameraPitch(resetInfo.pitch);
+		getRenderInterface()->getActiveCamera()->setCameraYaw(resetInfo.yaw);
+		getRenderInterface()->getActiveCamera()->setCameraTargetPosition(resetInfo.camPosX, resetInfo.camPosY, resetInfo.camPosZ);
 	}
 }
 

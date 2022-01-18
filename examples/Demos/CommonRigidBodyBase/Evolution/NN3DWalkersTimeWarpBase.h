@@ -16,6 +16,7 @@
 #ifndef NN3D_WALKERS_TIME_WARP_BASE_H
 #define NN3D_WALKERS_TIME_WARP_BASE_H
 
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
@@ -245,11 +246,11 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 		mLoopTimer.reset();
 	}
 
-	~NN3DWalkersTimeWarpBase()
+	~NN3DWalkersTimeWarpBase() override
 	{
 	}
 
-	void initPhysics()
+	void initPhysics() override
 	{  // initialize the demo
 
 		setupBasicParamInterface();  // setup adjustable sliders and buttons for parameters
@@ -799,14 +800,17 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 		}
 		mIsHeadless = gIsHeadless;
 	}
-	void resetCamera()
+
+	CameraResetInfo cameraResetInfo() const override
 	{  // reset the camera to its original position
-		float dist = 41;
-		float pitch = 52;
-		float yaw = 35;
-		float targetPos[3] = {0, 0.46, 0};
-		m_guiHelper->resetCamera(dist, pitch, yaw, targetPos[0], targetPos[1],
-								 targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 41;
+		info.pitch = 52;
+		info.yaw = 35;
+		info.camPosX = 0;
+		info.camPosY = 0.46;
+		info.camPosZ = 0;
+		return info;
 	}
 
 	// loop timing components ###################

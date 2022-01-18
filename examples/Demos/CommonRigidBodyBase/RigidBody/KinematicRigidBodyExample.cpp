@@ -15,6 +15,7 @@ subject to the following restrictions:
 
 #include "KinematicRigidBodyExample.h"
 //#define USE_MOTIONSTATE 1
+#include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btTransformUtil.h"
 #define ARRAY_SIZE_Y 5
@@ -62,13 +63,16 @@ struct KinematicRigidBodyExample : public CommonRigidBodyBase
 	virtual ~KinematicRigidBodyExample() {}
 	virtual void initPhysics();
 	virtual void renderScene();
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 4;
-		float pitch = -30;
-		float yaw = 50;
-		float targetPos[3] = {0, 0, 0};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 4;
+		info.pitch = -30;
+		info.yaw = 50;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
 };
 

@@ -3,6 +3,7 @@
 #include "BulletDynamics/Featherstone/btMultiBodyLinkCollider.h"
 #include "BulletDynamics/Featherstone/btMultiBodyJointFeedback.h"
 #include "BulletDynamics/Featherstone/btMultiBodyJointMotor.h"
+#include "CommonCameraInterface.h"
 
 #include <CommonMultiBodyBase.h>
 
@@ -23,13 +24,16 @@ public:
 
 	virtual void stepSimulation(float deltaTime);
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 5;
-		float pitch = -21;
-		float yaw = 270;
-		float targetPos[3] = {-1.34, 3.4, -0.44};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 5;
+		info.pitch = -21;
+		info.yaw = 270;
+		info.camPosX = -1.34;
+		info.camPosY = 3.4;
+		info.camPosZ = -0.44;
+		return info;
 	}
 };
 
@@ -63,7 +67,6 @@ void MultiBodyConstraintFeedbackSetup::initPhysics()
 	m_dynamicsWorld->getDebugDrawer()->setDebugMode(
 		//btIDebugDraw::DBG_DrawConstraints
 		+btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints + btIDebugDraw::DBG_DrawAabb);  //+btIDebugDraw::DBG_DrawConstraintLimits);
-
 
 	m_dynamicsWorld->getSolverInfo().m_jointFeedbackInWorldSpace = true;
 	m_dynamicsWorld->getSolverInfo().m_jointFeedbackInJointFrame = true;

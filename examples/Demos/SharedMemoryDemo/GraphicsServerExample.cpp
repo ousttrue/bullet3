@@ -2,6 +2,7 @@
 #include "GraphicsServerExample.h"
 #include <CommonGraphicsAppInterface.h>
 #include <CommonRenderInterface.h>
+#include "CommonCameraInterface.h"
 #include "PosixSharedMemory.h"
 #include "Win32SharedMemory.h"
 #include <CommonExampleInterface.h>
@@ -24,7 +25,6 @@
 #include "GraphicsSharedMemoryPublic.h"
 #include "GraphicsSharedMemoryCommands.h"
 
-
 bool gVerboseNetworkMessagesServer = true;
 
 void MySerializeInt(unsigned int sz, unsigned char* output)
@@ -43,7 +43,6 @@ void submitStatus(CActiveSocket* pClient, GraphicsSharedMemoryStatus& serverStat
 {
 	b3AlignedObjectArray<unsigned char> packetData;
 	unsigned char* statBytes = (unsigned char*)&serverStatus;
-
 
 	//create packetData with [int packetSizeInBytes, status, streamBytes)
 	packetData.resize(4 + sizeof(GraphicsSharedMemoryStatus) + serverStatus.m_numDataStreamBytes);
@@ -64,7 +63,7 @@ void submitStatus(CActiveSocket* pClient, GraphicsSharedMemoryStatus& serverStat
 	}
 	curPos += sizeof(GraphicsSharedMemoryStatus);
 	if (gVerboseNetworkMessagesServer)
-   	 printf("serverStatus.m_numDataStreamBytes=%d\n", serverStatus.m_numDataStreamBytes);
+		printf("serverStatus.m_numDataStreamBytes=%d\n", serverStatus.m_numDataStreamBytes);
 	for (int i = 0; i < serverStatus.m_numDataStreamBytes; i++)
 	{
 		packetData[i + curPos] = buffer[i];
@@ -75,25 +74,22 @@ void submitStatus(CActiveSocket* pClient, GraphicsSharedMemoryStatus& serverStat
 		printf("pClient->Send serverStatus: %d\n", packetData.size());
 }
 
-
-#endif //BT_ENABLE_CLSOCKET
-
+#endif  //BT_ENABLE_CLSOCKET
 
 #define MAX_GRAPHICS_SHARED_MEMORY_BLOCKS 1
-
 
 struct TCPArgs
 {
 	TCPArgs()
 		: m_cs(0),
-		m_port(6667),
-		m_numClientCommands(0),
-		m_numServerCommands(0),
-		m_cmdPtr(0)
+		  m_port(6667),
+		  m_numClientCommands(0),
+		  m_numServerCommands(0),
+		  m_cmdPtr(0)
 	{
 		m_dataSlots.resize(10);
 	}
-	
+
 	void submitCommand()
 	{
 		m_cs->lock();
@@ -118,10 +114,9 @@ struct TCPArgs
 		return result;
 	}
 
-
 	b3CriticalSection* m_cs;
 	int m_port;
-	b3AlignedObjectArray< b3AlignedObjectArray<unsigned char> > m_dataSlots;
+	b3AlignedObjectArray<b3AlignedObjectArray<unsigned char> > m_dataSlots;
 	int m_numClientCommands;
 	int m_numServerCommands;
 	GraphicsSharedMemoryCommand* m_cmdPtr;
@@ -132,7 +127,6 @@ struct TCPThreadLocalStorage
 {
 	int threadId;
 };
-
 
 enum TCPCommunicationEnums
 {
@@ -169,17 +163,15 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 		b3Clock clock;
 		double timeOutInSeconds = 10;
 
-		
 		bool isPhysicsClientConnected = true;
 		bool exitRequested = false;
 
-		
 		if (!isPhysicsClientConnected)
 		{
 			printf("TCP thread error connecting to shared memory. Machine needs a reboot?\n");
 		}
 		btAssert(isPhysicsClientConnected);
-		
+
 		printf("Starting TCP server using port %d\n", args->m_port);
 
 		CPassiveSocket socket;
@@ -200,7 +192,6 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 
 		do
 		{
-		  
 			{
 				b3Clock::usleep(0);
 			}
@@ -213,7 +204,7 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 
 				if ((pClient = socket.Accept()) != NULL)
 				{
-					socket.SetReceiveTimeout(60, 0);// (1, 0);
+					socket.SetReceiveTimeout(60, 0);  // (1, 0);
 					socket.SetSendTimeout(60, 0);
 
 					b3AlignedObjectArray<char> bytesReceived;
@@ -240,18 +231,15 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 					//----------------------------------------------------------------------
 					// Receive request from the client.
 					//----------------------------------------------------------------------
-					
+
 					while (cachedSharedParam != eTCPRequestTerminate)
 					{
-						
 						bool receivedData = false;
 
 						int maxLen = 4 + sizeof(GraphicsSharedMemoryCommand) + GRAPHICS_SHARED_MEMORY_MAX_STREAM_CHUNK_SIZE;
-          
-            
+
 						if (pClient->Receive(maxLen))
 						{
-						  
 							//heuristic to detect disconnected clients
 							CSimpleSocket::CSocketError err = pClient->GetSocketError();
 
@@ -264,7 +252,6 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 								if (curNumErr > 100)
 								{
 									///printf("TCP Connection error = %d, curNumErr = %d\n", (int)err, curNumErr);
-									
 								}
 							}
 
@@ -272,7 +259,7 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 							char* msg2 = (char*)pClient->GetData();
 							int numBytesRec2 = pClient->GetBytesReceived();
 							if (gVerboseNetworkMessagesServer)
-							  printf("numBytesRec2=%d\n", numBytesRec2);
+								printf("numBytesRec2=%d\n", numBytesRec2);
 							if (numBytesRec2 < 0)
 							{
 								numBytesRec2 = 0;
@@ -295,8 +282,6 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 										bytesReceived.clear();
 										break;
 									}
-
-										
 								}
 
 								if (gVerboseNetworkMessagesServer)
@@ -306,21 +291,17 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 
 								receivedData = true;
 
-								
 								args->m_cmdPtr = 0;
-								
 
 								int type = *(int*)&bytesReceived[0];
 
-								
 								if (numBytesRec == sizeof(GraphicsSharedMemoryCommand))
 								{
 									args->m_cmdPtr = (GraphicsSharedMemoryCommand*)&bytesReceived[0];
 								}
-								
+
 								if (args->m_cmdPtr)
 								{
-									
 									b3AlignedObjectArray<char> buffer;
 									buffer.resize(GRAPHICS_SHARED_MEMORY_MAX_STREAM_CHUNK_SIZE);
 									bool hasStatus = true;
@@ -328,194 +309,192 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 										printf("processing command:");
 									switch (args->m_cmdPtr->m_type)
 									{
-									case GFX_CMD_0:
-									{
-										int axis = args->m_cmdPtr->m_upAxisYCommand.m_enableUpAxisY ? 1 : 2;
-										args->submitCommand();
-										while (args->isCommandOutstanding())
+										case GFX_CMD_0:
 										{
-											clock.usleep(0);
-										}
-										bool done = false;
-										//guiHelper.setUpAxis(axis);
-
-										
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_0\n");
-										break;
-									}
-
-									case GFX_CMD_SET_VISUALIZER_FLAG:
-									{
-										//disable single step rendering for GraphicsServer
-										if (args->m_cmdPtr->m_visualizerFlagCommand.m_visualizerFlag == COV_ENABLE_SINGLE_STEP_RENDERING)
-										{
-											args->m_cmdPtr->m_visualizerFlagCommand.m_visualizerFlag = 0;
-										}
-										args->submitCommand();
-										while (args->isCommandOutstanding())
-										{
-											clock.usleep(0);
-										}
-										//guiHelper.setVisualizerFlag(
-										//	args->m_cmdPtr->m_visualizerFlagCommand.m_visualizerFlag,
-										//	args->m_cmdPtr->m_visualizerFlagCommand.m_enable);
-										//serverStatus.m_type = GFX_CMD_CLIENT_COMMAND_COMPLETED;
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_SET_VISUALIZER_FLAG\n");
-										break;
-									}
-									case GFX_CMD_UPLOAD_DATA:
-									{
-										int slot = args->m_cmdPtr->m_uploadDataCommand.m_dataSlot;
-
-										int numBytes = args->m_cmdPtr->m_uploadDataCommand.m_numBytes;
-
-
-										submitStatus(pClient, args->m_serverStatus, buffer);
-
-										//now receive numBytes 
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_UPLOAD_DATA receiving data\n");
-										int received = 0;
-										int offset = 0;
-										args->m_dataSlots[slot].resize(numBytes);
-										while (received < numBytes)
-										{
-											if (pClient->Receive(args->m_cmdPtr->m_uploadDataCommand.m_numBytes))
+											int axis = args->m_cmdPtr->m_upAxisYCommand.m_enableUpAxisY ? 1 : 2;
+											args->submitCommand();
+											while (args->isCommandOutstanding())
 											{
-												//heuristic to detect disconnected clients
-												CSimpleSocket::CSocketError err = pClient->GetSocketError();
-												if (err != CSimpleSocket::SocketSuccess || !pClient->IsSocketValid())
-												{
-													curNumErr++;
-													//printf("TCP Connection error = %d, curNumErr = %d\n", (int)err, curNumErr);
-												}
-												char* msg2 = (char*)pClient->GetData();
-												int numBytesRec2 = pClient->GetBytesReceived();
-												if (gVerboseNetworkMessagesServer)
-													printf("received %d bytes (total=%d)\n", numBytesRec2, received);
-												
-												for (int i = 0; i < numBytesRec2; i++)
-												{
-													args->m_dataSlots[slot][i+ offset] = msg2[i];
-												}
-												offset += numBytesRec2;
-												received += numBytesRec2;
+												clock.usleep(0);
 											}
-										}
-										if (gVerboseNetworkMessagesServer)
-											printf("received all bytes!\n");
-										args->m_serverStatus.m_type = GFX_CMD_CLIENT_COMMAND_COMPLETED;
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_UPLOAD_DATA\n");
-										break;
-									}
-									case GFX_CMD_REGISTER_TEXTURE:
-									{
-										args->submitCommand();
-										while (args->isCommandOutstanding())
-										{
-											clock.usleep(0);
-										}
-										//const unsigned char* texels = (const unsigned char*)&args->m_dataSlots[0][0];
-										//args->m_serverStatus.m_registerTextureStatus.m_textureId = guiHelper.registerTexture(texels, args->m_cmdPtr->m_registerTextureCommand.m_width,
-										//	args->m_cmdPtr->m_registerTextureCommand.m_height);
-										//serverStatus.m_type = GFX_CMD_REGISTER_TEXTURE_COMPLETED;
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_REGISTER_TEXTURE\n");
-										break;
-									}
-									case GFX_CMD_REGISTER_GRAPHICS_SHAPE:
-									{
-										args->submitCommand();
-										while (args->isCommandOutstanding())
-										{
-											clock.usleep(0);
-										}
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_REGISTER_GRAPHICS_SHAPE\n");
-										break;
-									}
-									case GFX_CMD_REGISTER_GRAPHICS_INSTANCE:
-									{
-										args->submitCommand();
-										while (args->isCommandOutstanding())
-										{
-											clock.usleep(0);
+											bool done = false;
+											//guiHelper.setUpAxis(axis);
+
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_0\n");
+											break;
 										}
 
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_REGISTER_GRAPHICS_INSTANCE\n");
-										break;
-									}
-									case GFX_CMD_SYNCHRONIZE_TRANSFORMS:
-									{
-										args->submitCommand();
-										while (args->isCommandOutstanding())
+										case GFX_CMD_SET_VISUALIZER_FLAG:
 										{
-											clock.usleep(0);
+											//disable single step rendering for GraphicsServer
+											if (args->m_cmdPtr->m_visualizerFlagCommand.m_visualizerFlag == COV_ENABLE_SINGLE_STEP_RENDERING)
+											{
+												args->m_cmdPtr->m_visualizerFlagCommand.m_visualizerFlag = 0;
+											}
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+											//guiHelper.setVisualizerFlag(
+											//	args->m_cmdPtr->m_visualizerFlagCommand.m_visualizerFlag,
+											//	args->m_cmdPtr->m_visualizerFlagCommand.m_enable);
+											//serverStatus.m_type = GFX_CMD_CLIENT_COMMAND_COMPLETED;
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_SET_VISUALIZER_FLAG\n");
+											break;
 										}
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_SYNCHRONIZE_TRANSFORMS\n");
-										break;
-									}
-									case GFX_CMD_REMOVE_ALL_GRAPHICS_INSTANCES:
-									{
-										args->submitCommand();
-										while (args->isCommandOutstanding())
+										case GFX_CMD_UPLOAD_DATA:
 										{
-											clock.usleep(0);
-										}
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_REMOVE_ALL_GRAPHICS_INSTANCES\n");
-										break;
-									}
-									case GFX_CMD_REMOVE_SINGLE_GRAPHICS_INSTANCE:
-									{
-										args->submitCommand();
-										while (args->isCommandOutstanding())
-										{
-											clock.usleep(0);
-										}
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_REMOVE_SINGLE_GRAPHICS_INSTANCE\n");
-										break;
-									}
-									case GFX_CMD_CHANGE_RGBA_COLOR:
-									{
-										args->submitCommand();
-										while (args->isCommandOutstanding())
-										{
-											clock.usleep(0);
-										}
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_CHANGE_RGBA_COLOR\n");
-										break;
-									}
-									case GFX_CMD_CHANGE_SCALING:
-									{
-										args->submitCommand();
-										while (args->isCommandOutstanding())
-										{
-											clock.usleep(0);
-										}
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_CHANGE_SCALING\n");
-										break;
-									}
+											int slot = args->m_cmdPtr->m_uploadDataCommand.m_dataSlot;
 
-									case GFX_CMD_GET_CAMERA_INFO:
-									{
-										args->submitCommand();
-										while (args->isCommandOutstanding())
-										{
-											clock.usleep(0);
+											int numBytes = args->m_cmdPtr->m_uploadDataCommand.m_numBytes;
+
+											submitStatus(pClient, args->m_serverStatus, buffer);
+
+											//now receive numBytes
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_UPLOAD_DATA receiving data\n");
+											int received = 0;
+											int offset = 0;
+											args->m_dataSlots[slot].resize(numBytes);
+											while (received < numBytes)
+											{
+												if (pClient->Receive(args->m_cmdPtr->m_uploadDataCommand.m_numBytes))
+												{
+													//heuristic to detect disconnected clients
+													CSimpleSocket::CSocketError err = pClient->GetSocketError();
+													if (err != CSimpleSocket::SocketSuccess || !pClient->IsSocketValid())
+													{
+														curNumErr++;
+														//printf("TCP Connection error = %d, curNumErr = %d\n", (int)err, curNumErr);
+													}
+													char* msg2 = (char*)pClient->GetData();
+													int numBytesRec2 = pClient->GetBytesReceived();
+													if (gVerboseNetworkMessagesServer)
+														printf("received %d bytes (total=%d)\n", numBytesRec2, received);
+
+													for (int i = 0; i < numBytesRec2; i++)
+													{
+														args->m_dataSlots[slot][i + offset] = msg2[i];
+													}
+													offset += numBytesRec2;
+													received += numBytesRec2;
+												}
+											}
+											if (gVerboseNetworkMessagesServer)
+												printf("received all bytes!\n");
+											args->m_serverStatus.m_type = GFX_CMD_CLIENT_COMMAND_COMPLETED;
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_UPLOAD_DATA\n");
+											break;
 										}
-										//bool RemoteGUIHelper::getCameraInfo(int* width, int* height, 
-										//	float viewMatrix[16], float projectionMatrix[16], 
-										//	float camUp[3], float camForward[3], float hor[3], float vert[3], 
-										//	float* yaw, float* pitch, float* camDist, float camTarget[3]) const
+										case GFX_CMD_REGISTER_TEXTURE:
+										{
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+											//const unsigned char* texels = (const unsigned char*)&args->m_dataSlots[0][0];
+											//args->m_serverStatus.m_registerTextureStatus.m_textureId = guiHelper.registerTexture(texels, args->m_cmdPtr->m_registerTextureCommand.m_width,
+											//	args->m_cmdPtr->m_registerTextureCommand.m_height);
+											//serverStatus.m_type = GFX_CMD_REGISTER_TEXTURE_COMPLETED;
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_REGISTER_TEXTURE\n");
+											break;
+										}
+										case GFX_CMD_REGISTER_GRAPHICS_SHAPE:
+										{
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_REGISTER_GRAPHICS_SHAPE\n");
+											break;
+										}
+										case GFX_CMD_REGISTER_GRAPHICS_INSTANCE:
+										{
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_REGISTER_GRAPHICS_INSTANCE\n");
+											break;
+										}
+										case GFX_CMD_SYNCHRONIZE_TRANSFORMS:
+										{
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_SYNCHRONIZE_TRANSFORMS\n");
+											break;
+										}
+										case GFX_CMD_REMOVE_ALL_GRAPHICS_INSTANCES:
+										{
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_REMOVE_ALL_GRAPHICS_INSTANCES\n");
+											break;
+										}
+										case GFX_CMD_REMOVE_SINGLE_GRAPHICS_INSTANCE:
+										{
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_REMOVE_SINGLE_GRAPHICS_INSTANCE\n");
+											break;
+										}
+										case GFX_CMD_CHANGE_RGBA_COLOR:
+										{
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_CHANGE_RGBA_COLOR\n");
+											break;
+										}
+										case GFX_CMD_CHANGE_SCALING:
+										{
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_CHANGE_SCALING\n");
+											break;
+										}
+
+										case GFX_CMD_GET_CAMERA_INFO:
+										{
+											args->submitCommand();
+											while (args->isCommandOutstanding())
+											{
+												clock.usleep(0);
+											}
+											//bool RemoteGUIHelper::getCameraInfo(int* width, int* height,
+											//	float viewMatrix[16], float projectionMatrix[16],
+											//	float camUp[3], float camForward[3], float hor[3], float vert[3],
+											//	float* yaw, float* pitch, float* camDist, float camTarget[3]) const
 #if 0
 										guiHelper.getCameraInfo(&serverStatus.m_getCameraInfoStatus.width,
 											&serverStatus.m_getCameraInfoStatus.height,
@@ -531,21 +510,20 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 											serverStatus.m_getCameraInfoStatus.camTarget);
 										serverStatus.m_type = GFX_CMD_GET_CAMERA_INFO_COMPLETED;
 #endif
-										if (gVerboseNetworkMessagesServer)
-											printf("GFX_CMD_GET_CAMERA_INFO\n");
-										break;
-									}
+											if (gVerboseNetworkMessagesServer)
+												printf("GFX_CMD_GET_CAMERA_INFO\n");
+											break;
+										}
 
-									case GFX_CMD_INVALID:
-									case GFX_CMD_MAX_CLIENT_COMMANDS:
-									default:
-									{
-										printf("UNKNOWN COMMAND!\n");
-										btAssert(0);
-										hasStatus = false;
+										case GFX_CMD_INVALID:
+										case GFX_CMD_MAX_CLIENT_COMMANDS:
+										default:
+										{
+											printf("UNKNOWN COMMAND!\n");
+											btAssert(0);
+											hasStatus = false;
+										}
 									}
-									}
-
 
 									double startTimeSeconds = clock.getTimeInSeconds();
 									double curTimeSeconds = clock.getTimeInSeconds();
@@ -559,7 +537,7 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 									{
 										submitStatus(pClient, args->m_serverStatus, buffer);
 									}
-                         
+
 									bytesReceived.clear();
 								}
 								else
@@ -581,8 +559,7 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 				}
 			}
 
-#endif //BT_ENABLE_CLSOCKET
-
+#endif  //BT_ENABLE_CLSOCKET
 
 			///////////////////////////////
 			args->m_cs->lock();
@@ -590,7 +567,7 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 			args->m_cs->unlock();
 
 		} while (cachedSharedParam != eTCPRequestTerminate);
-#ifdef BT_ENABLE_CLSOCKET	
+#ifdef BT_ENABLE_CLSOCKET
 		socket.Close();
 		socket.Shutdown(CSimpleSocket::Both);
 #endif
@@ -601,7 +578,7 @@ void TCPThreadFunc(void* userPtr, void* lsMemory)
 		args->m_cs->setSharedParam(0, eTCPInitializationFailed);
 		args->m_cs->unlock();
 	}
-		
+
 	printf("TCPThreadFunc thread exit\n");
 	//do nothing
 }
@@ -618,17 +595,16 @@ void TCPlsMemoryReleaseFunc(void* ptr)
 	delete p;
 }
 
-
 #ifndef _WIN32
 #include "../MultiThreading/b3PosixThreadSupport.h"
 
 b3ThreadSupportInterface* createTCPThreadSupport(int numThreads)
 {
 	b3PosixThreadSupport::ThreadConstructionInfo constructionInfo("TCPThreads",
-		TCPThreadFunc,
-		TCPlsMemoryFunc,
-		TCPlsMemoryReleaseFunc,
-		numThreads);
+																  TCPThreadFunc,
+																  TCPlsMemoryFunc,
+																  TCPlsMemoryReleaseFunc,
+																  numThreads);
 	b3ThreadSupportInterface* threadSupport = new b3PosixThreadSupport(constructionInfo);
 
 	return threadSupport;
@@ -645,21 +621,20 @@ b3ThreadSupportInterface* createTCPThreadSupport(int numThreads)
 }
 #endif
 
-
 class GraphicsServerExample : public CommonExampleInterface
 {
 	CommonGraphicsApp* m_app;
 	GUIHelperInterface* m_guiHelper;
-	
+
 	bool m_verboseOutput;
 
 	float m_x;
 	float m_y;
 	float m_z;
-	
+
 	b3ThreadSupportInterface* m_threadSupport;
 	TCPArgs m_args;
-	
+
 public:
 	GraphicsServerExample(GUIHelperInterface* guiHelper)
 		: m_guiHelper(guiHelper),
@@ -668,7 +643,7 @@ public:
 		  m_z(0)
 	{
 		m_verboseOutput = true;
-		
+
 		m_app = guiHelper->getAppInterface();
 		m_app->setUpAxis(2);
 
@@ -687,12 +662,10 @@ public:
 #ifdef _WIN32
 			b3Clock::usleep(1000);
 #endif
-	}
-
+		}
 	}
 	virtual ~GraphicsServerExample()
 	{
-		
 		m_args.m_cs->setSharedParam(0, eTCPRequestTerminate);
 
 		int numActiveThreads = 1;
@@ -714,7 +687,6 @@ public:
 
 		delete m_threadSupport;
 		m_threadSupport = 0;
-
 	}
 
 	virtual void initPhysics()
@@ -723,7 +695,7 @@ public:
 	virtual void exitPhysics()
 	{
 	}
-	
+
 	void submitServerStatus(GraphicsSharedMemoryStatus& status, int blockIndex)
 	{
 	}
@@ -755,7 +727,6 @@ public:
 				}
 				m_args.processCommand();
 				break;
-
 			}
 
 			case GFX_CMD_UPLOAD_DATA:
@@ -776,7 +747,6 @@ public:
 			}
 			case GFX_CMD_REGISTER_TEXTURE:
 			{
-				
 				int dataSlot = 0;
 				int sizeData = m_args.m_dataSlots[dataSlot].size();
 				btAssert(sizeData > 0);
@@ -788,7 +758,7 @@ public:
 					serverStatusOut.m_type = GFX_CMD_REGISTER_TEXTURE_COMPLETED;
 					serverStatusOut.m_registerTextureStatus.m_textureId = textureId;
 				}
-				
+
 				m_args.processCommand();
 				break;
 			}
@@ -814,10 +784,10 @@ public:
 			case GFX_CMD_REGISTER_GRAPHICS_INSTANCE:
 			{
 				int graphicsInstanceId = m_guiHelper->registerGraphicsInstance(clientCmd.m_registerGraphicsInstanceCommand.m_shapeIndex,
-					clientCmd.m_registerGraphicsInstanceCommand.m_position,
-					clientCmd.m_registerGraphicsInstanceCommand.m_quaternion,
-					clientCmd.m_registerGraphicsInstanceCommand.m_color,
-					clientCmd.m_registerGraphicsInstanceCommand.m_scaling);
+																			   clientCmd.m_registerGraphicsInstanceCommand.m_position,
+																			   clientCmd.m_registerGraphicsInstanceCommand.m_quaternion,
+																			   clientCmd.m_registerGraphicsInstanceCommand.m_color,
+																			   clientCmd.m_registerGraphicsInstanceCommand.m_scaling);
 				serverStatusOut.m_registerGraphicsInstanceStatus.m_graphicsInstanceId = graphicsInstanceId;
 				serverStatusOut.m_type = GFX_CMD_REGISTER_GRAPHICS_INSTANCE_COMPLETED;
 				m_args.processCommand();
@@ -862,20 +832,20 @@ public:
 			case GFX_CMD_GET_CAMERA_INFO:
 			{
 				serverStatusOut.m_type = GFX_CMD_GET_CAMERA_INFO_FAILED;
-				
+
 				if (m_guiHelper->getCameraInfo(
-					&serverStatusOut.m_getCameraInfoStatus.width,
-					&serverStatusOut.m_getCameraInfoStatus.height,
-					serverStatusOut.m_getCameraInfoStatus.viewMatrix,
-					serverStatusOut.m_getCameraInfoStatus.projectionMatrix,
-					serverStatusOut.m_getCameraInfoStatus.camUp,
-					serverStatusOut.m_getCameraInfoStatus.camForward,
-					serverStatusOut.m_getCameraInfoStatus.hor,
-					serverStatusOut.m_getCameraInfoStatus.vert,
-					&serverStatusOut.m_getCameraInfoStatus.yaw,
-					&serverStatusOut.m_getCameraInfoStatus.pitch,
-					&serverStatusOut.m_getCameraInfoStatus.camDist,
-					serverStatusOut.m_getCameraInfoStatus.camTarget))
+						&serverStatusOut.m_getCameraInfoStatus.width,
+						&serverStatusOut.m_getCameraInfoStatus.height,
+						serverStatusOut.m_getCameraInfoStatus.viewMatrix,
+						serverStatusOut.m_getCameraInfoStatus.projectionMatrix,
+						serverStatusOut.m_getCameraInfoStatus.camUp,
+						serverStatusOut.m_getCameraInfoStatus.camForward,
+						serverStatusOut.m_getCameraInfoStatus.hor,
+						serverStatusOut.m_getCameraInfoStatus.vert,
+						&serverStatusOut.m_getCameraInfoStatus.yaw,
+						&serverStatusOut.m_getCameraInfoStatus.pitch,
+						&serverStatusOut.m_getCameraInfoStatus.camDist,
+						serverStatusOut.m_getCameraInfoStatus.camTarget))
 				{
 					serverStatusOut.m_type = GFX_CMD_GET_CAMERA_INFO_COMPLETED;
 				}
@@ -916,12 +886,10 @@ public:
 		m_z += 0.01f;
 	}
 
-
 	virtual void renderScene()
 	{
 		B3_PROFILE("renderScene");
 		{
-
 			B3_PROFILE("writeTransforms");
 			m_app->m_renderer->writeTransforms();
 		}
@@ -929,14 +897,10 @@ public:
 			B3_PROFILE("m_renderer->renderScene");
 			m_app->m_renderer->renderScene();
 		}
-		
 	}
-
-	
 
 	virtual void physicsDebugDraw(int debugDrawFlags)
 	{
-		
 	}
 
 	virtual bool mouseMoveCallback(float x, float y)
@@ -952,29 +916,18 @@ public:
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 3.5;
-		float pitch = -32;
-		float yaw = 136;
-		float targetPos[3] = {0, 0, 0};
-		if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
-		{
-			m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
-			m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
-			m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
-			m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
-		}
+		CameraResetInfo info;
+		info.camDist = 3.5;
+		info.pitch = -32;
+		info.yaw = 136;
+		info.camPosX = 0;
+		info.camPosY = 0;
+		info.camPosZ = 0;
+		return info;
 	}
-	
-	
 };
-
-
-
-
-
-
 
 CommonExampleInterface* GraphicsServerCreateFuncBullet(struct CommonExampleOptions& options)
 {

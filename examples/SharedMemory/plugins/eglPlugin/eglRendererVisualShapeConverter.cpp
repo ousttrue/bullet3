@@ -480,7 +480,10 @@ EGLRendererVisualShapeConverter::EGLRendererVisualShapeConverter()
 	float dist = 1.5;
 	float pitch = -10;
 	float yaw = -80;
-	float targetPos[3] = {0, 0, 0};
+	float info.camPosX = 0;
+info.camPosY = 0;
+info.camPosZ = 0;
+
 	m_data->m_camera.setCameraUpAxis(m_data->m_upAxis);
 	resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
 	gWindow = this;

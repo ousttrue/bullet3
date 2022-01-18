@@ -4,6 +4,7 @@
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3Transform.h"
 #include "Bullet3Common/b3AlignedObjectArray.h"
+#include "CommonCameraInterface.h"
 #include <CommonRenderInterface.h>
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
@@ -73,11 +74,10 @@ void Reset(Tree& tree, Jacobian* m_ikJacobian)
 
 void UpdateTargets(double T, Tree& treeY)
 {
-	targetaa[0].Set(2.0f + 1.5*sin(3 * T) * 2, -0.5 + 1.0f + 0.2*sin(7 * T) * 2, 0.3f + 0.7*sin(5 * T) * 2);
-	targetaa[1].Set(0.5f + 0.4*sin(4 * T) * 2, -0.5 + 0.9f + 0.3*sin(4 * T) * 2, -0.2f + 1.0*sin(3 * T) * 2);
-	targetaa[2].Set(-0.5f + 0.8*sin(6 * T) * 2, -0.5 + 1.1f + 0.2*sin(7 * T) * 2, 0.3f + 0.5*sin(8 * T) * 2);
-	targetaa[3].Set(-1.6f + 0.8*sin(4 * T) * 2, -0.5 + 0.8f + 0.3*sin(4 * T) * 2, -0.2f + 0.3*sin(3 * T) * 2);
-
+	targetaa[0].Set(2.0f + 1.5 * sin(3 * T) * 2, -0.5 + 1.0f + 0.2 * sin(7 * T) * 2, 0.3f + 0.7 * sin(5 * T) * 2);
+	targetaa[1].Set(0.5f + 0.4 * sin(4 * T) * 2, -0.5 + 0.9f + 0.3 * sin(4 * T) * 2, -0.2f + 1.0 * sin(3 * T) * 2);
+	targetaa[2].Set(-0.5f + 0.8 * sin(6 * T) * 2, -0.5 + 1.1f + 0.2 * sin(7 * T) * 2, 0.3f + 0.5 * sin(8 * T) * 2);
+	targetaa[3].Set(-1.6f + 0.8 * sin(4 * T) * 2, -0.5 + 0.8f + 0.3 * sin(4 * T) * 2, -0.2f + 0.3 * sin(3 * T) * 2);
 }
 
 // Does a single update (on one kind of m_ikTree)
@@ -86,7 +86,7 @@ void DoUpdateStep(double Tstep, Tree& treeY, Jacobian* jacob, int ikMethod)
 	B3_PROFILE("IK_DoUpdateStep");
 	if (SleepCounter == 0)
 	{
-		T += Tstep*0.1;
+		T += Tstep * 0.1;
 		UpdateTargets(T, treeY);
 	}
 
@@ -155,7 +155,7 @@ class InverseKinematicsExample : public CommonExampleInterface
 public:
 	InverseKinematicsExample(CommonGraphicsApp* app, int option)
 		: m_app(app),
-		  m_ikMethod(option)		  
+		  m_ikMethod(option)
 	{
 		m_app->setUpAxis(1);
 
@@ -222,7 +222,6 @@ public:
 	}
 	void MyDrawTree(Node* node, const b3Transform& tr, const b3Transform& parentTr)
 	{
-		
 		int lineWidth = 2;
 		if (node != 0)
 		{
@@ -261,7 +260,6 @@ public:
 				m_app->m_renderer->drawLine(tr.getOrigin(), trl.getOrigin(), lineColor, lineWidth);
 				MyDrawTree(node->left, trl, tr);  // Draw m_ikTree of children recursively
 			}
-			
 		}
 	}
 	virtual void stepSimulation(float deltaTime)
@@ -301,19 +299,16 @@ public:
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 1.3;
-		float pitch = -13;
-		float yaw = 120;
-		float targetPos[3] = {-0.35, 0.14, 0.25};
-		if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
-		{
-			m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
-			m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
-			m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
-			m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
-		}
+		CameraResetInfo info;
+		info.camDist = 1.3;
+		info.pitch = -13;
+		info.yaw = 120;
+		info.camPosX = -0.35;
+		info.camPosY = 0.14;
+		info.camPosZ = 0.25;
+		return info;
 	}
 };
 
@@ -328,20 +323,20 @@ void InverseKinematicsExample::BuildKukaIIWAShape()
 	VectorR3 p0(0.0f, -1.5f, 0.0f);
 	VectorR3 p1(0.0f, -1.0f, 0.0f);
 	VectorR3 p2(0.0f, -0.5f, 0.0f);
-	VectorR3 p3(0.5f*Root2Inv, -0.5 + 0.5*Root2Inv, 0.0f);
-	VectorR3 p4(0.5f*Root2Inv + 0.5f*HalfRoot3, -0.5 + 0.5*Root2Inv + 0.5f*0.5, 0.0f);
-	VectorR3 p5(0.5f*Root2Inv + 1.0f*HalfRoot3, -0.5 + 0.5*Root2Inv + 1.0f*0.5, 0.0f);
-	VectorR3 p6(0.5f*Root2Inv + 1.5f*HalfRoot3, -0.5 + 0.5*Root2Inv + 1.5f*0.5, 0.0f);
-	VectorR3 p7(0.5f*Root2Inv + 0.5f*HalfRoot3, -0.5 + 0.5*Root2Inv + 0.5f*HalfRoot3, 0.0f);
-	VectorR3 p8(0.5f*Root2Inv + 1.0f*HalfRoot3, -0.5 + 0.5*Root2Inv + 1.0f*HalfRoot3, 0.0f);
-	VectorR3 p9(0.5f*Root2Inv + 1.5f*HalfRoot3, -0.5 + 0.5*Root2Inv + 1.5f*HalfRoot3, 0.0f);
-	VectorR3 p10(-0.5f*Root2Inv, -0.5 + 0.5*Root2Inv, 0.0f);
-	VectorR3 p11(-0.5f*Root2Inv - 0.5f*HalfRoot3, -0.5 + 0.5*Root2Inv + 0.5f*HalfRoot3, 0.0f);
-	VectorR3 p12(-0.5f*Root2Inv - 1.0f*HalfRoot3, -0.5 + 0.5*Root2Inv + 1.0f*HalfRoot3, 0.0f);
-	VectorR3 p13(-0.5f*Root2Inv - 1.5f*HalfRoot3, -0.5 + 0.5*Root2Inv + 1.5f*HalfRoot3, 0.0f);
-	VectorR3 p14(-0.5f*Root2Inv - 0.5f*HalfRoot3, -0.5 + 0.5*Root2Inv + 0.5f*0.5, 0.0f);
-	VectorR3 p15(-0.5f*Root2Inv - 1.0f*HalfRoot3, -0.5 + 0.5*Root2Inv + 1.0f*0.5, 0.0f);
-	VectorR3 p16(-0.5f*Root2Inv - 1.5f*HalfRoot3, -0.5 + 0.5*Root2Inv + 1.5f*0.5, 0.0f);
+	VectorR3 p3(0.5f * Root2Inv, -0.5 + 0.5 * Root2Inv, 0.0f);
+	VectorR3 p4(0.5f * Root2Inv + 0.5f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 0.5f * 0.5, 0.0f);
+	VectorR3 p5(0.5f * Root2Inv + 1.0f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 1.0f * 0.5, 0.0f);
+	VectorR3 p6(0.5f * Root2Inv + 1.5f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 1.5f * 0.5, 0.0f);
+	VectorR3 p7(0.5f * Root2Inv + 0.5f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 0.5f * HalfRoot3, 0.0f);
+	VectorR3 p8(0.5f * Root2Inv + 1.0f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 1.0f * HalfRoot3, 0.0f);
+	VectorR3 p9(0.5f * Root2Inv + 1.5f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 1.5f * HalfRoot3, 0.0f);
+	VectorR3 p10(-0.5f * Root2Inv, -0.5 + 0.5 * Root2Inv, 0.0f);
+	VectorR3 p11(-0.5f * Root2Inv - 0.5f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 0.5f * HalfRoot3, 0.0f);
+	VectorR3 p12(-0.5f * Root2Inv - 1.0f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 1.0f * HalfRoot3, 0.0f);
+	VectorR3 p13(-0.5f * Root2Inv - 1.5f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 1.5f * HalfRoot3, 0.0f);
+	VectorR3 p14(-0.5f * Root2Inv - 0.5f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 0.5f * 0.5, 0.0f);
+	VectorR3 p15(-0.5f * Root2Inv - 1.0f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 1.0f * 0.5, 0.0f);
+	VectorR3 p16(-0.5f * Root2Inv - 1.5f * HalfRoot3, -0.5 + 0.5 * Root2Inv + 1.5f * 0.5, 0.0f);
 
 	m_ikNodes[0] = new Node(p0, unit1, 0.08, JOINT, RADIAN(-180.), RADIAN(180.), RADIAN(30.));
 	m_ikTree.InsertRoot(m_ikNodes[0]);
@@ -429,7 +424,6 @@ void InverseKinematicsExample::BuildKukaIIWAShape()
 
 	m_ikNodes[28] = new Node(p16, zero, 0.08, EFFECTOR);
 	m_ikTree.InsertLeftChild(m_ikNodes[27], m_ikNodes[28]);
-
 }
 
 class CommonExampleInterface* InverseKinematicsExampleCreateFunc(struct CommonExampleOptions& options)

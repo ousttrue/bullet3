@@ -21,6 +21,7 @@ subject to the following restrictions:
 #include "BulletCollision/CollisionShapes/btBox2dShape.h"
 #include "BulletCollision/CollisionShapes/btConvex2dShape.h"
 #include "BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h"
+#include "CommonCameraInterface.h"
 
 ///create 125 (5x5x5) dynamic object
 #define ARRAY_SIZE_X 5
@@ -76,13 +77,16 @@ public:
 
 	void exitPhysics();
 
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 9;
-		float pitch = -11;
-		float yaw = 539;
-		float targetPos[3] = {8.6, 10.5, -20.6};
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 9;
+		info.pitch = -11;
+		info.yaw = 539;
+		info.camPosX = 8.6;
+		info.camPosY = 10.5;
+		info.camPosZ = -20.6;
+		return info;
 	}
 };
 
@@ -98,7 +102,7 @@ void Planar2D::initPhysics()
 	m_convexAlgo2d = new btConvex2dConvex2dAlgorithm::CreateFunc(m_simplexSolver, m_pdSolver);
 	m_box2dbox2dAlgo = new btBox2dBox2dCollisionAlgorithm::CreateFunc();
 
-	auto m_dispatcher=m_physics->getDispatcher();
+	auto m_dispatcher = m_physics->getDispatcher();
 	m_dispatcher->registerCollisionCreateFunc(CONVEX_2D_SHAPE_PROXYTYPE, CONVEX_2D_SHAPE_PROXYTYPE, m_convexAlgo2d);
 	m_dispatcher->registerCollisionCreateFunc(BOX_2D_SHAPE_PROXYTYPE, CONVEX_2D_SHAPE_PROXYTYPE, m_convexAlgo2d);
 	m_dispatcher->registerCollisionCreateFunc(CONVEX_2D_SHAPE_PROXYTYPE, BOX_2D_SHAPE_PROXYTYPE, m_convexAlgo2d);
