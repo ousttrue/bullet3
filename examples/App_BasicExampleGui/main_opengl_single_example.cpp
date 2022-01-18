@@ -1,18 +1,3 @@
-/*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2015 Google Inc. http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
-*/
-
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
 #include <GlfwApp.h>
@@ -20,72 +5,36 @@ subject to the following restrictions:
 #include <OpenGLGuiHelper.h>
 #include <stdio.h>
 #include <BasicDemo/BasicExample.h>
-
-// this define maps StandaloneExampleCreateFunc to the right 'CreateFunc'
-// #define B3_USE_STANDALONE_EXAMPLE 1
-B3_STANDALONE_EXAMPLE(BasicExampleCreateFunc)
-
-CommonExampleInterface* example;
-int gSharedMemoryKey = -1;
-
-b3MouseMoveCallback prevMouseMoveCallback = 0;
-static void OnMouseMove(float x, float y)
-{
-	bool handled = false;
-	handled = example->mouseMoveCallback(x, y);
-	if (!handled)
-	{
-		if (prevMouseMoveCallback)
-			prevMouseMoveCallback(x, y);
-	}
-}
-
-b3MouseButtonCallback prevMouseButtonCallback = 0;
-static void OnMouseDown(int button, int state, float x, float y)
-{
-	bool handled = false;
-
-	handled = example->mouseButtonCallback(button, state, x, y);
-	if (!handled)
-	{
-		if (prevMouseButtonCallback)
-			prevMouseButtonCallback(button, state, x, y);
-	}
-}
-
-class LessDummyGuiHelper : public DummyGUIHelper
-{
-	CommonGraphicsApp* m_app;
-
-public:
-	virtual CommonGraphicsApp* getAppInterface()
-	{
-		return m_app;
-	}
-
-	LessDummyGuiHelper(CommonGraphicsApp* app)
-		: m_app(app)
-	{
-	}
-};
+#include <memory>
 
 int main(int argc, char* argv[])
 {
-	auto app = new GlfwApp("Bullet Standalone Example", 1024, 768, true);
-
-	prevMouseButtonCallback = app->m_window->getMouseButtonCallback();
-	prevMouseMoveCallback = app->m_window->getMouseMoveCallback();
-
-	app->m_window->setMouseButtonCallback((b3MouseButtonCallback)OnMouseDown);
-	app->m_window->setMouseMoveCallback((b3MouseMoveCallback)OnMouseMove);
-
-	OpenGLGuiHelper gui(app, false);
-	//LessDummyGuiHelper gui(app);
-	//DummyGUIHelper gui;
-
+	GlfwApp app("Bullet Standalone Example", 1024, 768, true);
+	OpenGLGuiHelper gui(&app, false);
 	CommonExampleOptions options(&gui);
+	std::unique_ptr<CommonExampleInterface> example;
+	example.reset(BasicExampleCreateFunc(options));
 
-	example = BasicExampleCreateFunc(options);
+	auto prevMouseButtonCallback = app.m_window->getMouseButtonCallback();
+	app.m_window->setMouseButtonCallback([&example, &prevMouseButtonCallback](int button, int state, float x, float y)
+										 {
+											 bool handled = example->mouseButtonCallback(button, state, x, y);
+											 if (!handled)
+											 {
+												 if (prevMouseButtonCallback)
+													 prevMouseButtonCallback(button, state, x, y);
+											 } });
+
+	auto prevMouseMoveCallback = app.m_window->getMouseMoveCallback();
+	app.m_window->setMouseMoveCallback([&example, &prevMouseMoveCallback](float x, float y)
+									   {
+										   bool handled = example->mouseMoveCallback(x, y);
+										   if (!handled)
+										   {
+											   if (prevMouseMoveCallback)
+												   prevMouseMoveCallback(x, y);
+										   } });
+
 	example->processCommandLineArgs(argc, argv);
 
 	example->initPhysics();
@@ -93,10 +42,10 @@ int main(int argc, char* argv[])
 
 	b3Clock clock;
 
-	do
+	while (!app.m_window->requestedExit())
 	{
-		app->m_instancingRenderer->init();
-		app->m_instancingRenderer->updateCamera(app->getUpAxis());
+		app.m_instancingRenderer->init();
+		app.m_instancingRenderer->updateCamera(app.getUpAxis());
 
 		btScalar dtSec = btScalar(clock.getTimeInSeconds());
 		if (dtSec > 0.1)
@@ -108,14 +57,13 @@ int main(int argc, char* argv[])
 		example->renderScene();
 
 		DrawGridData dg;
-		dg.upAxis = app->getUpAxis();
-		app->drawGrid(dg);
+		dg.upAxis = app.getUpAxis();
+		app.drawGrid(dg);
 
-		app->swapBuffer();
-	} while (!app->m_window->requestedExit());
+		app.swapBuffer();
+	}
 
 	example->exitPhysics();
-	delete example;
-	delete app;
+
 	return 0;
 }

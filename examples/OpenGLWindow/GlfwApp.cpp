@@ -203,13 +203,19 @@ static void SimpleMouseMoveCallback(GLFWwindow* window, double x, double y)
 	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
 	s_x = x;
 	s_y = y;
-	gApp->m_onMove(x, y);
+	if (gApp->m_onMove)
+	{
+		gApp->m_onMove(x, y);
+	}
 }
 
 static void SimpleWheelCallback(GLFWwindow* window, double deltax, double deltay)
 {
 	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
-	gApp->m_onWheel(deltax, deltay);
+	if (gApp->m_onWheel)
+	{
+		gApp->m_onWheel(deltax, deltay);
+	}
 }
 
 struct SimpleInternalData
