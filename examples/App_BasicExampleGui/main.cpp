@@ -39,7 +39,6 @@ int main(int argc, char* argv[])
 
 	example->initPhysics();
 
-
 	gui.resetCamera(example->cameraResetInfo());
 	// if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
 	// {
@@ -53,17 +52,21 @@ int main(int argc, char* argv[])
 
 	while (!app.m_window->requestedExit())
 	{
-		app.m_instancingRenderer->init();
-		app.m_instancingRenderer->updateCamera(app.getUpAxis());
-
+		// step simulation
 		btScalar dtSec = btScalar(clock.getTimeInSeconds());
 		if (dtSec > 0.1)
 			dtSec = 0.1;
-
 		example->stepSimulation(dtSec);
 		clock.reset();
 
-		example->renderScene();
+		app.m_instancingRenderer->init();
+		app.m_instancingRenderer->updateCamera(app.getUpAxis());
+
+		if (auto world = example->getDynamicsWorld())
+		{
+				gui.syncPhysicsToGraphics(world);
+				gui.render(world);
+		}
 
 		DrawGridData dg;
 		dg.upAxis = app.getUpAxis();

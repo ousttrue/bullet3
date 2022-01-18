@@ -84,4 +84,15 @@ struct CommonRigidBodyBase : public CommonExampleInterface
 	bool mouseMoveCallback(float x, float y) override;
 	bool mouseButtonCallback(int button, int state, float x, float y) override;
 	void renderScene() override;
+	class btDiscreteDynamicsWorld* getDynamicsWorld() override
+	{
+		if (m_physics)
+		{
+			return m_physics->getDynamicsWorld();
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
 };
