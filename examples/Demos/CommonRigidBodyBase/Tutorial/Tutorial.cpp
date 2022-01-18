@@ -551,25 +551,6 @@ public:
 
 		m_app->m_renderer->writeTransforms();
 	}
-	virtual void renderScene()
-	{
-		m_app->m_renderer->renderScene();
-		m_app->drawText3D("X", 1, 0, 0, 1);
-		m_app->drawText3D("Y", 0, 1, 0, 1);
-		m_app->drawText3D("Z", 0, 0, 1, 1);
-
-		for (int i = 0; i < m_contactPoints.size(); i++)
-		{
-			const LWContactPoint& contact = m_contactPoints[i];
-			b3Vector3 color = b3MakeVector3(1, 1, 0);
-			float lineWidth = 3;
-			if (contact.m_distance < 0)
-			{
-				color.setValue(1, 0, 0);
-			}
-			m_app->m_renderer->drawLine(contact.m_ptOnAWorld, contact.m_ptOnBWorld, color, lineWidth);
-		}
-	}
 
 	virtual void physicsDebugDraw(int debugDrawFlags)
 	{

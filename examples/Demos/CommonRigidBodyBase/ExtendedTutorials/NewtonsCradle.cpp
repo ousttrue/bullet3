@@ -53,7 +53,6 @@ struct NewtonsCradleExample : public CommonRigidBodyBase
 	{
 	}
 	virtual void initPhysics();
-	virtual void renderScene();
 	virtual void createPendulum(btSphereShape* colShape, const btVector3& position, btScalar length, btScalar mass);
 	virtual void changePendulaLength(btScalar length);
 	virtual void changePendulaRestitution(btScalar restitution);

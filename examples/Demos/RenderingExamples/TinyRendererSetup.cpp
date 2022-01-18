@@ -111,8 +111,6 @@ struct TinyRendererSetup : public CommonExampleInterface
 
 	virtual bool keyboardCallback(int key, int state);
 
-	virtual void renderScene();
-
 	void animateRenderer(int animateRendererIndex)
 	{
 		m_internalData->m_animateRenderer = animateRendererIndex;
@@ -312,122 +310,122 @@ void TinyRendererSetup::stepSimulation(float deltaTime)
 	m_internalData->updateTransforms();
 }
 
-void TinyRendererSetup::renderScene()
-{
-	m_internalData->updateTransforms();
+// void TinyRendererSetup::renderScene()
+// {
+// 	m_internalData->updateTransforms();
 
-	btVector4 from(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2], 1);
-	btVector4 toX(m_internalData->m_lightPos[0] + 0.1, m_internalData->m_lightPos[1], m_internalData->m_lightPos[2], 1);
-	btVector4 toY(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1] + 0.1, m_internalData->m_lightPos[2], 1);
-	btVector4 toZ(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2] + 0.1, 1);
-	btVector4 colorX(1, 0, 0, 1);
-	btVector4 colorY(0, 1, 0, 1);
-	btVector4 colorZ(0, 0, 1, 1);
-	int width = 2;
-	m_guiHelper->getRenderInterface()->drawLine(from, toX, colorX, width);
-	m_guiHelper->getRenderInterface()->drawLine(from, toY, colorY, width);
-	m_guiHelper->getRenderInterface()->drawLine(from, toZ, colorZ, width);
+// 	btVector4 from(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2], 1);
+// 	btVector4 toX(m_internalData->m_lightPos[0] + 0.1, m_internalData->m_lightPos[1], m_internalData->m_lightPos[2], 1);
+// 	btVector4 toY(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1] + 0.1, m_internalData->m_lightPos[2], 1);
+// 	btVector4 toZ(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2] + 0.1, 1);
+// 	btVector4 colorX(1, 0, 0, 1);
+// 	btVector4 colorY(0, 1, 0, 1);
+// 	btVector4 colorZ(0, 0, 1, 1);
+// 	int width = 2;
+// 	m_guiHelper->getRenderInterface()->drawLine(from, toX, colorX, width);
+// 	m_guiHelper->getRenderInterface()->drawLine(from, toY, colorY, width);
+// 	m_guiHelper->getRenderInterface()->drawLine(from, toZ, colorZ, width);
 
-	if (!m_useSoftware)
-	{
-		btVector3 lightPos(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2]);
-		m_guiHelper->getRenderInterface()->setLightPosition(lightPos);
+// 	if (!m_useSoftware)
+// 	{
+// 		btVector3 lightPos(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2]);
+// 		m_guiHelper->getRenderInterface()->setLightPosition(lightPos);
 
-		for (int i = 0; i < m_internalData->m_transforms.size(); i++)
-		{
-			m_guiHelper->getRenderInterface()->writeSingleInstanceTransformToCPU(m_internalData->m_transforms[i].getOrigin(), m_internalData->m_transforms[i].getRotation(), i);
-		}
-		m_guiHelper->getRenderInterface()->writeTransforms();
-		m_guiHelper->getRenderInterface()->renderScene();
-	}
-	else
-	{
-		TGAColor clearColor;
-		clearColor.bgra[0] = 200;
-		clearColor.bgra[1] = 200;
-		clearColor.bgra[2] = 200;
-		clearColor.bgra[3] = 255;
-		for (int y = 0; y < m_internalData->m_height; ++y)
-		{
-			for (int x = 0; x < m_internalData->m_width; ++x)
-			{
-				m_internalData->m_rgbColorBuffer.set(x, y, clearColor);
-				m_internalData->m_depthBuffer[x + y * m_internalData->m_width] = -1e30f;
-				m_internalData->m_shadowBuffer[x + y * m_internalData->m_width] = -1e30f;
-			}
-		}
+// 		for (int i = 0; i < m_internalData->m_transforms.size(); i++)
+// 		{
+// 			m_guiHelper->getRenderInterface()->writeSingleInstanceTransformToCPU(m_internalData->m_transforms[i].getOrigin(), m_internalData->m_transforms[i].getRotation(), i);
+// 		}
+// 		m_guiHelper->getRenderInterface()->writeTransforms();
+// 		m_guiHelper->getRenderInterface()->renderScene();
+// 	}
+// 	else
+// 	{
+// 		TGAColor clearColor;
+// 		clearColor.bgra[0] = 200;
+// 		clearColor.bgra[1] = 200;
+// 		clearColor.bgra[2] = 200;
+// 		clearColor.bgra[3] = 255;
+// 		for (int y = 0; y < m_internalData->m_height; ++y)
+// 		{
+// 			for (int x = 0; x < m_internalData->m_width; ++x)
+// 			{
+// 				m_internalData->m_rgbColorBuffer.set(x, y, clearColor);
+// 				m_internalData->m_depthBuffer[x + y * m_internalData->m_width] = -1e30f;
+// 				m_internalData->m_shadowBuffer[x + y * m_internalData->m_width] = -1e30f;
+// 			}
+// 		}
 
-		ATTRIBUTE_ALIGNED16(btScalar modelMat2[16]);
-		ATTRIBUTE_ALIGNED16(float viewMat[16]);
-		ATTRIBUTE_ALIGNED16(float projMat[16]);
-		CommonRenderInterface* render = this->m_app->m_renderer;
-		render->getActiveCamera()->getCameraViewMatrix(viewMat);
-		render->getActiveCamera()->getCameraProjectionMatrix(projMat);
+// 		ATTRIBUTE_ALIGNED16(btScalar modelMat2[16]);
+// 		ATTRIBUTE_ALIGNED16(float viewMat[16]);
+// 		ATTRIBUTE_ALIGNED16(float projMat[16]);
+// 		CommonRenderInterface* render = this->m_app->m_renderer;
+// 		render->getActiveCamera()->getCameraViewMatrix(viewMat);
+// 		render->getActiveCamera()->getCameraProjectionMatrix(projMat);
 
-		for (int o = 0; o < this->m_internalData->m_renderObjects.size(); o++)
-		{
-			const btTransform& tr = m_internalData->m_transforms[o];
-			tr.getOpenGLMatrix(modelMat2);
+// 		for (int o = 0; o < this->m_internalData->m_renderObjects.size(); o++)
+// 		{
+// 			const btTransform& tr = m_internalData->m_transforms[o];
+// 			tr.getOpenGLMatrix(modelMat2);
 
-			for (int i = 0; i < 4; i++)
-			{
-				for (int j = 0; j < 4; j++)
-				{
-					m_internalData->m_renderObjects[o]->m_modelMatrix[i][j] = float(modelMat2[i + 4 * j]);
-					m_internalData->m_renderObjects[o]->m_viewMatrix[i][j] = viewMat[i + 4 * j];
-					m_internalData->m_renderObjects[o]->m_projectionMatrix[i][j] = projMat[i + 4 * j];
+// 			for (int i = 0; i < 4; i++)
+// 			{
+// 				for (int j = 0; j < 4; j++)
+// 				{
+// 					m_internalData->m_renderObjects[o]->m_modelMatrix[i][j] = float(modelMat2[i + 4 * j]);
+// 					m_internalData->m_renderObjects[o]->m_viewMatrix[i][j] = viewMat[i + 4 * j];
+// 					m_internalData->m_renderObjects[o]->m_projectionMatrix[i][j] = projMat[i + 4 * j];
 
-					btVector3 lightDirWorld = btVector3(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2]);
+// 					btVector3 lightDirWorld = btVector3(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2]);
 
-					m_internalData->m_renderObjects[o]->m_lightDirWorld = lightDirWorld.normalized();
+// 					m_internalData->m_renderObjects[o]->m_lightDirWorld = lightDirWorld.normalized();
 
-					btVector3 lightColor(1.0, 1.0, 1.0);
-					m_internalData->m_renderObjects[o]->m_lightColor = lightColor;
+// 					btVector3 lightColor(1.0, 1.0, 1.0);
+// 					m_internalData->m_renderObjects[o]->m_lightColor = lightColor;
 
-					m_internalData->m_renderObjects[o]->m_lightDistance = 10.0;
-					m_internalData->m_renderObjects[o]->m_lightAmbientCoeff = 0.6;
-					m_internalData->m_renderObjects[o]->m_lightDiffuseCoeff = 0.35;
-					m_internalData->m_renderObjects[o]->m_lightSpecularCoeff = 0.05;
-				}
-			}
-			TinyRenderer::renderObjectDepth(*m_internalData->m_renderObjects[o]);
-		}
+// 					m_internalData->m_renderObjects[o]->m_lightDistance = 10.0;
+// 					m_internalData->m_renderObjects[o]->m_lightAmbientCoeff = 0.6;
+// 					m_internalData->m_renderObjects[o]->m_lightDiffuseCoeff = 0.35;
+// 					m_internalData->m_renderObjects[o]->m_lightSpecularCoeff = 0.05;
+// 				}
+// 			}
+// 			TinyRenderer::renderObjectDepth(*m_internalData->m_renderObjects[o]);
+// 		}
 
-		for (int o = 0; o < this->m_internalData->m_renderObjects.size(); o++)
-		{
-			const btTransform& tr = m_internalData->m_transforms[o];
-			tr.getOpenGLMatrix(modelMat2);
+// 		for (int o = 0; o < this->m_internalData->m_renderObjects.size(); o++)
+// 		{
+// 			const btTransform& tr = m_internalData->m_transforms[o];
+// 			tr.getOpenGLMatrix(modelMat2);
 
-			for (int i = 0; i < 4; i++)
-			{
-				for (int j = 0; j < 4; j++)
-				{
-					m_internalData->m_renderObjects[o]->m_modelMatrix[i][j] = float(modelMat2[i + 4 * j]);
-					m_internalData->m_renderObjects[o]->m_viewMatrix[i][j] = viewMat[i + 4 * j];
-					m_internalData->m_renderObjects[o]->m_projectionMatrix[i][j] = projMat[i + 4 * j];
+// 			for (int i = 0; i < 4; i++)
+// 			{
+// 				for (int j = 0; j < 4; j++)
+// 				{
+// 					m_internalData->m_renderObjects[o]->m_modelMatrix[i][j] = float(modelMat2[i + 4 * j]);
+// 					m_internalData->m_renderObjects[o]->m_viewMatrix[i][j] = viewMat[i + 4 * j];
+// 					m_internalData->m_renderObjects[o]->m_projectionMatrix[i][j] = projMat[i + 4 * j];
 
-					btVector3 lightDirWorld = btVector3(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2]);
+// 					btVector3 lightDirWorld = btVector3(m_internalData->m_lightPos[0], m_internalData->m_lightPos[1], m_internalData->m_lightPos[2]);
 
-					m_internalData->m_renderObjects[o]->m_lightDirWorld = lightDirWorld.normalized();
+// 					m_internalData->m_renderObjects[o]->m_lightDirWorld = lightDirWorld.normalized();
 
-					btVector3 lightColor(1.0, 1.0, 1.0);
-					m_internalData->m_renderObjects[o]->m_lightColor = lightColor;
+// 					btVector3 lightColor(1.0, 1.0, 1.0);
+// 					m_internalData->m_renderObjects[o]->m_lightColor = lightColor;
 
-					m_internalData->m_renderObjects[o]->m_lightDistance = 10.0;
-					m_internalData->m_renderObjects[o]->m_lightAmbientCoeff = 0.6;
-					m_internalData->m_renderObjects[o]->m_lightDiffuseCoeff = 0.35;
-					m_internalData->m_renderObjects[o]->m_lightSpecularCoeff = 0.05;
-				}
-			}
-			TinyRenderer::renderObject(*m_internalData->m_renderObjects[o]);
-		}
-		//m_app->drawText("hello",500,500);
-		render->activateTexture(m_internalData->m_textureHandle);
-		render->updateTexture(m_internalData->m_textureHandle, m_internalData->m_rgbColorBuffer.buffer());
-		float color[4] = {1, 1, 1, 1};
-		m_app->drawTexturedRect(0, 0, m_app->m_window->getWidth(), m_app->m_window->getHeight(), color, 0, 0, 1, 1, true);
-	}
-}
+// 					m_internalData->m_renderObjects[o]->m_lightDistance = 10.0;
+// 					m_internalData->m_renderObjects[o]->m_lightAmbientCoeff = 0.6;
+// 					m_internalData->m_renderObjects[o]->m_lightDiffuseCoeff = 0.35;
+// 					m_internalData->m_renderObjects[o]->m_lightSpecularCoeff = 0.05;
+// 				}
+// 			}
+// 			TinyRenderer::renderObject(*m_internalData->m_renderObjects[o]);
+// 		}
+// 		//m_app->drawText("hello",500,500);
+// 		render->activateTexture(m_internalData->m_textureHandle);
+// 		render->updateTexture(m_internalData->m_textureHandle, m_internalData->m_rgbColorBuffer.buffer());
+// 		float color[4] = {1, 1, 1, 1};
+// 		m_app->drawTexturedRect(0, 0, m_app->m_window->getWidth(), m_app->m_window->getHeight(), color, 0, 0, 1, 1, true);
+// 	}
+// }
 
 void TinyRendererSetup::physicsDebugDraw(int debugDrawFlags)
 {

@@ -53,7 +53,6 @@ struct InclinedPlaneExample : public CommonRigidBodyBase
 	virtual ~InclinedPlaneExample() {}
 	virtual void initPhysics();
 	virtual void resetScene();
-	virtual void renderScene();
 	virtual void stepSimulation(float deltaTime);
 	virtual bool keyboardCallback(int key, int state);
 	CameraResetInfo cameraResetInfo() const override

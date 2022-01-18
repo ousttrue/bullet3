@@ -15,8 +15,6 @@ public:
 
 	virtual bool connect(int mode, const std::string& hostName = "localhost", int portOrKey = -1);
 
-	virtual void renderScene();
-
 	virtual void debugDraw(int debugDrawMode);
 
 	virtual bool mouseMoveCallback(float x, float y);

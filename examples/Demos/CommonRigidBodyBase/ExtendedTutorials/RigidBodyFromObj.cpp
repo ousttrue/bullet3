@@ -36,7 +36,6 @@ struct RigidBodyFromObjExample : public CommonRigidBodyBase
 	}
 	virtual ~RigidBodyFromObjExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;

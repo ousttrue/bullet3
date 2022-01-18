@@ -62,7 +62,6 @@ struct KinematicRigidBodyExample : public CommonRigidBodyBase
 
 	virtual ~KinematicRigidBodyExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;

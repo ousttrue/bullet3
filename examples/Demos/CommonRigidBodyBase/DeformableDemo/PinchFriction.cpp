@@ -85,11 +85,6 @@ public:
 		}
 	}
 
-	virtual void renderScene()
-	{
-		CommonDeformableBodyBase::renderScene();
-	}
-
 	virtual bool pickBody(const btVector3& rayFromWorld, const btVector3& rayToWorld)
 	{
 		return false;

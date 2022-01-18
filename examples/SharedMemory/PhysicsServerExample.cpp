@@ -1513,7 +1513,7 @@ public:
 
 	virtual bool wantsTermination();
 	virtual bool isConnected();
-	virtual void renderScene();
+	void renderScene();
 	void drawUserDebugLines();
 	virtual void exitPhysics();
 

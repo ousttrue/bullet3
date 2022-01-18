@@ -38,7 +38,6 @@ struct RigidBodySoftContact : public CommonRigidBodyBase
 	{
 	}
 	virtual void initPhysics();
-	virtual void renderScene();
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;

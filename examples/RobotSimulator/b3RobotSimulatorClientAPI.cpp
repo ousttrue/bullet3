@@ -29,19 +29,6 @@ b3RobotSimulatorClientAPI::~b3RobotSimulatorClientAPI()
 {
 }
 
-void b3RobotSimulatorClientAPI::renderScene()
-{
-	if (!isConnected())
-	{
-		b3Warning("Not connected");
-		return;
-	}
-	if (m_data->m_guiHelper)
-	{
-		b3InProcessRenderSceneInternal(m_data->m_physicsClientHandle);
-	}
-}
-
 void b3RobotSimulatorClientAPI::debugDraw(int debugDrawMode)
 {
 	if (!isConnected())

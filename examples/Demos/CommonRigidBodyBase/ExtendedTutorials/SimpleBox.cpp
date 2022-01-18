@@ -29,7 +29,6 @@ struct SimpleBoxExample : public CommonRigidBodyBase
 	}
 	virtual ~SimpleBoxExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;

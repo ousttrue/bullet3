@@ -67,66 +67,6 @@ int main(int argc, char* argv[])
 				gui.syncPhysicsToGraphics(world);
 				gui.render(world);
 		}
-		// void renderScene()
-		// {  // render the scene
-		// 	if (!gIsHeadless)
-		// 	{  // while the simulation is not running headlessly, render to screen
-		// 		CommonRigidBodyBase::renderScene();
-
-		// 		if (m_physics->getDynamicsWorld()->getDebugDrawer())
-		// 		{
-		// 			m_physics->debugDraw(m_physics->getDynamicsWorld()->getDebugDrawer()->getDebugMode());
-		// 		}
-		// 	}
-		// 	mIsHeadless = gIsHeadless;
-		// }		
-		// virtual void renderScene()
-		// {
-		// 	CommonRigidBodyBase::renderScene();
-		// 	btSoftRigidDynamicsWorld* softWorld = getSoftDynamicsWorld();
-
-		// 	for (int i = 0; i < softWorld->getSoftBodyArray().size(); i++)
-		// 	{
-		// 		btSoftBody* psb = (btSoftBody*)softWorld->getSoftBodyArray()[i];
-		// 		//if (softWorld->getDebugDrawer() && !(softWorld->getDebugDrawer()->getDebugMode() & (btIDebugDraw::DBG_DrawWireframe)))
-		// 		{
-		// 			btSoftBodyHelpers::DrawFrame(psb, softWorld->getDebugDrawer());
-		// 			btSoftBodyHelpers::Draw(psb, softWorld->getDebugDrawer(), softWorld->getDrawFlags());
-		// 		}
-		// 	}
-		// }
-
-		// void SimpleClothExample::renderScene()
-		// {
-		// 	CommonRigidBodyBase::renderScene();
-		// 	btSoftRigidDynamicsWorld* softWorld = getSoftDynamicsWorld();
-
-		// 	for (int i = 0; i < softWorld->getSoftBodyArray().size(); i++)
-		// 	{
-		// 		btSoftBody* psb = (btSoftBody*)softWorld->getSoftBodyArray()[i];
-		// 		//if (softWorld->getDebugDrawer() && !(softWorld->getDebugDrawer()->getDebugMode() & (btIDebugDraw::DBG_DrawWireframe)))
-		// 		{
-		// 			btSoftBodyHelpers::DrawFrame(psb, softWorld->getDebugDrawer());
-		// 			btSoftBodyHelpers::Draw(psb, softWorld->getDebugDrawer(), softWorld->getDrawFlags());
-		// 		}
-		// 	}
-		// }
-
-		// void NewtonsRopeCradleExample::renderScene()
-		// {
-		// 	CommonRigidBodyBase::renderScene();
-		// 	btSoftRigidDynamicsWorld* softWorld = getSoftDynamicsWorld();
-
-		// 	for (int i = 0; i < softWorld->getSoftBodyArray().size(); i++)
-		// 	{
-		// 		btSoftBody* psb = (btSoftBody*)softWorld->getSoftBodyArray()[i];
-		// 		//if (softWorld->getDebugDrawer() && !(softWorld->getDebugDrawer()->getDebugMode() & (btIDebugDraw::DBG_DrawWireframe)))
-		// 		{
-		// 			btSoftBodyHelpers::DrawFrame(psb, softWorld->getDebugDrawer());
-		// 			btSoftBodyHelpers::Draw(psb, softWorld->getDebugDrawer(), softWorld->getDrawFlags());
-		// 		}
-		// 	}
-		// }
 
 		DrawGridData dg;
 		dg.upAxis = app.getUpAxis();

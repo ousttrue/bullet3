@@ -80,7 +80,7 @@ struct CommonOpenCLBase : public CommonExampleInterface
 		}
 	}
 
-	virtual void renderScene()
+	void renderScene() override
 	{
 		if (m_guiHelper->getRenderInterface())
 		{

@@ -51,7 +51,7 @@ public:
 
 	virtual void stepSimulation(float deltaTime);
 
-	virtual void renderScene();
+	void renderScene() override;
 
 	virtual void resetCamera()
 	{

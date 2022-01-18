@@ -948,10 +948,3 @@ void CommonRigidBodyMTBase::physicsDebugDraw(int debugFlags)
 	}
 	drawScreenText();
 }
-
-void CommonRigidBodyMTBase::renderScene()
-{
-	m_guiHelper->syncPhysicsToGraphics(m_dynamicsWorld);
-	m_guiHelper->render(m_dynamicsWorld);
-	drawScreenText();
-}

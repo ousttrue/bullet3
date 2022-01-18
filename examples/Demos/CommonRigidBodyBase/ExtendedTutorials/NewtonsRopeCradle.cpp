@@ -58,7 +58,6 @@ struct NewtonsRopeCradleExample : public CommonRigidBodyBase
 	virtual ~NewtonsRopeCradleExample() {}
 	virtual void initPhysics();
 	virtual void stepSimulation(float deltaTime);
-	virtual void renderScene();
 	virtual void applyPendulumForce(btScalar pendulumForce);
 
 	virtual void createRopePendulum(btSphereShape* colShape,

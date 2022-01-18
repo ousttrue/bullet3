@@ -103,7 +103,7 @@ public:
 
 	//the following APIs are for internal use for visualization:
 	virtual bool connect(struct GUIHelperInterface* guiHelper);
-	virtual void renderScene();
+	void renderScene() override;
 	virtual void debugDraw(int debugDrawMode);
 
 	virtual void setTimeOut(double timeOutInSeconds);

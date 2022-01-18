@@ -87,8 +87,6 @@ public:
 
 	virtual bool keyboardCallback(int key, int state);
 
-	virtual void renderScene();
-
 	virtual void physicsDebugDraw(int debugFlags);
 
 	void initPhysics();
@@ -329,20 +327,6 @@ void Hinge2Vehicle::physicsDebugDraw(int debugFlags)
 		m_dynamicsWorld->getDebugDrawer()->setDebugMode(debugFlags);
 		m_dynamicsWorld->debugDrawWorld();
 	}
-}
-
-//to be implemented by the demo
-void Hinge2Vehicle::renderScene()
-{
-	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
-	m_guiHelper->syncPhysicsToGraphics(m_dynamicsWorld);
-
-	m_guiHelper->render(m_dynamicsWorld);
-
-	btVector3 wheelColor(1, 0, 0);
-
-	btVector3 worldBoundsMin, worldBoundsMax;
-	m_physics->getDynamicsWorld()->getBroadphase()->getBroadphaseAabb(worldBoundsMin, worldBoundsMax);
 }
 
 void Hinge2Vehicle::stepSimulation(float deltaTime)

@@ -72,8 +72,6 @@ public:
 
 	void initPhysics();
 
-	void exitPhysics();
-
 	//virtual void renderme();
 
 	void getVerticesInsidePlanes(const btAlignedObjectArray<btVector3>& planes, btAlignedObjectArray<btVector3>& verticesOut, std::set<int>& planeIndicesOut);
@@ -89,16 +87,16 @@ public:
 
 	void attachFixedConstraints();
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 18;
-		float pitch = -30;
-		float yaw = 129;
-		float info.camPosX = -1.5;
-info.camPosY = 4.7;
-info.camPosZ = -2;
-
-		m_guiHelper->resetCamera(dist, yaw, pitch, targetPos[0], targetPos[1], targetPos[2]);
+		CameraResetInfo info;
+		info.camDist = 18;
+		info.pitch = -30;
+		info.yaw = 129;
+		info.camPosX = -1.5;
+		info.camPosY = 4.7;
+		info.camPosZ = -2;
+		return info;
 	}
 };
 

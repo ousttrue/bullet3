@@ -266,22 +266,6 @@ public:
 	{
 		DoUpdateStep(deltaTime, m_ikTree, m_ikJacobian, m_ikMethod);
 	}
-	virtual void renderScene()
-	{
-		b3Transform act;
-		getLocalTransform(m_ikTree.GetRoot(), act);
-		MyDrawTree(m_ikTree.GetRoot(), act, b3Transform::getIdentity());
-
-		for (int i = 0; i < m_targetInstances.size(); i++)
-		{
-			b3Vector3 pos = b3MakeVector3(targetaa[i].x, targetaa[i].y, targetaa[i].z);
-			b3Quaternion orn(0, 0, 0, 1);
-
-			m_app->m_renderer->writeSingleInstanceTransformToCPU(pos, orn, m_targetInstances[i]);
-		}
-		m_app->m_renderer->writeTransforms();
-		m_app->m_renderer->renderScene();
-	}
 
 	virtual void physicsDebugDraw()
 	{

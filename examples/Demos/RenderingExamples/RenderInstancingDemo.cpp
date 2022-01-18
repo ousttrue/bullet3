@@ -95,10 +95,6 @@ public:
 		}
 		m_app->m_renderer->writeTransforms();
 	}
-	virtual void renderScene()
-	{
-		m_app->m_renderer->renderScene();
-	}
 
 	virtual void physicsDebugDraw()
 	{

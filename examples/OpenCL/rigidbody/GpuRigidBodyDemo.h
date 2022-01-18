@@ -25,7 +25,7 @@ public:
 
 	virtual void exitPhysics();
 
-	virtual void renderScene();
+	void renderScene() override;
 
 	void resetCamera();
 

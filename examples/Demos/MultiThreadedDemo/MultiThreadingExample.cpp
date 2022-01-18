@@ -177,9 +177,6 @@ public:
 	{
 	}
 
-	virtual void renderScene()
-	{
-	}
 	virtual void initPhysics()
 	{
 		b3Printf("initPhysics");

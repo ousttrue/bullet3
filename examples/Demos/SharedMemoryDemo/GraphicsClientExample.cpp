@@ -205,9 +205,6 @@ public:
 	{
 	}
 
-	virtual void renderScene()
-	{
-	}
 	virtual bool mouseMoveCallback(float x, float y)
 	{
 		return false;

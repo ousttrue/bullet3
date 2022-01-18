@@ -130,8 +130,6 @@ public:
 
 	virtual bool keyboardCallback(int key, int state);
 
-	virtual void renderScene();
-
 	virtual void physicsDebugDraw(int debugFlags);
 
 	void initPhysics();
@@ -540,106 +538,6 @@ void ForkLiftDemo::physicsDebugDraw(int debugFlags)
 		m_dynamicsWorld->getDebugDrawer()->setDebugMode(debugFlags);
 		m_dynamicsWorld->debugDrawWorld();
 	}
-}
-
-//to be implemented by the demo
-void ForkLiftDemo::renderScene()
-{
-	m_guiHelper->syncPhysicsToGraphics(m_dynamicsWorld);
-
-	for (int i = 0; i < m_vehicle->getNumWheels(); i++)
-	{
-		//synchronize the wheels with the (interpolated) chassis worldtransform
-		m_vehicle->updateWheelTransform(i, true);
-
-		CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
-		if (renderer)
-		{
-			btTransform tr = m_vehicle->getWheelInfo(i).m_worldTransform;
-			btVector3 pos = tr.getOrigin();
-			btQuaternion orn = tr.getRotation();
-			renderer->writeSingleInstanceTransformToCPU(pos, orn, m_wheelInstances[i]);
-		}
-	}
-
-	m_guiHelper->render(m_dynamicsWorld);
-
-	ATTRIBUTE_ALIGNED16(btScalar)
-	m[16];
-	int i;
-
-	btVector3 wheelColor(1, 0, 0);
-
-	btVector3 worldBoundsMin, worldBoundsMax;
-	getDynamicsWorld()->getBroadphase()->getBroadphaseAabb(worldBoundsMin, worldBoundsMax);
-
-	for (i = 0; i < m_vehicle->getNumWheels(); i++)
-	{
-		//synchronize the wheels with the (interpolated) chassis worldtransform
-		m_vehicle->updateWheelTransform(i, true);
-		//draw wheels (cylinders)
-		m_vehicle->getWheelInfo(i).m_worldTransform.getOpenGLMatrix(m);
-		//		m_shapeDrawer->drawOpenGL(m,m_wheelShape,wheelColor,getDebugMode(),worldBoundsMin,worldBoundsMax);
-	}
-
-#if 0
-	int lineWidth=400;
-	int xStart = m_glutScreenWidth - lineWidth;
-	int yStart = 20;
-
-	if((getDebugMode() & btIDebugDraw::DBG_NoHelpText)==0)
-	{
-		setOrthographicProjection();
-		glDisable(GL_LIGHTING);
-		glColor3f(0, 0, 0);
-		char buf[124];
-		
-		sprintf(buf,"SHIFT+Cursor Left/Right - rotate lift");
-		GLDebugDrawString(xStart,20,buf);
-		yStart+=20;
-		sprintf(buf,"SHIFT+Cursor UP/Down - fork up/down");
-		yStart+=20;
-		GLDebugDrawString(xStart,yStart,buf);
-
-		if (m_useDefaultCamera)
-		{
-			sprintf(buf,"F5 - camera mode (free)");
-		} else
-		{
-			sprintf(buf,"F5 - camera mode (follow)");
-		}
-		yStart+=20;
-		GLDebugDrawString(xStart,yStart,buf);
-
-		yStart+=20;
-		if (m_dynamicsWorld->getConstraintSolver()->getSolverType()==BT_MLCP_SOLVER)
-		{
-			sprintf(buf,"F6 - solver (direct MLCP)");
-		} else
-		{
-			sprintf(buf,"F6 - solver (sequential impulse)");
-		}
-		GLDebugDrawString(xStart,yStart,buf);
-		btDiscreteDynamicsWorld* world = (btDiscreteDynamicsWorld*) m_dynamicsWorld;
-		if (world->getLatencyMotionStateInterpolation())
-		{
-			sprintf(buf,"F7 - motionstate interpolation (on)");
-		} else
-		{
-			sprintf(buf,"F7 - motionstate interpolation (off)");
-		}
-		yStart+=20;
-		GLDebugDrawString(xStart,yStart,buf);
-
-		sprintf(buf,"Click window for keyboard focus");
-		yStart+=20;
-		GLDebugDrawString(xStart,yStart,buf);
-
-
-		resetPerspectiveProjection();
-		glEnable(GL_LIGHTING);
-	}
-#endif
 }
 
 void ForkLiftDemo::stepSimulation(float deltaTime)

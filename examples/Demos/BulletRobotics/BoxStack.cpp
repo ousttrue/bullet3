@@ -77,10 +77,6 @@ public:
 	{
 		m_robotSim.stepSimulation();
 	}
-	virtual void renderScene()
-	{
-		m_robotSim.renderScene();
-	}
 
 	virtual bool mouseMoveCallback(float x, float y)
 	{

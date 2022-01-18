@@ -15,6 +15,7 @@
 
 #include "../RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "../Utils/b3Clock.h"
+#include "CommonCameraInterface.h"
 
 static btScalar sGripperVerticalVelocity = 0.f;
 static btScalar sGripperClosingTargetVelocity = -0.7f;
@@ -313,9 +314,9 @@ public:
 
 					for (int i = 0; i < 8; i++)
 					{
-					b3RobotSimulatorJointMotorArgs controlArgs(CONTROL_MODE_VELOCITY);
-					controlArgs.m_maxTorqueValue = 0.0;
-					m_robotSim.setJointMotorControl(m_gripperIndex, i, controlArgs);
+						b3RobotSimulatorJointMotorArgs controlArgs(CONTROL_MODE_VELOCITY);
+						controlArgs.m_maxTorqueValue = 0.0;
+						m_robotSim.setJointMotorControl(m_gripperIndex, i, controlArgs);
 					}
 				}
 			}
@@ -324,58 +325,58 @@ public:
 				args.m_startPosition.setValue(0, 0, -0.2);
 				args.m_startOrientation.setEulerZYX(0, 0, 0);
 				m_robotSim.loadURDF("plane.urdf", args);
-				}
-				m_robotSim.setGravity(btVector3(0, 0, -10));
-				b3RobotSimulatorLoadSoftBodyArgs args(0.1, 1, 0.02);
-				args.m_startPosition.setValue(0, 0, 5);
-				args.m_startOrientation.setValue(1, 0, 0, 1);
-				m_robotSim.loadSoftBody("bunny.obj", args);
-
-				b3JointInfo revoluteJoint1;
-				revoluteJoint1.m_parentFrame[0] = -0.055;
-				revoluteJoint1.m_parentFrame[1] = 0;
-				revoluteJoint1.m_parentFrame[2] = 0.02;
-				revoluteJoint1.m_parentFrame[3] = 0;
-				revoluteJoint1.m_parentFrame[4] = 0;
-				revoluteJoint1.m_parentFrame[5] = 0;
-				revoluteJoint1.m_parentFrame[6] = 1.0;
-				revoluteJoint1.m_childFrame[0] = 0;
-				revoluteJoint1.m_childFrame[1] = 0;
-				revoluteJoint1.m_childFrame[2] = 0;
-				revoluteJoint1.m_childFrame[3] = 0;
-				revoluteJoint1.m_childFrame[4] = 0;
-				revoluteJoint1.m_childFrame[5] = 0;
-				revoluteJoint1.m_childFrame[6] = 1.0;
-				revoluteJoint1.m_jointAxis[0] = 1.0;
-				revoluteJoint1.m_jointAxis[1] = 0.0;
-				revoluteJoint1.m_jointAxis[2] = 0.0;
-				revoluteJoint1.m_jointType = ePoint2PointType;
-				b3JointInfo revoluteJoint2;
-				revoluteJoint2.m_parentFrame[0] = 0.055;
-				revoluteJoint2.m_parentFrame[1] = 0;
-				revoluteJoint2.m_parentFrame[2] = 0.02;
-				revoluteJoint2.m_parentFrame[3] = 0;
-				revoluteJoint2.m_parentFrame[4] = 0;
-				revoluteJoint2.m_parentFrame[5] = 0;
-				revoluteJoint2.m_parentFrame[6] = 1.0;
-				revoluteJoint2.m_childFrame[0] = 0;
-				revoluteJoint2.m_childFrame[1] = 0;
-				revoluteJoint2.m_childFrame[2] = 0;
-				revoluteJoint2.m_childFrame[3] = 0;
-				revoluteJoint2.m_childFrame[4] = 0;
-				revoluteJoint2.m_childFrame[5] = 0;
-				revoluteJoint2.m_childFrame[6] = 1.0;
-				revoluteJoint2.m_jointAxis[0] = 1.0;
-				revoluteJoint2.m_jointAxis[1] = 0.0;
-				revoluteJoint2.m_jointAxis[2] = 0.0;
-				revoluteJoint2.m_jointType = ePoint2PointType;
-				m_robotSim.createConstraint(0, 2, 0, 4, &revoluteJoint1);
-				m_robotSim.createConstraint(0, 3, 0, 6, &revoluteJoint2);
 			}
+			m_robotSim.setGravity(btVector3(0, 0, -10));
+			b3RobotSimulatorLoadSoftBodyArgs args(0.1, 1, 0.02);
+			args.m_startPosition.setValue(0, 0, 5);
+			args.m_startOrientation.setValue(1, 0, 0, 1);
+			m_robotSim.loadSoftBody("bunny.obj", args);
 
-			if ((m_options & eGRASP_DEFORMABLE_CLOTH) != 0)
-			{
-				m_robotSim.resetSimulation(RESET_USE_DEFORMABLE_WORLD);
+			b3JointInfo revoluteJoint1;
+			revoluteJoint1.m_parentFrame[0] = -0.055;
+			revoluteJoint1.m_parentFrame[1] = 0;
+			revoluteJoint1.m_parentFrame[2] = 0.02;
+			revoluteJoint1.m_parentFrame[3] = 0;
+			revoluteJoint1.m_parentFrame[4] = 0;
+			revoluteJoint1.m_parentFrame[5] = 0;
+			revoluteJoint1.m_parentFrame[6] = 1.0;
+			revoluteJoint1.m_childFrame[0] = 0;
+			revoluteJoint1.m_childFrame[1] = 0;
+			revoluteJoint1.m_childFrame[2] = 0;
+			revoluteJoint1.m_childFrame[3] = 0;
+			revoluteJoint1.m_childFrame[4] = 0;
+			revoluteJoint1.m_childFrame[5] = 0;
+			revoluteJoint1.m_childFrame[6] = 1.0;
+			revoluteJoint1.m_jointAxis[0] = 1.0;
+			revoluteJoint1.m_jointAxis[1] = 0.0;
+			revoluteJoint1.m_jointAxis[2] = 0.0;
+			revoluteJoint1.m_jointType = ePoint2PointType;
+			b3JointInfo revoluteJoint2;
+			revoluteJoint2.m_parentFrame[0] = 0.055;
+			revoluteJoint2.m_parentFrame[1] = 0;
+			revoluteJoint2.m_parentFrame[2] = 0.02;
+			revoluteJoint2.m_parentFrame[3] = 0;
+			revoluteJoint2.m_parentFrame[4] = 0;
+			revoluteJoint2.m_parentFrame[5] = 0;
+			revoluteJoint2.m_parentFrame[6] = 1.0;
+			revoluteJoint2.m_childFrame[0] = 0;
+			revoluteJoint2.m_childFrame[1] = 0;
+			revoluteJoint2.m_childFrame[2] = 0;
+			revoluteJoint2.m_childFrame[3] = 0;
+			revoluteJoint2.m_childFrame[4] = 0;
+			revoluteJoint2.m_childFrame[5] = 0;
+			revoluteJoint2.m_childFrame[6] = 1.0;
+			revoluteJoint2.m_jointAxis[0] = 1.0;
+			revoluteJoint2.m_jointAxis[1] = 0.0;
+			revoluteJoint2.m_jointAxis[2] = 0.0;
+			revoluteJoint2.m_jointType = ePoint2PointType;
+			m_robotSim.createConstraint(0, 2, 0, 4, &revoluteJoint1);
+			m_robotSim.createConstraint(0, 3, 0, 6, &revoluteJoint2);
+		}
+
+		if ((m_options & eGRASP_DEFORMABLE_CLOTH) != 0)
+		{
+			m_robotSim.resetSimulation(RESET_USE_DEFORMABLE_WORLD);
 			{
 				SliderParams slider("Vertical velocity", &sGripperVerticalVelocity);
 				slider.m_minVal = -2;
@@ -477,7 +478,7 @@ public:
 			m_robotSim.createConstraint(0, 2, 0, 4, &revoluteJoint1);
 			m_robotSim.createConstraint(0, 3, 0, 6, &revoluteJoint2);
 			m_robotSim.setNumSimulationSubSteps(2);
-        }
+		}
 
 		if ((m_options & eSOFTBODY_MULTIBODY_COUPLING) != 0)
 		{
@@ -568,7 +569,7 @@ public:
 				m_robotSim.setJointMotorControl(m_gripperIndex, fingerJointIndices[i], controlArgs);
 			}
 		}
-        
+
 		if ((m_options & eGRASP_DEFORMABLE_CLOTH) != 0)
 		{
 			int fingerJointIndices[2] = {0, 1};
@@ -700,12 +701,6 @@ public:
 
 		m_robotSim.stepSimulation();
 	}
-	virtual void renderScene()
-	{
-		m_robotSim.renderScene();
-
-		//m_app->m_renderer->renderScene();
-	}
 
 	virtual bool mouseMoveCallback(float x, float y)
 	{
@@ -720,22 +715,16 @@ public:
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 1.5;
-		float pitch = -10;
-		float yaw = 18;
-		float info.camPosX = -0.2;
-info.camPosY = 0.8;
-info.camPosZ = 0.3;
-
-		if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
-		{
-			m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
-			m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
-			m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
-			m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
-		}
+		CameraResetInfo info;
+		info.camDist = 1.5;
+		info.pitch = -10;
+		info.yaw = 18;
+		info.camPosX = -0.2;
+		info.camPosY = 0.8;
+		info.camPosZ = 0.3;
+		return info;
 	}
 };
 

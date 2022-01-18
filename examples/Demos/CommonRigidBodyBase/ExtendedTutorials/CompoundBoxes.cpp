@@ -30,7 +30,6 @@ struct CompoundBoxesExample : public CommonRigidBodyBase
 	}
 	virtual ~CompoundBoxesExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;

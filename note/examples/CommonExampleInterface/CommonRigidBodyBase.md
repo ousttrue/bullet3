@@ -31,7 +31,7 @@ struct BasicExample : public CommonRigidBodyBase
 	}
 	virtual ~BasicExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
+	void renderScene() override;
 	void resetCamera()
 	{
 		float dist = 4;

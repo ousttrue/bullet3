@@ -8,7 +8,10 @@ subdirs(
   MultiThreadedDemo
   Collision
   RenderingExamples
-  SharedMemoryDemo)
+  SharedMemoryDemo
+  VoronoiFracture
+  RoboticsLearning
+  )
 
 set(TARGET_NAME Demos)
 add_library(${TARGET_NAME} INTERFACE)
@@ -35,6 +38,8 @@ target_link_libraries(
             Vehicles
             Importers
             #
+            VoronoiFracture
+            RoboticsLearning
             BulletRobotics
             ForkLift
             MultiBody

@@ -297,31 +297,6 @@ public:
 		CProfileManager::Increment_Frame_Counter();
 #endif
 	}
-	virtual void renderScene()
-	{
-		if (m_app && m_app->m_renderer)
-		{
-			m_app->m_renderer->renderScene();
-
-			m_app->m_renderer->clearZBuffer();
-
-			m_app->drawText3D("X", 1, 0, 0, 1);
-			m_app->drawText3D("Y", 0, 1, 0, 1);
-			m_app->drawText3D("Z", 0, 0, 1, 1);
-
-			for (int i = 0; i < gTotalPoints; i++)
-			{
-				const lwContactPoint& contact = pointsOut[i];
-				btVector3 color(1, 1, 0);
-				btScalar lineWidth = 3;
-				if (contact.m_distance < 0)
-				{
-					color.setValue(1, 0, 0);
-				}
-				m_app->m_renderer->drawLine(contact.m_ptOnAWorld, contact.m_ptOnBWorld, color, lineWidth);
-			}
-		}
-	}
 
 	virtual void physicsDebugDraw(int debugDrawFlags)
 	{

@@ -29,7 +29,6 @@ struct SimpleJointExample : public CommonRigidBodyBase
 	}
 	virtual ~SimpleJointExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;

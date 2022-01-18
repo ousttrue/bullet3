@@ -33,7 +33,6 @@ struct SimpleClothExample : public CommonRigidBodyBase
 	}
 	virtual ~SimpleClothExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
 	virtual btSoftRigidDynamicsWorld* getSoftDynamicsWorld()
 	{
 		///just make it a btSoftRigidDynamicsWorld please

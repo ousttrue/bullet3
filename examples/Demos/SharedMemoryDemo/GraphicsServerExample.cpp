@@ -886,18 +886,18 @@ public:
 		m_z += 0.01f;
 	}
 
-	virtual void renderScene()
-	{
-		B3_PROFILE("renderScene");
-		{
-			B3_PROFILE("writeTransforms");
-			m_app->m_renderer->writeTransforms();
-		}
-		{
-			B3_PROFILE("m_renderer->renderScene");
-			m_app->m_renderer->renderScene();
-		}
-	}
+	// void renderScene() override
+	// {
+	// 	B3_PROFILE("renderScene");
+	// 	{
+	// 		B3_PROFILE("writeTransforms");
+	// 		m_app->m_renderer->writeTransforms();
+	// 	}
+	// 	{
+	// 		B3_PROFILE("m_renderer->renderScene");
+	// 		m_app->m_renderer->renderScene();
+	// 	}
+	// }
 
 	virtual void physicsDebugDraw(int debugDrawFlags)
 	{

@@ -67,21 +67,6 @@ public:
 	btMultiBody* createFeatherstoneMultiBody_testMultiDof(class btMultiBodyDynamicsWorld* world, int numLinks, const btVector3& basePosition, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents, bool spherical = false, bool floating = false);
 
 	void addColliders_testMultiDof(btMultiBody* pMultiBody, btMultiBodyDynamicsWorld* pWorld, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents);
-
-	virtual void renderScene()
-	{
-		CommonDeformableBodyBase::renderScene();
-		btDeformableMultiBodyDynamicsWorld* deformableWorld = getDeformableDynamicsWorld();
-
-		for (int i = 0; i < deformableWorld->getSoftBodyArray().size(); i++)
-		{
-			btSoftBody* psb = (btSoftBody*)deformableWorld->getSoftBodyArray()[i];
-			{
-				btSoftBodyHelpers::DrawFrame(psb, deformableWorld->getDebugDrawer());
-				btSoftBodyHelpers::Draw(psb, deformableWorld->getDebugDrawer(), fDrawFlags::Faces);  // deformableWorld->getDrawFlags());
-			}
-		}
-	}
 };
 
 void DeformableMultibody::initPhysics()

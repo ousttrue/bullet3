@@ -30,7 +30,6 @@ struct ChainExample : public CommonRigidBodyBase
 	}
 	virtual ~ChainExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;

@@ -35,7 +35,7 @@ public:
 	virtual void initPhysics();
 	virtual void exitPhysics();
 	virtual void stepSimulation(float deltaTime);
-	virtual void renderScene();
+	void renderScene() override;
 	virtual void physicsDebugDraw(int debugFlags);  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	virtual bool mouseMoveCallback(float x, float y)
 	{

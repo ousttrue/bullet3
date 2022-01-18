@@ -83,21 +83,6 @@ public:
 			createRigidBody(mass, startTransform, shape[i % nshapes]);
 		}
 	}
-
-	virtual void renderScene()
-	{
-		CommonDeformableBodyBase::renderScene();
-		btDeformableMultiBodyDynamicsWorld* deformableWorld = getDeformableDynamicsWorld();
-
-		for (int i = 0; i < deformableWorld->getSoftBodyArray().size(); i++)
-		{
-			btSoftBody* psb = (btSoftBody*)deformableWorld->getSoftBodyArray()[i];
-			{
-				btSoftBodyHelpers::DrawFrame(psb, deformableWorld->getDebugDrawer());
-				btSoftBodyHelpers::Draw(psb, deformableWorld->getDebugDrawer(), deformableWorld->getDrawFlags());
-			}
-		}
-	}
 };
 
 void dynamics(btScalar time, btDeformableMultiBodyDynamicsWorld* world)

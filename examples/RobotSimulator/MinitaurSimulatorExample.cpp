@@ -107,7 +107,7 @@ public:
 		m_robotSim.getJointStates(m_minitaurUid, states);
 
 	}
-	virtual void renderScene()
+	void renderScene() override
 	{
 		m_robotSim.renderScene();
 	}

@@ -71,22 +71,6 @@ public:
 		startTransform.setOrigin(btVector3(0, 0.7, 0));
 		createRigidBody(mass, startTransform, shape[0]);
 	}
-
-	virtual void renderScene()
-	{
-		CommonDeformableBodyBase::renderScene();
-		btDeformableMultiBodyDynamicsWorld* deformableWorld = getDeformableDynamicsWorld();
-
-		for (int i = 0; i < deformableWorld->getSoftBodyArray().size(); i++)
-		{
-			btSoftBody* psb = (btSoftBody*)deformableWorld->getSoftBodyArray()[i];
-			//if (softWorld->getDebugDrawer() && !(softWorld->getDebugDrawer()->getDebugMode() & (btIDebugDraw::DBG_DrawWireframe)))
-			{
-				btSoftBodyHelpers::DrawFrame(psb, deformableWorld->getDebugDrawer());
-				btSoftBodyHelpers::Draw(psb, deformableWorld->getDebugDrawer(), deformableWorld->getDrawFlags());
-			}
-		}
-	}
 };
 
 void SplitImpulse::initPhysics()

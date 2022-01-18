@@ -91,7 +91,7 @@ public:
 		m_soundEngine.exit();
 	}
 
-	virtual void renderScene()
+	void renderScene() override
 	{
 	}
 

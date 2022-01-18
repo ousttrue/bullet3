@@ -15,7 +15,6 @@ public:
 	virtual void initPhysics() {}
 	virtual void exitPhysics() {}
 	virtual void stepSimulation(float deltaTime) {}
-	virtual void renderScene() {}
 	virtual void physicsDebugDraw(int debugFlags) {}
 	virtual bool mouseMoveCallback(float x, float y) { return false; }
 	virtual bool mouseButtonCallback(int button, int state, float x, float y) { return false; }

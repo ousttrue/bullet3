@@ -59,22 +59,6 @@ public:
 		m_dynamicsWorld->stepSimulation(deltaTime, 4, internalTimeStep);
 	}
 
-	virtual void renderScene()
-	{
-		CommonDeformableBodyBase::renderScene();
-		btDeformableMultiBodyDynamicsWorld* deformableWorld = getDeformableDynamicsWorld();
-
-		for (int i = 0; i < deformableWorld->getSoftBodyArray().size(); i++)
-		{
-			btSoftBody* psb = (btSoftBody*)deformableWorld->getSoftBodyArray()[i];
-			//if (softWorld->getDebugDrawer() && !(softWorld->getDebugDrawer()->getDebugMode() & (btIDebugDraw::DBG_DrawWireframe)))
-			{
-				btSoftBodyHelpers::DrawFrame(psb, deformableWorld->getDebugDrawer());
-				btSoftBodyHelpers::Draw(psb, deformableWorld->getDebugDrawer(), fDrawFlags::Faces);  // deformableWorld->getDrawFlags());
-			}
-		}
-	}
-
 	btMultiBody* createMultiBody(class btMultiBodyDynamicsWorld* world, int numLinks, const btVector3& basePosition, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents, bool spherical = false, bool floating = false);
 
 	void addColliders(btMultiBody* pMultiBody, btMultiBodyDynamicsWorld* pWorld, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents);

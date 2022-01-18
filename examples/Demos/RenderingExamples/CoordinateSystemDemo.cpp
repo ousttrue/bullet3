@@ -51,13 +51,6 @@ public:
 		m_y += 0.01f;
 		m_z += 0.01f;
 	}
-	virtual void renderScene()
-	{
-		m_app->m_renderer->renderScene();
-		m_app->drawText3D("X", 1, 0, 0, 1);
-		m_app->drawText3D("Y", 0, 1, 0, 1);
-		m_app->drawText3D("Z", 0, 0, 1, 1);
-	}
 
 	virtual void drawArc(const btVector3& center, const btVector3& normal, const btVector3& axis, btScalar radiusA, btScalar radiusB, btScalar minAngle, btScalar maxAngle,
 						 const btVector3& color, bool drawSect, btScalar stepDegrees = btScalar(10.f))

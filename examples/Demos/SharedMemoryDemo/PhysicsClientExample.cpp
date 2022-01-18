@@ -120,54 +120,54 @@ public:
 	void prepareAndSubmitCommand(int commandId);
 
 	virtual void exitPhysics(){};
-	virtual void renderScene()
-	{
-		if (m_options == eCLIENTEXAMPLE_SERVER)
-		{
-			int renderFlags = 0;
-			m_physicsServer.renderScene(renderFlags);
-		}
+	// void renderScene() override
+	// {
+	// 	if (m_options == eCLIENTEXAMPLE_SERVER)
+	// 	{
+	// 		int renderFlags = 0;
+	// 		m_physicsServer.renderScene(renderFlags);
+	// 	}
 
-		b3DebugLines debugLines;
-		b3GetDebugLines(m_physicsClientHandle, &debugLines);
-		int numLines = debugLines.m_numDebugLines;
+	// 	b3DebugLines debugLines;
+	// 	b3GetDebugLines(m_physicsClientHandle, &debugLines);
+	// 	int numLines = debugLines.m_numDebugLines;
 
-		int lineWidth = 1;
+	// 	int lineWidth = 1;
 
-		if (1)
-		{
-			btAlignedObjectArray<btVector3FloatData> points;
-			points.resize(numLines * 2);
-			btAlignedObjectArray<unsigned int> indices;
-			indices.resize(numLines * 2);
+	// 	if (1)
+	// 	{
+	// 		btAlignedObjectArray<btVector3FloatData> points;
+	// 		points.resize(numLines * 2);
+	// 		btAlignedObjectArray<unsigned int> indices;
+	// 		indices.resize(numLines * 2);
 
-			for (int i = 0; i < numLines; i++)
-			{
-				points[i * 2].m_floats[0] = debugLines.m_linesFrom[i * 3 + 0];
-				points[i * 2].m_floats[1] = debugLines.m_linesFrom[i * 3 + 1];
-				points[i * 2].m_floats[2] = debugLines.m_linesFrom[i * 3 + 2];
-				points[i * 2 + 1].m_floats[0] = debugLines.m_linesTo[i * 3 + 0];
-				points[i * 2 + 1].m_floats[1] = debugLines.m_linesTo[i * 3 + 1];
-				points[i * 2 + 1].m_floats[2] = debugLines.m_linesTo[i * 3 + 2];
-				indices[i * 2] = i * 2;
-				indices[i * 2 + 1] = i * 2 + 1;
-			}
+	// 		for (int i = 0; i < numLines; i++)
+	// 		{
+	// 			points[i * 2].m_floats[0] = debugLines.m_linesFrom[i * 3 + 0];
+	// 			points[i * 2].m_floats[1] = debugLines.m_linesFrom[i * 3 + 1];
+	// 			points[i * 2].m_floats[2] = debugLines.m_linesFrom[i * 3 + 2];
+	// 			points[i * 2 + 1].m_floats[0] = debugLines.m_linesTo[i * 3 + 0];
+	// 			points[i * 2 + 1].m_floats[1] = debugLines.m_linesTo[i * 3 + 1];
+	// 			points[i * 2 + 1].m_floats[2] = debugLines.m_linesTo[i * 3 + 2];
+	// 			indices[i * 2] = i * 2;
+	// 			indices[i * 2 + 1] = i * 2 + 1;
+	// 		}
 
-			float color[4] = {0.2, 0.2, 1, 1};
+	// 		float color[4] = {0.2, 0.2, 1, 1};
 
-			if (points.size() && indices.size())
-			{
-				m_guiHelper->getRenderInterface()->drawLines(&points[0].m_floats[0], color, points.size(), sizeof(btVector3FloatData), &indices[0], indices.size(), lineWidth);
-			}
-		}
-		else
-		{
-			for (int i = 0; i < numLines; i++)
-			{
-				m_guiHelper->getRenderInterface()->drawLine(debugLines.m_linesFrom, debugLines.m_linesTo, debugLines.m_linesColor, lineWidth);
-			}
-		}
-	}
+	// 		if (points.size() && indices.size())
+	// 		{
+	// 			m_guiHelper->getRenderInterface()->drawLines(&points[0].m_floats[0], color, points.size(), sizeof(btVector3FloatData), &indices[0], indices.size(), lineWidth);
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		for (int i = 0; i < numLines; i++)
+	// 		{
+	// 			m_guiHelper->getRenderInterface()->drawLine(debugLines.m_linesFrom, debugLines.m_linesTo, debugLines.m_linesColor, lineWidth);
+	// 		}
+	// 	}
+	// }
 
 	void prepareControlCommand(b3SharedMemoryCommandHandle commandHandle)
 	{

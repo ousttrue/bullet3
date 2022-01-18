@@ -88,7 +88,6 @@ struct CommonRigidBodyMTBase : public CommonExampleInterface
 	}
 
 	virtual void drawScreenText();
-	virtual void renderScene();
 	virtual void physicsDebugDraw(int debugFlags);
 
 	virtual void exitPhysics()

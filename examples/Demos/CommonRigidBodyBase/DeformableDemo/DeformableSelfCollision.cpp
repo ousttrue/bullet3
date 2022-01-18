@@ -60,11 +60,6 @@ public:
 	}
 
 	void addCloth(const btVector3& origin);
-
-	virtual void renderScene()
-	{
-		CommonDeformableBodyBase::renderScene();
-	}
 };
 
 void DeformableSelfCollision::initPhysics()

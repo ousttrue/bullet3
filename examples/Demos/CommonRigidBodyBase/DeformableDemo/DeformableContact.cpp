@@ -59,22 +59,6 @@ public:
 		float internalTimeStep = 1. / 240.f;
 		m_dynamicsWorld->stepSimulation(deltaTime, 4, internalTimeStep);
 	}
-
-	virtual void renderScene()
-	{
-		CommonDeformableBodyBase::renderScene();
-
-		btDeformableMultiBodyDynamicsWorld* deformableWorld = getDeformableDynamicsWorld();
-
-		for (int i = 0; i < deformableWorld->getSoftBodyArray().size(); i++)
-		{
-			btSoftBody* psb = (btSoftBody*)deformableWorld->getSoftBodyArray()[i];
-			{
-				//btSoftBodyHelpers::DrawFrame(psb, deformableWorld->getDebugDrawer());
-				btSoftBodyHelpers::Draw(psb, deformableWorld->getDebugDrawer(), fDrawFlags::Faces);  // StddeformableWorld->getDrawFlags());
-			}
-		}
-	}
 };
 
 void DeformableContact::initPhysics()

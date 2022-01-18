@@ -30,8 +30,7 @@ struct BridgeExample : public CommonRigidBodyBase
 	}
 	virtual ~BridgeExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
-	CameraResetInfo cameraResetInfo() const override
+		CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
 		info.camDist = 41;

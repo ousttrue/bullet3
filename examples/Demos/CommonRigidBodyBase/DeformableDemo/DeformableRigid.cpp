@@ -156,22 +156,6 @@ public:
 		///or we will add type checking
 		return (btDeformableMultiBodyDynamicsWorld*)m_dynamicsWorld;
 	}
-
-	virtual void renderScene()
-	{
-		CommonDeformableBodyBase::renderScene();
-		btDeformableMultiBodyDynamicsWorld* deformableWorld = getDeformableDynamicsWorld();
-
-		for (int i = 0; i < deformableWorld->getSoftBodyArray().size(); i++)
-		{
-			btSoftBody* psb = (btSoftBody*)deformableWorld->getSoftBodyArray()[i];
-			//if (softWorld->getDebugDrawer() && !(softWorld->getDebugDrawer()->getDebugMode() & (btIDebugDraw::DBG_DrawWireframe)))
-			{
-				btSoftBodyHelpers::DrawFrame(psb, deformableWorld->getDebugDrawer());
-				btSoftBodyHelpers::Draw(psb, deformableWorld->getDebugDrawer(), fDrawFlags::Faces);  // deformableWorld->getDrawFlags());
-			}
-		}
-	}
 };
 
 void DeformableRigid::initPhysics()

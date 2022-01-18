@@ -30,7 +30,6 @@ struct MultipleBoxesExample : public CommonRigidBodyBase
 	}
 	virtual ~MultipleBoxesExample() {}
 	virtual void initPhysics();
-	virtual void renderScene();
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;

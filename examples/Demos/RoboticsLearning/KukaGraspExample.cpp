@@ -234,19 +234,6 @@ public:
 
 		m_robotSim.stepSimulation();
 	}
-	virtual void renderScene()
-	{
-		m_robotSim.renderScene();
-
-		b3Quaternion orn(0, 0, 0, 1);
-
-		m_app->m_renderer->writeSingleInstanceTransformToCPU(m_targetPos, orn, m_targetSphereInstance);
-		m_app->m_renderer->writeTransforms();
-
-		//draw the end-effector target sphere
-
-		//m_app->m_renderer->renderScene();
-	}
 
 	virtual void physicsDebugDraw(int debugDrawMode)
 	{
@@ -265,22 +252,16 @@ public:
 		return false;
 	}
 
-	virtual void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
-		float dist = 3;
-		float pitch = -30;
-		float yaw = 0;
-		float info.camPosX = -0.2;
-info.camPosY = 0.8;
-info.camPosZ = 0.3;
-
-		if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
-		{
-			m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
-			m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
-			m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
-			m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
-		}
+		CameraResetInfo info;
+		info.camDist = 3;
+		info.pitch = -30;
+		info.yaw = 0;
+		info.camPosX = -0.2;
+		info.camPosY = 0.8;
+		info.camPosZ = 0.3;
+		return info;
 	}
 };
 

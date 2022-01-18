@@ -45,7 +45,7 @@ public:
 
 	virtual void init();
 
-	virtual void renderScene();
+	void renderScene() override;
 	virtual void renderSceneInternal(int orgRenderMode = B3_DEFAULT_RENDERMODE);
 
 	void InitShaders();

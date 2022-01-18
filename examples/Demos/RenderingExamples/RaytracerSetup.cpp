@@ -49,10 +49,6 @@ struct RaytracerPhysicsSetup : public CommonExampleInterface
 	virtual bool mouseButtonCallback(int button, int state, float x, float y);
 
 	virtual bool keyboardCallback(int key, int state);
-
-	virtual void renderScene()
-	{
-	}
 };
 
 struct RaytracerInternalData
