@@ -790,7 +790,11 @@ public:
 					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 				}
 				BT_PROFILE("Render Scene");
-				sCurrentDemo->renderScene();
+				if (auto world = sCurrentDemo->getDynamicsWorld())
+				{
+					s_guiHelper->syncPhysicsToGraphics(world);
+					s_guiHelper->render(world);
+				}
 			}
 			else
 			{

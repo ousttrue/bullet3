@@ -120,11 +120,6 @@ void CompoundBoxesExample::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void CompoundBoxesExample::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 CommonExampleInterface* ET_CompoundBoxesCreateFunc(CommonExampleOptions& options)
 {
 	return new CompoundBoxesExample(options.m_guiHelper);

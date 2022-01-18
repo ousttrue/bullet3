@@ -83,16 +83,5 @@ struct CommonRigidBodyBase : public CommonExampleInterface
 	btVector3 getRayTo(int x, int y);
 	bool mouseMoveCallback(float x, float y) override;
 	bool mouseButtonCallback(int button, int state, float x, float y) override;
-	void renderScene() override;
-	class btDiscreteDynamicsWorld* getDynamicsWorld() override
-	{
-		if (m_physics)
-		{
-			return m_physics->getDynamicsWorld();
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
+	class btDiscreteDynamicsWorld* getDynamicsWorld() override { return m_physics ? m_physics->getDynamicsWorld() : nullptr; }
 };

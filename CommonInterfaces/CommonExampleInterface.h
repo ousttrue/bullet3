@@ -38,7 +38,6 @@ public:
 	virtual void exitPhysics() = 0;
 	virtual void updateGraphics() {}
 	virtual void stepSimulation(float deltaTime) = 0;
-	virtual void renderScene() = 0;
 	virtual void physicsDebugDraw(int debugFlags) = 0;  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	virtual CameraResetInfo cameraResetInfo() const { return {}; }
 	virtual bool mouseMoveCallback(float x, float y) = 0;

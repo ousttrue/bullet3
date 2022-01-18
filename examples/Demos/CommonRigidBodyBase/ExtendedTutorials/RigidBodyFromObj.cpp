@@ -141,11 +141,6 @@ void RigidBodyFromObjExample::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void RigidBodyFromObjExample::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 CommonExampleInterface* ET_RigidBodyFromObjCreateFunc(CommonExampleOptions& options)
 {
 	return new RigidBodyFromObjExample(options.m_guiHelper, options.m_option);

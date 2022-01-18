@@ -101,11 +101,6 @@ void MultipleBoxesExample::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void MultipleBoxesExample::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 CommonExampleInterface* ET_MultipleBoxesCreateFunc(CommonExampleOptions& options)
 {
 	return new MultipleBoxesExample(options.m_guiHelper);

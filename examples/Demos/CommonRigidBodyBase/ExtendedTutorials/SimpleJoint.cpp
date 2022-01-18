@@ -112,11 +112,6 @@ void SimpleJointExample::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void SimpleJointExample::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 CommonExampleInterface* ET_SimpleJointCreateFunc(CommonExampleOptions& options)
 {
 	return new SimpleJointExample(options.m_guiHelper);

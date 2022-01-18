@@ -97,11 +97,6 @@ void SimpleBoxExample::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void SimpleBoxExample::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 CommonExampleInterface* ET_SimpleBoxCreateFunc(CommonExampleOptions& options)
 {
 	return new SimpleBoxExample(options.m_guiHelper);

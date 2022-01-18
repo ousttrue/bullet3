@@ -213,9 +213,9 @@ public:
 		return stat;
 	}
 
-	virtual void renderScene()
+	void renderScene()
 	{
-		m_physicsServerExample->renderScene();
+		// m_physicsServerExample->renderScene();
 	}
 	virtual void debugDraw(int debugDrawMode)
 	{

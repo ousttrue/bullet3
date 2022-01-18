@@ -221,11 +221,6 @@ void KinematicRigidBodyExample::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void KinematicRigidBodyExample::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 CommonExampleInterface* KinematicRigidBodyExampleCreateFunc(CommonExampleOptions& options)
 {
 	return new KinematicRigidBodyExample(options.m_guiHelper);

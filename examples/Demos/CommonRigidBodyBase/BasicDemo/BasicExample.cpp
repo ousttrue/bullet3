@@ -103,11 +103,6 @@ struct BasicExample : public CommonRigidBodyBase
 		m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 	}
 
-	void renderScene() override
-	{
-		CommonRigidBodyBase::renderScene();
-	}
-
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;

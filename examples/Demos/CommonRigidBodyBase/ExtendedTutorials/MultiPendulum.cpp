@@ -351,11 +351,6 @@ void MultiPendulumExample::changePendulaRestitution(btScalar restitution)
 	}
 }
 
-void MultiPendulumExample::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 bool MultiPendulumExample::keyboardCallback(int key, int state)
 {
 	//b3Printf("Key pressed: %d in state %d \n",key,state);

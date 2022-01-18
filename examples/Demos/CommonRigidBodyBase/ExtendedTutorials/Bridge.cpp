@@ -128,11 +128,6 @@ void BridgeExample::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void BridgeExample::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 CommonExampleInterface* ET_BridgeCreateFunc(CommonExampleOptions& options)
 {
 	return new BridgeExample(options.m_guiHelper);

@@ -137,11 +137,6 @@ void RigidBodySoftContact::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void RigidBodySoftContact::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 CommonExampleInterface* RigidBodySoftContactCreateFunc(CommonExampleOptions& options)
 {
 	return new RigidBodySoftContact(options.m_guiHelper);

@@ -504,17 +504,3 @@ bool CommonRigidBodyBase::mouseButtonCallback(int button, int state, float x, fl
 
 	return false;
 }
-
-void CommonRigidBodyBase::renderScene()
-{
-	if (m_physics)
-	{
-		{
-			m_guiHelper->syncPhysicsToGraphics(m_physics->getDynamicsWorld());
-		}
-
-		{
-			m_guiHelper->render(m_physics->getDynamicsWorld());
-		}
-	}
-}

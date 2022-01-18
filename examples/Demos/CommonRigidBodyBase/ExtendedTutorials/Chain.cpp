@@ -118,11 +118,6 @@ void ChainExample::initPhysics()
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void ChainExample::renderScene()
-{
-	CommonRigidBodyBase::renderScene();
-}
-
 CommonExampleInterface* ET_ChainCreateFunc(CommonExampleOptions& options)
 {
 	return new ChainExample(options.m_guiHelper);

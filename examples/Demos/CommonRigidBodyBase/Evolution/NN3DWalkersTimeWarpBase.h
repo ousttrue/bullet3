@@ -787,20 +787,6 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 		}
 	}
 
-	void renderScene()
-	{  // render the scene
-		if (!gIsHeadless)
-		{  // while the simulation is not running headlessly, render to screen
-			CommonRigidBodyBase::renderScene();
-
-			if (m_physics->getDynamicsWorld()->getDebugDrawer())
-			{
-				m_physics->debugDraw(m_physics->getDynamicsWorld()->getDebugDrawer()->getDebugMode());
-			}
-		}
-		mIsHeadless = gIsHeadless;
-	}
-
 	CameraResetInfo cameraResetInfo() const override
 	{  // reset the camera to its original position
 		CameraResetInfo info;
