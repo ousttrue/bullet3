@@ -612,7 +612,7 @@ void RemoteGUIHelper::setProjectiveTexture(bool useProjectiveTexture)
 {
 }
 
-void RemoteGUIHelper::autogenerateGraphicsObjects(btDiscreteDynamicsWorld* rbWorld)
+void RemoteGUIHelper::autogenerateGraphicsObjects(const btDiscreteDynamicsWorld* rbWorld)
 {
 }
 

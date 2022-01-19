@@ -1259,9 +1259,9 @@ public:
 		}
 	}
 
-	btDiscreteDynamicsWorld* m_dynamicsWorld;
+	const btDiscreteDynamicsWorld* m_dynamicsWorld;
 
-	virtual void autogenerateGraphicsObjects(btDiscreteDynamicsWorld* rbWorld)
+	void autogenerateGraphicsObjects(const btDiscreteDynamicsWorld* rbWorld) override
 	{
 		m_dynamicsWorld = rbWorld;
 		m_cs->lock();
@@ -1468,7 +1468,7 @@ class PhysicsServerExample : public SharedMemoryCommon
 public:
 	PhysicsServerExample(MultiThreadedOpenGLGuiHelper* helper, CommandProcessorCreationInterface* commandProcessorCreator, SharedMemoryInterface* sharedMem = 0, int options = 0);
 	~PhysicsServerExample() override;
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	void stepSimulation(float deltaTime) override;
 	void updateGraphics() override;
 	void enableCommandLogging()
@@ -1499,7 +1499,7 @@ public:
 	void drawUserDebugLines();
 	virtual void exitPhysics();
 
-	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper);
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper);
 
 	virtual void vrControllerButtonCallback(int controllerId, int button, int state, float pos[4], float orn[4]);
 	virtual void vrControllerMoveCallback(int controllerId, float pos[4], float orn[4], float analogAxis, float auxAnalogAxes[10]);
@@ -1846,7 +1846,7 @@ bool PhysicsServerExample::isConnected()
 	return m_isConnected;
 }
 
-void PhysicsServerExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void PhysicsServerExample::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
 	///for this testing we use Z-axis up
 	int upAxis = 2;
@@ -3061,7 +3061,7 @@ void PhysicsServerExample::renderScene()
 	//m_args[0].m_cs->unlock();
 }
 
-void PhysicsServerExample::physicsDebugDraw(int debugDrawFlags, struct GUIHelperInterface *m_guiHelper)
+void PhysicsServerExample::physicsDebugDraw(int debugDrawFlags, struct GUIHelperInterface* m_guiHelper)
 {
 	m_renderedFrames++;
 

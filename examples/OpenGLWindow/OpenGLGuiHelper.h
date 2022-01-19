@@ -10,102 +10,71 @@ class btTransform;
 
 struct OpenGLGuiHelper : public GUIHelperInterface
 {
+	int m_frame = 0;
 	struct OpenGLGuiHelperInternalData* m_data;
 
 	OpenGLGuiHelper(struct CommonGraphicsApp* glApp, bool useOpenGL2);
-
-	virtual ~OpenGLGuiHelper();
-
-	virtual struct CommonRenderInterface* getRenderInterface();
-	virtual const struct CommonRenderInterface* getRenderInterface() const;
-
-	virtual void createRigidBodyGraphicsObject(btRigidBody* body, const btVector3& color);
-
-	virtual void createCollisionObjectGraphicsObject(btCollisionObject* body, const btVector3& color);
-
-	virtual int registerTexture(const unsigned char* texels, int width, int height);
-	virtual int registerGraphicsShape(const float* vertices, int numvertices, const int* indices, int numIndices, int primitiveType, int textureId);
-	virtual int registerGraphicsInstance(int shapeIndex, const float* position, const float* quaternion, const float* color, const float* scaling);
-	virtual void removeAllGraphicsInstances();
-	virtual void removeGraphicsInstance(int graphicsUid);
-	virtual void changeInstanceFlags(int instanceUid, int flags);
-	virtual void changeRGBAColor(int instanceUid, const double rgbaColor[4]);
-	virtual void changeScaling(int instanceUid, const double scaling[3]);
-	virtual void changeSpecularColor(int instanceUid, const double specularColor[3]);
-	virtual void changeTexture(int textureUniqueId, const unsigned char* rgbTexels, int width, int height);
-	virtual void removeTexture(int textureUid);
-	virtual int getShapeIndexFromInstance(int instanceUid);
-	virtual void replaceTexture(int shapeIndex, int textureUid);
-	virtual void updateShape(int shapeIndex, float* vertices, int numVertices);
-	virtual void setBackgroundColor(const double rgbBackground[3]);
-	virtual void createCollisionShapeGraphicsObject(btCollisionShape* collisionShape);
-
-	virtual void syncPhysicsToGraphics(const btDiscreteDynamicsWorld* rbWorld);
-
-	virtual void render(const btDiscreteDynamicsWorld* rbWorld);
-
-	virtual void createPhysicsDebugDrawer(btDiscreteDynamicsWorld* rbWorld);
-
-	virtual struct Common2dCanvasInterface* get2dCanvasInterface();
-
-	virtual CommonParameterInterface* getParameterInterface();
-
-	virtual struct CommonGraphicsApp* getAppInterface();
-
-	virtual void setUpAxis(int axis);
-
-	virtual void resetCamera(const CameraResetInfo &resetInfo);
-	virtual bool getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float cameraTarget[3]) const;
-
-	virtual void copyCameraImageData(const float viewMatrix[16], const float projectionMatrix[16],
-									 unsigned char* pixelsRGBA, int rgbaBufferSizeInPixels,
-									 float* depthBuffer, int depthBufferSizeInPixels,
-									 int* segmentationMaskBuffer, int segmentationMaskBufferSizeInPixels,
-									 int startPixelIndex, int destinationWidth,
-									 int destinationHeight, int* numPixelsCopied);
-
-	virtual void setProjectiveTextureMatrices(const float viewMatrix[16], const float projectionMatrix[16]);
-	virtual void setProjectiveTexture(bool useProjectiveTexture);
-
-	virtual void autogenerateGraphicsObjects(btDiscreteDynamicsWorld* rbWorld);
-
-	virtual void drawText3D(const char* txt, float position[3], float orientation[4], float color[4], float size, int optionFlag);
-
-	virtual void drawText3D(const char* txt, float posX, float posY, float posZ, float size);
-
-	virtual int addUserDebugText3D(const char* txt, const double positionXYZ[3], const double textColorRGB[3], double size, double lifeTime)
+	~OpenGLGuiHelper() override;
+	struct CommonRenderInterface* getRenderInterface() override;
+	const struct CommonRenderInterface* getRenderInterface() const override;
+	void createRigidBodyGraphicsObject(btRigidBody* body, const btVector3& color) override;
+	void createCollisionObjectGraphicsObject(btCollisionObject* body, const btVector3& color) override;
+	int registerTexture(const unsigned char* texels, int width, int height) override;
+	int registerGraphicsShape(const float* vertices, int numvertices, const int* indices, int numIndices, int primitiveType, int textureId) override;
+	int registerGraphicsInstance(int shapeIndex, const float* position, const float* quaternion, const float* color, const float* scaling) override;
+	void removeAllGraphicsInstances() override;
+	void removeGraphicsInstance(int graphicsUid) override;
+	void changeInstanceFlags(int instanceUid, int flags) override;
+	void changeRGBAColor(int instanceUid, const double rgbaColor[4]) override;
+	void changeScaling(int instanceUid, const double scaling[3]) override;
+	void changeSpecularColor(int instanceUid, const double specularColor[3]) override;
+	void changeTexture(int textureUniqueId, const unsigned char* rgbTexels, int width, int height) override;
+	void removeTexture(int textureUid) override;
+	int getShapeIndexFromInstance(int instanceUid) override;
+	void replaceTexture(int shapeIndex, int textureUid) override;
+	void updateShape(int shapeIndex, float* vertices, int numVertices) override;
+	void setBackgroundColor(const double rgbBackground[3]) override;
+	void createCollisionShapeGraphicsObject(btCollisionShape* collisionShape) override;
+	void syncPhysicsToGraphics(const btDiscreteDynamicsWorld* rbWorld) override;
+	void render(const btDiscreteDynamicsWorld* rbWorld) override;
+	void createPhysicsDebugDrawer(btDiscreteDynamicsWorld* rbWorld) override;
+	struct Common2dCanvasInterface* get2dCanvasInterface() override;
+	CommonParameterInterface* getParameterInterface() override;
+	struct CommonGraphicsApp* getAppInterface() override;
+	void setUpAxis(int axis) override;
+	void resetCamera(const CameraResetInfo& resetInfo) override;
+	bool getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float cameraTarget[3]) const override;
+	void copyCameraImageData(const float viewMatrix[16], const float projectionMatrix[16],
+							 unsigned char* pixelsRGBA, int rgbaBufferSizeInPixels,
+							 float* depthBuffer, int depthBufferSizeInPixels,
+							 int* segmentationMaskBuffer, int segmentationMaskBufferSizeInPixels,
+							 int startPixelIndex, int destinationWidth,
+							 int destinationHeight, int* numPixelsCopied) override;
+	void setProjectiveTextureMatrices(const float viewMatrix[16], const float projectionMatrix[16]) override;
+	void setProjectiveTexture(bool useProjectiveTexture) override;
+	void autogenerateGraphicsObjects(const btDiscreteDynamicsWorld* rbWorld) override;
+	void drawText3D(const char* txt, float position[3], float orientation[4], float color[4], float size, int optionFlag) override;
+	void drawText3D(const char* txt, float posX, float posY, float posZ, float size) override;
+	int addUserDebugLine(const double debugLineFromXYZ[3], const double debugLineToXYZ[3], const double debugLineColorRGB[3], double lineWidth, double lifeTime, int trackingVisualShapeIndex, int replaceItemUid) override
 	{
 		return -1;
 	}
-
-	virtual int addUserDebugLine(const double debugLineFromXYZ[3], const double debugLineToXYZ[3], const double debugLineColorRGB[3], double lineWidth, double lifeTime, int trackingVisualShapeIndex, int replaceItemUid)
+	int addUserDebugParameter(const char* txt, double rangeMin, double rangeMax, double startValue) override
 	{
 		return -1;
 	}
-	virtual int addUserDebugParameter(const char* txt, double rangeMin, double rangeMax, double startValue)
-	{
-		return -1;
-	}
-
-	virtual void removeUserDebugItem(int debugItemUniqueId)
+	void removeUserDebugItem(int debugItemUniqueId) override
 	{
 	}
-	virtual void removeAllUserDebugItems()
+	void removeAllUserDebugItems() override
 	{
 	}
-
 	void renderInternalGl2(int pass, const btDiscreteDynamicsWorld* dynamicsWorld);
-
 	void setVRMode(bool vrMode);
-
-	void setVisualizerFlag(int flag, int enable);
-
-	virtual void setVisualizerFlagCallback(VisualizerFlagCallback callback);
-
-	virtual void dumpFramesToVideo(const char* mp4FileName);
-
+	void setVisualizerFlag(int flag, int enable) override;
+	void setVisualizerFlagCallback(VisualizerFlagCallback callback) override;
+	void dumpFramesToVideo(const char* mp4FileName) override;
 	int createCheckeredTexture(int r, int g, int b);
-
 	void computeSoftBodyVertices(btCollisionShape* collisionShape,
 								 btAlignedObjectArray<GLInstanceVertex>& gfxVertices,
 								 btAlignedObjectArray<int>& indices);

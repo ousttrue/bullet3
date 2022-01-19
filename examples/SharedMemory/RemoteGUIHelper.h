@@ -50,9 +50,9 @@ struct RemoteGUIHelper : public GUIHelperInterface
 	virtual CommonGraphicsApp* getAppInterface();
 
 	virtual void setUpAxis(int axis);
-	
-	void resetCamera(const CameraResetInfo &info) override;
-	
+
+	void resetCamera(const CameraResetInfo& info) override;
+
 	virtual void copyCameraImageData(const float viewMatrix[16], const float projectionMatrix[16],
 									 unsigned char* pixelsRGBA, int rgbaBufferSizeInPixels,
 									 float* depthBuffer, int depthBufferSizeInPixels,
@@ -60,10 +60,10 @@ struct RemoteGUIHelper : public GUIHelperInterface
 									 int startPixelIndex, int width, int height, int* numPixelsCopied);
 
 	virtual void setProjectiveTextureMatrices(const float viewMatrix[16], const float projectionMatrix[16]);
-	
+
 	virtual void setProjectiveTexture(bool useProjectiveTexture);
 
-	virtual void autogenerateGraphicsObjects(btDiscreteDynamicsWorld* rbWorld);
+	void autogenerateGraphicsObjects(const btDiscreteDynamicsWorld* rbWorld) override;
 
 	virtual void drawText3D(const char* txt, float posX, float posZY, float posZ, float size);
 

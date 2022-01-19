@@ -106,7 +106,7 @@ struct GUIHelperInterface
 	virtual void setProjectiveTextureMatrices(const float viewMatrix[16], const float projectionMatrix[16]) {}
 	virtual void setProjectiveTexture(bool useProjectiveTexture) {}
 
-	virtual void autogenerateGraphicsObjects(btDiscreteDynamicsWorld* rbWorld) = 0;
+	virtual void autogenerateGraphicsObjects(const btDiscreteDynamicsWorld* rbWorld) = 0;
 
 	virtual void drawText3D(const char* txt, float posX, float posY, float posZ, float size) {}
 	virtual void drawText3D(const char* txt, float position[3], float orientation[4], float color[4], float size, int optionFlag) {}
@@ -203,7 +203,7 @@ struct DummyGUIHelper : public GUIHelperInterface
 	{
 	}
 
-	virtual void autogenerateGraphicsObjects(btDiscreteDynamicsWorld* rbWorld)
+	void autogenerateGraphicsObjects(const btDiscreteDynamicsWorld* rbWorld) override
 	{
 	}
 

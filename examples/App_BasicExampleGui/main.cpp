@@ -41,7 +41,6 @@ int main(int argc, char* argv[])
 	// m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 	// if (m_dynamicsWorld->getDebugDrawer())
 	// 	m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
-	gui.autogenerateGraphicsObjects(example->getDynamicsWorld());
 	gui.resetCamera(example->cameraResetInfo());
 
 	b3Clock clock;

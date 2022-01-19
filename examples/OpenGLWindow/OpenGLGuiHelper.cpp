@@ -1042,11 +1042,18 @@ void OpenGLGuiHelper::createCollisionShapeGraphicsObject(btCollisionShape* colli
 }
 void OpenGLGuiHelper::syncPhysicsToGraphics(const btDiscreteDynamicsWorld* rbWorld)
 {
+	if (m_frame++ == 0)
+	{
+		// initial
+		autogenerateGraphicsObjects(rbWorld);
+	}
+
+	int numCollisionObjects = rbWorld->getNumCollisionObjects();
+
 	//in VR mode, we skip the synchronization for the second eye
 	if (m_data->m_vrMode && m_data->m_vrSkipShadowPass == 1)
 		return;
 
-	int numCollisionObjects = rbWorld->getNumCollisionObjects();
 	{
 		B3_PROFILE("write all InstanceTransformToCPU");
 		for (int i = 0; i < numCollisionObjects; i++)
@@ -1457,7 +1464,7 @@ bool shapePointerCompareFunc(const btCollisionObject* colA, const btCollisionObj
 	return (a.m_int < b.m_int);
 }
 
-void OpenGLGuiHelper::autogenerateGraphicsObjects(btDiscreteDynamicsWorld* rbWorld)
+void OpenGLGuiHelper::autogenerateGraphicsObjects(const btDiscreteDynamicsWorld* rbWorld)
 {
 	//sort the collision objects based on collision shape, the gfx library requires instances that re-use a shape to be added after eachother
 
