@@ -72,7 +72,7 @@ rankdir="BT"
 
 `btJointFeedback`
 
-* [拘束条件(Constraint)](http://www.slis.tsukuba.ac.jp/~fujisawa.makoto.fu/lecture/iml/text/4_constraint.html)
+* [情報メディア実験 物理エンジンを使ったアプリケーション開発(4) 拘束条件(Constraint)](http://www.slis.tsukuba.ac.jp/~fujisawa.makoto.fu/lecture/iml/text/4_constraint.html)
 
 ##  DeformableDemo
 ##  DynamicControlDemo
