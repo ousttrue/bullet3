@@ -1,43 +1,13 @@
 #include "TestHingeTorque.h"
-#include <CommonRigidBodyBase.h>
 #include <CommonParameterInterface.h>
 #include <Bullet3Common/b3Logging.h>
 #include "CommonCameraInterface.h"
+#include "CommonRigidBodyBase.h"
 
 int collisionFilterGroup = int(btBroadphaseProxy::CharacterFilter);
 int collisionFilterMask = int(btBroadphaseProxy::AllFilter ^ (btBroadphaseProxy::CharacterFilter));
 static btScalar radius(0.2);
 
-struct TestHingeTorque : public CommonRigidBodyBase
-{
-	bool m_once;
-	btAlignedObjectArray<btJointFeedback*> m_jointFeedback;
-
-	TestHingeTorque(struct GUIHelperInterface* helper);
-	virtual ~TestHingeTorque();
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
-
-	virtual void stepSimulation(float deltaTime);
-
-	CameraResetInfo cameraResetInfo() const override
-	{
-		CameraResetInfo info;
-		info.camDist = 5;
-		info.pitch = -21;
-		info.yaw = 270;
-		info.camPosX = -1.34;
-		info.camPosY = 3.4;
-		info.camPosZ = -0.44;
-		info.upAxis = 1;
-		return info;
-	}
-};
-
-TestHingeTorque::TestHingeTorque(struct GUIHelperInterface* helper)
-	: CommonRigidBodyBase(helper),
-	  m_once(true)
-{
-}
 TestHingeTorque::~TestHingeTorque()
 {
 	for (int i = 0; i < m_jointFeedback.size(); i++)
@@ -46,69 +16,25 @@ TestHingeTorque::~TestHingeTorque()
 	}
 }
 
-void TestHingeTorque::stepSimulation(float deltaTime)
+CameraResetInfo TestHingeTorque::cameraResetInfo() const
 {
-	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
-	if (0)  //m_once)
-	{
-		m_once = false;
-		btHingeConstraint* hinge = (btHingeConstraint*)m_dynamicsWorld->getConstraint(0);
-
-		btRigidBody& bodyA = hinge->getRigidBodyA();
-		btTransform trA = bodyA.getWorldTransform();
-		btVector3 hingeAxisInWorld = trA.getBasis() * hinge->getFrameOffsetA().getBasis().getColumn(2);
-		hinge->getRigidBodyA().applyTorque(-hingeAxisInWorld * 10);
-		hinge->getRigidBodyB().applyTorque(hingeAxisInWorld * 10);
-	}
-
-	m_dynamicsWorld->stepSimulation(1. / 240, 0);
-
-	static int count = 0;
-	if ((count & 0x0f) == 0)
-	{
-		btRigidBody* base = btRigidBody::upcast(m_dynamicsWorld->getCollisionObjectArray()[0]);
-
-		b3Printf("base angvel = %f,%f,%f", base->getAngularVelocity()[0],
-				 base->getAngularVelocity()[1],
-
-				 base->getAngularVelocity()[2]);
-
-		btRigidBody* child = btRigidBody::upcast(m_dynamicsWorld->getCollisionObjectArray()[1]);
-
-		b3Printf("child angvel = %f,%f,%f", child->getAngularVelocity()[0],
-				 child->getAngularVelocity()[1],
-
-				 child->getAngularVelocity()[2]);
-
-		for (int i = 0; i < m_jointFeedback.size(); i++)
-		{
-			b3Printf("Applied force at the COM/Inertial frame B[%d]:(%f,%f,%f), torque B:(%f,%f,%f)\n", i,
-
-					 m_jointFeedback[i]->m_appliedForceBodyB.x(),
-					 m_jointFeedback[i]->m_appliedForceBodyB.y(),
-					 m_jointFeedback[i]->m_appliedForceBodyB.z(),
-					 m_jointFeedback[i]->m_appliedTorqueBodyB.x(),
-					 m_jointFeedback[i]->m_appliedTorqueBodyB.y(),
-					 m_jointFeedback[i]->m_appliedTorqueBodyB.z());
-		}
-	}
-	count++;
-
-	//CommonRigidBodyBase::stepSimulation(deltaTime);
+	CameraResetInfo info;
+	info.camDist = 5;
+	info.pitch = -21;
+	info.yaw = 270;
+	info.camPosX = -1.34;
+	info.camPosY = 3.4;
+	info.camPosZ = -0.44;
+	info.upAxis = 1;
+	return info;
 }
 
-void TestHingeTorque::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void TestHingeTorque::initWorld(Physics* physics)
 {
-	m_physics = new Physics();
-
-	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
+	auto m_dynamicsWorld = physics->getDynamicsWorld();
 	m_dynamicsWorld->getSolverInfo().m_splitImpulse = false;
 
 	m_dynamicsWorld->setGravity(btVector3(0, 0, -10));
-
-	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
-	int mode = btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawConstraints + btIDebugDraw::DBG_DrawConstraintLimits;
-	m_dynamicsWorld->getDebugDrawer()->setDebugMode(mode);
 
 	{  // create a door using hinge constraint attached to the world
 
@@ -129,7 +55,7 @@ void TestHingeTorque::initPhysics(CommonCameraInterface *camera, struct GUIHelpe
 		float baseMass = 0.f;
 		float linkMass = 1.f;
 
-		btRigidBody* base = m_physics->createRigidBody(baseMass, baseWorldTrans, baseBox);
+		btRigidBody* base = physics->createRigidBody(baseMass, baseWorldTrans, baseBox);
 		m_dynamicsWorld->removeRigidBody(base);
 		base->setDamping(0, 0);
 		m_dynamicsWorld->addRigidBody(base, collisionFilterGroup, collisionFilterMask);
@@ -155,7 +81,7 @@ void TestHingeTorque::initPhysics(CommonCameraInterface *camera, struct GUIHelpe
 			{
 				colOb = linkSphere;
 			}
-			btRigidBody* linkBody = m_physics->createRigidBody(linkMass, linkTrans, colOb);
+			btRigidBody* linkBody = physics->createRigidBody(linkMass, linkTrans, colOb);
 			m_dynamicsWorld->removeRigidBody(linkBody);
 			m_dynamicsWorld->addRigidBody(linkBody, collisionFilterGroup, collisionFilterMask);
 			linkBody->setDamping(0, 0);
@@ -218,13 +144,58 @@ void TestHingeTorque::initPhysics(CommonCameraInterface *camera, struct GUIHelpe
 		groundOrigin[2] -= 0.6;
 		start.setOrigin(groundOrigin);
 		//	start.setRotation(groundOrn);
-		btRigidBody* body = m_physics->createRigidBody(0, start, box);
+		btRigidBody* body = physics->createRigidBody(0, start, box);
 		body->setFriction(0);
 	}
-	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-class CommonExampleInterface* TestHingeTorqueCreateFunc(CommonExampleOptions& options)
+void TestHingeTorque::stepSimulation(float deltaTime)
 {
-	return new TestHingeTorque(options.m_guiHelper);
+	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
+	if (0)  //m_once)
+	{
+		m_once = false;
+		btHingeConstraint* hinge = (btHingeConstraint*)m_dynamicsWorld->getConstraint(0);
+
+		btRigidBody& bodyA = hinge->getRigidBodyA();
+		btTransform trA = bodyA.getWorldTransform();
+		btVector3 hingeAxisInWorld = trA.getBasis() * hinge->getFrameOffsetA().getBasis().getColumn(2);
+		hinge->getRigidBodyA().applyTorque(-hingeAxisInWorld * 10);
+		hinge->getRigidBodyB().applyTorque(hingeAxisInWorld * 10);
+	}
+
+	m_dynamicsWorld->stepSimulation(1. / 240, 0);
+
+	static int count = 0;
+	if ((count & 0x0f) == 0)
+	{
+		btRigidBody* base = btRigidBody::upcast(m_dynamicsWorld->getCollisionObjectArray()[0]);
+
+		b3Printf("base angvel = %f,%f,%f", base->getAngularVelocity()[0],
+				 base->getAngularVelocity()[1],
+
+				 base->getAngularVelocity()[2]);
+
+		btRigidBody* child = btRigidBody::upcast(m_dynamicsWorld->getCollisionObjectArray()[1]);
+
+		b3Printf("child angvel = %f,%f,%f", child->getAngularVelocity()[0],
+				 child->getAngularVelocity()[1],
+
+				 child->getAngularVelocity()[2]);
+
+		for (int i = 0; i < m_jointFeedback.size(); i++)
+		{
+			b3Printf("Applied force at the COM/Inertial frame B[%d]:(%f,%f,%f), torque B:(%f,%f,%f)\n", i,
+
+					 m_jointFeedback[i]->m_appliedForceBodyB.x(),
+					 m_jointFeedback[i]->m_appliedForceBodyB.y(),
+					 m_jointFeedback[i]->m_appliedForceBodyB.z(),
+					 m_jointFeedback[i]->m_appliedTorqueBodyB.x(),
+					 m_jointFeedback[i]->m_appliedTorqueBodyB.y(),
+					 m_jointFeedback[i]->m_appliedTorqueBodyB.z());
+		}
+	}
+	count++;
+
+	//CommonRigidBodyBase::stepSimulation(deltaTime);
 }

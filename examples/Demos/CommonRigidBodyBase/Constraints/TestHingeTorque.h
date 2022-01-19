@@ -1,6 +1,13 @@
-#ifndef TEST_HINGE_TORQUE_H
-#define TEST_HINGE_TORQUE_H
+#pragma once
+#include <CommonRigidBodyBase.h>
+struct TestHingeTorque : public CommonRigidBodyBase
+{
+	bool m_once = true;
+	btAlignedObjectArray<btJointFeedback *> m_jointFeedback;
 
-class CommonExampleInterface* TestHingeTorqueCreateFunc(struct CommonExampleOptions& options);
-
-#endif  //TEST_HINGE_TORQUE_H
+	TestHingeTorque() : CommonRigidBodyBase({}) {}
+	virtual ~TestHingeTorque();
+	CameraResetInfo cameraResetInfo() const override;
+	void initWorld(Physics *physics) override;
+	void stepSimulation(float deltaTime) override;
+};

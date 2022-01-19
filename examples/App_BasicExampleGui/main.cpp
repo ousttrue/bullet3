@@ -47,6 +47,9 @@ int main(int argc, char* argv[])
 	// m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 	// if (m_dynamicsWorld->getDebugDrawer())
 	// 	m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
+	// int mode = btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawConstraints + btIDebugDraw::DBG_DrawConstraintLimits;
+	// m_dynamicsWorld->getDebugDrawer()->setDebugMode(mode);
+
 	camera->resetCamera(example->cameraResetInfo());
 
 	// if (0)

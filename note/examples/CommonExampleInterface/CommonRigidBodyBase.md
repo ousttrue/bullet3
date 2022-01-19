@@ -62,7 +62,17 @@ rankdir="BT"
 
 ##  Constraints
 
+### AllConstraintDemo
+
 > AllConstraintDemo shows how to create a constraint, like Hinge or btGenericD6constraint
+
+### ConstraintPhysicsSetup
+
+### TestHingeTorque
+
+`btJointFeedback`
+
+* [拘束条件(Constraint)](http://www.slis.tsukuba.ac.jp/~fujisawa.makoto.fu/lecture/iml/text/4_constraint.html)
 
 ##  DeformableDemo
 ##  DynamicControlDemo
