@@ -14,6 +14,20 @@ subject to the following restrictions:
 */
 
 #include "ConstraintDemo.h"
+#include "CommonRigidBodyBase.h"
+
+CameraResetInfo AllConstraintDemo::cameraResetInfo() const
+{
+	CameraResetInfo info;
+	info.camDist = 27;
+	info.pitch = -30;
+	info.yaw = 720;
+	info.camPosX = 2;
+	info.camPosY = 0;
+	info.camPosZ = -10;
+	info.upAxis = 1;
+	return info;
+}
 
 #include "CommonCameraInterface.h"
 #include "btBulletDynamicsCommon.h"
@@ -21,37 +35,6 @@ subject to the following restrictions:
 
 #include <stdio.h>  //printf debugging
 #include <cmath>
-
-#include <CommonRigidBodyBase.h>
-
-///AllConstraintDemo shows how to create a constraint, like Hinge or btGenericD6constraint
-class AllConstraintDemo : public CommonRigidBodyBase
-{
-	//keep track of variables to delete memory at the end
-	void setupEmptyDynamicsWorld();
-
-public:
-	AllConstraintDemo(struct GUIHelperInterface* helper);
-	~AllConstraintDemo() override;
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
-	void exitPhysics() override;
-	CameraResetInfo cameraResetInfo() const override
-	{
-		CameraResetInfo info;
-		info.camDist = 27;
-		info.pitch = -30;
-		info.yaw = 720;
-		info.camPosX = 2;
-		info.camPosY = 0;
-		info.camPosZ = -10;
-		return info;
-	}
-	virtual bool keyboardCallback(int key, int state) override;
-
-	// for cone-twist motor driving
-	float m_Time = 0;
-	class btConeTwistConstraint* m_ctc = nullptr;
-};
 
 #define ENABLE_ALL_DEMOS 1
 #define CUBE_HALF_EXTENTS 1.f
@@ -70,27 +53,22 @@ btGeneric6DofConstraint* spSlider6Dof = NULL;
 
 static bool s_bTestConeTwistMotor = false;
 
-void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void AllConstraintDemo::initWorld(Physics* physics)
 {
-	m_guiHelper->setUpAxis(1);
-
-	m_physics = new Physics();
-	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
-
-	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
+	auto m_dynamicsWorld = physics->getDynamicsWorld();
 
 	//btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(50.),btScalar(40.),btScalar(50.)));
 	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 40);
-	m_physics->m_collisionShapes.push_back(groundShape);
+	physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(0, -56, 0));
 	btRigidBody* groundBody;
-	groundBody = m_physics->createRigidBody(0, groundTransform, groundShape);
+	groundBody = physics->createRigidBody(0, groundTransform, groundShape);
 
 	btCollisionShape* shape = new btBoxShape(btVector3(CUBE_HALF_EXTENTS, CUBE_HALF_EXTENTS, CUBE_HALF_EXTENTS));
-	m_physics->m_collisionShapes.push_back(shape);
+	physics->m_collisionShapes.push_back(shape);
 
 	btTransform trans;
 	trans.setIdentity();
@@ -171,10 +149,10 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 	{
 		trans.setIdentity();
 		trans.setOrigin(btVector3(1, 30, -5));
-		m_physics->createRigidBody(mass, trans, shape);
+		physics->createRigidBody(mass, trans, shape);
 		trans.setOrigin(btVector3(0, 0, -5));
 
-		btRigidBody* body0 = m_physics->createRigidBody(mass, trans, shape);
+		btRigidBody* body0 = physics->createRigidBody(mass, trans, shape);
 		trans.setOrigin(btVector3(2 * CUBE_HALF_EXTENTS, 20, 0));
 		mass = 1.f;
 		//	btRigidBody* body1 = 0;//createRigidBody( mass,trans,shape);
@@ -189,7 +167,7 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 #if ENABLE_ALL_DEMOS
 	//point to point constraint (ball socket)
 	{
-		btRigidBody* body0 = m_physics->createRigidBody(mass, trans, shape);
+		btRigidBody* body0 = physics->createRigidBody(mass, trans, shape);
 		trans.setOrigin(btVector3(2 * CUBE_HALF_EXTENTS, 20, 0));
 
 		mass = 1.f;
@@ -239,14 +217,14 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		frameInA = btTransform::getIdentity();
 		frameInB = btTransform::getIdentity();
 
-		btRigidBody* pRbA1 = m_physics->createRigidBody(mass, trans, shape);
+		btRigidBody* pRbA1 = physics->createRigidBody(mass, trans, shape);
 		//	btRigidBody* pRbA1 = createRigidBody(0.f, trans, shape);
 		pRbA1->setActivationState(DISABLE_DEACTIVATION);
 
 		// add dynamic rigid body B1
 		worldPos.setValue(-30, 0, 30);
 		trans.setOrigin(worldPos);
-		btRigidBody* pRbB1 = m_physics->createRigidBody(mass, trans, shape);
+		btRigidBody* pRbB1 = physics->createRigidBody(mass, trans, shape);
 		//	btRigidBody* pRbB1 = createRigidBody(0.f, trans, shape);
 		pRbB1->setActivationState(DISABLE_DEACTIVATION);
 
@@ -282,9 +260,9 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		//trans.setBasis(sliderOrientation);
 		sliderTransform = trans;
 
-		d6body0 = m_physics->createRigidBody(mass, trans, shape);
+		d6body0 = physics->createRigidBody(mass, trans, shape);
 		d6body0->setActivationState(DISABLE_DEACTIVATION);
-		btRigidBody* fixedBody1 = m_physics->createRigidBody(0, trans, 0);
+		btRigidBody* fixedBody1 = physics->createRigidBody(0, trans, 0);
 		m_dynamicsWorld->addRigidBody(fixedBody1);
 
 		btTransform frameInA, frameInB;
@@ -318,11 +296,11 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 #if ENABLE_ALL_DEMOS
 	{  // create a door using hinge constraint attached to the world
 		btCollisionShape* pDoorShape = new btBoxShape(btVector3(2.0f, 5.0f, 0.2f));
-		m_physics->m_collisionShapes.push_back(pDoorShape);
+		physics->m_collisionShapes.push_back(pDoorShape);
 		btTransform doorTrans;
 		doorTrans.setIdentity();
 		doorTrans.setOrigin(btVector3(-5.0f, -2.0f, 0.0f));
-		btRigidBody* pDoorBody = m_physics->createRigidBody(1.0, doorTrans, pDoorShape);
+		btRigidBody* pDoorBody = physics->createRigidBody(1.0, doorTrans, pDoorShape);
 		pDoorBody->setActivationState(DISABLE_DEACTIVATION);
 		const btVector3 btPivotA(10.f + 2.1f, -2.0f, 0.0f);  // right next to the door slightly outside
 		btVector3 btAxisA(0.0f, 1.0f, 0.0f);                 // pointing upwards, aka Y-axis
@@ -354,14 +332,14 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		tr.setOrigin(btVector3(btScalar(10.), btScalar(6.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
 		//		btRigidBody* pBodyA = createRigidBody( mass, tr, shape);
-		btRigidBody* pBodyA = m_physics->createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyA = physics->createRigidBody(0.0, tr, shape);
 		//		btRigidBody* pBodyA = createRigidBody( 0.0, tr, 0);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(0.), btScalar(6.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyB = m_physics->createRigidBody(mass, tr, shape);
+		btRigidBody* pBodyB = physics->createRigidBody(mass, tr, shape);
 		//		btRigidBody* pBodyB = createRigidBody(0.f, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 
@@ -416,14 +394,14 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-10.), btScalar(5.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyA = m_physics->createRigidBody(1.0, tr, shape);
+		btRigidBody* pBodyA = physics->createRigidBody(1.0, tr, shape);
 		//		btRigidBody* pBodyA = createRigidBody( 0.0, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-10.), btScalar(-5.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyB = m_physics->createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyB = physics->createRigidBody(0.0, tr, shape);
 		//		btRigidBody* pBodyB = createRigidBody(1.0, tr, shape);
 
 		btTransform frameInA, frameInB;
@@ -449,7 +427,7 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
-		btRigidBody* pBody = m_physics->createRigidBody(1.0, tr, shape);
+		btRigidBody* pBody = physics->createRigidBody(1.0, tr, shape);
 		pBody->setActivationState(DISABLE_DEACTIVATION);
 		const btVector3 btPivotA(10.0f, 0.0f, 0.0f);
 		btVector3 btAxisA(0.0f, 0.0f, 1.0f);
@@ -470,12 +448,12 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(20.), btScalar(4.), btScalar(0.)));
-		btRigidBody* pBodyA = m_physics->createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyA = physics->createRigidBody(0.0, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 		// dynamic bodyB (child) below it :
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(20.), btScalar(0.), btScalar(0.)));
-		btRigidBody* pBodyB = m_physics->createRigidBody(1.0, tr, shape);
+		btRigidBody* pBodyB = physics->createRigidBody(1.0, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 		// add some (arbitrary) data to build constraint frames
 		btVector3 parentAxis(1.f, 0.f, 0.f);
@@ -499,13 +477,13 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-20.), btScalar(16.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyA = m_physics->createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyA = physics->createRigidBody(0.0, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-10.), btScalar(16.), btScalar(0.)));
 		tr.getBasis().setEulerZYX(0, 0, 0);
-		btRigidBody* pBodyB = m_physics->createRigidBody(1.0, tr, shape);
+		btRigidBody* pBodyB = physics->createRigidBody(1.0, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 
 		btTransform frameInA, frameInB;
@@ -541,12 +519,12 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-20.), btScalar(4.), btScalar(0.)));
-		btRigidBody* pBodyA = m_physics->createRigidBody(0.0, tr, shape);
+		btRigidBody* pBodyA = physics->createRigidBody(0.0, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 		// dynamic bodyB (child) below it :
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-20.), btScalar(0.), btScalar(0.)));
-		btRigidBody* pBodyB = m_physics->createRigidBody(1.0, tr, shape);
+		btRigidBody* pBodyB = physics->createRigidBody(1.0, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 		// add some data to build constraint frames
 		btVector3 parentAxis(0.f, 1.f, 0.f);
@@ -569,12 +547,12 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-20.), btScalar(-2.), btScalar(0.)));
-		btRigidBody* pBodyA = m_physics->createRigidBody(1.0f, tr, shape);
+		btRigidBody* pBodyA = physics->createRigidBody(1.0f, tr, shape);
 		pBodyA->setActivationState(DISABLE_DEACTIVATION);
 		// dynamic bodyB:
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(-30.), btScalar(-2.), btScalar(0.)));
-		btRigidBody* pBodyB = m_physics->createRigidBody(10.0, tr, shape);
+		btRigidBody* pBodyB = physics->createRigidBody(10.0, tr, shape);
 		pBodyB->setActivationState(DISABLE_DEACTIVATION);
 		// add some data to build constraint frames
 		btVector3 axisA(0.f, 1.f, 0.f);
@@ -595,7 +573,7 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		btTransform tr;
 		tr.setIdentity();
 		tr.setOrigin(btVector3(btScalar(10.), btScalar(-15.), btScalar(0.)));
-		btRigidBody* pBody = m_physics->createRigidBody(1.0, tr, shape);
+		btRigidBody* pBody = physics->createRigidBody(1.0, tr, shape);
 		pBody->setActivationState(DISABLE_DEACTIVATION);
 		btTransform frameB;
 		frameB.setIdentity();
@@ -613,119 +591,7 @@ void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHel
 		pGen6Dof->getTranslationalLimitMotor()->m_maxMotorForce[0] = 6.0f;
 	}
 #endif
-
-	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
-
-void AllConstraintDemo::exitPhysics()
-{
-	delete m_physics;
-}
-
-AllConstraintDemo::AllConstraintDemo(struct GUIHelperInterface* helper)
-	: CommonRigidBodyBase(helper)
-{
-}
-
-AllConstraintDemo::~AllConstraintDemo()
-{
-}
-
-#if 0
-void AllConstraintDemo::clientMoveAndDisplay()
-{
-	
- glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-
- 	float dt = float(getDeltaTimeMicroseconds()) * 0.000001f;
-	//printf("dt = %f: ",dt);
-
-	// drive cone-twist motor
-	m_Time += 0.03f;
-	if (s_bTestConeTwistMotor)
-	{  // this works only for obsolete constraint solver for now
-		// build cone target
-		btScalar t = 1.25f*m_Time;
-		btVector3 axis(0,sin(t),cos(t));
-		axis.normalize();
-		btQuaternion q1(axis, 0.75f*SIMD_PI);
-
-		// build twist target
-		//btQuaternion q2(0,0,0);
-		//btQuaternion q2(btVehictor3(1,0,0), -0.3*sin(m_Time));
-		btQuaternion q2(btVector3(1,0,0), -1.49f*btSin(1.5f*m_Time));
-
-		// compose cone + twist and set target
-		q1 = q1 * q2;
-		m_ctc->enableMotor(true);
-		m_ctc->setMotorTargetInConstraintSpace(q1);
-	}
-
-	{
-		static bool once = true;
-		if ( m_dynamicsWorld->getDebugDrawer() && once)
-		{
-			m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
-			once=false;
-		}
-	}
-
-	
-	{
-	 	//during idle mode, just run 1 simulation step maximum
-		int maxSimSubSteps = m_idle ? 1 : 1;
-		if (m_idle)
-			dt = 1.0f/420.f;
-
-		int numSimSteps = m_dynamicsWorld->stepSimulation(dt,maxSimSubSteps);
-
-		//optional but useful: debug drawing
-		m_dynamicsWorld->debugDrawWorld();
-	
-		bool verbose = false;
-		if (verbose)
-		{
-			if (!numSimSteps)
-				printf("Interpolated transforms\n");
-			else
-			{
-				if (numSimSteps > maxSimSubSteps)
-				{
-					//detect dropping frames
-					printf("Dropped (%i) simulation steps out of %i\n",numSimSteps - maxSimSubSteps,numSimSteps);
-				} else
-				{
-					printf("Simulated (%i) steps\n",numSimSteps);
-				}
-			}
-		}
-	}
-	renderme();
-
-//	drawLimit();
-
-    glFlush();
-    swapBuffers();
-}
-
-
-
-
-void AllConstraintDemo::displayCallback(void) {
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-
-	if (m_dynamicsWorld)
-		m_dynamicsWorld->debugDrawWorld();
-
-//	drawLimit();
-
-	renderme();
-
-    glFlush();
-    swapBuffers();
-}
-#endif
 
 bool AllConstraintDemo::keyboardCallback(int key, int state)
 {
@@ -766,9 +632,4 @@ bool AllConstraintDemo::keyboardCallback(int key, int state)
 		break;
 	}
 	return handled;
-}
-
-class CommonExampleInterface* AllConstraintCreateFunc(struct CommonExampleOptions& options)
-{
-	return new AllConstraintDemo(options.m_guiHelper);
 }

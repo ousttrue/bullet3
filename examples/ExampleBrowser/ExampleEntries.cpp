@@ -127,12 +127,13 @@ static ExampleEntry gDefaultExamples[] =
 	{
 		ExampleEntry(0, "API"),
 
-		ExampleEntry(1, "Basic Example", "Create some rigid bodies using box collision shapes. This is a good example to familiarize with the basic initialization of Bullet. The Basic Example can also be compiled without graphical user interface, as a console application. Press W for wireframe, A to show AABBs, I to suspend/restart physics simulation. Press D to toggle auto-deactivation of the simulation. ", [](auto){ return new BasicExample; }),
+		ExampleEntry(1, "Basic Example", "Create some rigid bodies using box collision shapes. This is a good example to familiarize with the basic initialization of Bullet. The Basic Example can also be compiled without graphical user interface, as a console application. Press W for wireframe, A to show AABBs, I to suspend/restart physics simulation. Press D to toggle auto-deactivation of the simulation. ", [](auto)
+					 { return new BasicExample; }),
 
 		ExampleEntry(1, "Rolling Friction", "Damping is often not good enough to keep rounded objects from rolling down a sloped surface. Instead, you can set the rolling friction of a rigid body. Generally it is best to leave the rolling friction to zero, to avoid artifacts.", RollingFrictionCreateFunc),
-        
-		ExampleEntry(1, "Constraints", "Show the use of the various constraints in Bullet. Press the L key to visualize the constraint limits. Press the C key to visualize the constraint frames.",
-					 AllConstraintCreateFunc),
+
+		ExampleEntry(1, "Constraints", "Show the use of the various constraints in Bullet. Press the L key to visualize the constraint limits. Press the C key to visualize the constraint frames.", [](auto)
+					 { return new AllConstraintDemo; }),
 
 		ExampleEntry(1, "Motorized Hinge", "Use of a btHingeConstraint. You can adjust the first slider to change the target velocity, and the second slider to adjust the maximum impulse applied to reach the target velocity. Note that the hinge angle can reach beyond -360 and 360 degrees.", ConstraintCreateFunc),
 		ExampleEntry(1, "TestHingeTorque", "Apply a torque in the hinge axis. This example uses a btHingeConstraint and btRigidBody. The setup is similar to the multi body example TestJointTorque.",
@@ -147,7 +148,7 @@ static ExampleEntry gDefaultExamples[] =
 		ExampleEntry(1, "Gyroscopic", "Show the Dzhanibekov effect using various settings of the gyroscopic term. You can select the gyroscopic term computation using btRigidBody::setFlags, with arguments BT_ENABLE_GYROSCOPIC_FORCE_EXPLICIT (using explicit integration, which adds energy and can lead to explosions), BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_WORLD, BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY. If you don't set any of these flags, there is no gyroscopic term used.", GyroscopicCreateFunc),
 
 		ExampleEntry(1, "Soft Contact", "Using the error correction parameter (ERP) and constraint force mixing (CFM) values for contacts to simulate compliant contact.", RigidBodySoftContactCreateFunc),
-    ExampleEntry(1, "Kinematic Body", "Let the user set the transform, the physics engine computes the velocity for one-way contact and friction interaction.", KinematicRigidBodyExampleCreateFunc),
+		ExampleEntry(1, "Kinematic Body", "Let the user set the transform, the physics engine computes the velocity for one-way contact and friction interaction.", KinematicRigidBodyExampleCreateFunc),
 
 		ExampleEntry(0, "MultiBody"),
 		ExampleEntry(1, "MultiDof", "Create a basic btMultiBody with 3-DOF spherical joints (mobilizers). The demo uses a fixed base or a floating base at restart.", MultiDofCreateFunc),
@@ -157,7 +158,7 @@ static ExampleEntry gDefaultExamples[] =
 		ExampleEntry(1, "Constraint Feedback", "The example shows how to receive joint reaction forces in a btMultiBody. Also the applied impulse is available for a btMultiBodyJointMotor", MultiBodyConstraintFeedbackCreateFunc),
 		ExampleEntry(1, "Inverted Pendulum PD", "Keep an inverted pendulum up using open loop PD control", InvertedPendulumPDControlCreateFunc),
 		ExampleEntry(1, "MultiBody Soft Contact", "Using the error correction parameter (ERP) and constraint force mixing (CFM) values for contacts to simulate compliant contact.", MultiBodySoftContactCreateFunc, 0),
-    ExampleEntry(1, "Kinematic MultiBody", "Let the user set the transform, the physics engine computes the velocity for one-way contact and friction interaction.", KinematicMultiBodyExampleCreateFunc),
+		ExampleEntry(1, "Kinematic MultiBody", "Let the user set the transform, the physics engine computes the velocity for one-way contact and friction interaction.", KinematicMultiBodyExampleCreateFunc),
 
 		ExampleEntry(0, "Physics Client-Server"),
 		ExampleEntry(1, "Physics Server", "Create a physics server that communicates with a physics client over shared memory. You can connect to the server using pybullet, a PhysicsClient or a UDP/TCP Bridge.",
@@ -168,12 +169,11 @@ static ExampleEntry gDefaultExamples[] =
 					 PhysicsServerCreateFuncBullet2, PHYSICS_SERVER_ENABLE_COMMAND_LOGGING),
 		ExampleEntry(1, "Physics Server (Replay Log)", "Create a physics server that replay a command log from disk.",
 					 PhysicsServerCreateFuncBullet2, PHYSICS_SERVER_REPLAY_FROM_COMMAND_LOG),
-		ExampleEntry(1, "Graphics Server", "Create a graphics server.",GraphicsServerCreateFuncBullet),
+		ExampleEntry(1, "Graphics Server", "Create a graphics server.", GraphicsServerCreateFuncBullet),
 		ExampleEntry(1, "Graphics Client", "Create a graphics client.", GraphicsClientCreateFunc),
-		
-					 //
-		//	ExampleEntry(1, "Physics Client (Direct)", "Create a physics client that can communicate with a physics server directly in-process.", PhysicsClientCreateFunc,eCLIENTEXAMPLE_DIRECT),
 
+		//
+		//	ExampleEntry(1, "Physics Client (Direct)", "Create a physics client that can communicate with a physics server directly in-process.", PhysicsClientCreateFunc,eCLIENTEXAMPLE_DIRECT),
 
 		ExampleEntry(0, "Inverse Dynamics"),
 		ExampleEntry(1, "Inverse Dynamics URDF", "Create a btMultiBody from URDF. Create an inverse MultiBodyTree model from that. Use either decoupled PD control or computed torque control using the inverse model to track joint position targets", InverseDynamicsExampleCreateFunc, BT_ID_LOAD_URDF),
@@ -196,25 +196,25 @@ static ExampleEntry gDefaultExamples[] =
 
 		ExampleEntry(0, "Collision"),
 		ExampleEntry(1, "Spheres & Plane C-API (Bullet2)", "Collision C-API using Bullet 2.x backend", CollisionTutorialBullet2CreateFunc, TUT_SPHERE_PLANE_BULLET2),
-//ExampleEntry(1, "Spheres & Plane C-API (Bullet3)", "Collision C-API using Bullet 3.x backend", CollisionTutorialBullet2CreateFunc,TUT_SPHERE_PLANE_RTB3),
+		//ExampleEntry(1, "Spheres & Plane C-API (Bullet3)", "Collision C-API using Bullet 3.x backend", CollisionTutorialBullet2CreateFunc,TUT_SPHERE_PLANE_RTB3),
 
-        ExampleEntry(0, "Deformabe Body"),
-        ExampleEntry(1, "Deformable Self Collision", "Deformable Self Collision", DeformableSelfCollisionCreateFunc),
-        ExampleEntry(1, "Deformable-Deformable Contact", "Deformable contact", DeformableContactCreateFunc),
-        ExampleEntry(1, "Cloth Friction", "Cloth friction contact", ClothFrictionCreateFunc),
-        ExampleEntry(1, "Deformable-Deformable Friction Contact", "Deformable friction contact", PinchFrictionCreateFunc),
-        ExampleEntry(1, "Deformable-RigidBody Contact", "Deformable test", DeformableRigidCreateFunc),
-        ExampleEntry(1, "Split Impulse Contact", "Split impulse test", SplitImpulseCreateFunc),
-        ExampleEntry(1, "Grasp Deformable Cube", "Grasping test", PinchCreateFunc),
-        ExampleEntry(1, "Grasp Deformable with Motor", "Grasping test", GraspDeformableCreateFunc),
-        ExampleEntry(1, "Volumetric Deformable Objects", "Volumetric Deformable test", VolumetricDeformableCreateFunc),
+		ExampleEntry(0, "Deformabe Body"),
+		ExampleEntry(1, "Deformable Self Collision", "Deformable Self Collision", DeformableSelfCollisionCreateFunc),
+		ExampleEntry(1, "Deformable-Deformable Contact", "Deformable contact", DeformableContactCreateFunc),
+		ExampleEntry(1, "Cloth Friction", "Cloth friction contact", ClothFrictionCreateFunc),
+		ExampleEntry(1, "Deformable-Deformable Friction Contact", "Deformable friction contact", PinchFrictionCreateFunc),
+		ExampleEntry(1, "Deformable-RigidBody Contact", "Deformable test", DeformableRigidCreateFunc),
+		ExampleEntry(1, "Split Impulse Contact", "Split impulse test", SplitImpulseCreateFunc),
+		ExampleEntry(1, "Grasp Deformable Cube", "Grasping test", PinchCreateFunc),
+		ExampleEntry(1, "Grasp Deformable with Motor", "Grasping test", GraspDeformableCreateFunc),
+		ExampleEntry(1, "Volumetric Deformable Objects", "Volumetric Deformable test", VolumetricDeformableCreateFunc),
 		ExampleEntry(1, "Extreme Deformation", "Recovery from extreme deformation", LargeDeformationCreateFunc),
 		ExampleEntry(1, "Colliding Test", "Volumetric deformable collide with rigid box", CollideCreateFunc),
-        ExampleEntry(1, "Rigid Cloth Anchor", "Deformable Rigid body Anchor test", DeformableClothAnchorCreateFunc),
-        ExampleEntry(1, "Multibody Cloth Anchor", "Deformable Multibody Anchor test", MultibodyClothAnchorCreateFunc),
-        ExampleEntry(1, "Deformable-MultiBody Contact", "MultiBody and Deformable contact", DeformableMultibodyCreateFunc),
-        // ExampleEntry(1, "MultiBody Baseline", "MultiBody Baseline", MultiBodyBaselineCreateFunc),
-        
+		ExampleEntry(1, "Rigid Cloth Anchor", "Deformable Rigid body Anchor test", DeformableClothAnchorCreateFunc),
+		ExampleEntry(1, "Multibody Cloth Anchor", "Deformable Multibody Anchor test", MultibodyClothAnchorCreateFunc),
+		ExampleEntry(1, "Deformable-MultiBody Contact", "MultiBody and Deformable contact", DeformableMultibodyCreateFunc),
+// ExampleEntry(1, "MultiBody Baseline", "MultiBody Baseline", MultiBodyBaselineCreateFunc),
+
 #ifdef INCLUDE_CLOTH_DEMOS
 		ExampleEntry(0, "Soft Body"),
 		ExampleEntry(1, "Cloth", "Simulate a patch of cloth.", SoftDemoCreateFunc, 0),
@@ -444,7 +444,7 @@ void ExampleEntriesAll::initExampleEntries()
 	}
 }
 
-void ExampleEntriesAll::registerExampleEntry(int menuLevel, const char* name, const char* description, const CommonExampleInterface::CreateFunc &createFunc, int option)
+void ExampleEntriesAll::registerExampleEntry(int menuLevel, const char* name, const char* description, const CommonExampleInterface::CreateFunc& createFunc, int option)
 {
 	ExampleEntry e(menuLevel, name, description, createFunc, option);
 	gAdditionalRegisteredExamples.push_back(e);

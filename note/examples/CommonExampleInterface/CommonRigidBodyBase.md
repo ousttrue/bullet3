@@ -58,7 +58,12 @@ rankdir="BT"
 	}
 ```
 
+##  RollingFrictionDemo
+
 ##  Constraints
+
+> AllConstraintDemo shows how to create a constraint, like Hinge or btGenericD6constraint
+
 ##  DeformableDemo
 ##  DynamicControlDemo
 ##  FractureDemo
@@ -68,7 +73,6 @@ rankdir="BT"
 ##  Planar2D
 ##  Raycast
 ##  RigidBody
-##  RollingFrictionDemo
 ##  SoftDemo
 ##  Tutorial
 ##  ExtendedTutorials
