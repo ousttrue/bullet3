@@ -264,7 +264,7 @@ private:
 	{
 		bool handled = false;
 		if (sCurrentDemo)
-			handled = sCurrentDemo->mouseMoveCallback(x, y);
+			handled = sCurrentDemo->mouseMoveCallback(s_guiHelper->getRenderInterface()->getActiveCamera(), x, y);
 		if (renderGui && !handled && m_gwen)
 		{
 			handled = m_gwen->OnMouseMove(x, y);
@@ -281,7 +281,7 @@ private:
 		bool handled = false;
 		//try picking first
 		if (sCurrentDemo)
-			handled = sCurrentDemo->mouseButtonCallback(button, state, x, y);
+			handled = sCurrentDemo->mouseButtonCallback(s_guiHelper->getRenderInterface()->getActiveCamera(),button, state, x, y);
 
 		if (renderGui && m_gwen && !handled)
 		{

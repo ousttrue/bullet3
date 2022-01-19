@@ -78,11 +78,11 @@ public:
 		m_robotSim.stepSimulation();
 	}
 
-	virtual bool mouseMoveCallback(float x, float y)
+	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
 	{
 		return m_robotSim.mouseMoveCallback(x, y);
 	}
-	virtual bool mouseButtonCallback(int button, int state, float x, float y)
+	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
 	{
 		return m_robotSim.mouseButtonCallback(button, state, x, y);
 	}

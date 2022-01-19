@@ -221,13 +221,13 @@ public:
 	{
 		m_physicsServerExample->physicsDebugDraw(debugDrawMode);
 	}
-	virtual bool mouseMoveCallback(float x, float y)
+	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)
 	{
-		return m_physicsServerExample->mouseMoveCallback(x, y);
+		return m_physicsServerExample->mouseMoveCallback(camera, x, y);
 	}
-	virtual bool mouseButtonCallback(int button, int state, float x, float y)
+	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y)
 	{
-		return m_physicsServerExample->mouseButtonCallback(button, state, x, y);
+		return m_physicsServerExample->mouseButtonCallback(camera, button, state, x, y);
 	}
 };
 
@@ -245,12 +245,12 @@ void b3InProcessRenderSceneInternal(b3PhysicsClientHandle clientHandle)
 int b3InProcessMouseMoveCallback(b3PhysicsClientHandle clientHandle, float x, float y)
 {
 	InProcessPhysicsClientExistingExampleBrowser* cl = (InProcessPhysicsClientExistingExampleBrowser*)clientHandle;
-	return cl->mouseMoveCallback(x, y);
+	return cl->mouseMoveCallback({}, x, y);
 }
 int b3InProcessMouseButtonCallback(b3PhysicsClientHandle clientHandle, int button, int state, float x, float y)
 {
 	InProcessPhysicsClientExistingExampleBrowser* cl = (InProcessPhysicsClientExistingExampleBrowser*)clientHandle;
-	return cl->mouseButtonCallback(button, state, x, y);
+	return cl->mouseButtonCallback({}, button, state, x, y);
 }
 
 B3_SHARED_API b3PhysicsClientHandle b3CreateInProcessPhysicsServerFromExistingExampleBrowserAndConnect(void* guiHelperPtr)

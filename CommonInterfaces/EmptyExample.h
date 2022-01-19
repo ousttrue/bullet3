@@ -5,18 +5,18 @@ class EmptyExample : public CommonExampleInterface
 {
 public:
 	EmptyExample() {}
-	virtual ~EmptyExample() {}
+	~EmptyExample() override {}
 
 	static CommonExampleInterface* CreateFunc(struct CommonExampleOptions& /* unusedOptions*/)
 	{
 		return new EmptyExample;
 	}
 
-	virtual void initPhysics() {}
-	virtual void exitPhysics() {}
-	virtual void stepSimulation(float deltaTime) {}
-	virtual void physicsDebugDraw(int debugFlags) {}
-	virtual bool mouseMoveCallback(float x, float y) { return false; }
-	virtual bool mouseButtonCallback(int button, int state, float x, float y) { return false; }
-	virtual bool keyboardCallback(int key, int state) { return false; }
+	void initPhysics() override {}
+	void exitPhysics() override {}
+	void stepSimulation(float deltaTime) override {}
+	void physicsDebugDraw(int debugFlags) override {}
+	bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) override { return false; }
+	bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y) override { return false; }
+	bool keyboardCallback(int key, int state) override { return false; }
 };

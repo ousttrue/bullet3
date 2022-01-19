@@ -22,32 +22,18 @@ struct RaytracerPhysicsSetup : public CommonExampleInterface
 	struct RaytracerInternalData* m_internalData;
 
 	RaytracerPhysicsSetup(struct CommonGraphicsApp* app);
-
 	virtual ~RaytracerPhysicsSetup();
-
 	virtual void initPhysics();
-
 	virtual void exitPhysics();
-
 	virtual void stepSimulation(float deltaTime);
-
 	virtual void physicsDebugDraw(int debugFlags);
-
 	virtual void syncPhysicsToGraphics(struct GraphicsPhysicsBridge& gfxBridge);
-
 	///worldRaytest performs a ray versus all objects in a collision world, returning true is a hit is found (filling in worldNormal and worldHitPoint)
 	bool worldRaytest(const btVector3& rayFrom, const btVector3& rayTo, btVector3& worldNormal, btVector3& worldHitPoint);
-
 	///singleObjectRaytest performs a ray versus one collision shape, returning true is a hit is found (filling in worldNormal and worldHitPoint)
 	bool singleObjectRaytest(const btVector3& rayFrom, const btVector3& rayTo, btVector3& worldNormal, btVector3& worldHitPoint);
-
 	///lowlevelRaytest performs a ray versus convex shape, returning true is a hit is found (filling in worldNormal and worldHitPoint)
 	bool lowlevelRaytest(const btVector3& rayFrom, const btVector3& rayTo, btVector3& worldNormal, btVector3& worldHitPoint);
-
-	virtual bool mouseMoveCallback(float x, float y);
-
-	virtual bool mouseButtonCallback(int button, int state, float x, float y);
-
 	virtual bool keyboardCallback(int key, int state);
 };
 
@@ -330,16 +316,6 @@ void RaytracerPhysicsSetup::stepSimulation(float deltaTime)
 
 void RaytracerPhysicsSetup::physicsDebugDraw(int debugDrawFlags)
 {
-}
-
-bool RaytracerPhysicsSetup::mouseMoveCallback(float x, float y)
-{
-	return false;
-}
-
-bool RaytracerPhysicsSetup::mouseButtonCallback(int button, int state, float x, float y)
-{
-	return false;
 }
 
 bool RaytracerPhysicsSetup::keyboardCallback(int key, int state)

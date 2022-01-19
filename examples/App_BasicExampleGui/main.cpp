@@ -11,14 +11,15 @@ int main(int argc, char* argv[])
 {
 	GlfwApp app("Bullet Standalone Example", 1024, 768, true);
 	OpenGLGuiHelper gui(&app, false);
+	auto camera = gui.getRenderInterface()->getActiveCamera();
 	CommonExampleOptions options(&gui);
 	std::unique_ptr<CommonExampleInterface> example;
 	example.reset(BasicExampleCreateFunc(options));
 
 	auto prevMouseButtonCallback = app.m_window->getMouseButtonCallback();
-	app.m_window->setMouseButtonCallback([&example, &prevMouseButtonCallback](int button, int state, float x, float y)
+	app.m_window->setMouseButtonCallback([&example, &prevMouseButtonCallback, camera](int button, int state, float x, float y)
 										 {
-											 bool handled = example->mouseButtonCallback(button, state, x, y);
+											 bool handled = example->mouseButtonCallback(camera, button, state, x, y);
 											 if (!handled)
 											 {
 												 if (prevMouseButtonCallback)
@@ -26,9 +27,9 @@ int main(int argc, char* argv[])
 											 } });
 
 	auto prevMouseMoveCallback = app.m_window->getMouseMoveCallback();
-	app.m_window->setMouseMoveCallback([&example, &prevMouseMoveCallback](float x, float y)
+	app.m_window->setMouseMoveCallback([&example, &prevMouseMoveCallback, camera](float x, float y)
 									   {
-										   bool handled = example->mouseMoveCallback(x, y);
+										   bool handled = example->mouseMoveCallback(camera, x, y);
 										   if (!handled)
 										   {
 											   if (prevMouseMoveCallback)

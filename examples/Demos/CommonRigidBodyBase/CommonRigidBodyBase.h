@@ -4,6 +4,7 @@
 #include <CommonGUIHelperInterface.h>
 #include <CommonGraphicsAppInterface.h>
 #include <functional>
+#include "CommonCameraInterface.h"
 
 using WorldFactory = std::function<btDiscreteDynamicsWorld*(
 	btDispatcher* dispatcher,
@@ -81,7 +82,7 @@ struct CommonRigidBodyBase : public CommonExampleInterface
 	void exitPhysics() override;
 	bool keyboardCallback(int key, int state) override;
 	btVector3 getRayTo(int x, int y);
-	bool mouseMoveCallback(float x, float y) override;
-	bool mouseButtonCallback(int button, int state, float x, float y) override;
+	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y) override;
+	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override;
 	class btDiscreteDynamicsWorld* getDynamicsWorld() override { return m_physics ? m_physics->getDynamicsWorld() : nullptr; }
 };

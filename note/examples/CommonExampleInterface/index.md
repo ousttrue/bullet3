@@ -42,8 +42,8 @@ public:
 	virtual void physicsDebugDraw(int debugFlags) = 0;  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	//reset camera is only called when switching demo. this way you can restart (initPhysics) and watch in a specific location easier
 	virtual void resetCamera(){};
-	virtual bool mouseMoveCallback(float x, float y) = 0;
-	virtual bool mouseButtonCallback(int button, int state, float x, float y) = 0;
+	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override = 0;
+	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override = 0;
 	virtual bool keyboardCallback(int key, int state) = 0;
 
 	virtual void vrControllerMoveCallback(int controllerId, float pos[4], float orientation[4], float analogAxis, float auxAnalogAxes[10]) {}

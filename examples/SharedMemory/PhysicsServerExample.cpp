@@ -1526,7 +1526,7 @@ public:
 	virtual void vrHMDMoveCallback(int controllerId, float pos[4], float orientation[4]);
 	virtual void vrGenericTrackerMoveCallback(int controllerId, float pos[4], float orientation[4]);
 
-	virtual bool mouseMoveCallback(float x, float y)
+	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
 	{
 		if (m_replay)
 			return false;
@@ -1563,7 +1563,7 @@ public:
 		return false;
 	};
 
-	virtual bool mouseButtonCallback(int button, int state, float x, float y)
+	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
 	{
 		if (m_replay)
 			return false;

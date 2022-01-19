@@ -1,15 +1,11 @@
-
 #include "TimeSeriesExample.h"
-
 #include <CommonGraphicsAppInterface.h>
 #include <CommonRenderInterface.h>
-
 #include <Common2dCanvasInterface.h>
 #include <CommonExampleInterface.h>
 #include "LinearMath/btAlignedObjectArray.h"
 #include "btBulletCollisionCommon.h"
 #include <CommonGUIHelperInterface.h>
-
 #include "TimeSeriesCanvas.h"
 
 struct TimeSeriesExample : public CommonExampleInterface
@@ -18,23 +14,12 @@ struct TimeSeriesExample : public CommonExampleInterface
 	struct TimeSeriesExampleInternalData* m_internalData;
 
 	TimeSeriesExample(struct CommonGraphicsApp* app);
-
 	virtual ~TimeSeriesExample();
-
 	virtual void initPhysics();
-
 	virtual void exitPhysics();
-
 	virtual void stepSimulation(float deltaTime);
-
 	virtual void physicsDebugDraw(int debugFlags);
-
 	virtual void syncPhysicsToGraphics(struct GraphicsPhysicsBridge& gfxBridge);
-
-	virtual bool mouseMoveCallback(float x, float y);
-
-	virtual bool mouseButtonCallback(int button, int state, float x, float y);
-
 	virtual bool keyboardCallback(int key, int state);
 };
 
@@ -94,16 +79,6 @@ void TimeSeriesExample::stepSimulation(float deltaTime)
 
 void TimeSeriesExample::physicsDebugDraw(int debugDrawFlags)
 {
-}
-
-bool TimeSeriesExample::mouseMoveCallback(float x, float y)
-{
-	return false;
-}
-
-bool TimeSeriesExample::mouseButtonCallback(int button, int state, float x, float y)
-{
-	return false;
 }
 
 bool TimeSeriesExample::keyboardCallback(int key, int state)

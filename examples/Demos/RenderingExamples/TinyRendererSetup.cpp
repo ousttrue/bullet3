@@ -92,23 +92,12 @@ struct TinyRendererSetup : public CommonExampleInterface
 	bool m_useSoftware;
 
 	TinyRendererSetup(struct GUIHelperInterface* guiHelper);
-
 	virtual ~TinyRendererSetup();
-
 	virtual void initPhysics();
-
 	virtual void exitPhysics();
-
 	virtual void stepSimulation(float deltaTime);
-
 	virtual void physicsDebugDraw(int debugFlags);
-
 	virtual void syncPhysicsToGraphics(struct GraphicsPhysicsBridge& gfxBridge);
-
-	virtual bool mouseMoveCallback(float x, float y);
-
-	virtual bool mouseButtonCallback(int button, int state, float x, float y);
-
 	virtual bool keyboardCallback(int key, int state);
 
 	void animateRenderer(int animateRendererIndex)
@@ -429,16 +418,6 @@ void TinyRendererSetup::stepSimulation(float deltaTime)
 
 void TinyRendererSetup::physicsDebugDraw(int debugDrawFlags)
 {
-}
-
-bool TinyRendererSetup::mouseMoveCallback(float x, float y)
-{
-	return false;
-}
-
-bool TinyRendererSetup::mouseButtonCallback(int button, int state, float x, float y)
-{
-	return false;
 }
 
 bool TinyRendererSetup::keyboardCallback(int key, int state)

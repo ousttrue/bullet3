@@ -17,9 +17,9 @@ public:
 
 	virtual void debugDraw(int debugDrawMode);
 
-	virtual bool mouseMoveCallback(float x, float y);
+	bool mouseMoveCallback(float x, float y);
 
-	virtual bool mouseButtonCallback(int button, int state, float x, float y);
+	bool mouseButtonCallback(int button, int state, float x, float y);
 };
 
 #endif  //B3_ROBOT_SIMULATOR_CLIENT_API_H

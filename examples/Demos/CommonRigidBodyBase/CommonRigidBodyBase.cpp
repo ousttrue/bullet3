@@ -239,10 +239,10 @@ btBoxShape* Physics::createBoxShape(const btVector3& halfExtents)
 	return box;
 }
 
-void Physics::deleteRigidBody(btRigidBody* body, struct GUIHelperInterface* m_guiHelper)
+void Physics::deleteRigidBody(btRigidBody* body, struct GUIHelperInterface* guiHelper)
 {
 	int graphicsUid = body->getUserIndex();
-	m_guiHelper->removeGraphicsInstance(graphicsUid);
+	guiHelper->removeGraphicsInstance(graphicsUid);
 	m_dynamicsWorld->removeRigidBody(body);
 	btMotionState* ms = body->getMotionState();
 	delete body;
@@ -415,11 +415,9 @@ btVector3 CommonRigidBodyBase::getRayTo(int x, int y)
 	return rayTo;
 }
 
-bool CommonRigidBodyBase::mouseMoveCallback(float x, float y)
+bool CommonRigidBodyBase::mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)
 {
-	CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
-
-	if (!renderer)
+	if (!camera)
 	{
 		btAssert(0);
 		return false;
@@ -427,7 +425,7 @@ bool CommonRigidBodyBase::mouseMoveCallback(float x, float y)
 
 	btVector3 rayTo = getRayTo(int(x), int(y));
 	btVector3 rayFrom;
-	renderer->getActiveCamera()->getCameraPosition(rayFrom);
+	camera->getCameraPosition(rayFrom);
 
 	if (m_physics)
 	{
@@ -437,11 +435,9 @@ bool CommonRigidBodyBase::mouseMoveCallback(float x, float y)
 	return false;
 }
 
-bool CommonRigidBodyBase::mouseButtonCallback(int button, int state, float x, float y)
+bool CommonRigidBodyBase::mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y)
 {
-	CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
-
-	if (!renderer)
+	if (!camera)
 	{
 		btAssert(0);
 		return false;
@@ -480,7 +476,7 @@ bool CommonRigidBodyBase::mouseButtonCallback(int button, int state, float x, fl
 		if (button == 0 && (!window->isModifierKeyPressed(B3G_ALT) && !window->isModifierKeyPressed(B3G_CONTROL)))
 		{
 			btVector3 camPos;
-			renderer->getActiveCamera()->getCameraPosition(camPos);
+			camera->getCameraPosition(camPos);
 
 			btVector3 rayFrom = camPos;
 			btVector3 rayTo = getRayTo(int(x), int(y));

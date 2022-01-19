@@ -40,8 +40,8 @@ public:
 	virtual void stepSimulation(float deltaTime) = 0;
 	virtual void physicsDebugDraw(int debugFlags) = 0;  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	virtual CameraResetInfo cameraResetInfo() const { return {}; }
-	virtual bool mouseMoveCallback(float x, float y) = 0;
-	virtual bool mouseButtonCallback(int button, int state, float x, float y) = 0;
+	virtual bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) { return false; }
+	virtual bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y) { return false; }
 	virtual bool keyboardCallback(int key, int state) = 0;
 	virtual void vrControllerMoveCallback(int controllerId, float pos[4], float orientation[4], float analogAxis, float auxAnalogAxes[10]) {}
 	virtual void vrControllerButtonCallback(int controllerId, int button, int state, float pos[4], float orientation[4]) {}

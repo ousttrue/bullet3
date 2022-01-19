@@ -97,12 +97,12 @@ struct CommonOpenCLBase : public CommonExampleInterface
 		return false;  //don't handle this key
 	}
 
-	virtual bool mouseMoveCallback(float x, float y)
+	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
 	{
 		return false;
 	}
 
-	virtual bool mouseButtonCallback(int button, int state, float x, float y)
+	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
 	{
 		CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
 

@@ -118,12 +118,12 @@ public:
 
 	virtual void specialKeyboardUp(int key, int x, int y);
 
-	virtual bool mouseMoveCallback(float x, float y)
+	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
 	{
 		return false;
 	}
 
-	virtual bool mouseButtonCallback(int button, int state, float x, float y)
+	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
 	{
 		return false;
 	}
