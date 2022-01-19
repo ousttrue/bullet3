@@ -169,7 +169,7 @@ struct CommonRigidBodyMTBase : public CommonExampleInterface
 		return false;  //don't handle this key
 	}
 
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
+	bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) override
 	{
 		if (!camera)
 		{
@@ -185,7 +185,7 @@ struct CommonRigidBodyMTBase : public CommonExampleInterface
 		return false;
 	}
 
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
+	bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags) override
 	{
 		if (!camera)
 		{
@@ -193,45 +193,20 @@ struct CommonRigidBodyMTBase : public CommonExampleInterface
 			return false;
 		}
 
-		CommonWindowInterface* window = m_guiHelper->getAppInterface()->m_window;
-
-#if 0
-		if (window->isModifierKeyPressed(B3G_ALT))
-		{
-			printf("ALT pressed\n");
-		} else
-		{
-			printf("NO ALT pressed\n");
-		}
-		
-		if (window->isModifierKeyPressed(B3G_SHIFT))
-		{
-			printf("SHIFT pressed\n");
-		} else
-		{
-			printf("NO SHIFT pressed\n");
-		}
-		
-		if (window->isModifierKeyPressed(B3G_CONTROL))
-		{
-			printf("CONTROL pressed\n");
-		} else
-		{
-			printf("NO CONTROL pressed\n");
-		}
-#endif
-
 		if (state == 1)
 		{
-			if (button == 0 && (!window->isModifierKeyPressed(B3G_ALT) && !window->isModifierKeyPressed(B3G_CONTROL)))
+			if (button == 0)
 			{
-				btVector3 camPos;
-				camera->getCameraPosition(camPos);
+				if (!(flags & ButtonFlagsAlt) && (flags & ButtonFlagsCtrl))
+				{
+					btVector3 camPos;
+					camera->getCameraPosition(camPos);
 
-				btVector3 rayFrom = camPos;
-				btVector3 rayTo = camera->getRayTo(int(x), int(y));
+					btVector3 rayFrom = camPos;
+					btVector3 rayTo = camera->getRayTo(int(x), int(y));
 
-				pickBody(rayFrom, rayTo);
+					pickBody(rayFrom, rayTo);
+				}
 			}
 		}
 		else

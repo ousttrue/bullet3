@@ -4,6 +4,7 @@
 #include <CommonMultiBodyBase.h>
 #include <Common2dCanvasInterface.h>
 #include "CommonCameraInterface.h"
+#include "CommonExampleInterface.h"
 #include "SharedMemoryCommon.h"
 #include <CommonParameterInterface.h>
 #include "PhysicsServerCommandProcessor.h"
@@ -195,9 +196,6 @@ public:
 			m_physicsServer.physicsDebugDraw(debugFlags);
 		}
 	}
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override { return false; };
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override { return false; }
-	virtual bool keyboardCallback(int key, int state) { return false; }
 
 	virtual void setSharedMemoryKey(int key)
 	{

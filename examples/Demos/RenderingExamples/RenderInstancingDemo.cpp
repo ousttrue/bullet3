@@ -64,20 +64,10 @@ public:
 
 		m_app->m_renderer->writeTransforms();
 	}
-	virtual ~RenderInstancingDemo()
-	{
-	}
-
-	virtual void physicsDebugDraw(int debugDrawMode)
-	{
-	}
-	virtual void initPhysics()
-	{
-	}
-	virtual void exitPhysics()
-	{
-	}
-	virtual void stepSimulation(float deltaTime)
+	void physicsDebugDraw(int debugDrawMode)override{}
+	void initPhysics()override{}
+	void exitPhysics()override{}
+	void stepSimulation(float deltaTime)override
 	{
 		m_x += 0.01f;
 		m_y += 0.01f;
@@ -98,18 +88,6 @@ public:
 
 	virtual void physicsDebugDraw()
 	{
-	}
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
-	{
-		return false;
-	}
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
-	{
-		return false;
-	}
-	virtual bool keyboardCallback(int key, int state)
-	{
-		return false;
 	}
 
 	CameraResetInfo cameraResetInfo() const override

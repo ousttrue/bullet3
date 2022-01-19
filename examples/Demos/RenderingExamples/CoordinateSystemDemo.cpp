@@ -35,17 +35,10 @@ public:
 
 		m_app->m_renderer->writeTransforms();
 	}
-	virtual ~CoordinateSystemDemo()
-	{
-	}
-
-	virtual void initPhysics()
-	{
-	}
-	virtual void exitPhysics()
-	{
-	}
-	virtual void stepSimulation(float deltaTime)
+	~CoordinateSystemDemo() override{}
+	void initPhysics() override{}
+	void exitPhysics() override{}
+	void stepSimulation(float deltaTime) override
 	{
 		m_x += 0.01f;
 		m_y += 0.01f;
@@ -112,18 +105,6 @@ public:
 		drawArc(xUnit, xUnit, toX.normalized(), radius, radius, 0.4, SIMD_2_PI, xUnit, false);
 		drawArc(yUnit, yUnit, toY.normalized(), radius, radius, 0.4, SIMD_2_PI, yUnit, false);
 		drawArc(zUnit, zUnit, toZ.normalized(), radius, radius, 0.4, SIMD_2_PI, zUnit, false);
-	}
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
-	{
-		return false;
-	}
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
-	{
-		return false;
-	}
-	virtual bool keyboardCallback(int key, int state)
-	{
-		return false;
 	}
 
 	CameraResetInfo cameraResetInfo() const override

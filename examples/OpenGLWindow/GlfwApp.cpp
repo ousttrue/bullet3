@@ -1,4 +1,5 @@
 #include "GlfwApp.h"
+#include "CommonExampleInterface.h"
 #include "fontstash.h"
 #include "TwFonts.h"
 #include "GLRenderToTexture.h"
@@ -195,7 +196,17 @@ static void SimpleMouseButtonCallback(GLFWwindow* window, int button, int action
 			button = 1;
 			break;
 	}
-	gApp->m_onBUtton(button, action, s_x, s_y);
+
+	ButtonFlags flags = {};
+	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT))
+	{
+		flags = (ButtonFlags)(flags | ButtonFlagsAlt);
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL))
+	{
+		flags = (ButtonFlags)(flags | ButtonFlagsCtrl);
+	}
+	gApp->m_onBUtton(button, action, s_x, s_y, flags);
 }
 
 static void SimpleMouseMoveCallback(GLFWwindow* window, double x, double y)
@@ -499,7 +510,7 @@ GlfwApp::GlfwApp(const char* title, int width, int height, float retinaScale)
 										gApp->m_primRenderer->setScreenSize(width, height); });
 	m_window->setMouseMoveCallback([gApp = this](int x, int y)
 								   { gApp->defaultMouseMoveCallback(x, y); });
-	m_window->setMouseButtonCallback([gApp = this](int button, int state, float x, float y)
+	m_window->setMouseButtonCallback([gApp = this](int button, int state, float x, float y, ButtonFlags flags)
 									 { gApp->defaultMouseButtonCallback(button, state, x, y); });
 	m_window->setKeyboardCallback([gApp = this](int keycode, int state)
 								  {

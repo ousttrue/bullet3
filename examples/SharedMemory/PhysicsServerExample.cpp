@@ -6,6 +6,7 @@
 
 #include <Common2dCanvasInterface.h>
 #include "CommonCameraInterface.h"
+#include "CommonExampleInterface.h"
 #include "PhysicsServerSharedMemory.h"
 #include "Bullet3Common/b3CommandLineArgs.h"
 #include "SharedMemoryCommon.h"
@@ -1524,7 +1525,7 @@ public:
 	virtual void vrHMDMoveCallback(int controllerId, float pos[4], float orientation[4]);
 	virtual void vrGenericTrackerMoveCallback(int controllerId, float pos[4], float orientation[4]);
 
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
+	bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) override
 	{
 		if (m_replay)
 			return false;
@@ -1559,7 +1560,7 @@ public:
 		return false;
 	};
 
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
+	bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags) override
 	{
 		if (m_replay)
 			return false;
@@ -1568,8 +1569,6 @@ public:
 		{
 			return false;
 		}
-
-		CommonWindowInterface* window = m_guiHelper->getAppInterface()->m_window;
 
 		b3MouseEvent event;
 		event.m_buttonIndex = button;
@@ -1591,22 +1590,25 @@ public:
 
 		if (state == 1)
 		{
-			if (button == 0 && (!window->isModifierKeyPressed(B3G_ALT) && !window->isModifierKeyPressed(B3G_CONTROL)))
+			if (button == 0)
 			{
-				btVector3 camPos;
-				camera->getCameraPosition(camPos);
+				if (!(flags & ButtonFlagsAlt) && !(flags & ButtonFlagsCtrl))
+				{
+					btVector3 camPos;
+					camera->getCameraPosition(camPos);
 
-				btVector3 rayFrom = camPos;
-				btVector3 rayTo = camera->getRayTo(int(x), int(y));
+					btVector3 rayFrom = camPos;
+					btVector3 rayTo = camera->getRayTo(int(x), int(y));
 
-				MyMouseCommand cmd;
-				cmd.m_rayFrom = rayFrom;
-				cmd.m_rayTo = rayTo;
-				cmd.m_type = MyMouseButtonDown;
+					MyMouseCommand cmd;
+					cmd.m_rayFrom = rayFrom;
+					cmd.m_rayTo = rayTo;
+					cmd.m_type = MyMouseButtonDown;
 
-				m_args[0].m_csGUI->lock();
-				m_args[0].m_mouseCommands.push_back(cmd);
-				m_args[0].m_csGUI->unlock();
+					m_args[0].m_csGUI->lock();
+					m_args[0].m_mouseCommands.push_back(cmd);
+					m_args[0].m_csGUI->unlock();
+				}
 			}
 		}
 		else

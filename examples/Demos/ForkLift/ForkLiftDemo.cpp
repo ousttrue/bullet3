@@ -104,36 +104,17 @@ public:
 
 	ForkLiftDemo(struct GUIHelperInterface* helper);
 
-	virtual ~ForkLiftDemo();
-
-	virtual void stepSimulation(float deltaTime);
-
+	~ForkLiftDemo() override;
+	void stepSimulation(float deltaTime) override;
 	virtual void resetForklift();
-
 	virtual void clientResetScene();
-
 	virtual void displayCallback();
-
 	virtual void specialKeyboard(int key, int x, int y);
-
 	virtual void specialKeyboardUp(int key, int x, int y);
-
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
-	{
-		return false;
-	}
-
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
-	{
-		return false;
-	}
-
-	virtual bool keyboardCallback(int key, int state);
-
-	virtual void physicsDebugDraw(int debugFlags);
-
-	void initPhysics();
-	void exitPhysics();
+	bool keyboardCallback(int key, int state) override;
+	void physicsDebugDraw(int debugFlags) override;
+	void initPhysics() override;
+	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
 	{

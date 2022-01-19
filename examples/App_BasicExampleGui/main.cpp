@@ -17,13 +17,13 @@ int main(int argc, char* argv[])
 	example.reset(BasicExampleCreateFunc(options));
 
 	auto prevMouseButtonCallback = app.m_window->getMouseButtonCallback();
-	app.m_window->setMouseButtonCallback([&example, &prevMouseButtonCallback, camera](int button, int state, float x, float y)
+	app.m_window->setMouseButtonCallback([&example, &prevMouseButtonCallback, camera](int button, int state, float x, float y, ButtonFlags flags)
 										 {
-											 bool handled = example->mouseButtonCallback(camera, button, state, x, y);
+											 bool handled = example->mouseButtonCallback(camera, button, state, x, y, flags);
 											 if (!handled)
 											 {
 												 if (prevMouseButtonCallback)
-													 prevMouseButtonCallback(button, state, x, y);
+													 prevMouseButtonCallback(button, state, x, y, flags);
 											 } });
 
 	auto prevMouseMoveCallback = app.m_window->getMouseMoveCallback();

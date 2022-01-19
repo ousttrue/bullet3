@@ -227,7 +227,7 @@ public:
 	}
 	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y)
 	{
-		return m_physicsServerExample->mouseButtonCallback(camera, button, state, x, y);
+		return m_physicsServerExample->mouseButtonCallback(camera, button, state, x, y, ButtonFlagsNone);
 	}
 };
 

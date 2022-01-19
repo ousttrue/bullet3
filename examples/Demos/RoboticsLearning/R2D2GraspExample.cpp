@@ -148,29 +148,13 @@ public:
 			m_robotSim.setGravity(btVector3(0, 0, -10));
 		}
 	}
-	virtual void exitPhysics()
+	void exitPhysics() override
 	{
 		m_robotSim.disconnect();
 	}
-	virtual void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 		m_robotSim.stepSimulation();
-	}
-
-	virtual void physicsDebugDraw()
-	{
-	}
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
-	{
-		return false;
-	}
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
-	{
-		return false;
-	}
-	virtual bool keyboardCallback(int key, int state)
-	{
-		return false;
 	}
 
 	CameraResetInfo cameraResetInfo() const override

@@ -270,18 +270,6 @@ public:
 	virtual void physicsDebugDraw()
 	{
 	}
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
-	{
-		return false;
-	}
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
-	{
-		return false;
-	}
-	virtual bool keyboardCallback(int key, int state)
-	{
-		return false;
-	}
 
 	CameraResetInfo cameraResetInfo() const override
 	{

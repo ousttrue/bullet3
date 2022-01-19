@@ -200,23 +200,6 @@ public:
 	}
 
 	virtual void exitPhysics(){};
-
-	virtual void physicsDebugDraw(int debugFlags)
-	{
-	}
-
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
-	{
-		return false;
-	}
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
-	{
-		return false;
-	}
-	virtual bool keyboardCallback(int key, int state)
-	{
-		return false;
-	}
 };
 
 GraphicsClientExample::GraphicsClientExample(GUIHelperInterface* helper, int options)

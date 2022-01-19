@@ -706,7 +706,7 @@ public:
 	{
 		return m_robotSim.mouseMoveCallback(x, y);
 	}
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
+	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y, ButtonFlags flags) override
 	{
 		return m_robotSim.mouseButtonCallback(button, state, x, y);
 	}

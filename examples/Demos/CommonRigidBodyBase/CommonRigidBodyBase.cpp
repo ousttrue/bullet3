@@ -4,6 +4,7 @@
 #include <CommonCameraInterface.h>
 #include <BulletCollision/NarrowPhaseCollision/btRaycastCallback.h>
 #include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
+#include "CommonExampleInterface.h"
 #include "Evolution/NN3DWalkersTimeWarpBase.h"
 
 Physics::Physics(
@@ -373,7 +374,7 @@ bool CommonRigidBodyBase::mouseMoveCallback(const CommonCameraInterface* camera,
 	return false;
 }
 
-bool CommonRigidBodyBase::mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y)
+bool CommonRigidBodyBase::mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags)
 {
 	if (!camera)
 	{
@@ -381,47 +382,22 @@ bool CommonRigidBodyBase::mouseButtonCallback(const CommonCameraInterface* camer
 		return false;
 	}
 
-	CommonWindowInterface* window = m_guiHelper->getAppInterface()->m_window;
-
-#if 0
-		if (window->isModifierKeyPressed(B3G_ALT))
-		{
-			printf("ALT pressed\n");
-		} else
-		{
-			printf("NO ALT pressed\n");
-		}
-		
-		if (window->isModifierKeyPressed(B3G_SHIFT))
-		{
-			printf("SHIFT pressed\n");
-		} else
-		{
-			printf("NO SHIFT pressed\n");
-		}
-		
-		if (window->isModifierKeyPressed(B3G_CONTROL))
-		{
-			printf("CONTROL pressed\n");
-		} else
-		{
-			printf("NO CONTROL pressed\n");
-		}
-#endif
-
 	if (state == 1)
 	{
-		if (button == 0 && (!window->isModifierKeyPressed(B3G_ALT) && !window->isModifierKeyPressed(B3G_CONTROL)))
+		if (button == 0)
 		{
-			btVector3 camPos;
-			camera->getCameraPosition(camPos);
-
-			btVector3 rayFrom = camPos;
-			btVector3 rayTo = camera->getRayTo(int(x), int(y));
-
-			if (m_physics)
+			if (!(flags & ButtonFlagsAlt) && !(flags & ButtonFlagsCtrl))
 			{
-				m_physics->pickBody(rayFrom, rayTo);
+				btVector3 camPos;
+				camera->getCameraPosition(camPos);
+
+				btVector3 rayFrom = camPos;
+				btVector3 rayTo = camera->getRayTo(int(x), int(y));
+
+				if (m_physics)
+				{
+					m_physics->pickBody(rayFrom, rayTo);
+				}
 			}
 		}
 	}
