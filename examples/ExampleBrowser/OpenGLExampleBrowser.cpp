@@ -628,7 +628,8 @@ public:
 
 		char title[1024];
 		sprintf(title, "%s using OpenGL3+ %s %s", appTitle, glContext, optMode);
-		s_app = new GlfwApp(title, width, height, gAllowRetina);
+		s_app = new GlfwApp();
+		auto window = s_app->createWindow({width, height, title});
 
 		char* gVideoFileName = 0;
 		args.GetCmdLineArgument("mp4", gVideoFileName);

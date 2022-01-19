@@ -9,14 +9,20 @@
 
 int main(int argc, char* argv[])
 {
-	GlfwApp app("Bullet Standalone Example", 1024, 768, true);
+	GlfwApp app;
+	auto window = app.createWindow({1024, 768, "Bullet Standalone Example"});
+	if(!window)
+	{
+		return 1;
+	}
+	
 	OpenGLGuiHelper gui(&app, false);
 	auto camera = app.m_instancingRenderer->getActiveCamera();
 	// auto example = std::make_unique<BasicExample>(&gui);
 	auto example = std::make_unique<BasicExample>();
 
-	auto prevMouseButtonCallback = app.m_window->getMouseButtonCallback();
-	app.m_window->setMouseButtonCallback([&example, &prevMouseButtonCallback, camera](int button, int state, float x, float y, ButtonFlags flags)
+	auto prevMouseButtonCallback = window->getMouseButtonCallback();
+	window->setMouseButtonCallback([&example, &prevMouseButtonCallback, camera](int button, int state, float x, float y, ButtonFlags flags)
 										 {
 											 bool handled = example->mouseButtonCallback(camera, button, state, x, y, flags);
 											 if (!handled)
@@ -25,8 +31,8 @@ int main(int argc, char* argv[])
 													 prevMouseButtonCallback(button, state, x, y, flags);
 											 } });
 
-	auto prevMouseMoveCallback = app.m_window->getMouseMoveCallback();
-	app.m_window->setMouseMoveCallback([&example, &prevMouseMoveCallback, camera](float x, float y)
+	auto prevMouseMoveCallback = window->getMouseMoveCallback();
+	window->setMouseMoveCallback([&example, &prevMouseMoveCallback, camera](float x, float y)
 									   {
 										   bool handled = example->mouseMoveCallback(camera, x, y);
 										   if (!handled)
@@ -45,7 +51,7 @@ int main(int argc, char* argv[])
 
 	b3Clock clock;
 
-	while (!app.m_window->requestedExit())
+	while (!window->requestedExit())
 	{
 		// m_guiHelper->getRenderInterface()->removeAllInstances();
 

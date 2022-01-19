@@ -57,6 +57,9 @@ struct CommonGraphicsApp
 	virtual ~CommonGraphicsApp()
 	{
 	}
+
+	virtual CommonWindowInterface* createWindow(const b3gWindowConstructionInfo& ci) = 0;
+
 	virtual void dumpNextFrameToPng(const char* pngFilename) {}
 	virtual void dumpFramesToVideo(const char* mp4Filename) {}
 	virtual void getScreenPixels(unsigned char* rgbaBuffer, int bufferSizeInBytes, float* depthBuffer, int depthBufferSizeInBytes) {}

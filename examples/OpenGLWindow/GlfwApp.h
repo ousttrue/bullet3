@@ -7,8 +7,12 @@ struct GlfwApp : public CommonGraphicsApp
 	struct SimpleInternalData* m_data;
 	class GLPrimitiveRenderer* m_primRenderer;
 	class GLInstancingRenderer* m_instancingRenderer;
-	GlfwApp(const char* title, int width, int height, float retinaScale);
+	GlfwApp();
+	GlfwApp(const GlfwApp&) = delete;
+	GlfwApp& operator=(const GlfwApp&) = delete;
+
 	~GlfwApp() override;
+	CommonWindowInterface* createWindow(const b3gWindowConstructionInfo& ci) override;
 	void dumpNextFrameToPng(const char* filename) override;
 	void dumpFramesToVideo(const char* mp4Filename) override;
 	void getScreenPixels(unsigned char* rgbaBuffer, int bufferSizeInBytes, float* depthBuffer, int depthBufferSizeInBytes) override;

@@ -5,26 +5,14 @@
 
 struct b3gWindowConstructionInfo
 {
-	int m_width;
-	int m_height;
-	bool m_fullscreen;
-	int m_colorBitsPerPixel;
-	void* m_windowHandle;
+	int m_width = 1024;
+	int m_height = 768;
 	const char* m_title;
-	int m_openglVersion;
-	int m_renderDevice;
-
-	b3gWindowConstructionInfo(int width = 1024, int height = 768)
-		: m_width(width),
-		  m_height(height),
-		  m_fullscreen(false),
-		  m_colorBitsPerPixel(32),
-		  m_windowHandle(0),
-		  m_title("title"),
-		  m_openglVersion(3),
-		  m_renderDevice(-1)
-	{
-	}
+	bool m_fullscreen = false;
+	int m_colorBitsPerPixel = 32;
+	void* m_windowHandle = nullptr;
+	int m_openglVersion = 3;
+	int m_renderDevice = -1;
 };
 
 class CommonWindowInterface
@@ -33,15 +21,6 @@ public:
 	virtual ~CommonWindowInterface()
 	{
 	}
-
-	virtual void createDefaultWindow(int width, int height, const char* title)
-	{
-		b3gWindowConstructionInfo ci(width, height);
-		ci.m_title = title;
-		createWindow(ci);
-	}
-
-	virtual void createWindow(const b3gWindowConstructionInfo& ci) = 0;
 
 	virtual void closeWindow() = 0;
 

@@ -21,35 +21,44 @@ static void SimpleKeyboardCallback(GLFWwindow* window, int key, int scancode, in
 static void SimpleMouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 static void SimpleMouseMoveCallback(GLFWwindow* window, double x, double y);
 static void SimpleWheelCallback(GLFWwindow* window, double deltax, double deltay);
-struct GlfwWindowInterface : public CommonWindowInterface
+class GlfwWindowInterface : public CommonWindowInterface
 {
 	GLFWwindow* m_window = nullptr;
 	float m_retinaScale = 1.0f;
 
-	GlfwWindowInterface(float retinaScale)
-		: m_retinaScale(retinaScale)
+	GlfwWindowInterface(GLFWwindow* window)
+		: m_window(window)
 	{
+		assert(m_window);
 	}
+
+	GlfwWindowInterface(const GlfwWindowInterface*) = delete;
+	GlfwWindowInterface& operator=(const GlfwWindowInterface*) = delete;
+
+public:
 	~GlfwWindowInterface()
 	{
 		closeWindow();
 	}
-	void createWindow(const b3gWindowConstructionInfo& ci) override
+	static GlfwWindowInterface* createWindow(const b3gWindowConstructionInfo& ci)
 	{
-		m_window = glfwCreateWindow(ci.m_width, ci.m_height, ci.m_title, NULL, NULL);
-		if (!m_window)
+		auto window = glfwCreateWindow(ci.m_width, ci.m_height, ci.m_title, NULL, NULL);
+		if (!window)
 		{
-			throw std::runtime_error("glfwInit");
+			return nullptr;
 		}
-		glfwSetWindowUserPointer(m_window, this);
-		glfwSetWindowSizeCallback(m_window, SimpleResizeCallback);
-		glfwSetCursorPosCallback(m_window, SimpleMouseMoveCallback);
-		glfwSetMouseButtonCallback(m_window, SimpleMouseButtonCallback);
-		glfwSetKeyCallback(m_window, SimpleKeyboardCallback);
-		glfwSetScrollCallback(m_window, SimpleWheelCallback);
-		glfwMakeContextCurrent(m_window);
+
+		auto p = new GlfwWindowInterface(window);
+		glfwSetWindowUserPointer(window, p);
+		glfwSetWindowSizeCallback(window, SimpleResizeCallback);
+		glfwSetCursorPosCallback(window, SimpleMouseMoveCallback);
+		glfwSetMouseButtonCallback(window, SimpleMouseButtonCallback);
+		glfwSetKeyCallback(window, SimpleKeyboardCallback);
+		glfwSetScrollCallback(window, SimpleWheelCallback);
+		glfwMakeContextCurrent(window);
 		gladLoadGL(glfwGetProcAddress);
 		glfwSwapInterval(1);
+		return p;
 	}
 	void closeWindow() override
 	{
@@ -461,25 +470,44 @@ static void printGLString(const char* name, GLenum s)
 ///
 /// GlfwApp
 ///
-GlfwApp::GlfwApp(const char* title, int width, int height, float retinaScale)
+GlfwApp::GlfwApp()
 {
 	glfwSetErrorCallback(error_callback);
 	if (!glfwInit())
 	{
 		throw std::runtime_error("glfwInit");
 	}
+}
 
-	m_window = new GlfwWindowInterface(retinaScale);
-	// m_window->setAllowRetina(allowRetina);
+GlfwApp::~GlfwApp()
+{
+	delete m_instancingRenderer;
+	delete m_primRenderer;
+	sth_delete(m_data->m_fontStash);
+	delete m_data->m_renderCallbacks;
 
-	b3gWindowConstructionInfo ci;
-	ci.m_title = title;
-	ci.m_width = width;
-	ci.m_height = height;
-	// ci.m_renderDevice = renderDevice;
-	m_window->createWindow(ci);
+	sth_delete(m_data->m_fontStash2);
+	delete m_data->m_renderCallbacks2;
 
-	m_window->setWindowTitle(title);
+	TwDeleteDefaultFonts();
+	m_window->closeWindow();
+
+	delete m_window;
+	delete m_data;
+
+	glfwTerminate();
+}
+
+CommonWindowInterface* GlfwApp::createWindow(const b3gWindowConstructionInfo& ci)
+{
+	m_window = GlfwWindowInterface::createWindow(ci);
+	if (!m_window)
+	{
+		// throw std::runtime_error("glfwInit");
+		return nullptr;
+	}
+
+	m_window->setWindowTitle(ci.m_title);
 
 	b3Assert(glGetError() == GL_NO_ERROR);
 
@@ -495,8 +523,8 @@ GlfwApp::GlfwApp(const char* title, int width, int height, float retinaScale)
 				 1.f);
 
 	m_window->startRendering();
-	width = m_window->getWidth();
-	height = m_window->getHeight();
+	auto width = m_window->getWidth();
+	auto height = m_window->getHeight();
 
 	b3Assert(glGetError() == GL_NO_ERROR);
 
@@ -586,25 +614,7 @@ GlfwApp::GlfwApp(const char* title, int width, int height, float retinaScale)
 
 		b3Assert(glGetError() == GL_NO_ERROR);
 	}
-}
-
-GlfwApp::~GlfwApp()
-{
-	delete m_instancingRenderer;
-	delete m_primRenderer;
-	sth_delete(m_data->m_fontStash);
-	delete m_data->m_renderCallbacks;
-
-	sth_delete(m_data->m_fontStash2);
-	delete m_data->m_renderCallbacks2;
-
-	TwDeleteDefaultFonts();
-	m_window->closeWindow();
-
-	delete m_window;
-	delete m_data;
-
-	glfwTerminate();
+	return m_window;
 }
 
 struct sth_stash* GlfwApp::getFontStash()
