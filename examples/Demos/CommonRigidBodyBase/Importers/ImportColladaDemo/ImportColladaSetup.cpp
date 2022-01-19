@@ -43,6 +43,7 @@ public:
 		info.camPosX = -4;
 		info.camPosY = -3;
 		info.camPosZ = -3;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -65,8 +66,6 @@ static int ColladaGraphicsInstanceSortfnc(const ColladaGraphicsInstance& a, cons
 
 void ImportColladaSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	int upAxis = 1;
-	m_guiHelper->setUpAxis(upAxis);
 	m_physics = new Physics;
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
@@ -124,7 +123,7 @@ void ImportColladaSetup::initPhysics(CommonCameraInterface *camera, struct GUIHe
 			fileIndex = 0;
 		}
 		b3BulletDefaultFileIO fileIO;
-		LoadMeshFromCollada(relativeFileName, visualShapes, visualShapeInstances, upAxisTrans, unitMeterScaling, upAxis, &fileIO);
+		LoadMeshFromCollada(relativeFileName, visualShapes, visualShapeInstances, upAxisTrans, unitMeterScaling, cameraResetInfo().upAxis, &fileIO);
 #endif  // COMPARE_WITH_ASSIMP
 
 		//at the moment our graphics engine requires instances that share the same visual shape to be added right after registering the shape

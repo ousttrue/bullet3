@@ -64,6 +64,7 @@ struct InclinedPlaneExample : public CommonRigidBodyBase
 		info.camPosX = 0;
 		info.camPosY = 0.46;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -163,8 +164,6 @@ void InclinedPlaneExample::initPhysics(CommonCameraInterface *camera, struct GUI
 		slider.m_clampToNotches = false;
 		m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
 	}
-
-	m_guiHelper->setUpAxis(1);  // set Y axis as up axis
 
 	m_physics = new Physics;
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();

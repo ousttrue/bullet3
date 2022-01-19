@@ -27,6 +27,7 @@ public:
 		info.camPosX = -0.2;
 		info.camPosY = -1.4;
 		info.camPosZ = 3.5;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -79,11 +80,11 @@ void SerializeSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelper
 	//for now, guess the up axis from gravity
 	if (m_dynamicsWorld->getGravity()[1] == 0.f)
 	{
-		m_guiHelper->setUpAxis(2);
+		// m_guiHelper->setUpAxis(2);
 	}
 	else
 	{
-		m_guiHelper->setUpAxis(1);
+		// m_guiHelper->setUpAxis(1);
 	}
 
 	//example code to export the dynamics world to a .bullet file

@@ -101,6 +101,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 2;
+		info.upAxis = 1;
 		return info;
 	}
 
@@ -178,8 +179,6 @@ Hinge2Vehicle::Hinge2Vehicle(struct GUIHelperInterface* helper)
 	  m_minCameraDistance(3.f),
 	  m_maxCameraDistance(10.f)
 {
-	helper->setUpAxis(1);
-
 	m_wheelShape = 0;
 	m_cameraPosition = btVector3(30, 30, 30);
 	m_useDefaultCamera = false;
@@ -201,8 +200,6 @@ Hinge2Vehicle::~Hinge2Vehicle()
 
 void Hinge2Vehicle::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
-
 	btVector3 worldMin(-1000, -1000, -1000);
 	btVector3 worldMax(1000, 1000, 1000);
 	auto broadphase = new btAxisSweep3(worldMin, worldMax);

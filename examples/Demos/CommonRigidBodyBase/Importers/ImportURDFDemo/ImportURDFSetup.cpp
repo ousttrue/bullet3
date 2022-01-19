@@ -36,7 +36,7 @@ public:
 	ImportUrdfSetup(struct GUIHelperInterface* helper, int option, const char* fileName);
 	virtual ~ImportUrdfSetup();
 
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime);
 
 	void setFileName(const char* urdfFileName);
@@ -50,6 +50,7 @@ public:
 		info.camPosX = 0.47;
 		info.camPosY = 0;
 		info.camPosZ = -0.64;
+		info.upAxis = m_upAxis;
 		return info;
 	}
 };
@@ -155,10 +156,8 @@ void ImportUrdfSetup::setFileName(const char* urdfFileName)
 	memcpy(m_fileName, urdfFileName, strlen(urdfFileName) + 1);
 }
 
-void ImportUrdfSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void ImportUrdfSetup::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
-	m_guiHelper->setUpAxis(m_upAxis);
-
 	this->createEmptyDynamicsWorld();
 	//m_dynamicsWorld->getSolverInfo().m_numIterations = 100;
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);

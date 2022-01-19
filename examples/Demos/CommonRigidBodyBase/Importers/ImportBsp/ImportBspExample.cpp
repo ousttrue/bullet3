@@ -59,6 +59,7 @@ public:
 		info.camPosX = 4;
 		info.camPosY = -25;
 		info.camPosZ = -6;
+		info.upAxis = 2;
 		return info;
 	}
 };
@@ -117,10 +118,8 @@ void BspDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterfa
 void BspDemo::initPhysics(const char* bspfilename, struct GUIHelperInterface *m_guiHelper)
 {
 	int cameraUpAxis = 2;
-	m_guiHelper->setUpAxis(cameraUpAxis);
 	btVector3 grav(0, 0, 0);
 	grav[cameraUpAxis] = -10;
-	m_guiHelper->setUpAxis(cameraUpAxis);
 
 	//_cameraUp = btVector3(0,0,1);
 	//_forwardAxis = 1;

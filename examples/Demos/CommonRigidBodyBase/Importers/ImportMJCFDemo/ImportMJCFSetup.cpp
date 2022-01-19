@@ -42,6 +42,7 @@ public:
 		info.camPosX = 0.47;
 		info.camPosY = 0;
 		info.camPosZ = -0.64;
+		info.upAxis = m_upAxis;
 		return info;
 	}
 };
@@ -178,8 +179,6 @@ struct MyMJCFLogger : public MJCFErrorLogger
 
 void ImportMJCFSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	m_guiHelper->setUpAxis(m_upAxis);
-
 	createEmptyDynamicsWorld();
 
 	//MuJoCo uses a slightly different collision filter mode, use the FILTER_GROUPAMASKB_OR_GROUPBMASKA2

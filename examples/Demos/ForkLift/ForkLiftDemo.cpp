@@ -112,8 +112,8 @@ public:
 	virtual void specialKeyboard(int key, int x, int y);
 	virtual void specialKeyboardUp(int key, int x, int y);
 	bool keyboardCallback(int key, int state) override;
-	void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper) override;
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
@@ -125,6 +125,7 @@ public:
 		info.camPosX = -0.33;
 		info.camPosY = -0.72;
 		info.camPosZ = 4.5;
+		info.upAxis = 1;
 		return info;
 	}
 
@@ -208,7 +209,6 @@ ForkLiftDemo::ForkLiftDemo(struct GUIHelperInterface* helper)
 	  m_minCameraDistance(3.f),
 	  m_maxCameraDistance(10.f)
 {
-	helper->setUpAxis(1);
 	m_vehicle = 0;
 	m_wheelShape = 0;
 	m_cameraPosition = btVector3(30, 30, 30);
@@ -290,12 +290,9 @@ ForkLiftDemo::~ForkLiftDemo()
 	//exitPhysics();
 }
 
-void ForkLiftDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void ForkLiftDemo::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
 	int upAxis = 1;
-
-	m_guiHelper->setUpAxis(upAxis);
-
 	btVector3 groundExtents(50, 50, 50);
 	groundExtents[upAxis] = 3;
 	btCollisionShape* groundShape = new btBoxShape(groundExtents);
@@ -512,7 +509,7 @@ void ForkLiftDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperIn
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void ForkLiftDemo::physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
+void ForkLiftDemo::physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper)
 {
 	if (m_dynamicsWorld && m_dynamicsWorld->getDebugDrawer())
 	{

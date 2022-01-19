@@ -153,6 +153,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0.46;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 
@@ -597,8 +598,6 @@ void NN3DWalkersExample::initPhysics(CommonCameraInterface *camera, struct GUIHe
 	setupBasicParamInterface(m_guiHelper);  // parameter interface to use timewarp
 
 	gContactProcessedCallback = legContactProcessedCallback;
-
-	m_guiHelper->setUpAxis(1);
 
 	// Setup the basic world
 

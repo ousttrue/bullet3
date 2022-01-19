@@ -50,6 +50,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = -3;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 
@@ -62,8 +63,6 @@ public:
 
 void DeformableContact::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
-
 	///collision configuration contains default setup for memory, collision setup
 	m_collisionConfiguration = new btSoftBodyRigidBodyCollisionConfiguration();
 

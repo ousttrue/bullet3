@@ -32,6 +32,7 @@ public:
 		info.camPosX = -2;
 		info.camPosY = -2;
 		info.camPosZ = -2;
+		info.upAxis = 2;
 		return info;
 	}
 };
@@ -85,7 +86,6 @@ int loadAndRegisterMeshFromFile2(const std::string& fileName, CommonRenderInterf
 
 void ImportObjSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	m_guiHelper->setUpAxis(2);
 	m_physics = new Physics;
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);

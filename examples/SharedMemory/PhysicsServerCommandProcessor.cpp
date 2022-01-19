@@ -4026,27 +4026,27 @@ bool PhysicsServerCommandProcessor::processRequestCameraImageCommand(const struc
 		if ((clientCmd.m_updateFlags & REQUEST_PIXEL_ARGS_HAS_CAMERA_MATRICES) == 0)
 		{
 			b3OpenGLVisualizerCameraInfo tmpCamResult;
-			bool result = this->m_data->m_guiHelper->getCameraInfo(
-				&tmpCamResult.m_width,
-				&tmpCamResult.m_height,
-				tmpCamResult.m_viewMatrix,
-				tmpCamResult.m_projectionMatrix,
-				tmpCamResult.m_camUp,
-				tmpCamResult.m_camForward,
-				tmpCamResult.m_horizontal,
-				tmpCamResult.m_vertical,
-				&tmpCamResult.m_yaw,
-				&tmpCamResult.m_pitch,
-				&tmpCamResult.m_dist,
-				tmpCamResult.m_target);
-			if (result)
-			{
-				for (int i = 0; i < 16; i++)
-				{
-					viewMat[i] = tmpCamResult.m_viewMatrix[i];
-					projMat[i] = tmpCamResult.m_projectionMatrix[i];
-				}
-			}
+			// bool result = this->m_data->m_guiHelper->getCameraInfo(
+			// 	&tmpCamResult.m_width,
+			// 	&tmpCamResult.m_height,
+			// 	tmpCamResult.m_viewMatrix,
+			// 	tmpCamResult.m_projectionMatrix,
+			// 	tmpCamResult.m_camUp,
+			// 	tmpCamResult.m_camForward,
+			// 	tmpCamResult.m_horizontal,
+			// 	tmpCamResult.m_vertical,
+			// 	&tmpCamResult.m_yaw,
+			// 	&tmpCamResult.m_pitch,
+			// 	&tmpCamResult.m_dist,
+			// 	tmpCamResult.m_target);
+			// if (result)
+			// {
+			// 	for (int i = 0; i < 16; i++)
+			// 	{
+			// 		viewMat[i] = tmpCamResult.m_viewMatrix[i];
+			// 		projMat[i] = tmpCamResult.m_projectionMatrix[i];
+			// 	}
+			// }
 		}
 		bool handled = false;
 
@@ -4220,27 +4220,27 @@ bool PhysicsServerCommandProcessor::processRequestCameraImageCommand(const struc
 					else
 					{
 						b3OpenGLVisualizerCameraInfo tmpCamResult;
-						bool result = this->m_data->m_guiHelper->getCameraInfo(
-							&tmpCamResult.m_width,
-							&tmpCamResult.m_height,
-							tmpCamResult.m_viewMatrix,
-							tmpCamResult.m_projectionMatrix,
-							tmpCamResult.m_camUp,
-							tmpCamResult.m_camForward,
-							tmpCamResult.m_horizontal,
-							tmpCamResult.m_vertical,
-							&tmpCamResult.m_yaw,
-							&tmpCamResult.m_pitch,
-							&tmpCamResult.m_dist,
-							tmpCamResult.m_target);
-						if (result)
-						{
-							m_data->m_pluginManager.getRenderInterface()->render(tmpCamResult.m_viewMatrix, tmpCamResult.m_projectionMatrix);
-						}
-						else
-						{
-							m_data->m_pluginManager.getRenderInterface()->render();
-						}
+						// bool result = this->m_data->m_guiHelper->getCameraInfo(
+						// 	&tmpCamResult.m_width,
+						// 	&tmpCamResult.m_height,
+						// 	tmpCamResult.m_viewMatrix,
+						// 	tmpCamResult.m_projectionMatrix,
+						// 	tmpCamResult.m_camUp,
+						// 	tmpCamResult.m_camForward,
+						// 	tmpCamResult.m_horizontal,
+						// 	tmpCamResult.m_vertical,
+						// 	&tmpCamResult.m_yaw,
+						// 	&tmpCamResult.m_pitch,
+						// 	&tmpCamResult.m_dist,
+						// 	tmpCamResult.m_target);
+						// if (result)
+						// {
+						// 	m_data->m_pluginManager.getRenderInterface()->render(tmpCamResult.m_viewMatrix, tmpCamResult.m_projectionMatrix);
+						// }
+						// else
+						// {
+						// 	m_data->m_pluginManager.getRenderInterface()->render();
+						// }
 					}
 				}
 			}
@@ -11476,21 +11476,21 @@ bool PhysicsServerCommandProcessor::processRequestOpenGLVisualizeCameraCommand(c
 	bool hasStatus = true;
 
 	BT_PROFILE("CMD_REQUEST_OPENGL_VISUALIZER_CAMERA");
-	SharedMemoryStatus& serverCmd = serverStatusOut;
-	bool result = this->m_data->m_guiHelper->getCameraInfo(
-		&serverCmd.m_visualizerCameraResultArgs.m_width,
-		&serverCmd.m_visualizerCameraResultArgs.m_height,
-		serverCmd.m_visualizerCameraResultArgs.m_viewMatrix,
-		serverCmd.m_visualizerCameraResultArgs.m_projectionMatrix,
-		serverCmd.m_visualizerCameraResultArgs.m_camUp,
-		serverCmd.m_visualizerCameraResultArgs.m_camForward,
-		serverCmd.m_visualizerCameraResultArgs.m_horizontal,
-		serverCmd.m_visualizerCameraResultArgs.m_vertical,
-		&serverCmd.m_visualizerCameraResultArgs.m_yaw,
-		&serverCmd.m_visualizerCameraResultArgs.m_pitch,
-		&serverCmd.m_visualizerCameraResultArgs.m_dist,
-		serverCmd.m_visualizerCameraResultArgs.m_target);
-	serverCmd.m_type = result ? CMD_REQUEST_OPENGL_VISUALIZER_CAMERA_COMPLETED : CMD_REQUEST_OPENGL_VISUALIZER_CAMERA_FAILED;
+	// SharedMemoryStatus& serverCmd = serverStatusOut;
+	// bool result = this->m_data->m_guiHelper->getCameraInfo(
+	// 	&serverCmd.m_visualizerCameraResultArgs.m_width,
+	// 	&serverCmd.m_visualizerCameraResultArgs.m_height,
+	// 	serverCmd.m_visualizerCameraResultArgs.m_viewMatrix,
+	// 	serverCmd.m_visualizerCameraResultArgs.m_projectionMatrix,
+	// 	serverCmd.m_visualizerCameraResultArgs.m_camUp,
+	// 	serverCmd.m_visualizerCameraResultArgs.m_camForward,
+	// 	serverCmd.m_visualizerCameraResultArgs.m_horizontal,
+	// 	serverCmd.m_visualizerCameraResultArgs.m_vertical,
+	// 	&serverCmd.m_visualizerCameraResultArgs.m_yaw,
+	// 	&serverCmd.m_visualizerCameraResultArgs.m_pitch,
+	// 	&serverCmd.m_visualizerCameraResultArgs.m_dist,
+	// 	serverCmd.m_visualizerCameraResultArgs.m_target);
+	// serverCmd.m_type = result ? CMD_REQUEST_OPENGL_VISUALIZER_CAMERA_COMPLETED : CMD_REQUEST_OPENGL_VISUALIZER_CAMERA_FAILED;
 	return hasStatus;
 }
 

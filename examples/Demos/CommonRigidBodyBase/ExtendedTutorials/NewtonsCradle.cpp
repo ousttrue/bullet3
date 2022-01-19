@@ -68,6 +68,7 @@ struct NewtonsCradleExample : public CommonRigidBodyBase
 		info.camPosX = 0;
 		info.camPosY = 0.46;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 
@@ -140,8 +141,6 @@ void NewtonsCradleExample::initPhysics(CommonCameraInterface *camera, struct GUI
 		m_guiHelper->getParameterInterface()->registerSliderFloatParameter(
 			slider);
 	}
-
-	m_guiHelper->setUpAxis(1);
 
 	m_physics = new Physics;
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();

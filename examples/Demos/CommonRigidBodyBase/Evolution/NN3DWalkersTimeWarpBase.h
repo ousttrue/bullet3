@@ -256,8 +256,6 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 
 		setupBasicParamInterface(m_guiHelper);  // setup adjustable sliders and buttons for parameters
 
-		m_guiHelper->setUpAxis(1);  // Set Y axis as Up axis
-
 		m_physics = new Physics({}, SOLVER_TYPE);
 		auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 
@@ -797,6 +795,7 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 		info.camPosX = 0;
 		info.camPosY = 0.46;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 

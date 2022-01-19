@@ -20,7 +20,7 @@ public:
 	MultiBodyConstraintFeedbackSetup(struct GUIHelperInterface* helper);
 	virtual ~MultiBodyConstraintFeedbackSetup();
 
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -33,6 +33,7 @@ public:
 		info.camPosX = -1.34;
 		info.camPosY = 3.4;
 		info.camPosZ = -0.44;
+		info.upAxis = 2;
 		return info;
 	}
 };
@@ -48,11 +49,8 @@ MultiBodyConstraintFeedbackSetup::~MultiBodyConstraintFeedbackSetup()
 {
 }
 
-void MultiBodyConstraintFeedbackSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void MultiBodyConstraintFeedbackSetup::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
-	int upAxis = 2;
-	m_guiHelper->setUpAxis(upAxis);
-
 	btVector4 colors[4] =
 		{
 			btVector4(1, 0, 0, 1),
@@ -83,7 +81,7 @@ void MultiBodyConstraintFeedbackSetup::initPhysics(CommonCameraInterface *camera
 		start.setIdentity();
 		btVector3 groundOrigin(-0.4f, 3.f, 0.f);
 		//btVector3 basePosition = btVector3(-0.4f, 3.f, 0.f);
-		groundOrigin[upAxis] -= .5;
+		groundOrigin[cameraResetInfo().upAxis] -= .5;
 		groundOrigin[2] -= 0.6;
 		start.setOrigin(groundOrigin);
 		btQuaternion groundOrn(btVector3(0, 1, 0), 0.25 * SIMD_PI);

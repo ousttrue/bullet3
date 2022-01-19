@@ -1137,11 +1137,6 @@ public:
 		return m_childGuiHelper->getAppInterface();
 	}
 
-	virtual void setUpAxis(int axis)
-	{
-		m_childGuiHelper->setUpAxis(axis);
-	}
-
 	bool m_cameraUpdated;
 	float m_resetCameraCamDist;
 	float m_resetCameraYaw;
@@ -1150,30 +1145,30 @@ public:
 	float m_resetCameraCamPosY;
 	float m_resetCameraCamPosZ;
 
-// 	void resetCamera(const CameraResetInfo& info) override
-// 	{
-// 		m_csGUI->lock();
-// 		m_cameraUpdated = true;
-// 		m_resetCameraCamDist = info.camDist;
-// 		m_resetCameraYaw = info.yaw;
-// 		m_resetCameraPitch = info.pitch;
-// 		m_resetCameraCamPosX = info.camPosX;
-// 		m_resetCameraCamPosY = info.camPosY;
-// 		m_resetCameraCamPosZ = info.camPosZ;
+	// 	void resetCamera(const CameraResetInfo& info) override
+	// 	{
+	// 		m_csGUI->lock();
+	// 		m_cameraUpdated = true;
+	// 		m_resetCameraCamDist = info.camDist;
+	// 		m_resetCameraYaw = info.yaw;
+	// 		m_resetCameraPitch = info.pitch;
+	// 		m_resetCameraCamPosX = info.camPosX;
+	// 		m_resetCameraCamPosY = info.camPosY;
+	// 		m_resetCameraCamPosZ = info.camPosZ;
 
-// #ifdef SYNC_CAMERA_USING_GUI_CS
-// 		m_csGUI->unlock();
-// #else
-// 		setSharedParam(1, eGUIHelperResetCamera);
-// 		workerThreadWait();
-// 		m_childGuiHelper->resetCamera(camDist, yaw, pitch, camPosX, camPosY, camPosZ);
-// #endif  //SYNC_CAMERA_USING_GUI_CS
-// 	}
+	// #ifdef SYNC_CAMERA_USING_GUI_CS
+	// 		m_csGUI->unlock();
+	// #else
+	// 		setSharedParam(1, eGUIHelperResetCamera);
+	// 		workerThreadWait();
+	// 		m_childGuiHelper->resetCamera(camDist, yaw, pitch, camPosX, camPosY, camPosZ);
+	// #endif  //SYNC_CAMERA_USING_GUI_CS
+	// 	}
 
-	virtual bool getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float camTarget[3]) const
-	{
-		return m_childGuiHelper->getCameraInfo(width, height, viewMatrix, projectionMatrix, camUp, camForward, hor, vert, yaw, pitch, camDist, camTarget);
-	}
+	// virtual bool getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float camTarget[3]) const
+	// {
+	// 	return m_childGuiHelper->getCameraInfo(width, height, viewMatrix, projectionMatrix, camUp, camForward, hor, vert, yaw, pitch, camDist, camTarget);
+	// }
 
 	float m_viewMatrix[16];
 	float m_projectionMatrix[16];
@@ -1490,6 +1485,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 0;  //-3,2.8,-2.5};
+		info.upAxis = 2;
 		return info;
 	}
 
@@ -1849,8 +1845,7 @@ bool PhysicsServerExample::isConnected()
 void PhysicsServerExample::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
 	///for this testing we use Z-axis up
-	int upAxis = 2;
-	m_guiHelper->setUpAxis(upAxis);
+	// m_guiHelper->setUpAxis(upAxis);
 
 	m_threadSupport = createMotionThreadSupport(MAX_MOTION_NUM_THREADS);
 

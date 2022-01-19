@@ -29,7 +29,7 @@ public:
 	MultiDofDemo(GUIHelperInterface* helper);
 	virtual ~MultiDofDemo();
 
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -42,6 +42,7 @@ public:
 		info.camPosX = -3;
 		info.camPosY = 2.8;
 		info.camPosZ = -2.5;
+		info.upAxis = 1;
 		return info;
 	}
 
@@ -70,7 +71,6 @@ static int g_constraintSolverType = 0;
 MultiDofDemo::MultiDofDemo(GUIHelperInterface* helper)
 	: CommonMultiBodyBase(helper)
 {
-	m_guiHelper->setUpAxis(1);
 }
 MultiDofDemo::~MultiDofDemo()
 {
@@ -83,10 +83,8 @@ void MultiDofDemo::stepSimulation(float deltaTime)
 	m_dynamicsWorld->stepSimulation(deltaTime, 10, internalTimeStep);
 }
 
-void MultiDofDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void MultiDofDemo::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
-
 	if (g_firstInit)
 	{
 		m_guiHelper->getRenderInterface()->getActiveCamera()->setCameraDistance(btScalar(10. * scaling));

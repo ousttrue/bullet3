@@ -19,7 +19,7 @@ struct TestJointTorqueSetup : public CommonMultiBodyBase
 public:
 	TestJointTorqueSetup(struct GUIHelperInterface* helper) : CommonMultiBodyBase(helper) {}
 	~TestJointTorqueSetup() override {}
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime);
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -30,16 +30,13 @@ public:
 		info.camPosX = -1.34;
 		info.camPosY = 3.4;
 		info.camPosZ = -0.44;
+		info.upAxis = 1;
 		return info;
 	}
 };
 
-void TestJointTorqueSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void TestJointTorqueSetup::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
-	int upAxis = 1;
-
-	m_guiHelper->setUpAxis(upAxis);
-
 	btVector4 colors[4] =
 		{
 			btVector4(1, 0, 0, 1),
@@ -61,6 +58,7 @@ void TestJointTorqueSetup::initPhysics(CommonCameraInterface *camera, struct GUI
 	//create a static ground object
 	if (1)
 	{
+		auto upAxis = cameraResetInfo().upAxis;
 		btVector3 groundHalfExtents(1, 1, 0.2);
 		groundHalfExtents[upAxis] = 1.f;
 		btBoxShape* box = new btBoxShape(groundHalfExtents);

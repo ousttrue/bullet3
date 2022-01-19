@@ -96,6 +96,7 @@ public:
 		info.camPosX = -1.5;
 		info.camPosY = 4.7;
 		info.camPosZ = -2;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -624,8 +625,6 @@ void VoronoiFractureDemo::renderme()
 
 void VoronoiFractureDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
-
 	srand(13);
 	useGenericConstraint = !useGenericConstraint;
 	printf("useGenericConstraint = %d\n", useGenericConstraint);

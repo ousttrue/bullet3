@@ -705,6 +705,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 0;
+		info.upAxis = 2;
 		return info;
 	}
 
@@ -1101,7 +1102,6 @@ void HeightfieldExample::initPhysics(CommonCameraInterface *camera, struct GUIHe
 	createEmptyDynamicsWorld();
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 	m_upAxis = 2;  // start with Y-axis as "up"
-	m_guiHelper->setUpAxis(m_upAxis);
 
 	raycastBar = btRaycastBar3(2500.0, 0, 2.0, m_guiHelper, m_upAxis);
 	// set up basic state

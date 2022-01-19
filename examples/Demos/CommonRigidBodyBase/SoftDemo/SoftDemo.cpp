@@ -88,6 +88,7 @@ public:
 		info.camPosX = 10;
 		info.camPosY = -1;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 
@@ -2005,7 +2006,6 @@ void SoftDemo::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterf
 	///create concave ground mesh
 	m_physics = new Physics(broadphase, {}, {}, true);
 
-	m_guiHelper->setUpAxis(1);
 	//	m_azi = 0;
 
 	//reset and disable motorcontrol at the start

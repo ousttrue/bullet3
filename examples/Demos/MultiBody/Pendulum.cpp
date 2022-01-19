@@ -35,7 +35,7 @@ struct Pendulum : public CommonMultiBodyBase
 public:
 	Pendulum(struct GUIHelperInterface* helper) : CommonMultiBodyBase(helper) {}
 	Pendulum::~Pendulum() override {}
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime);
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -46,16 +46,13 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 };
 
-void Pendulum::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void Pendulum::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
-	int upAxis = 1;
-
-	m_guiHelper->setUpAxis(upAxis);
-
 	this->createEmptyDynamicsWorld();
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 	if (m_dynamicsWorld->getDebugDrawer())

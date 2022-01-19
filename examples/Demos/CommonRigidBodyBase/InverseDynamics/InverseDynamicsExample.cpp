@@ -95,6 +95,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 0;
+		info.upAxis = 2;
 		return info;
 	}
 };
@@ -120,9 +121,6 @@ btMultiBody* createInvertedPendulumMultiBody(btMultiBodyDynamicsWorld* world, GU
 void InverseDynamicsExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	//roboticists like Z up
-	int upAxis = 2;
-	m_guiHelper->setUpAxis(upAxis);
-
 	createEmptyDynamicsWorld();
 	btVector3 gravity(0, 0, 0);
 	// gravity[upAxis]=-9.8;

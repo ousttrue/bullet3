@@ -1156,11 +1156,6 @@ CommonParameterInterface* OpenGLGuiHelper::getParameterInterface()
 	return m_data->m_glApp->m_parameterInterface;
 }
 
-void OpenGLGuiHelper::setUpAxis(int axis)
-{
-	m_data->m_glApp->setUpAxis(axis);
-}
-
 void OpenGLGuiHelper::setVisualizerFlagCallback(VisualizerFlagCallback callback)
 {
 	m_data->m_visualizerFlagCallback = callback;
@@ -1174,62 +1169,6 @@ void OpenGLGuiHelper::setVisualizerFlag(int flag, int enable)
 	}
 	if (m_data->m_visualizerFlagCallback)
 		(m_data->m_visualizerFlagCallback)(flag, enable != 0);
-}
-
-bool OpenGLGuiHelper::getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float cameraTarget[3]) const
-{
-	if (getRenderInterface() && getRenderInterface()->getActiveCamera())
-	{
-		*width = m_data->m_glApp->m_window->getWidth();
-		*height = m_data->m_glApp->m_window->getHeight();
-		getRenderInterface()->getActiveCamera()->getCameraViewMatrix(viewMatrix);
-		getRenderInterface()->getActiveCamera()->getCameraProjectionMatrix(projectionMatrix);
-		getRenderInterface()->getActiveCamera()->getCameraUpVector(camUp);
-		getRenderInterface()->getActiveCamera()->getCameraForwardVector(camForward);
-
-		float top = 1.f;
-		float bottom = -1.f;
-		float tanFov = (top - bottom) * 0.5f / 1;
-		float fov = btScalar(2.0) * btAtan(tanFov);
-		btVector3 camPos, camTarget;
-		getRenderInterface()->getActiveCamera()->getCameraPosition(camPos);
-		getRenderInterface()->getActiveCamera()->getCameraTargetPosition(camTarget);
-		btVector3 rayFrom = camPos;
-		btVector3 rayForward = (camTarget - camPos);
-		rayForward.normalize();
-		float farPlane = 10000.f;
-		rayForward *= farPlane;
-
-		btVector3 rightOffset;
-		btVector3 cameraUp = btVector3(camUp[0], camUp[1], camUp[2]);
-		btVector3 vertical = cameraUp;
-		btVector3 hori;
-		hori = rayForward.cross(vertical);
-		hori.normalize();
-		vertical = hori.cross(rayForward);
-		vertical.normalize();
-		float tanfov = tanf(0.5f * fov);
-		hori *= 2.f * farPlane * tanfov;
-		vertical *= 2.f * farPlane * tanfov;
-		btScalar aspect = float(*width) / float(*height);
-		hori *= aspect;
-		//compute 'hor' and 'vert' vectors, useful to generate raytracer rays
-		hor[0] = hori[0];
-		hor[1] = hori[1];
-		hor[2] = hori[2];
-		vert[0] = vertical[0];
-		vert[1] = vertical[1];
-		vert[2] = vertical[2];
-
-		*yaw = getRenderInterface()->getActiveCamera()->getCameraYaw();
-		*pitch = getRenderInterface()->getActiveCamera()->getCameraPitch();
-		*camDist = getRenderInterface()->getActiveCamera()->getCameraDistance();
-		cameraTarget[0] = camTarget[0];
-		cameraTarget[1] = camTarget[1];
-		cameraTarget[2] = camTarget[2];
-		return true;
-	}
-	return false;
 }
 
 void OpenGLGuiHelper::setProjectiveTextureMatrices(const float viewMatrix[16], const float projectionMatrix[16])

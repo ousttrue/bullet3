@@ -8,7 +8,7 @@ struct ConstraintPhysicsSetup : public CommonRigidBodyBase
 {
 	ConstraintPhysicsSetup(struct GUIHelperInterface* helper);
 	virtual ~ConstraintPhysicsSetup();
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -21,6 +21,7 @@ struct ConstraintPhysicsSetup : public CommonRigidBodyBase
 		info.camPosX = 8;
 		info.camPosY = 1;
 		info.camPosZ = -11;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -84,10 +85,8 @@ void ConstraintPhysicsSetup::stepSimulation(float deltaTime)
 	}
 }
 
-void ConstraintPhysicsSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void ConstraintPhysicsSetup::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
-
 	m_physics = new Physics();
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 

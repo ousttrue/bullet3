@@ -62,6 +62,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0.46;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -265,8 +266,6 @@ void motorPreTickCallback(btDynamicsWorld* world, btScalar timeStep)
 
 void MotorDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
-
 	// Setup the basic world
 
 	m_Time = 0;

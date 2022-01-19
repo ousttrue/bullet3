@@ -69,13 +69,6 @@ struct GUIHelperInterface
 
 	virtual CommonGraphicsApp* getAppInterface() = 0;
 
-	virtual void setUpAxis(int axis) = 0;
-
-	virtual bool getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float camTarget[3]) const
-	{
-		return false;
-	}
-
 	virtual void setVisualizerFlag(int flag, int enable){};
 
 	virtual void copyCameraImageData(const float viewMatrix[16], const float projectionMatrix[16],

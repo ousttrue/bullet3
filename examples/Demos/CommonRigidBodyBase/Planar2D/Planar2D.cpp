@@ -83,14 +83,13 @@ public:
 		info.camPosX = 8.6;
 		info.camPosY = 10.5;
 		info.camPosZ = -20.6;
+		info.upAxis = 1;
 		return info;
 	}
 };
 
 void Planar2D::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
-
 	m_physics = new Physics;
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 

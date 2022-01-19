@@ -23,6 +23,7 @@ struct GyroscopicSetup : public CommonRigidBodyBase
 		info.camPosX = -2.4;
 		info.camPosY = 0.4;
 		info.camPosZ = -0.24;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -46,7 +47,6 @@ GyroscopicSetup::GyroscopicSetup(struct GUIHelperInterface* helper)
 
 void GyroscopicSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
 	m_physics = new Physics;
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	m_dynamicsWorld->setGravity(btVector3(0, 0, 0));

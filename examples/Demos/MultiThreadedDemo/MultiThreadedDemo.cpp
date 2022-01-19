@@ -150,6 +150,7 @@ public:
 		info.camPosX = m_cameraTargetPos.x();
 		info.camPosY = m_cameraTargetPos.y();
 		info.camPosZ = m_cameraTargetPos.z();
+		info.upAxis = kUpAxis;
 		return info;
 	}
 };
@@ -164,7 +165,6 @@ MultiThreadedDemo::MultiThreadedDemo(struct GUIHelperInterface* helper)
 	m_cameraYaw = 90.0f;
 	m_cameraDist = 48.0f;
 	m_prevRollingFriction = -1.0f;
-	helper->setUpAxis(kUpAxis);
 }
 
 void MultiThreadedDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)

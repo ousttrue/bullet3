@@ -20,7 +20,7 @@ struct MultiBodySoftContact : public CommonMultiBodyBase
 public:
 	MultiBodySoftContact(struct GUIHelperInterface* helper) : CommonMultiBodyBase(helper) {}
 	~MultiBodySoftContact() override {}
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -31,16 +31,13 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 0;
+		info.upAxis = 2;
 		return info;
 	}
 };
 
-void MultiBodySoftContact::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void MultiBodySoftContact::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
-	int upAxis = 2;
-
-	m_guiHelper->setUpAxis(upAxis);
-
 	btVector4 colors[4] =
 		{
 			btVector4(1, 0, 0, 1),

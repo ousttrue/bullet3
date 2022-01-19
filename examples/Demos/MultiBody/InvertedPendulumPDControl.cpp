@@ -30,7 +30,7 @@ public:
 	{
 	}
 
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	void stepSimulation(float deltaTime) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -41,6 +41,7 @@ public:
 		info.camPosX = -1.34;
 		info.camPosY = 1.4;
 		info.camPosZ = 3.44;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -286,7 +287,7 @@ btMultiBody* createInvertedPendulumMultiBody(btMultiBodyDynamicsWorld* world, GU
 	return pMultiBody;
 }
 
-void InvertedPendulumPDControl::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void InvertedPendulumPDControl::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
 	{
 		SliderParams slider("Kp", &kp);
@@ -306,10 +307,6 @@ void InvertedPendulumPDControl::initPhysics(CommonCameraInterface *camera, struc
 		slider.m_maxVal = 100;
 		m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
 	}
-
-	int upAxis = 1;
-
-	m_guiHelper->setUpAxis(upAxis);
 
 	this->createEmptyDynamicsWorld();
 

@@ -41,6 +41,7 @@ public:
 		info.camPosX = 0.47;
 		info.camPosY = 0;
 		info.camPosZ = -0.64;
+		info.upAxis = 2;
 		return info;
 	}
 };
@@ -144,9 +145,6 @@ void ImportSDFSetup::setFileName(const char* urdfFileName)
 
 void ImportSDFSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	int upAxis = 2;
-	m_guiHelper->setUpAxis(upAxis);
-
 	this->createEmptyDynamicsWorld();
 	//m_dynamicsWorld->getSolverInfo().m_numIterations = 100;
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
@@ -154,7 +152,7 @@ void ImportSDFSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelper
 		btIDebugDraw::DBG_DrawConstraints + btIDebugDraw::DBG_DrawContactPoints + btIDebugDraw::DBG_DrawAabb);  //+btIDebugDraw::DBG_DrawConstraintLimits);
 
 	btVector3 gravity(0, 0, 0);
-	gravity[upAxis] = -9.8;
+	gravity[cameraResetInfo().upAxis] = -9.8;
 
 	m_dynamicsWorld->setGravity(gravity);
 
@@ -246,7 +244,7 @@ void ImportSDFSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelper
 		if (createGround)
 		{
 			btVector3 groundHalfExtents(20, 20, 20);
-			groundHalfExtents[upAxis] = 1.f;
+			groundHalfExtents[cameraResetInfo().upAxis] = 1.f;
 			btBoxShape* box = new btBoxShape(groundHalfExtents);
 			box->initializePolyhedralFeatures();
 
@@ -254,7 +252,7 @@ void ImportSDFSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelper
 			btTransform start;
 			start.setIdentity();
 			btVector3 groundOrigin(0, 0, 0);
-			groundOrigin[upAxis] = -2.5;
+			groundOrigin[cameraResetInfo().upAxis] = -2.5;
 			start.setOrigin(groundOrigin);
 			btRigidBody* body = createRigidBody(0, start, box);
 			//m_dynamicsWorld->removeRigidBody(body);

@@ -94,7 +94,7 @@ public:
 	{
 		exitPhysics();
 	}
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	void exitPhysics() override;
 	void stepSimulation(float deltaTime) override;
 
@@ -107,6 +107,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 10.46;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -334,10 +335,8 @@ void BenchmarkDemo::stepSimulation(float deltaTime)
 	}
 }
 
-void BenchmarkDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void BenchmarkDemo::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
-
 	setCameraDistance(btScalar(100.));
 
 	createEmptyDynamicsWorld();

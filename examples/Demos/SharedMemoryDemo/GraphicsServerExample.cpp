@@ -710,7 +710,7 @@ public:
 			{
 				//either Y or Z can be up axis
 				int upAxis = (clientCmd.m_upAxisYCommand.m_enableUpAxisY) ? 1 : 2;
-				m_guiHelper->setUpAxis(upAxis);
+				// m_guiHelper->setUpAxis(upAxis);
 				serverStatusOut.m_type = GFX_CMD_CLIENT_COMMAND_COMPLETED;
 				m_args.processCommand();
 				break;
@@ -833,22 +833,22 @@ public:
 			{
 				serverStatusOut.m_type = GFX_CMD_GET_CAMERA_INFO_FAILED;
 
-				if (m_guiHelper->getCameraInfo(
-						&serverStatusOut.m_getCameraInfoStatus.width,
-						&serverStatusOut.m_getCameraInfoStatus.height,
-						serverStatusOut.m_getCameraInfoStatus.viewMatrix,
-						serverStatusOut.m_getCameraInfoStatus.projectionMatrix,
-						serverStatusOut.m_getCameraInfoStatus.camUp,
-						serverStatusOut.m_getCameraInfoStatus.camForward,
-						serverStatusOut.m_getCameraInfoStatus.hor,
-						serverStatusOut.m_getCameraInfoStatus.vert,
-						&serverStatusOut.m_getCameraInfoStatus.yaw,
-						&serverStatusOut.m_getCameraInfoStatus.pitch,
-						&serverStatusOut.m_getCameraInfoStatus.camDist,
-						serverStatusOut.m_getCameraInfoStatus.camTarget))
-				{
-					serverStatusOut.m_type = GFX_CMD_GET_CAMERA_INFO_COMPLETED;
-				}
+				// if (m_guiHelper->getCameraInfo(
+				// 		&serverStatusOut.m_getCameraInfoStatus.width,
+				// 		&serverStatusOut.m_getCameraInfoStatus.height,
+				// 		serverStatusOut.m_getCameraInfoStatus.viewMatrix,
+				// 		serverStatusOut.m_getCameraInfoStatus.projectionMatrix,
+				// 		serverStatusOut.m_getCameraInfoStatus.camUp,
+				// 		serverStatusOut.m_getCameraInfoStatus.camForward,
+				// 		serverStatusOut.m_getCameraInfoStatus.hor,
+				// 		serverStatusOut.m_getCameraInfoStatus.vert,
+				// 		&serverStatusOut.m_getCameraInfoStatus.yaw,
+				// 		&serverStatusOut.m_getCameraInfoStatus.pitch,
+				// 		&serverStatusOut.m_getCameraInfoStatus.camDist,
+				// 		serverStatusOut.m_getCameraInfoStatus.camTarget))
+				// {
+				// 	serverStatusOut.m_type = GFX_CMD_GET_CAMERA_INFO_COMPLETED;
+				// }
 				m_args.processCommand();
 
 				break;

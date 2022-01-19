@@ -28,6 +28,7 @@ struct TestHingeTorque : public CommonRigidBodyBase
 		info.camPosX = -1.34;
 		info.camPosY = 3.4;
 		info.camPosZ = -0.44;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -98,9 +99,6 @@ void TestHingeTorque::stepSimulation(float deltaTime)
 
 void TestHingeTorque::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	int upAxis = 1;
-	m_guiHelper->setUpAxis(upAxis);
-
 	m_physics = new Physics();
 
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
@@ -204,6 +202,7 @@ void TestHingeTorque::initPhysics(CommonCameraInterface *camera, struct GUIHelpe
 
 	if (1)
 	{
+		int upAxis = 1;
 		btVector3 groundHalfExtents(1, 1, 0.2);
 		groundHalfExtents[upAxis] = 1.f;
 		btBoxShape* box = new btBoxShape(groundHalfExtents);

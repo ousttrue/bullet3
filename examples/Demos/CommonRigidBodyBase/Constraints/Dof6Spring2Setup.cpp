@@ -42,7 +42,7 @@ struct Dof6Spring2Setup : public CommonRigidBodyBase
 
 	Dof6Spring2Setup(struct GUIHelperInterface* helper);
 	virtual ~Dof6Spring2Setup();
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -57,6 +57,7 @@ struct Dof6Spring2Setup : public CommonRigidBodyBase
 		info.camPosX = 4;
 		info.camPosY = 2;
 		info.camPosZ = -11;
+		info.upAxis = 1;
 		return info;
 	}
 };
@@ -95,11 +96,9 @@ Dof6Spring2Setup::~Dof6Spring2Setup()
 	exitPhysics();
 	delete m_data;
 }
-void Dof6Spring2Setup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void Dof6Spring2Setup::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
 	// Setup the basic world
-	m_guiHelper->setUpAxis(1);
-
 	btVector3 worldAabbMin(-10000, -10000, -10000);
 	btVector3 worldAabbMax(10000, 10000, 10000);
 	btBroadphaseInterface* broadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);

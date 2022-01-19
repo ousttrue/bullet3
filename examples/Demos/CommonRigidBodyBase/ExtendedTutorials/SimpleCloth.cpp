@@ -48,6 +48,7 @@ struct SimpleClothExample : public CommonRigidBodyBase
 		info.camPosX = 0;
 		info.camPosY = 0.46;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 
@@ -57,8 +58,6 @@ struct SimpleClothExample : public CommonRigidBodyBase
 
 void SimpleClothExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	m_guiHelper->setUpAxis(1);
-
 	m_physics = new Physics;
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
 	m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
