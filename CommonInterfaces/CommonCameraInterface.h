@@ -3,12 +3,13 @@
 
 struct CameraResetInfo
 {
-	float camDist;
-	float yaw;
-	float pitch;
-	float camPosX;
-	float camPosY;
-	float camPosZ;
+	float camDist = 4;
+	float yaw = 0;
+	float pitch = 0;
+	float camPosX = 0;
+	float camPosY = 0;
+	float camPosZ = 0;
+	int upAxis = -1;
 };
 
 struct CommonCameraInterface

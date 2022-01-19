@@ -44,7 +44,7 @@ public:
 	using CreateFunc = std::function<class CommonExampleInterface*(CommonExampleOptions& options)>;
 	virtual ~CommonExampleInterface() {}
 	virtual void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) = 0;
-	virtual void exitPhysics() = 0;
+	virtual void exitPhysics(){}
 	virtual void updateGraphics() {}
 	virtual void stepSimulation(float deltaTime) = 0;
 	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper=0) {}  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h

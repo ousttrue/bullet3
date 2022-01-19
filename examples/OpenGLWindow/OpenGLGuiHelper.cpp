@@ -237,8 +237,7 @@ OpenGLGuiHelper::OpenGLGuiHelper(CommonGraphicsApp* glApp, bool useOpenGL2)
 	m_data->m_debugDraw = 0;
 }
 
-
-	OpenGLGuiHelper::~OpenGLGuiHelper()
+OpenGLGuiHelper::~OpenGLGuiHelper()
 {
 	delete m_data->m_debugDraw;
 
@@ -265,7 +264,6 @@ void OpenGLGuiHelper::createRigidBodyGraphicsObject(btRigidBody* body, const btV
 	createCollisionObjectGraphicsObject(body, color);
 }
 
-
 class MyTriangleCollector2 : public btTriangleCallback
 {
 public:
@@ -275,7 +273,7 @@ public:
 	btScalar m_textureScaling;
 
 	MyTriangleCollector2(const btVector3& aabbMin, const btVector3& aabbMax)
-		:m_aabbMin(aabbMin), m_aabbMax(aabbMax), m_textureScaling(1)
+		: m_aabbMin(aabbMin), m_aabbMax(aabbMax), m_textureScaling(1)
 	{
 		m_pVerticesOut = 0;
 		m_pIndicesOut = 0;
@@ -287,7 +285,7 @@ public:
 		{
 			GLInstanceVertex v;
 			v.xyzw[3] = 0;
-			
+
 			btVector3 normal = (tris[0] - tris[1]).cross(tris[0] - tris[2]);
 			normal.safeNormalize();
 			for (int l = 0; l < 3; l++)
@@ -295,11 +293,11 @@ public:
 				v.xyzw[l] = tris[k][l];
 				v.normal[l] = normal[l];
 			}
-			
+
 			btVector3 extents = m_aabbMax - m_aabbMin;
-			
-			v.uv[0] = (1.-((v.xyzw[0] - m_aabbMin[0]) / (m_aabbMax[0] - m_aabbMin[0])))*m_textureScaling;
-			v.uv[1] = (1.-(v.xyzw[1] - m_aabbMin[1]) / (m_aabbMax[1] - m_aabbMin[1]))*m_textureScaling;
+
+			v.uv[0] = (1. - ((v.xyzw[0] - m_aabbMin[0]) / (m_aabbMax[0] - m_aabbMin[0]))) * m_textureScaling;
+			v.uv[1] = (1. - (v.xyzw[1] - m_aabbMin[1]) / (m_aabbMax[1] - m_aabbMin[1])) * m_textureScaling;
 
 			m_pIndicesOut->push_back(m_pVerticesOut->size());
 			m_pVerticesOut->push_back(v);
@@ -399,7 +397,7 @@ void OpenGLGuiHelper::changeInstanceFlags(int instanceUid, int flags)
 	if (instanceUid >= 0)
 	{
 		//careful, flags/instanceUid is swapped
-		m_data->m_glApp->m_renderer->writeSingleInstanceFlagsToCPU(  flags, instanceUid);
+		m_data->m_glApp->m_renderer->writeSingleInstanceFlagsToCPU(flags, instanceUid);
 	}
 }
 void OpenGLGuiHelper::changeScaling(int instanceUid, const double scaling[3])
@@ -483,8 +481,7 @@ void OpenGLGuiHelper::createCollisionShapeGraphicsObject(btCollisionShape* colli
 	if (collisionShape->getShapeType() == BOX_SHAPE_PROXYTYPE)
 	{
 		btBoxShape* boxShape = (btBoxShape*)collisionShape;
-		
-		
+
 		btAlignedObjectArray<float> transformedVertices;
 
 		btVector3 halfExtents = boxShape->getHalfExtentsWithMargin();
@@ -508,8 +505,8 @@ void OpenGLGuiHelper::createCollisionShapeGraphicsObject(btCollisionShape* colli
 			{
 				btVector3 vert;
 				vert.setValue(cube_vertices_textured[i * 9 + 0],
-					cube_vertices_textured[i * 9 + 1],
-					cube_vertices_textured[i * 9 + 2]);
+							  cube_vertices_textured[i * 9 + 1],
+							  cube_vertices_textured[i * 9 + 2]);
 
 				btVector3 trVer = halfExtents * vert;
 				transformedVertices[i * 9 + 0] = trVer[0];
@@ -532,17 +529,15 @@ void OpenGLGuiHelper::createCollisionShapeGraphicsObject(btCollisionShape* colli
 		return;
 	}
 
-
 	if (collisionShape->getShapeType() == TERRAIN_SHAPE_PROXYTYPE)
 	{
 		const btHeightfieldTerrainShape* heightField = static_cast<const btHeightfieldTerrainShape*>(collisionShape);
-		
-		
+
 		btVector3 aabbMin, aabbMax;
 		btTransform tr;
 		tr.setIdentity();
 		heightField->getAabb(tr, aabbMin, aabbMax);
-		MyTriangleCollector2  col(aabbMin, aabbMax);
+		MyTriangleCollector2 col(aabbMin, aabbMax);
 		if (heightField->getUserValue3())
 		{
 			col.m_textureScaling = heightField->getUserValue3();
@@ -562,19 +557,18 @@ void OpenGLGuiHelper::createCollisionShapeGraphicsObject(btCollisionShape* colli
 			{
 				userImage = m_data->m_checkedTexture;
 			}
-			int shapeId = m_data->m_glApp->m_renderer->registerShape(&gfxVertices[0].xyzw[0], gfxVertices.size(), &indices[0], indices.size(),1, userImage);
+			int shapeId = m_data->m_glApp->m_renderer->registerShape(&gfxVertices[0].xyzw[0], gfxVertices.size(), &indices[0], indices.size(), 1, userImage);
 			collisionShape->setUserIndex(shapeId);
 		}
 		return;
 	}
-
 
 	if (collisionShape->getShapeType() == SOFTBODY_SHAPE_PROXYTYPE)
 	{
 		computeSoftBodyVertices(collisionShape, gfxVertices, indices);
 		if (gfxVertices.size() && indices.size())
 		{
-			int shapeId = registerGraphicsShape(&gfxVertices[0].xyzw[0], gfxVertices.size(), &indices[0], indices.size(), B3_GL_TRIANGLES,m_data->m_checkedTexture);
+			int shapeId = registerGraphicsShape(&gfxVertices[0].xyzw[0], gfxVertices.size(), &indices[0], indices.size(), B3_GL_TRIANGLES, m_data->m_checkedTexture);
 
 			b3Assert(shapeId >= 0);
 			collisionShape->setUserIndex(shapeId);
@@ -650,8 +644,6 @@ void OpenGLGuiHelper::createCollisionShapeGraphicsObject(btCollisionShape* colli
 			return;
 		}
 	}
-
-	
 
 	if (collisionShape->getShapeType() == SPHERE_SHAPE_PROXYTYPE)
 	{
@@ -1066,10 +1058,9 @@ void OpenGLGuiHelper::syncPhysicsToGraphics(const btDiscreteDynamicsWorld* rbWor
 			{
 				const btSoftBody* psb = (const btSoftBody*)colObj;
 				btAlignedObjectArray<GLInstanceVertex> gfxVertices;
-				
+
 				if (psb->m_renderNodes.size() > 0)
 				{
-					
 					gfxVertices.resize(psb->m_renderNodes.size());
 					for (int i = 0; i < psb->m_renderNodes.size(); i++)  // Foreach face
 					{
@@ -1178,14 +1169,26 @@ void OpenGLGuiHelper::setVisualizerFlag(int flag, int enable)
 		(m_data->m_visualizerFlagCallback)(flag, enable != 0);
 }
 
-void OpenGLGuiHelper::resetCamera(const CameraResetInfo &resetInfo)
+void OpenGLGuiHelper::resetCamera(const CameraResetInfo& info)
 {
-	if (getRenderInterface() && getRenderInterface()->getActiveCamera())
+	if (getRenderInterface())
 	{
-		getRenderInterface()->getActiveCamera()->setCameraDistance(resetInfo.camDist);
-		getRenderInterface()->getActiveCamera()->setCameraPitch(resetInfo.pitch);
-		getRenderInterface()->getActiveCamera()->setCameraYaw(resetInfo.yaw);
-		getRenderInterface()->getActiveCamera()->setCameraTargetPosition(resetInfo.camPosX, resetInfo.camPosY, resetInfo.camPosZ);
+		if (auto camera = getRenderInterface()->getActiveCamera())
+		{
+			camera->setCameraDistance(info.camDist);
+			camera->setCameraPitch(info.pitch);
+			camera->setCameraYaw(info.yaw);
+			camera->setCameraTargetPosition(info.camPosX, info.camPosY, info.camPosZ);
+			switch (info.upAxis)
+			{
+				case 0:
+					camera->setCameraUpAxis(0);
+				case 1:
+					camera->setCameraUpAxis(1);
+				case 2:
+					camera->setCameraUpAxis(2);
+			}
+		}
 	}
 }
 
@@ -1440,7 +1443,8 @@ void OpenGLGuiHelper::copyCameraImageData(const float viewMatrix[16], const floa
 
 struct MyConvertPointerSizeT
 {
-	union {
+	union
+	{
 		const void* m_ptr;
 		size_t m_int;
 	};
@@ -1485,7 +1489,6 @@ void OpenGLGuiHelper::autogenerateGraphicsObjects(btDiscreteDynamicsWorld* rbWor
 			color.setValue(1, 1, 1, 1);
 		}
 		createCollisionObjectGraphicsObject(colObj, color);
-		
 	}
 }
 

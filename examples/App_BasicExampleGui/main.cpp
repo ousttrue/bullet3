@@ -10,11 +10,10 @@
 int main(int argc, char* argv[])
 {
 	GlfwApp app("Bullet Standalone Example", 1024, 768, true);
-	// OpenGLGuiHelper gui(&app, false);
+	OpenGLGuiHelper gui(&app, false);
 	auto camera = app.m_instancingRenderer->getActiveCamera();
-	// CommonExampleOptions options(&gui);
-	std::unique_ptr<CommonExampleInterface> example;
-	example.reset();
+	// auto example = std::make_unique<BasicExample>(&gui);
+	auto example = std::make_unique<BasicExample>();
 
 	auto prevMouseButtonCallback = app.m_window->getMouseButtonCallback();
 	app.m_window->setMouseButtonCallback([&example, &prevMouseButtonCallback, camera](int button, int state, float x, float y, ButtonFlags flags)
@@ -38,37 +37,36 @@ int main(int argc, char* argv[])
 
 	example->processCommandLineArgs(argc, argv);
 
-	example->initPhysics(camera, {});
-	// gui.resetCamera(example->cameraResetInfo());
-	// if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
-	// {
-	// 	m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
-	// 	m_app->m_renderer->getActiveCamera()->setCameraPitch(pitch);
-	// 	m_app->m_renderer->getActiveCamera()->setCameraYaw(yaw);
-	// 	m_app->m_renderer->getActiveCamera()->setCameraTargetPosition(targetPos[0], targetPos[1], targetPos[2]);
-	// }
+	example->initPhysics(camera, &gui);
+	// m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
+	// if (m_dynamicsWorld->getDebugDrawer())
+	// 	m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
+	gui.autogenerateGraphicsObjects(example->getDynamicsWorld());
+	gui.resetCamera(example->cameraResetInfo());
 
 	b3Clock clock;
 
 	while (!app.m_window->requestedExit())
 	{
+		// m_guiHelper->getRenderInterface()->removeAllInstances();
+
 		// step simulation
 		btScalar dtSec = btScalar(clock.getTimeInSeconds());
 		if (dtSec > 0.1)
+		{
 			dtSec = 0.1;
-		// m_guiHelper->getRenderInterface()->removeAllInstances();
-		example->stepSimulation(dtSec);
-		// m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
-
+		}
 		clock.reset();
+		example->stepSimulation(dtSec);
 
 		// render
+		// m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 		app.m_instancingRenderer->init();
 		app.m_instancingRenderer->updateCamera(app.getUpAxis());
 		if (auto world = example->getDynamicsWorld())
 		{
-			// gui.syncPhysicsToGraphics(world);
-			// gui.render(world);
+			gui.syncPhysicsToGraphics(world);
+			gui.render(world);
 		}
 
 		DrawGridData dg;
@@ -77,8 +75,6 @@ int main(int argc, char* argv[])
 
 		app.swapBuffer();
 	}
-
-	example->exitPhysics();
 
 	return 0;
 }

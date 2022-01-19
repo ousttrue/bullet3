@@ -3,43 +3,41 @@
 #define ARRAY_SIZE_X 5
 #define ARRAY_SIZE_Z 5
 
-void BasicExample::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
+CameraResetInfo BasicExample::cameraResetInfo() const
 {
-	m_guiHelper->setUpAxis(1);
+	CameraResetInfo info;
+	info.camDist = 4;
+	info.pitch = -35;
+	info.yaw = 52;
+	info.camPosX = 0;
+	info.camPosY = 0;
+	info.camPosZ = 0;
+	info.upAxis = 1;
+	return info;
+}
 
-	m_physics = new Physics();
-
-	//m_dynamicsWorld->setGravity(btVector3(0,0,0));
-	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
-	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
-
-	if (m_dynamicsWorld->getDebugDrawer())
-		m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
-
-	///create a few basic rigid bodies
-	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-
-	//groundShape->initializePolyhedralFeatures();
-	//btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),50);
-
-	m_physics->m_collisionShapes.push_back(groundShape);
-
+void BasicExample::initWorld(Physics* physics)
+{
 	{
+		///create a few basic rigid bodies
+		btBoxShape* groundShape = physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+		physics->m_collisionShapes.push_back(groundShape);
+
 		btTransform groundTransform;
 		groundTransform.setIdentity();
 		groundTransform.setOrigin(btVector3(0, -50, 0));
 		btScalar mass(0.);
-		m_physics->createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
+		physics->createRigidBody(mass, groundTransform, groundShape, btVector4(0, 0, 1, 1));
 	}
 
 	{
 		//create a few dynamic rigidbodies
 		// Re-using the same collision is better for memory usage and performance
 
-		btBoxShape* colShape = m_physics->createBoxShape(btVector3(.1, .1, .1));
+		btBoxShape* colShape = physics->createBoxShape(btVector3(.1, .1, .1));
 
 		//btCollisionShape* colShape = new btSphereShape(btScalar(1.));
-		m_physics->m_collisionShapes.push_back(colShape);
+		physics->m_collisionShapes.push_back(colShape);
 
 		/// Create Dynamic Objects
 		btTransform startTransform;
@@ -65,11 +63,9 @@ void BasicExample::initPhysics(CommonCameraInterface* camera, struct GUIHelperIn
 						btScalar(2 + .2 * k),
 						btScalar(0.2 * j)));
 
-					m_physics->createRigidBody(mass, startTransform, colShape);
+					physics->createRigidBody(mass, startTransform, colShape);
 				}
 			}
 		}
 	}
-
-	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }

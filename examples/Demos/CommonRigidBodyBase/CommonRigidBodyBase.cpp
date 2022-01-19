@@ -309,6 +309,16 @@ CommonRigidBodyBase::CommonRigidBodyBase(GUIHelperInterface* helper)
 
 CommonRigidBodyBase::~CommonRigidBodyBase()
 {
+	if (m_physics)
+	{
+		delete m_physics;
+	}
+}
+
+void CommonRigidBodyBase::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
+{
+	m_physics = new Physics;
+	initWorld(m_physics);
 }
 
 void CommonRigidBodyBase::stepSimulation(float deltaTime)
@@ -319,7 +329,7 @@ void CommonRigidBodyBase::stepSimulation(float deltaTime)
 	}
 }
 
-void CommonRigidBodyBase::physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
+void CommonRigidBodyBase::physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper)
 {
 	if (m_physics)
 	{
@@ -328,12 +338,6 @@ void CommonRigidBodyBase::physicsDebugDraw(int debugFlags, struct GUIHelperInter
 			drawer->setDebugMode(debugFlags);
 		}
 	}
-}
-
-void CommonRigidBodyBase::exitPhysics()
-{
-	//remove the rigidbodies from the dynamics world and delete them
-	delete m_physics;
 }
 
 bool CommonRigidBodyBase::keyboardCallback(int key, int state)

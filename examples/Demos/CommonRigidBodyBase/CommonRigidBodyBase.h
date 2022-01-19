@@ -76,11 +76,13 @@ struct CommonRigidBodyBase : public CommonExampleInterface
 
 	CommonRigidBodyBase(struct GUIHelperInterface* helper);
 	~CommonRigidBodyBase() override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	void stepSimulation(float deltaTime) override;
-	void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper) override;
-	void exitPhysics() override;
+	void physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper) override;
 	bool keyboardCallback(int key, int state) override;
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y) override;
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y, ButtonFlags flags) override;
+	bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) override;
+	bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags) override;
 	class btDiscreteDynamicsWorld* getDynamicsWorld() override { return m_physics ? m_physics->getDynamicsWorld() : nullptr; }
+
+	virtual void initWorld(Physics* world) {}
 };

@@ -13,6 +13,7 @@
 ```{toctree}
 :maxdepth: 1
 examples/index
+btIDebugDraw/index
 pybullet/index
 format/index
 SharedMemory/index
