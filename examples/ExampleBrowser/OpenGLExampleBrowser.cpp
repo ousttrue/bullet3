@@ -281,8 +281,9 @@ private:
 	{
 		bool handled = false;
 		//try picking first
-		if (sCurrentDemo){
-			handled = sCurrentDemo->mouseButtonCallback(s_guiHelper->getRenderInterface()->getActiveCamera(),button, state, x, y, flags);
+		if (sCurrentDemo)
+		{
+			handled = sCurrentDemo->mouseButtonCallback(s_guiHelper->getRenderInterface()->getActiveCamera(), button, state, x, y, flags);
 		}
 
 		if (renderGui && m_gwen && !handled)
@@ -291,7 +292,8 @@ private:
 		}
 		if (!handled)
 		{
-			if (prevMouseButtonCallback){
+			if (prevMouseButtonCallback)
+			{
 				prevMouseButtonCallback(button, state, x, y, flags);
 			}
 		}
@@ -426,7 +428,9 @@ private:
 				sCurrentDemo->initPhysics(s_guiHelper->getRenderInterface()->getActiveCamera(), s_guiHelper);
 				if (resetCamera)
 				{
-					s_guiHelper->getRenderInterface()->getActiveCamera()->resetCamera(sCurrentDemo->cameraResetInfo());
+					auto info = sCurrentDemo->cameraResetInfo();
+					s_guiHelper->getRenderInterface()->getActiveCamera()->resetCamera(info);
+					s_app->m_instancingRenderer->updateCamera();
 				}
 			}
 		}
@@ -655,7 +659,7 @@ public:
 		s_window->setMouseMoveCallback(std::bind(&OpenGLExampleBrowserInternalData::MyMouseMoveCallback,
 												 this, std::placeholders::_1, std::placeholders::_2));
 
-		prevMouseButtonCallback = s_window->getMouseButtonCallback();	
+		prevMouseButtonCallback = s_window->getMouseButtonCallback();
 		s_window->setMouseButtonCallback(std::bind(&OpenGLExampleBrowserInternalData::MyMouseButtonCallback,
 												   this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
 		prevKeyboardCallback = s_window->getKeyboardCallback();

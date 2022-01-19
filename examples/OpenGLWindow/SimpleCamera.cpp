@@ -698,10 +698,13 @@ void SimpleCamera::resetCamera(const CameraResetInfo& info)
 	{
 		case 0:
 			setCameraUpAxis(0);
+			break;
 		case 1:
 			setCameraUpAxis(1);
+			break;
 		case 2:
 			setCameraUpAxis(2);
+			break;
 	}
 }
 

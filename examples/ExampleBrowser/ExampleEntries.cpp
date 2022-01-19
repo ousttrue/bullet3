@@ -126,21 +126,18 @@ struct ExampleEntry
 static ExampleEntry gDefaultExamples[] =
 	{
 		ExampleEntry(0, "API"),
-
 		ExampleEntry(1, "Basic Example", "Create some rigid bodies using box collision shapes. This is a good example to familiarize with the basic initialization of Bullet. The Basic Example can also be compiled without graphical user interface, as a console application. Press W for wireframe, A to show AABBs, I to suspend/restart physics simulation. Press D to toggle auto-deactivation of the simulation. ", [](auto)
 					 { return new BasicExample; }),
-
 		ExampleEntry(1, "Rolling Friction", "Damping is often not good enough to keep rounded objects from rolling down a sloped surface. Instead, you can set the rolling friction of a rigid body. Generally it is best to leave the rolling friction to zero, to avoid artifacts.", [](auto)
 					 { return new RollingFrictionDemo; }),
-
 		ExampleEntry(1, "Constraints", "Show the use of the various constraints in Bullet. Press the L key to visualize the constraint limits. Press the C key to visualize the constraint frames.", [](auto)
 					 { return new AllConstraintDemo; }),
-
-		ExampleEntry(1, "Motorized Hinge", "Use of a btHingeConstraint. You can adjust the first slider to change the target velocity, and the second slider to adjust the maximum impulse applied to reach the target velocity. Note that the hinge angle can reach beyond -360 and 360 degrees.", ConstraintCreateFunc),
+		ExampleEntry(1, "Motorized Hinge", "Use of a btHingeConstraint. You can adjust the first slider to change the target velocity, and the second slider to adjust the maximum impulse applied to reach the target velocity. Note that the hinge angle can reach beyond -360 and 360 degrees.", [](auto)
+					 { return new ConstraintPhysicsSetup; }),
 		ExampleEntry(1, "TestHingeTorque", "Apply a torque in the hinge axis. This example uses a btHingeConstraint and btRigidBody. The setup is similar to the multi body example TestJointTorque.",
 					 TestHingeTorqueCreateFunc),
-		//	ExampleEntry(0,"What's new in 2.83"),
 
+		//	ExampleEntry(0,"What's new in 2.83"),
 		ExampleEntry(1, "6DofSpring2", "Show the use of the btGeneric6DofSpring2Constraint. This is a replacement of the btGeneric6DofSpringConstraint, it has various improvements. This includes improved spring implementation and better control over the restitution (bounce) when the constraint hits its limits.",
 					 Dof6Spring2CreateFunc),
 

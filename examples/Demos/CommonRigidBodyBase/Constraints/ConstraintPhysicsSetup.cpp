@@ -1,38 +1,6 @@
 #include "ConstraintPhysicsSetup.h"
-
-#include <CommonRigidBodyBase.h>
 #include <CommonParameterInterface.h>
-#include "CommonCameraInterface.h"
-
-struct ConstraintPhysicsSetup : public CommonRigidBodyBase
-{
-	ConstraintPhysicsSetup(struct GUIHelperInterface* helper);
-	virtual ~ConstraintPhysicsSetup();
-	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
-
-	virtual void stepSimulation(float deltaTime);
-
-	CameraResetInfo cameraResetInfo() const override
-	{
-		CameraResetInfo info;
-		info.camDist = 7;
-		info.pitch = -44;
-		info.yaw = 721;
-		info.camPosX = 8;
-		info.camPosY = 1;
-		info.camPosZ = -11;
-		info.upAxis = 1;
-		return info;
-	}
-};
-
-ConstraintPhysicsSetup::ConstraintPhysicsSetup(struct GUIHelperInterface* helper)
-	: CommonRigidBodyBase(helper)
-{
-}
-ConstraintPhysicsSetup::~ConstraintPhysicsSetup()
-{
-}
+#include "CommonRigidBodyBase.h"
 
 static btScalar val;
 static btScalar targetVel = 0;
@@ -41,6 +9,73 @@ static btHingeAccumulatedAngleConstraint* spDoorHinge = 0;
 static btScalar actualHingeVelocity = 0.f;
 
 static btVector3 btAxisA(0, 1, 0);
+
+CameraResetInfo ConstraintPhysicsSetup::cameraResetInfo() const
+{
+	CameraResetInfo info;
+	info.camDist = 7;
+	info.pitch = -44;
+	info.yaw = 721;
+	info.camPosX = 8;
+	info.camPosY = 1;
+	info.camPosZ = -11;
+	info.upAxis = 1;
+	return info;
+}
+
+void ConstraintPhysicsSetup::initWorld(Physics* physics)
+{
+	auto m_dynamicsWorld = physics->getDynamicsWorld();
+
+	int mode = btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawConstraints + btIDebugDraw::DBG_DrawConstraintLimits;
+	m_dynamicsWorld->getDebugDrawer()->setDebugMode(mode);
+
+	// {
+	// 	SliderParams slider("target vel", &targetVel);
+	// 	slider.m_minVal = -4;
+	// 	slider.m_maxVal = 4;
+	// 	m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
+	// }
+
+	// {
+	// 	SliderParams slider("max impulse", &maxImpulse);
+	// 	slider.m_minVal = 0;
+	// 	slider.m_maxVal = 1000;
+	// 	m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
+	// }
+
+	// {
+	// 	SliderParams slider("actual vel", &actualHingeVelocity);
+	// 	slider.m_minVal = -4;
+	// 	slider.m_maxVal = 4;
+	// 	m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
+	// }
+
+	// val = 1.f;
+	// {
+	// 	SliderParams slider("angle", &val);
+	// 	slider.m_minVal = -720;
+	// 	slider.m_maxVal = 720;
+	// 	m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
+	// }
+
+	{  // create a door using hinge constraint attached to the world
+		btCollisionShape* pDoorShape = new btBoxShape(btVector3(2.0f, 5.0f, 0.2f));
+		physics->m_collisionShapes.push_back(pDoorShape);
+		btTransform doorTrans;
+		doorTrans.setIdentity();
+		doorTrans.setOrigin(btVector3(-5.0f, -2.0f, 0.0f));
+		btRigidBody* pDoorBody = physics->createRigidBody(1.0, doorTrans, pDoorShape);
+		pDoorBody->setActivationState(DISABLE_DEACTIVATION);
+		const btVector3 btPivotA(10.f + 2.1f, -2.0f, 0.0f);  // right next to the door slightly outside
+
+		spDoorHinge = new btHingeAccumulatedAngleConstraint(*pDoorBody, btPivotA, btAxisA);
+
+		m_dynamicsWorld->addConstraint(spDoorHinge);
+
+		spDoorHinge->setDbgDrawSize(btScalar(5.f));
+	}
+}
 
 void ConstraintPhysicsSetup::stepSimulation(float deltaTime)
 {
@@ -83,67 +118,4 @@ void ConstraintPhysicsSetup::stepSimulation(float deltaTime)
 			}
 		}
 	}
-}
-
-void ConstraintPhysicsSetup::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
-{
-	m_physics = new Physics();
-	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
-
-	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
-	int mode = btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawConstraints + btIDebugDraw::DBG_DrawConstraintLimits;
-	m_dynamicsWorld->getDebugDrawer()->setDebugMode(mode);
-
-	{
-		SliderParams slider("target vel", &targetVel);
-		slider.m_minVal = -4;
-		slider.m_maxVal = 4;
-		m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
-	}
-
-	{
-		SliderParams slider("max impulse", &maxImpulse);
-		slider.m_minVal = 0;
-		slider.m_maxVal = 1000;
-		m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
-	}
-
-	{
-		SliderParams slider("actual vel", &actualHingeVelocity);
-		slider.m_minVal = -4;
-		slider.m_maxVal = 4;
-		m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
-	}
-
-	val = 1.f;
-	{
-		SliderParams slider("angle", &val);
-		slider.m_minVal = -720;
-		slider.m_maxVal = 720;
-		m_guiHelper->getParameterInterface()->registerSliderFloatParameter(slider);
-	}
-
-	{  // create a door using hinge constraint attached to the world
-		btCollisionShape* pDoorShape = new btBoxShape(btVector3(2.0f, 5.0f, 0.2f));
-		m_physics->m_collisionShapes.push_back(pDoorShape);
-		btTransform doorTrans;
-		doorTrans.setIdentity();
-		doorTrans.setOrigin(btVector3(-5.0f, -2.0f, 0.0f));
-		btRigidBody* pDoorBody = m_physics->createRigidBody(1.0, doorTrans, pDoorShape);
-		pDoorBody->setActivationState(DISABLE_DEACTIVATION);
-		const btVector3 btPivotA(10.f + 2.1f, -2.0f, 0.0f);  // right next to the door slightly outside
-
-		spDoorHinge = new btHingeAccumulatedAngleConstraint(*pDoorBody, btPivotA, btAxisA);
-
-		m_dynamicsWorld->addConstraint(spDoorHinge);
-
-		spDoorHinge->setDbgDrawSize(btScalar(5.f));
-	}
-
-	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
-}
-
-class CommonExampleInterface* ConstraintCreateFunc(CommonExampleOptions& options)
-{
-	return new ConstraintPhysicsSetup(options.m_guiHelper);
 }

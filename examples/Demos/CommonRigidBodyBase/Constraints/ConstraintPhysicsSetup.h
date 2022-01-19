@@ -1,6 +1,10 @@
-#ifndef CONSTAINT_PHYSICS_SETUP_H
-#define CONSTAINT_PHYSICS_SETUP_H
+#pragma once
 
-class CommonExampleInterface* ConstraintCreateFunc(struct CommonExampleOptions& options);
-
-#endif  //CONSTAINT_PHYSICS_SETUP_H
+#include <CommonRigidBodyBase.h>
+struct ConstraintPhysicsSetup : public CommonRigidBodyBase
+{
+	ConstraintPhysicsSetup() : CommonRigidBodyBase({}) {}
+	CameraResetInfo cameraResetInfo() const override;
+	void initWorld(Physics *world) override;
+	void stepSimulation(float deltaTime) override;
+};
