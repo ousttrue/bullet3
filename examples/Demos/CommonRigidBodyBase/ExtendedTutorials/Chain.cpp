@@ -29,7 +29,7 @@ struct ChainExample : public CommonRigidBodyBase
 	{
 	}
 	virtual ~ChainExample() {}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -43,7 +43,7 @@ struct ChainExample : public CommonRigidBodyBase
 	}
 };
 
-void ChainExample::initPhysics()
+void ChainExample::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

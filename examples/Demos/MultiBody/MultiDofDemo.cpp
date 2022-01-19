@@ -29,7 +29,7 @@ public:
 	MultiDofDemo(GUIHelperInterface* helper);
 	virtual ~MultiDofDemo();
 
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -83,7 +83,7 @@ void MultiDofDemo::stepSimulation(float deltaTime)
 	m_dynamicsWorld->stepSimulation(deltaTime, 10, internalTimeStep);
 }
 
-void MultiDofDemo::initPhysics()
+void MultiDofDemo::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

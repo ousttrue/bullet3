@@ -38,7 +38,7 @@ public:
 	virtual ~RaytestDemo()
 	{
 	}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 
 	virtual void exitPhysics();
 
@@ -139,7 +139,7 @@ void RaytestDemo::stepSimulation(float deltaTime)
 	CommonRigidBodyBase::stepSimulation(deltaTime);
 }
 
-void RaytestDemo::initPhysics()
+void RaytestDemo::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

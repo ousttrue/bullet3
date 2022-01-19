@@ -689,10 +689,10 @@ public:
 		m_threadSupport = 0;
 	}
 
-	virtual void initPhysics()
+	void initPhysics(CommonCameraInterface* camera) override
 	{
 	}
-	virtual void exitPhysics()
+	void exitPhysics() override
 	{
 	}
 

@@ -90,15 +90,13 @@ public:
 		  m_benchmark(benchmark)
 	{
 	}
-	virtual ~BenchmarkDemo()
+	~BenchmarkDemo() override
 	{
 		exitPhysics();
 	}
-	void initPhysics();
-
-	void exitPhysics();
-
-	void stepSimulation(float deltaTime);
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics() override;
+	void stepSimulation(float deltaTime) override;
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -336,7 +334,7 @@ void BenchmarkDemo::stepSimulation(float deltaTime)
 	}
 }
 
-void BenchmarkDemo::initPhysics()
+void BenchmarkDemo::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

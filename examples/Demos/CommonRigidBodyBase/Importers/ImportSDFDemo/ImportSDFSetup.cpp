@@ -27,7 +27,7 @@ public:
 	ImportSDFSetup(struct GUIHelperInterface* helper, int option, const char* fileName);
 	virtual ~ImportSDFSetup();
 
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	virtual void stepSimulation(float deltaTime);
 
 	void setFileName(const char* urdfFileName);
@@ -142,7 +142,7 @@ void ImportSDFSetup::setFileName(const char* urdfFileName)
 	memcpy(m_fileName, urdfFileName, strlen(urdfFileName) + 1);
 }
 
-void ImportSDFSetup::initPhysics()
+void ImportSDFSetup::initPhysics(CommonCameraInterface *camera)
 {
 	int upAxis = 2;
 	m_guiHelper->setUpAxis(upAxis);

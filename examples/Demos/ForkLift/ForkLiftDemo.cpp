@@ -113,7 +113,7 @@ public:
 	virtual void specialKeyboardUp(int key, int x, int y);
 	bool keyboardCallback(int key, int state) override;
 	void physicsDebugDraw(int debugFlags) override;
-	void initPhysics() override;
+	void initPhysics(CommonCameraInterface *camera) override;
 	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
@@ -290,7 +290,7 @@ ForkLiftDemo::~ForkLiftDemo()
 	//exitPhysics();
 }
 
-void ForkLiftDemo::initPhysics()
+void ForkLiftDemo::initPhysics(CommonCameraInterface *camera)
 {
 	int upAxis = 1;
 
@@ -599,7 +599,7 @@ void ForkLiftDemo::displayCallback(void)
 void ForkLiftDemo::clientResetScene()
 {
 	exitPhysics();
-	initPhysics();
+	initPhysics({});
 }
 
 void ForkLiftDemo::resetForklift()

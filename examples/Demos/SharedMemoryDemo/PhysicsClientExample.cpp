@@ -79,7 +79,7 @@ public:
 	PhysicsClientExample(GUIHelperInterface* helper, int options);
 	virtual ~PhysicsClientExample();
 
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	void selectComboBox(int comboIndex, const char* name)
 	{
 		if (m_guiHelper && m_guiHelper->getParameterInterface())
@@ -711,7 +711,7 @@ void PhysicsClientExample::createButtons()
 	}
 }
 
-void PhysicsClientExample::initPhysics()
+void PhysicsClientExample::initPhysics(CommonCameraInterface *camera)
 {
 	if (m_guiHelper && m_guiHelper->getParameterInterface())
 	{

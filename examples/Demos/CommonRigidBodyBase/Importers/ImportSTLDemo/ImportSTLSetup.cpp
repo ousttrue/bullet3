@@ -18,7 +18,7 @@ public:
 	ImportSTLSetup(struct GUIHelperInterface* helper, const char* fileName);
 	virtual ~ImportSTLSetup();
 
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -51,7 +51,7 @@ ImportSTLSetup::~ImportSTLSetup()
 {
 }
 
-void ImportSTLSetup::initPhysics()
+void ImportSTLSetup::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(2);
 	m_physics = new Physics;

@@ -23,7 +23,7 @@ struct RaytracerPhysicsSetup : public CommonExampleInterface
 
 	RaytracerPhysicsSetup(struct CommonGraphicsApp* app);
 	virtual ~RaytracerPhysicsSetup();
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	virtual void exitPhysics();
 	virtual void stepSimulation(float deltaTime);
 	virtual void physicsDebugDraw(int debugFlags);
@@ -108,7 +108,7 @@ RaytracerPhysicsSetup::~RaytracerPhysicsSetup()
 	delete m_internalData;
 }
 
-void RaytracerPhysicsSetup::initPhysics()
+void RaytracerPhysicsSetup::initPhysics(CommonCameraInterface *camera)
 {
 	//request a visual bitma/texture we can render to
 

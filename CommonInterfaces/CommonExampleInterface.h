@@ -42,7 +42,7 @@ class CommonExampleInterface
 public:
 	typedef class CommonExampleInterface*(CreateFunc)(CommonExampleOptions& options);
 	virtual ~CommonExampleInterface() {}
-	virtual void initPhysics() = 0;
+	virtual void initPhysics(CommonCameraInterface* camera) = 0;
 	virtual void exitPhysics() = 0;
 	virtual void updateGraphics() {}
 	virtual void stepSimulation(float deltaTime) = 0;
@@ -57,6 +57,18 @@ public:
 	virtual void vrGenericTrackerMoveCallback(int controllerId, float pos[4], float orientation[4]) {}
 	virtual void processCommandLineArgs(int argc, char* argv[]){};
 	virtual class btDiscreteDynamicsWorld* getDynamicsWorld() { return nullptr; }
+};
+
+class EmptyExample : public CommonExampleInterface
+{
+public:
+	static CommonExampleInterface* CreateFunc(struct CommonExampleOptions& /* unusedOptions*/)
+	{
+		return new EmptyExample;
+	}
+	void initPhysics(CommonCameraInterface* camera) override {}
+	void exitPhysics() override {}
+	void stepSimulation(float deltaTime) override {}
 };
 
 class ExampleEntries

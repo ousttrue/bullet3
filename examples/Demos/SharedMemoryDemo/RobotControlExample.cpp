@@ -331,7 +331,7 @@ RobotControlExample::~RobotControlExample()
 	m_physicsServer.disconnectSharedMemory(deInitializeSharedMemory);
 }
 
-void	RobotControlExample::initPhysics()
+void	RobotControlExample::initPhysics(CommonCameraInterface *camera)
 {
 	///for this testing we use Z-axis up
 	int upAxis = 2;

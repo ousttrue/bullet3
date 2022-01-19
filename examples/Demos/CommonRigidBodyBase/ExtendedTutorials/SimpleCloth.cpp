@@ -32,7 +32,7 @@ struct SimpleClothExample : public CommonRigidBodyBase
 	{
 	}
 	virtual ~SimpleClothExample() {}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	virtual btSoftRigidDynamicsWorld* getSoftDynamicsWorld()
 	{
 		///just make it a btSoftRigidDynamicsWorld please
@@ -55,7 +55,7 @@ struct SimpleClothExample : public CommonRigidBodyBase
 	btSoftBodyWorldInfo softBodyWorldInfo;
 };
 
-void SimpleClothExample::initPhysics()
+void SimpleClothExample::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

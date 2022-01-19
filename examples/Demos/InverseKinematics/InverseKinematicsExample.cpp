@@ -187,20 +187,17 @@ public:
 		}
 		m_app->m_renderer->writeTransforms();
 	}
-	virtual ~InverseKinematicsExample()
+	~InverseKinematicsExample() override
 	{
 	}
 
-	virtual void physicsDebugDraw(int debugDrawMode)
-	{
-	}
-	virtual void initPhysics()
+	void initPhysics(CommonCameraInterface* camera) override
 	{
 		BuildKukaIIWAShape();
 		m_ikJacobian = new Jacobian(&m_ikTree);
 		Reset(m_ikTree, m_ikJacobian);
 	}
-	virtual void exitPhysics()
+	void exitPhysics()override
 	{
 		delete m_ikJacobian;
 		m_ikJacobian = 0;
@@ -262,13 +259,9 @@ public:
 			}
 		}
 	}
-	virtual void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 		DoUpdateStep(deltaTime, m_ikTree, m_ikJacobian, m_ikMethod);
-	}
-
-	virtual void physicsDebugDraw()
-	{
 	}
 
 	CameraResetInfo cameraResetInfo() const override

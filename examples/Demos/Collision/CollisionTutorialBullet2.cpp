@@ -239,14 +239,13 @@ public:
 		m_timeSeriesCanvas0 = 0;
 	}
 
-	virtual void initPhysics()
+	void initPhysics(CommonCameraInterface* camera) override
 	{
 	}
-	virtual void exitPhysics()
+	void exitPhysics() override
 	{
 	}
-
-	virtual void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 #ifndef BT_NO_PROFILE
 		CProfileManager::Reset();
@@ -296,10 +295,6 @@ public:
 #ifndef BT_NO_PROFILE
 		CProfileManager::Increment_Frame_Counter();
 #endif
-	}
-
-	virtual void physicsDebugDraw(int debugDrawFlags)
-	{
 	}
 
 	CameraResetInfo cameraResetInfo() const override

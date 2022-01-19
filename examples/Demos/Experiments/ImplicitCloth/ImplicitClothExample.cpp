@@ -32,7 +32,7 @@ public:
 		  m_cloth(0)
 	{
 	}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	virtual void exitPhysics();
 	virtual void stepSimulation(float deltaTime);
 	void renderScene() override;
@@ -63,7 +63,7 @@ info.camPosZ = -3.6;
 	}
 };
 
-void ImplicitClothExample::initPhysics()
+void ImplicitClothExample::initPhysics(CommonCameraInterface *camera)
 {
 	float size = 10;
 	m_guiHelper->setUpAxis(1);

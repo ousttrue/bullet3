@@ -54,11 +54,9 @@ public:
 	virtual ~FractureDemo()
 	{
 	}
-	void initPhysics();
-
-	void exitPhysics();
-
-	virtual void stepSimulation(float deltaTime)
+	void initPhysics(CommonCameraInterface *camera)override;
+	void exitPhysics()override;
+	void stepSimulation(float deltaTime)override
 	{
 		CommonRigidBodyBase::stepSimulation(deltaTime);
 
@@ -93,7 +91,7 @@ public:
 	}
 };
 
-void FractureDemo::initPhysics()
+void FractureDemo::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

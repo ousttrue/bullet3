@@ -26,8 +26,6 @@ void ExampleBrowserMemoryReleaseFunc(void* ptr);
 #include "Bullet3Common/b3Logging.h"
 #include "ExampleEntries.h"
 #include "LinearMath/btAlignedObjectArray.h"
-#include "EmptyExample.h"
-
 #include <PhysicsServerExample.h>
 #include <PhysicsServerExampleBullet2.h>
 #include <GraphicsServerExample.h>

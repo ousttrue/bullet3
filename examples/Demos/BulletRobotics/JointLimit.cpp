@@ -20,24 +20,23 @@ class JointLimit : public CommonExampleInterface
 {
 	GUIHelperInterface* m_guiHelper;
 	b3RobotSimulatorClientAPI m_robotSim;
-	int m_options;
 
 public:
 	JointLimit(GUIHelperInterface* helper, int options)
-		: m_guiHelper(helper),
-		  m_options(options)
+		: m_guiHelper(helper)
 	{
 	}
 
-	virtual ~JointLimit()
+	~JointLimit() override
 	{
 	}
 
-	virtual void physicsDebugDraw(int debugDrawMode)
+	void physicsDebugDraw(int debugDrawMode) override
 	{
 		m_robotSim.debugDraw(debugDrawMode);
 	}
-	virtual void initPhysics()
+
+	void initPhysics(CommonCameraInterface* camera) override
 	{
 		int mode = eCONNECT_EXISTING_EXAMPLE_BROWSER;
 		m_robotSim.setGuiHelper(m_guiHelper);
@@ -67,26 +66,22 @@ public:
 		m_robotSim.setGravity(btVector3(0, 0, -10));
 	}
 
-	virtual void exitPhysics()
+	void exitPhysics() override
 	{
 		m_robotSim.disconnect();
 	}
-	virtual void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 		m_robotSim.stepSimulation();
 	}
 
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
+	bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) override
 	{
 		return m_robotSim.mouseMoveCallback(x, y);
 	}
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y, ButtonFlags flags) override
+	bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags) override
 	{
 		return m_robotSim.mouseButtonCallback(button, state, x, y);
-	}
-	virtual bool keyboardCallback(int key, int state)
-	{
-		return false;
 	}
 
 	CameraResetInfo cameraResetInfo() const override

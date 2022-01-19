@@ -30,7 +30,7 @@ struct BasicExample : public CommonRigidBodyBase
 	{
 	}
 	virtual ~BasicExample() {}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	void renderScene() override;
 	void resetCamera()
 	{

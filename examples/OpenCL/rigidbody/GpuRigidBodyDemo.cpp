@@ -110,7 +110,7 @@ void GpuRigidBodyDemo::setupScene()
 {
 }
 
-void GpuRigidBodyDemo::initPhysics()
+void GpuRigidBodyDemo::initPhysics(CommonCameraInterface *camera)
 {
 	initCL(gPreferredOpenCLDeviceIndex, gPreferredOpenCLPlatformIndex);
 

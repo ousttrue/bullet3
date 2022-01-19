@@ -459,10 +459,10 @@ public:
 		m_timeSeriesCanvas1 = 0;
 	}
 
-	virtual void initPhysics()
+	void initPhysics(CommonCameraInterface* camera) override
 	{
 	}
-	virtual void exitPhysics()
+	void exitPhysics() override
 	{
 	}
 
@@ -471,7 +471,7 @@ public:
 	void tutorialCollisionUpdate(float deltaTime, LWContactPoint& contact);
 	void tutorialSolveContactConstraintUpdate(float deltaTime, LWContactPoint& contact);
 
-	virtual void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 		switch (m_tutorialIndex)
 		{

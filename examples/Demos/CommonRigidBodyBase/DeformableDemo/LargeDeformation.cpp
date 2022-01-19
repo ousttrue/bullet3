@@ -48,13 +48,11 @@ public:
 	{
 		m_linearElasticity = 0;
 	}
-	virtual ~LargeDeformation()
+	~LargeDeformation() override
 	{
 	}
-	void initPhysics();
-
-	void exitPhysics();
-
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics() override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -66,8 +64,7 @@ public:
 		info.camPosZ = 0;
 		return info;
 	}
-
-	void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 		m_linearElasticity->setPoissonRatio(nu);
 		m_linearElasticity->setYoungsModulus(E);
@@ -77,7 +74,7 @@ public:
 	}
 };
 
-void LargeDeformation::initPhysics()
+void LargeDeformation::initPhysics(CommonCameraInterface* camera)
 {
 	m_guiHelper->setUpAxis(1);
 

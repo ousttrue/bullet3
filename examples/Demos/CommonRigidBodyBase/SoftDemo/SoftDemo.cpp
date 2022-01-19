@@ -76,11 +76,9 @@ public:
 	btCollisionAlgorithmCreateFunc* m_boxBoxCF;
 
 public:
-	void initPhysics();
-
-	void exitPhysics();
-
-	virtual void resetCamera()
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics() override;
+	void resetCamera()
 	{
 		//@todo depends on current_demo?
 		CameraResetInfo info;
@@ -248,7 +246,7 @@ void SoftDemo::createStack(btCollisionShape* boxShape, float halfCubeSize, int s
 ///for mouse picking
 void pickingPreTickCallback(btDynamicsWorld* world, btScalar timeStep)
 {
-	CommonCameraInterface *camera = {};
+	CommonCameraInterface* camera = {};
 	SoftDemo* softDemo = (SoftDemo*)world->getWorldUserInfo();
 
 	if (softDemo->m_drag)
@@ -2003,7 +2001,7 @@ void	SoftDemo::mouseFunc(int button, int state, int x, int y)
 }
 #endif
 
-void SoftDemo::initPhysics()
+void SoftDemo::initPhysics(CommonCameraInterface* camera)
 {
 	btVector3 worldAabbMin(-1000, -1000, -1000);
 	btVector3 worldAabbMax(1000, 1000, 1000);

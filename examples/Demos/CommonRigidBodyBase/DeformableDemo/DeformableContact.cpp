@@ -35,12 +35,11 @@ public:
 		: CommonDeformableBodyBase(helper)
 	{
 	}
-	virtual ~DeformableContact()
+	~DeformableContact() override
 	{
 	}
-	void initPhysics();
-
-	void exitPhysics();
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics()override;
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -51,7 +50,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = -3;
 		info.camPosZ = 0;
-        return info;
+		return info;
 	}
 
 	void stepSimulation(float deltaTime)
@@ -61,7 +60,7 @@ public:
 	}
 };
 
-void DeformableContact::initPhysics()
+void DeformableContact::initPhysics(CommonCameraInterface* camera)
 {
 	m_guiHelper->setUpAxis(1);
 

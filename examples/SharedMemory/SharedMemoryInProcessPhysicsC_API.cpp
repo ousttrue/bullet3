@@ -9,6 +9,7 @@
 #include "PhysicsServerExampleBullet2.h"
 #include <CommonGUIHelperInterface.h>
 #include <CommonExampleInterface.h>
+#include <CommonRenderInterface.h>
 #include "InProcessMemory.h"
 #include "RemoteGUIHelper.h"
 
@@ -96,8 +97,6 @@ B3_SHARED_API b3PhysicsClientHandle b3CreateInProcessPhysicsServerAndConnectMain
 	return (b3PhysicsClientHandle)cl;
 }
 
-
-
 class InProcessPhysicsClientSharedMemory : public PhysicsClientSharedMemory
 {
 	btInProcessExampleBrowserInternalData* m_data;
@@ -128,8 +127,6 @@ public:
 		free(m_newargv);
 	}
 };
-
-
 
 B3_SHARED_API b3PhysicsClientHandle b3CreateInProcessPhysicsServerAndConnect(int argc, char* argv[])
 {
@@ -162,7 +159,7 @@ public:
 		{
 			m_guiHelper = guiHelper;
 		}
-		
+
 		m_sharedMem = 0;
 		CommonExampleOptions options(guiHelper);
 
@@ -174,7 +171,7 @@ public:
 
 		options.m_skipGraphicsUpdate = skipGraphicsUpdate;
 		m_physicsServerExample = PhysicsServerCreateFuncBullet2(options);
-		m_physicsServerExample->initPhysics();
+		m_physicsServerExample->initPhysics(m_guiHelper->getRenderInterface()->getActiveCamera());
 		//m_physicsServerExample->resetCamera();
 		setSharedMemoryInterface(m_sharedMem);
 		m_clock.reset();
@@ -221,11 +218,11 @@ public:
 	{
 		m_physicsServerExample->physicsDebugDraw(debugDrawMode);
 	}
-	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)
+	bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y)
 	{
 		return m_physicsServerExample->mouseMoveCallback(camera, x, y);
 	}
-	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y)
+	bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y)
 	{
 		return m_physicsServerExample->mouseButtonCallback(camera, button, state, x, y, ButtonFlagsNone);
 	}
@@ -322,7 +319,7 @@ B3_SHARED_API b3PhysicsClientHandle b3CreateInProcessPhysicsServerFromExistingEx
 {
 	bool ownsGuiHelper = true;
 	GUIHelperInterface* guiHelper = new RemoteGUIHelperTCP(hostName, port);
-	
+
 	bool useInprocessMemory = true;
 	bool skipGraphicsUpdate = false;
 	InProcessPhysicsClientExistingExampleBrowser* cl = new InProcessPhysicsClientExistingExampleBrowser(guiHelper, useInprocessMemory, skipGraphicsUpdate, ownsGuiHelper);
@@ -334,15 +331,11 @@ B3_SHARED_API b3PhysicsClientHandle b3CreateInProcessPhysicsServerFromExistingEx
 	return (b3PhysicsClientHandle)cl;
 }
 
-
-
 //backward compatiblity
 B3_SHARED_API b3PhysicsClientHandle b3CreateInProcessPhysicsServerFromExistingExampleBrowserAndConnect2(void* guiHelperPtr)
 {
 	return b3CreateInProcessPhysicsServerFromExistingExampleBrowserAndConnect3(guiHelperPtr, SHARED_MEMORY_KEY);
 }
-
-
 
 #include "SharedMemoryCommands.h"
 #include "PhysicsClientSharedMemory.h"
@@ -354,7 +347,7 @@ class InProcessGraphicsServerSharedMemory : public PhysicsClientSharedMemory
 	btInProcessExampleBrowserInternalData* m_data2;
 	char** m_newargv;
 	SharedMemoryCommand m_command;
-	
+
 	GraphicsSharedMemoryBlock* m_testBlock1;
 	SharedMemoryInterface* m_sharedMemory;
 
@@ -369,13 +362,13 @@ public:
 		char* t1 = (char*)"--start_demo_name=Graphics Server";
 		char portArg[1024];
 		sprintf(portArg, "--port=%d", port);
-		
+
 		m_newargv[1] = t1;
 		m_newargv[2] = portArg;
 		bool useInProcessMemory = false;
 		m_data2 = btCreateInProcessExampleBrowser(newargc, m_newargv, useInProcessMemory);
 		SharedMemoryInterface* shMem = btGetSharedMemoryInterface(m_data2);
-		
+
 		setSharedMemoryInterface(shMem);
 		///////////////////
 
@@ -385,18 +378,17 @@ public:
 		m_sharedMemory = new PosixSharedMemory();
 #endif
 
-			/// server always has to create and initialize shared memory
+		/// server always has to create and initialize shared memory
 		bool allowCreation = false;
 		m_testBlock1 = (GraphicsSharedMemoryBlock*)m_sharedMemory->allocateSharedMemory(
 			GRAPHICS_SHARED_MEMORY_KEY, GRAPHICS_SHARED_MEMORY_SIZE, allowCreation);
-
 	}
 
 	virtual ~InProcessGraphicsServerSharedMemory()
 	{
 		m_sharedMemory->releaseSharedMemory(GRAPHICS_SHARED_MEMORY_KEY, GRAPHICS_SHARED_MEMORY_SIZE);
 		delete m_sharedMemory;
-		
+
 		setSharedMemoryInterface(0);
 		btShutDownExampleBrowser(m_data2);
 		free(m_newargv);
@@ -422,20 +414,16 @@ public:
 	{
 		switch (command.m_type)
 		{
-		default:
-		{
-		}
+			default:
+			{
+			}
 		}
 		return true;
 	}
-
-
 };
-
 
 class InProcessGraphicsServerSharedMemoryMainThread : public PhysicsClientSharedMemory
 {
-	
 	btInProcessExampleBrowserMainThreadInternalData* m_data2;
 	char** m_newargv;
 	SharedMemoryCommand m_command;
@@ -452,7 +440,6 @@ public:
 		char* t0 = (char*)"--unused";
 		m_newargv[0] = t0;
 
-		
 		char* t1 = (char*)"--start_demo_name=Graphics Server";
 		m_newargv[1] = t1;
 		char portArg[1024];
@@ -510,9 +497,9 @@ public:
 	{
 		switch (command.m_type)
 		{
-		default:
-		{
-		}
+			default:
+			{
+			}
 		}
 		return true;
 	}
@@ -547,10 +534,7 @@ public:
 
 		return stat;
 	}
-
 };
-
-
 
 B3_SHARED_API b3PhysicsClientHandle b3CreateInProcessGraphicsServerAndConnectSharedMemory(int port)
 {

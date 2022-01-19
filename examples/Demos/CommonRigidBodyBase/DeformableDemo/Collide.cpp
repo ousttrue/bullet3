@@ -52,10 +52,8 @@ public:
 	virtual ~Collide()
 	{
 	}
-	void initPhysics();
-
-	void exitPhysics();
-
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics() override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -67,7 +65,7 @@ public:
 		info.camPosZ = 0;
 		return info;
 	}
-
+	
 	void Ctor_RbUpStack()
 	{
 		float mass = 0.5;
@@ -79,7 +77,7 @@ public:
 		rb->setLinearVelocity(btVector3(0, +COLLIDING_VELOCITY, 0));
 	}
 
-	void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 		m_linearElasticity->setPoissonRatio(nu);
 		m_linearElasticity->setYoungsModulus(E);
@@ -89,7 +87,7 @@ public:
 	}
 };
 
-void Collide::initPhysics()
+void Collide::initPhysics(CommonCameraInterface* camera)
 {
 	m_guiHelper->setUpAxis(1);
 

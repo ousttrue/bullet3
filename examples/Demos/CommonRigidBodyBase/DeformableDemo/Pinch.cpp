@@ -43,9 +43,8 @@ public:
 	virtual ~Pinch()
 	{
 	}
-	void initPhysics();
-
-	void exitPhysics();
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -59,7 +58,7 @@ public:
 		return info;
 	}
 
-	void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 		//use a smaller internal timestep, there are stability issues
 		float internalTimeStep = 1. / 240.f;
@@ -188,7 +187,7 @@ void dynamics(btScalar time, btDeformableMultiBodyDynamicsWorld* world)
 	rb1->setFriction(20);
 }
 
-void Pinch::initPhysics()
+void Pinch::initPhysics(CommonCameraInterface* camera)
 {
 	m_guiHelper->setUpAxis(1);
 

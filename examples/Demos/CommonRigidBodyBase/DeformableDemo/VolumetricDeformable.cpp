@@ -51,13 +51,9 @@ public:
 		m_pickingForceDampingStiffness = 0;
 		m_maxPickingForce = 1e10;  // allow large picking force with implicit scheme.
 	}
-	virtual ~VolumetricDeformable()
-	{
-	}
-	void initPhysics();
-
-	void exitPhysics();
-
+	~VolumetricDeformable() override {}
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics() override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -69,8 +65,7 @@ public:
 		info.camPosZ = 0;
 		return info;
 	}
-
-	void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 		m_linearElasticity->setPoissonRatio(nu);
 		m_linearElasticity->setYoungsModulus(E);
@@ -135,7 +130,7 @@ public:
 	}
 };
 
-void VolumetricDeformable::initPhysics()
+void VolumetricDeformable::initPhysics(CommonCameraInterface* camera)
 {
 	m_guiHelper->setUpAxis(1);
 

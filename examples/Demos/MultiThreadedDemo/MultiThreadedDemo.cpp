@@ -140,7 +140,7 @@ public:
 #endif
 	}
 
-	virtual void initPhysics() BT_OVERRIDE;
+	void initPhysics(CommonCameraInterface* camera) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -167,7 +167,7 @@ MultiThreadedDemo::MultiThreadedDemo(struct GUIHelperInterface* helper)
 	helper->setUpAxis(kUpAxis);
 }
 
-void MultiThreadedDemo::initPhysics()
+void MultiThreadedDemo::initPhysics(CommonCameraInterface* camera)
 {
 	createEmptyDynamicsWorld();
 

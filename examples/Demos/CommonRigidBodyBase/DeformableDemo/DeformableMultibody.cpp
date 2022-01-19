@@ -46,9 +46,8 @@ public:
 	{
 	}
 
-	void initPhysics();
-
-	void exitPhysics();
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -59,17 +58,17 @@ public:
 		info.camPosX = 0;
 		info.camPosY = -10;
 		info.camPosZ = 0;
-        return info;
+		return info;
 	}
 
-	virtual void stepSimulation(float deltaTime);
+	virtual void stepSimulation(float deltaTime) override;
 
 	btMultiBody* createFeatherstoneMultiBody_testMultiDof(class btMultiBodyDynamicsWorld* world, int numLinks, const btVector3& basePosition, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents, bool spherical = false, bool floating = false);
 
 	void addColliders_testMultiDof(btMultiBody* pMultiBody, btMultiBodyDynamicsWorld* pWorld, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents);
 };
 
-void DeformableMultibody::initPhysics()
+void DeformableMultibody::initPhysics(CommonCameraInterface* camera)
 {
 	m_guiHelper->setUpAxis(1);
 

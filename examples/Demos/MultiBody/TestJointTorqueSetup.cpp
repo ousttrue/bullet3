@@ -19,7 +19,7 @@ struct TestJointTorqueSetup : public CommonMultiBodyBase
 public:
 	TestJointTorqueSetup(struct GUIHelperInterface* helper) : CommonMultiBodyBase(helper) {}
 	~TestJointTorqueSetup() override {}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	virtual void stepSimulation(float deltaTime);
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -34,7 +34,7 @@ public:
 	}
 };
 
-void TestJointTorqueSetup::initPhysics()
+void TestJointTorqueSetup::initPhysics(CommonCameraInterface *camera)
 {
 	int upAxis = 1;
 

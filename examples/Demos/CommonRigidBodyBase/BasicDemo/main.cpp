@@ -17,6 +17,7 @@ subject to the following restrictions:
 
 #include <CommonExampleInterface.h>
 #include <CommonGUIHelperInterface.h>
+#include <CommonRenderInterface.h>
 #include "BulletCollision/CollisionDispatch/btCollisionObject.h"
 #include "BulletCollision/CollisionShapes/btCollisionShape.h"
 #include "BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
@@ -31,7 +32,7 @@ int main(int argc, char* argv[])
 	CommonExampleOptions options(&noGfx);
 	CommonExampleInterface* example = BasicExampleCreateFunc(options);
 
-	example->initPhysics();
+	example->initPhysics(noGfx.getRenderInterface()->getActiveCamera());
 	example->stepSimulation(1.f / 60.f);
 	example->exitPhysics();
 

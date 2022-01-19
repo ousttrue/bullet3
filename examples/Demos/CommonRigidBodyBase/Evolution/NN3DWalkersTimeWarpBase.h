@@ -250,7 +250,7 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 	{
 	}
 
-	void initPhysics() override
+	void initPhysics(CommonCameraInterface *camera) override
 	{  // initialize the demo
 
 		setupBasicParamInterface();  // setup adjustable sliders and buttons for parameters

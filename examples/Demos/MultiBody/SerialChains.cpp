@@ -28,7 +28,7 @@ public:
 	SerialChains(GUIHelperInterface* helper);
 	virtual ~SerialChains();
 
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -73,7 +73,7 @@ void SerialChains::stepSimulation(float deltaTime)
 	m_dynamicsWorld->stepSimulation(deltaTime, 10, internalTimeStep);
 }
 
-void SerialChains::initPhysics()
+void SerialChains::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

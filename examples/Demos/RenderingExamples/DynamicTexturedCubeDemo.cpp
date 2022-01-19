@@ -67,16 +67,12 @@ public:
 		delete m_tinyVrGUI;
 	}
 
-	virtual void physicsDebugDraw(int debugDrawMode)
+	void initPhysics(CommonCameraInterface* camera) override
 	{
 	}
-	virtual void initPhysics()
+	void exitPhysics() override
 	{
 	}
-	virtual void exitPhysics()
-	{
-	}
-
 	void stepSimulation(float deltaTime) override
 	{
 		static b3Transform tr = b3Transform::getIdentity();

@@ -38,8 +38,7 @@ int main(int argc, char* argv[])
 
 	example->processCommandLineArgs(argc, argv);
 
-	example->initPhysics();
-
+	example->initPhysics(camera);
 	gui.resetCamera(example->cameraResetInfo());
 	// if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
 	// {
@@ -65,8 +64,8 @@ int main(int argc, char* argv[])
 		app.m_instancingRenderer->updateCamera(app.getUpAxis());
 		if (auto world = example->getDynamicsWorld())
 		{
-				gui.syncPhysicsToGraphics(world);
-				gui.render(world);
+			gui.syncPhysicsToGraphics(world);
+			gui.render(world);
 		}
 
 		DrawGridData dg;

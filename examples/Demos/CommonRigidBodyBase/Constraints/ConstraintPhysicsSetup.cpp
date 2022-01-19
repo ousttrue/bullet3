@@ -8,7 +8,7 @@ struct ConstraintPhysicsSetup : public CommonRigidBodyBase
 {
 	ConstraintPhysicsSetup(struct GUIHelperInterface* helper);
 	virtual ~ConstraintPhysicsSetup();
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -84,7 +84,7 @@ void ConstraintPhysicsSetup::stepSimulation(float deltaTime)
 	}
 }
 
-void ConstraintPhysicsSetup::initPhysics()
+void ConstraintPhysicsSetup::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

@@ -43,10 +43,7 @@ public:
 	{
 	}
 
-	virtual void physicsDebugDraw(int debugDrawMode)
-	{
-	}
-	virtual void initPhysics()
+	void initPhysics(CommonCameraInterface* camera) override
 	{
 		int mode = eCONNECT_EXISTING_EXAMPLE_BROWSER;
 		m_robotSim.setGuiHelper(m_guiHelper);

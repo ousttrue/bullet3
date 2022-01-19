@@ -1,7 +1,6 @@
 #include "ExampleEntries.h"
 
 #include "LinearMath/btAlignedObjectArray.h"
-#include <EmptyExample.h>
 // CommonRigidBodyBase
 #include <Heightfield/HeightfieldExample.h>
 #include <RenderingExamples/RenderInstancingDemo.h>

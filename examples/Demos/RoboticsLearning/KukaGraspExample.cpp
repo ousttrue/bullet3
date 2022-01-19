@@ -56,7 +56,7 @@ public:
 	{
 	}
 
-	virtual void initPhysics()
+	void initPhysics(CommonCameraInterface* camera) override
 	{
 		///create some graphics proxy for the tracking target
 		///the endeffector tries to track it using Inverse Kinematics

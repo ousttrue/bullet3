@@ -70,7 +70,7 @@ struct KinematicMultiBodyExample : public CommonMultiBodyBase
 	}
 
 	virtual ~KinematicMultiBodyExample() {}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -85,7 +85,7 @@ struct KinematicMultiBodyExample : public CommonMultiBodyBase
 	}
 };
 
-void KinematicMultiBodyExample::initPhysics()
+void KinematicMultiBodyExample::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

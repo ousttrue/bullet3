@@ -15,7 +15,7 @@ struct TimeSeriesExample : public CommonExampleInterface
 
 	TimeSeriesExample(struct CommonGraphicsApp* app);
 	virtual ~TimeSeriesExample();
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	virtual void exitPhysics();
 	virtual void stepSimulation(float deltaTime);
 	virtual void physicsDebugDraw(int debugFlags);
@@ -45,7 +45,7 @@ TimeSeriesExample::~TimeSeriesExample()
 	delete m_internalData;
 }
 
-void TimeSeriesExample::initPhysics()
+void TimeSeriesExample::initPhysics(CommonCameraInterface *camera)
 {
 	//request a visual bitma/texture we can render to
 

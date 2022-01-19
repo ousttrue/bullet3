@@ -36,7 +36,7 @@ public:
 		m_app->m_renderer->writeTransforms();
 	}
 	~CoordinateSystemDemo() override{}
-	void initPhysics() override{}
+	void initPhysics(CommonCameraInterface *camera) override{}
 	void exitPhysics() override{}
 	void stepSimulation(float deltaTime) override
 	{

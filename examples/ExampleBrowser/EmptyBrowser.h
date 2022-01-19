@@ -1,7 +1,7 @@
 #ifndef EMPTY_BROWSER
 #define EMPTY_BROWSER
 
-#include <EmptyExample.h>
+#include <CommonExampleInterface.h>
 #include <CommonGUIInterface.h>
 
 extern int gSharedMemoryKey;

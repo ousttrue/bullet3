@@ -89,8 +89,8 @@ public:
 
 	virtual void physicsDebugDraw(int debugFlags);
 
-	void initPhysics();
-	void exitPhysics();
+	void initPhysics(CommonCameraInterface *camera)override;
+	void exitPhysics()override;
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -199,7 +199,7 @@ Hinge2Vehicle::~Hinge2Vehicle()
 	//exitPhysics();
 }
 
-void Hinge2Vehicle::initPhysics()
+void Hinge2Vehicle::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 
@@ -393,7 +393,7 @@ void Hinge2Vehicle::displayCallback(void)
 void Hinge2Vehicle::clientResetScene()
 {
 	exitPhysics();
-	initPhysics();
+	initPhysics({});
 }
 
 void Hinge2Vehicle::resetForklift()

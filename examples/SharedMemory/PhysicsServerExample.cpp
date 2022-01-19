@@ -553,7 +553,7 @@ ATTRIBUTE_ALIGNED16(class)
 MultithreadedDebugDrawer : public btIDebugDraw
 {
 	struct GUIHelperInterface* m_guiHelper;
-	int m_debugMode;
+	int m_debugMode = 0;
 
 	btAlignedObjectArray<btAlignedObjectArray<unsigned int> > m_sortedIndices;
 	btAlignedObjectArray<btAlignedObjectArray<btVector3FloatData> > m_sortedLines;
@@ -577,14 +577,7 @@ public:
 			}
 		}
 	}
-	MultithreadedDebugDrawer(GUIHelperInterface * guiHelper)
-		: m_guiHelper(guiHelper),
-		  m_debugMode(0)
-	{
-	}
-	virtual ~MultithreadedDebugDrawer()
-	{
-	}
+	MultithreadedDebugDrawer(GUIHelperInterface * guiHelper) : m_guiHelper(guiHelper) {}
 	virtual void drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 	{
 		{
@@ -1470,30 +1463,18 @@ class PhysicsServerExample : public SharedMemoryCommon
 	int m_canvasDepthIndex;
 	int m_canvasSegMaskIndex;
 
-	//	int m_options;
-
-#ifdef BT_ENABLE_VR
-	TinyVRGui* m_tinyVrGui;
-#endif
-
 	int m_renderedFrames;
 
 public:
 	PhysicsServerExample(MultiThreadedOpenGLGuiHelper* helper, CommandProcessorCreationInterface* commandProcessorCreator, SharedMemoryInterface* sharedMem = 0, int options = 0);
-
-	virtual ~PhysicsServerExample();
-
-	virtual void initPhysics();
-
-	virtual void stepSimulation(float deltaTime);
-
-	virtual void updateGraphics();
-
+	~PhysicsServerExample() override;
+	void initPhysics(CommonCameraInterface* camera) override;
+	void stepSimulation(float deltaTime) override;
+	void updateGraphics() override;
 	void enableCommandLogging()
 	{
 		m_physicsServer.enableCommandLogging(true, "BulletPhysicsCommandLog.bin");
 	}
-
 	void replayFromLogFile()
 	{
 		m_replay = true;
@@ -1865,7 +1846,7 @@ bool PhysicsServerExample::isConnected()
 	return m_isConnected;
 }
 
-void PhysicsServerExample::initPhysics()
+void PhysicsServerExample::initPhysics(CommonCameraInterface* camera)
 {
 	///for this testing we use Z-axis up
 	int upAxis = 2;

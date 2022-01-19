@@ -45,15 +45,8 @@ public:
 		: CommonRigidBodyBase(helper)
 	{
 	}
-
-	void initPhysics();
-
-	void exitPhysics();
-
-	virtual ~MotorDemo()
-	{
-	}
-
+	void initPhysics(CommonCameraInterface *camera)override;
+	void exitPhysics()override;
 	void spawnTestRig(const btVector3& startOffset, bool bFixed);
 
 	//	virtual void keyboardCallback(unsigned char key, int x, int y);
@@ -270,7 +263,7 @@ void motorPreTickCallback(btDynamicsWorld* world, btScalar timeStep)
 	motorDemo->setMotorTargets(timeStep);
 }
 
-void MotorDemo::initPhysics()
+void MotorDemo::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

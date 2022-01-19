@@ -20,7 +20,7 @@ struct MultiBodySoftContact : public CommonMultiBodyBase
 public:
 	MultiBodySoftContact(struct GUIHelperInterface* helper) : CommonMultiBodyBase(helper) {}
 	~MultiBodySoftContact() override {}
-	virtual void initPhysics() override;
+	void initPhysics(CommonCameraInterface *camera) override;
 	virtual void stepSimulation(float deltaTime) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -35,7 +35,7 @@ public:
 	}
 };
 
-void MultiBodySoftContact::initPhysics()
+void MultiBodySoftContact::initPhysics(CommonCameraInterface *camera)
 {
 	int upAxis = 2;
 

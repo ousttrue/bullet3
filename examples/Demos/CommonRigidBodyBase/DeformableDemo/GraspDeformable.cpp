@@ -65,13 +65,9 @@ public:
 		: CommonDeformableBodyBase(helper)
 	{
 	}
-	virtual ~GraspDeformable()
-	{
-	}
-	void initPhysics();
-
-	void exitPhysics();
-
+	~GraspDeformable() override {}
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics() override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -81,7 +77,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = -0.1;
 		info.camPosZ = 0;
-        return info;
+		return info;
 	}
 
 	btMultiBody* createFeatherstoneMultiBody(btMultiBodyDynamicsWorld* pWorld, const btVector3& basePosition, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents, bool floating);
@@ -167,7 +163,7 @@ public:
 	virtual void removePickingConstraint() {}
 };
 
-void GraspDeformable::initPhysics()
+void GraspDeformable::initPhysics(CommonCameraInterface* camera)
 {
 	m_guiHelper->setUpAxis(1);
 

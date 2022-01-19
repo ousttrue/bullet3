@@ -177,7 +177,7 @@ public:
 	{
 	}
 
-	virtual void initPhysics()
+	void initPhysics(CommonCameraInterface* camera) override
 	{
 		b3Printf("initPhysics");
 

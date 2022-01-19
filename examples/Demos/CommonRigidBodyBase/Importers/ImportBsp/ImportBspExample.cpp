@@ -46,7 +46,7 @@ public:
 
 	virtual ~BspDemo();
 
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 
 	void initPhysics(const char* bspfilename);
 
@@ -107,7 +107,7 @@ BspDemo::~BspDemo()
 	exitPhysics();  //will delete all default data
 }
 
-void BspDemo::initPhysics()
+void BspDemo::initPhysics(CommonCameraInterface *camera)
 {
 	const char* bspfilename = "BspDemo.bsp";
 

@@ -385,7 +385,7 @@ private:
 
 		if (sCurrentDemo)
 		{
-			sCurrentDemo->initPhysics();
+			sCurrentDemo->initPhysics(s_guiHelper->getRenderInterface()->getActiveCamera());
 			s_guiHelper->resetCamera(sCurrentDemo->cameraResetInfo());
 		}
 	}
@@ -423,7 +423,7 @@ private:
 				b3Printf("Selected demo: %s", gAllExamples->getExampleName(demoIndex));
 				m_gwen->SetDescription(gAllExamples->getExampleDescription(demoIndex));
 
-				sCurrentDemo->initPhysics();
+				sCurrentDemo->initPhysics(s_guiHelper->getRenderInterface()->getActiveCamera());
 				if (resetCamera)
 				{
 					s_guiHelper->resetCamera(sCurrentDemo->cameraResetInfo());

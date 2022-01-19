@@ -28,7 +28,7 @@ struct SimpleBoxExample : public CommonRigidBodyBase
 	{
 	}
 	virtual ~SimpleBoxExample() {}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -42,7 +42,7 @@ struct SimpleBoxExample : public CommonRigidBodyBase
 	}
 };
 
-void SimpleBoxExample::initPhysics()
+void SimpleBoxExample::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

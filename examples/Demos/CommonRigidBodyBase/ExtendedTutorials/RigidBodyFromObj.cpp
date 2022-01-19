@@ -35,7 +35,7 @@ struct RigidBodyFromObjExample : public CommonRigidBodyBase
 	{
 	}
 	virtual ~RigidBodyFromObjExample() {}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -49,7 +49,7 @@ struct RigidBodyFromObjExample : public CommonRigidBodyBase
 	}
 };
 
-void RigidBodyFromObjExample::initPhysics()
+void RigidBodyFromObjExample::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

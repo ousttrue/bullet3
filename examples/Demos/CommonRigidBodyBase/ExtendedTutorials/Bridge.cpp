@@ -29,7 +29,7 @@ struct BridgeExample : public CommonRigidBodyBase
 	{
 	}
 	virtual ~BridgeExample() {}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 		CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -43,7 +43,7 @@ struct BridgeExample : public CommonRigidBodyBase
 	}
 };
 
-void BridgeExample::initPhysics()
+void BridgeExample::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 

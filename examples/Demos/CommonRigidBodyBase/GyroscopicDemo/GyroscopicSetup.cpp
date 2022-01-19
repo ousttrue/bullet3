@@ -10,7 +10,7 @@ struct GyroscopicSetup : public CommonRigidBodyBase
 	virtual ~GyroscopicSetup()
 	{
 	}
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 
 	virtual void physicsDebugDraw(int debugFlags);
 
@@ -44,7 +44,7 @@ GyroscopicSetup::GyroscopicSetup(struct GUIHelperInterface* helper)
 {
 }
 
-void GyroscopicSetup::initPhysics()
+void GyroscopicSetup::initPhysics(CommonCameraInterface *camera)
 {
 	m_guiHelper->setUpAxis(1);
 	m_physics = new Physics;

@@ -135,9 +135,8 @@ public:
 		delete m_timeSeriesCanvas;
 	}
 
-	void initPhysics();
-
-	virtual void exitPhysics();
+	void initPhysics(CommonCameraInterface *camera)override;
+	void exitPhysics()override;
 
 	void spawnWalker(int index, const btVector3& startOffset, bool bFixed);
 
@@ -593,7 +592,7 @@ struct WalkerFilterCallback : public btOverlapFilterCallback
 	}
 };
 
-void NN3DWalkersExample::initPhysics()
+void NN3DWalkersExample::initPhysics(CommonCameraInterface *camera)
 {
 	setupBasicParamInterface();  // parameter interface to use timewarp
 

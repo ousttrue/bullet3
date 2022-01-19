@@ -37,9 +37,8 @@ public:
 	virtual ~DeformableSelfCollision()
 	{
 	}
-	void initPhysics();
-
-	void exitPhysics();
+	void initPhysics(CommonCameraInterface* camera) override;
+	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -50,10 +49,10 @@ public:
 		info.camPosX = 0;
 		info.camPosY = -1.0;
 		info.camPosZ = 0;
-        return info;
+		return info;
 	}
 
-	void stepSimulation(float deltaTime)
+	void stepSimulation(float deltaTime) override
 	{
 		float internalTimeStep = 1. / 240.f;
 		m_dynamicsWorld->stepSimulation(deltaTime, 4, internalTimeStep);
@@ -62,7 +61,7 @@ public:
 	void addCloth(const btVector3& origin);
 };
 
-void DeformableSelfCollision::initPhysics()
+void DeformableSelfCollision::initPhysics(CommonCameraInterface* camera)
 {
 	m_guiHelper->setUpAxis(1);
 	///collision configuration contains default setup for memory, collision setup

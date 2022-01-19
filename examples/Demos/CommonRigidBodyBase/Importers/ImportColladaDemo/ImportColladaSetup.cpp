@@ -33,7 +33,7 @@ public:
 	ImportColladaSetup(struct GUIHelperInterface* helper);
 	virtual ~ImportColladaSetup();
 
-	virtual void initPhysics();
+	void initPhysics(CommonCameraInterface *camera) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
 		CameraResetInfo info;
@@ -63,7 +63,7 @@ static int ColladaGraphicsInstanceSortfnc(const ColladaGraphicsInstance& a, cons
 	return 0;
 }
 
-void ImportColladaSetup::initPhysics()
+void ImportColladaSetup::initPhysics(CommonCameraInterface *camera)
 {
 	int upAxis = 1;
 	m_guiHelper->setUpAxis(upAxis);
