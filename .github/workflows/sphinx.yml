@@ -3,7 +3,7 @@ name: Sphinx
 on:
   push:
     branches:
-      - master
+      - custom
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
       - run: sudo apt install pandoc
       - run: sudo apt install graphviz
       - run: pip install -r requirements.txt
-      - run: sphinx-build src public
+      - run: sphinx-build note public
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
