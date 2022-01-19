@@ -57,7 +57,6 @@ void ChainExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperIn
 
 	///create a few basic rigid bodies
 	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
@@ -71,8 +70,6 @@ void ChainExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperIn
 		//create a few dynamic rigidbodies
 		// Re-using the same collision is better for memory usage and performance
 		btBoxShape* colShape = m_physics->createBoxShape(btVector3(1, 1, 0.25));
-
-		m_physics->m_collisionShapes.push_back(colShape);
 
 		/// Create Dynamic Objects
 		btTransform startTransform;

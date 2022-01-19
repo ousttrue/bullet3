@@ -21,7 +21,6 @@ void BasicExample::initWorld(Physics* physics)
 	{
 		///create a few basic rigid bodies
 		btBoxShape* groundShape = physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-		physics->m_collisionShapes.push_back(groundShape);
 
 		btTransform groundTransform;
 		groundTransform.setIdentity();
@@ -31,26 +30,23 @@ void BasicExample::initWorld(Physics* physics)
 	}
 
 	{
-		//create a few dynamic rigidbodies
+		// create a few dynamic rigidbodies
 		// Re-using the same collision is better for memory usage and performance
-
 		btBoxShape* colShape = physics->createBoxShape(btVector3(.1, .1, .1));
-
-		//btCollisionShape* colShape = new btSphereShape(btScalar(1.));
-		physics->m_collisionShapes.push_back(colShape);
 
 		/// Create Dynamic Objects
 		btTransform startTransform;
 		startTransform.setIdentity();
 
-		btScalar mass(1.f);
-
 		//rigidbody is dynamic if and only if mass is non zero, otherwise static
+		btScalar mass(1.f);
 		bool isDynamic = (mass != 0.f);
 
 		btVector3 localInertia(0, 0, 0);
 		if (isDynamic)
+		{
 			colShape->calculateLocalInertia(mass, localInertia);
+		}
 
 		for (int k = 0; k < ARRAY_SIZE_Y; k++)
 		{

@@ -176,7 +176,6 @@ void InclinedPlaneExample::initPhysics(CommonCameraInterface *camera, struct GUI
 
 	{  // create a static ground
 		btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-		m_physics->m_collisionShapes.push_back(groundShape);
 
 		btTransform groundTransform;
 		groundTransform.setIdentity();
@@ -188,7 +187,6 @@ void InclinedPlaneExample::initPhysics(CommonCameraInterface *camera, struct GUI
 
 	{  //create a static inclined plane
 		btBoxShape* inclinedPlaneShape = m_physics->createBoxShape(btVector3(btScalar(20.), btScalar(1.), btScalar(10.)));
-		m_physics->m_collisionShapes.push_back(inclinedPlaneShape);
 
 		btTransform startTransform;
 		startTransform.setIdentity();
@@ -211,8 +209,6 @@ void InclinedPlaneExample::initPhysics(CommonCameraInterface *camera, struct GUI
 
 	{  //create a cube above the inclined plane
 		btBoxShape* boxShape = m_physics->createBoxShape(btVector3(1, 1, 1));
-
-		m_physics->m_collisionShapes.push_back(boxShape);
 
 		btTransform startTransform;
 		startTransform.setIdentity();

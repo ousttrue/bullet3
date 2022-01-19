@@ -95,7 +95,6 @@ void KinematicRigidBodyExample::initPhysics(CommonCameraInterface *camera, struc
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(0, -halfExtentsY, 0));
-	m_physics->m_collisionShapes.push_back(groundShape);
 
 	{
 		btScalar mass(0.);
@@ -183,9 +182,6 @@ void KinematicRigidBodyExample::initPhysics(CommonCameraInterface *camera, struc
 		// Re-using the same collision is better for memory usage and performance
 
 		btBoxShape* colShape = m_physics->createBoxShape(btVector3(.1, .1, .1));
-
-		//btCollisionShape* colShape = new btSphereShape(btScalar(1.));
-		m_physics->m_collisionShapes.push_back(colShape);
 
 		/// Create Dynamic Objects
 		btTransform startTransform;

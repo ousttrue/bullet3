@@ -72,11 +72,6 @@ void RigidBodySoftContact::initPhysics(CommonCameraInterface *camera, struct GUI
 	///create a few basic rigid bodies
 	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
 
-	//groundShape->initializePolyhedralFeatures();
-	//	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),50);
-
-	m_physics->m_collisionShapes.push_back(groundShape);
-
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(0, -50, 0));

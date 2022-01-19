@@ -237,6 +237,7 @@ bool Physics::movePickedBody(const btVector3& rayFromWorld, const btVector3& ray
 btBoxShape* Physics::createBoxShape(const btVector3& halfExtents)
 {
 	btBoxShape* box = new btBoxShape(halfExtents);
+	m_collisionShapes.push_back(box);
 	return box;
 }
 

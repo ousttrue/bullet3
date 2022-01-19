@@ -63,7 +63,6 @@ void RigidBodyFromObjExample::initPhysics(CommonCameraInterface *camera, struct 
 
 	///create a few basic rigid bodies
 	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();

@@ -57,7 +57,6 @@ void BridgeExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperI
 
 	///create a few basic rigid bodies
 	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
@@ -81,7 +80,6 @@ void BridgeExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperI
 		btScalar halfBridgeWidth = bridgeWidth * 0.5f;
 
 		btBoxShape* colShape = m_physics->createBoxShape(btVector3(plankWidth, plankHeight, plankBreadth));
-		m_physics->m_collisionShapes.push_back(colShape);
 
 		/// Create Dynamic Objects
 		btTransform startTransform;

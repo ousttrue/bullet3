@@ -57,7 +57,6 @@ void CompoundBoxesExample::initPhysics(CommonCameraInterface *camera, struct GUI
 
 	///create a few basic rigid bodies
 	btBoxShape* groundShape = m_physics->createBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-	m_physics->m_collisionShapes.push_back(groundShape);
 
 	btTransform groundTransform;
 	groundTransform.setIdentity();
@@ -71,7 +70,6 @@ void CompoundBoxesExample::initPhysics(CommonCameraInterface *camera, struct GUI
 		//create a few dynamic rigidbodies
 		// Re-using the same collision is better for memory usage and performance
 		btBoxShape* cube = m_physics->createBoxShape(btVector3(0.5, 0.5, 0.5));
-		m_physics->m_collisionShapes.push_back(cube);
 
 		// create a new compound shape for making an L-beam from `cube`s
 		btCompoundShape* compoundShape = new btCompoundShape();
