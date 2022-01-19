@@ -26,7 +26,7 @@ extern bool gDisableDeactivation;
 struct FileImporterByExtension
 {
 	std::string m_extension;
-	CommonExampleInterface::CreateFunc* m_createFunc;
+	CommonExampleInterface::CreateFunc m_createFunc;
 };
 
 class OpenGLExampleBrowserInternalData
@@ -403,7 +403,7 @@ private:
 		}
 		deleteDemo();
 
-		CommonExampleInterface::CreateFunc* func = gAllExamples->getExampleCreateFunc(demoIndex);
+		auto func = gAllExamples->getExampleCreateFunc(demoIndex);
 		if (func)
 		{
 			if (s_parameterInterface)
@@ -417,7 +417,7 @@ private:
 
 			CommonExampleOptions options(s_guiHelper, option);
 			options.m_sharedMem = sSharedMem;
-			sCurrentDemo = (*func)(options);
+			sCurrentDemo = (func)(options);
 			if (sCurrentDemo)
 			{
 				b3Printf("Selected demo: %s", gAllExamples->getExampleName(demoIndex));
@@ -880,7 +880,7 @@ public:
 	}
 };
 
-void OpenGLExampleBrowser::registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc)
+void OpenGLExampleBrowser::registerFileImporter(const char* extension, const CommonExampleInterface::CreateFunc& createFunc)
 {
 	FileImporterByExtension fi;
 	fi.m_extension = extension;

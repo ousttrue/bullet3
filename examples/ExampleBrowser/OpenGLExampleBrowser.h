@@ -15,5 +15,5 @@ public:
 	void updateGraphics() override;
 	bool requestedExit() override;
 	void setSharedMemoryInterface(class SharedMemoryInterface* sharedMem) override;
-	void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc) override;
+	void registerFileImporter(const char* extension, const CommonExampleInterface::CreateFunc& createFunc) override;
 };

@@ -10,11 +10,11 @@
 int main(int argc, char* argv[])
 {
 	GlfwApp app("Bullet Standalone Example", 1024, 768, true);
-	OpenGLGuiHelper gui(&app, false);
-	auto camera = gui.getRenderInterface()->getActiveCamera();
-	CommonExampleOptions options(&gui);
+	// OpenGLGuiHelper gui(&app, false);
+	auto camera = app.m_instancingRenderer->getActiveCamera();
+	// CommonExampleOptions options(&gui);
 	std::unique_ptr<CommonExampleInterface> example;
-	example.reset(BasicExampleCreateFunc(options));
+	example.reset();
 
 	auto prevMouseButtonCallback = app.m_window->getMouseButtonCallback();
 	app.m_window->setMouseButtonCallback([&example, &prevMouseButtonCallback, camera](int button, int state, float x, float y, ButtonFlags flags)
@@ -38,8 +38,8 @@ int main(int argc, char* argv[])
 
 	example->processCommandLineArgs(argc, argv);
 
-	example->initPhysics(camera, &gui);
-	gui.resetCamera(example->cameraResetInfo());
+	example->initPhysics(camera, {});
+	// gui.resetCamera(example->cameraResetInfo());
 	// if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
 	// {
 	// 	m_app->m_renderer->getActiveCamera()->setCameraDistance(dist);
@@ -67,8 +67,8 @@ int main(int argc, char* argv[])
 		app.m_instancingRenderer->updateCamera(app.getUpAxis());
 		if (auto world = example->getDynamicsWorld())
 		{
-			gui.syncPhysicsToGraphics(world);
-			gui.render(world);
+			// gui.syncPhysicsToGraphics(world);
+			// gui.render(world);
 		}
 
 		DrawGridData dg;

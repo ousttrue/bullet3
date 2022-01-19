@@ -47,7 +47,7 @@ public:
 	{
 	}
 
-	virtual void registerFileImporter(const char* extension, CommonExampleInterface::CreateFunc* createFunc)
+	virtual void registerFileImporter(const char* extension, const CommonExampleInterface::CreateFunc& createFunc)
 	{
 	}
 };

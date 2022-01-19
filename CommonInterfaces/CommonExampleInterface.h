@@ -1,5 +1,6 @@
 #pragma once
 #include "CommonCameraInterface.h"
+#include <functional>
 
 enum ButtonFlags
 {
@@ -40,7 +41,7 @@ struct CommonExampleOptions
 class CommonExampleInterface
 {
 public:
-	typedef class CommonExampleInterface*(CreateFunc)(CommonExampleOptions& options);
+	using CreateFunc = std::function<class CommonExampleInterface*(CommonExampleOptions& options)>;
 	virtual ~CommonExampleInterface() {}
 	virtual void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) = 0;
 	virtual void exitPhysics() = 0;
@@ -78,7 +79,7 @@ public:
 	virtual void initExampleEntries() = 0;
 	virtual void initOpenCLExampleEntries() = 0;
 	virtual int getNumRegisteredExamples() = 0;
-	virtual CommonExampleInterface::CreateFunc* getExampleCreateFunc(int index) = 0;
+	virtual CommonExampleInterface::CreateFunc getExampleCreateFunc(int index) = 0;
 	virtual const char* getExampleName(int index) = 0;
 	virtual const char* getExampleDescription(int index) = 0;
 	virtual int getExampleOption(int index) = 0;

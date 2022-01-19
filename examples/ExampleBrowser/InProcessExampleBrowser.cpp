@@ -65,7 +65,7 @@ public:
 	ExampleEntriesPhysicsServer();
 	virtual ~ExampleEntriesPhysicsServer();
 
-	static void registerExampleEntry(int menuLevel, const char* name, const char* description, CommonExampleInterface::CreateFunc* createFunc, int option = 0);
+	static void registerExampleEntry(int menuLevel, const char* name, const char* description, const CommonExampleInterface::CreateFunc &createFunc, int option = 0);
 
 	virtual void initExampleEntries();
 
@@ -73,7 +73,7 @@ public:
 
 	virtual int getNumRegisteredExamples();
 
-	virtual CommonExampleInterface::CreateFunc* getExampleCreateFunc(int index);
+	virtual CommonExampleInterface::CreateFunc getExampleCreateFunc(int index);
 
 	virtual const char* getExampleName(int index);
 
@@ -87,7 +87,7 @@ struct ExampleEntryPhysicsServer
 	int m_menuLevel;
 	const char* m_name;
 	const char* m_description;
-	CommonExampleInterface::CreateFunc* m_createFunc;
+	CommonExampleInterface::CreateFunc m_createFunc;
 	int m_option;
 
 	ExampleEntryPhysicsServer(int menuLevel, const char* name)
@@ -95,7 +95,7 @@ struct ExampleEntryPhysicsServer
 	{
 	}
 
-	ExampleEntryPhysicsServer(int menuLevel, const char* name, const char* description, CommonExampleInterface::CreateFunc* createFunc, int option = 0)
+	ExampleEntryPhysicsServer(int menuLevel, const char* name, const char* description, const CommonExampleInterface::CreateFunc &createFunc, int option = 0)
 		: m_menuLevel(menuLevel), m_name(name), m_description(description), m_createFunc(createFunc), m_option(option)
 	{
 	}
@@ -149,7 +149,7 @@ void ExampleEntriesPhysicsServer::initExampleEntries()
 	}
 }
 
-void ExampleEntriesPhysicsServer::registerExampleEntry(int menuLevel, const char* name, const char* description, CommonExampleInterface::CreateFunc* createFunc, int option)
+void ExampleEntriesPhysicsServer::registerExampleEntry(int menuLevel, const char* name, const char* description, const CommonExampleInterface::CreateFunc &createFunc, int option)
 {
 }
 
@@ -158,7 +158,7 @@ int ExampleEntriesPhysicsServer::getNumRegisteredExamples()
 	return m_data->m_allExamples.size();
 }
 
-CommonExampleInterface::CreateFunc* ExampleEntriesPhysicsServer::getExampleCreateFunc(int index)
+CommonExampleInterface::CreateFunc ExampleEntriesPhysicsServer::getExampleCreateFunc(int index)
 {
 	return m_data->m_allExamples[index].m_createFunc;
 }

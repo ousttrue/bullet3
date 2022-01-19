@@ -12,7 +12,7 @@ public:
 	ExampleEntriesAll();
 	virtual ~ExampleEntriesAll();
 
-	static void registerExampleEntry(int menuLevel, const char* name, const char* description, CommonExampleInterface::CreateFunc* createFunc, int option = 0);
+	static void registerExampleEntry(int menuLevel, const char* name, const char* description, const CommonExampleInterface::CreateFunc &createFunc, int option = 0);
 
 	virtual void initExampleEntries();
 
@@ -20,7 +20,7 @@ public:
 
 	virtual int getNumRegisteredExamples();
 
-	virtual CommonExampleInterface::CreateFunc* getExampleCreateFunc(int index);
+	virtual CommonExampleInterface::CreateFunc getExampleCreateFunc(int index);
 
 	virtual const char* getExampleName(int index);
 

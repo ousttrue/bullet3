@@ -109,7 +109,7 @@ struct ExampleEntry
 	int m_menuLevel;
 	const char* m_name;
 	const char* m_description;
-	CommonExampleInterface::CreateFunc* m_createFunc;
+	CommonExampleInterface::CreateFunc m_createFunc;
 	int m_option;
 
 	ExampleEntry(int menuLevel, const char* name)
@@ -117,7 +117,7 @@ struct ExampleEntry
 	{
 	}
 
-	ExampleEntry(int menuLevel, const char* name, const char* description, CommonExampleInterface::CreateFunc* createFunc, int option = 0)
+	ExampleEntry(int menuLevel, const char* name, const char* description, const CommonExampleInterface::CreateFunc& createFunc, int option = 0)
 		: m_menuLevel(menuLevel), m_name(name), m_description(description), m_createFunc(createFunc), m_option(option)
 	{
 	}
@@ -127,7 +127,7 @@ static ExampleEntry gDefaultExamples[] =
 	{
 		ExampleEntry(0, "API"),
 
-		ExampleEntry(1, "Basic Example", "Create some rigid bodies using box collision shapes. This is a good example to familiarize with the basic initialization of Bullet. The Basic Example can also be compiled without graphical user interface, as a console application. Press W for wireframe, A to show AABBs, I to suspend/restart physics simulation. Press D to toggle auto-deactivation of the simulation. ", BasicExampleCreateFunc),
+		ExampleEntry(1, "Basic Example", "Create some rigid bodies using box collision shapes. This is a good example to familiarize with the basic initialization of Bullet. The Basic Example can also be compiled without graphical user interface, as a console application. Press W for wireframe, A to show AABBs, I to suspend/restart physics simulation. Press D to toggle auto-deactivation of the simulation. ", [](auto){ return new BasicExample; }),
 
 		ExampleEntry(1, "Rolling Friction", "Damping is often not good enough to keep rounded objects from rolling down a sloped surface. Instead, you can set the rolling friction of a rigid body. Generally it is best to leave the rolling friction to zero, to avoid artifacts.", RollingFrictionCreateFunc),
         
@@ -444,7 +444,7 @@ void ExampleEntriesAll::initExampleEntries()
 	}
 }
 
-void ExampleEntriesAll::registerExampleEntry(int menuLevel, const char* name, const char* description, CommonExampleInterface::CreateFunc* createFunc, int option)
+void ExampleEntriesAll::registerExampleEntry(int menuLevel, const char* name, const char* description, const CommonExampleInterface::CreateFunc &createFunc, int option)
 {
 	ExampleEntry e(menuLevel, name, description, createFunc, option);
 	gAdditionalRegisteredExamples.push_back(e);
@@ -455,7 +455,7 @@ int ExampleEntriesAll::getNumRegisteredExamples()
 	return m_data->m_allExamples.size();
 }
 
-CommonExampleInterface::CreateFunc* ExampleEntriesAll::getExampleCreateFunc(int index)
+CommonExampleInterface::CreateFunc ExampleEntriesAll::getExampleCreateFunc(int index)
 {
 	return m_data->m_allExamples[index].m_createFunc;
 }
