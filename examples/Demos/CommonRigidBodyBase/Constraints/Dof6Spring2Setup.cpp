@@ -1,6 +1,7 @@
 #include "Dof6Spring2Setup.h"
 
 #include "CommonCameraInterface.h"
+#include "CommonRigidBodyBase.h"
 #include "btBulletDynamicsCommon.h"
 #include "BulletDynamics/ConstraintSolver/btNNCGConstraintSolver.h"
 #include "BulletDynamics/MLCPSolvers/btMLCPSolver.h"
@@ -36,32 +37,6 @@ extern float g_additionalBodyMass;
 
 #include <CommonRigidBodyBase.h>
 
-struct Dof6Spring2Setup : public CommonRigidBodyBase
-{
-	struct Dof6Spring2SetupInternalData* m_data;
-
-	Dof6Spring2Setup(struct GUIHelperInterface* helper);
-	virtual ~Dof6Spring2Setup();
-	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
-
-	virtual void stepSimulation(float deltaTime);
-
-	void animate();
-
-	CameraResetInfo cameraResetInfo() const override
-	{
-		CameraResetInfo info;
-		info.camDist = 5;
-		info.pitch = -35;
-		info.yaw = 722;
-		info.camPosX = 4;
-		info.camPosY = 2;
-		info.camPosZ = -11;
-		info.upAxis = 1;
-		return info;
-	}
-};
-
 struct Dof6Spring2SetupInternalData
 {
 	btRigidBody* m_TranslateSpringBody;
@@ -86,28 +61,42 @@ struct Dof6Spring2SetupInternalData
 	}
 };
 
-Dof6Spring2Setup::Dof6Spring2Setup(struct GUIHelperInterface* helper)
-	: CommonRigidBodyBase(helper)
+Dof6Spring2Setup::Dof6Spring2Setup() : CommonRigidBodyBase({})
 {
 	m_data = new Dof6Spring2SetupInternalData;
 }
 Dof6Spring2Setup::~Dof6Spring2Setup()
 {
-	exitPhysics();
 	delete m_data;
 }
-void Dof6Spring2Setup::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
+CameraResetInfo Dof6Spring2Setup::cameraResetInfo() const
 {
-	// Setup the basic world
+	CameraResetInfo info;
+	info.camDist = 5;
+	info.pitch = -35;
+	info.yaw = 722;
+	info.camPosX = 4;
+	info.camPosY = 2;
+	info.camPosZ = -11;
+	info.upAxis = 1;
+	return info;
+}
+
+Physics* Dof6Spring2Setup::createPhysics()
+{
 	btVector3 worldAabbMin(-10000, -10000, -10000);
 	btVector3 worldAabbMax(10000, 10000, 10000);
 	btBroadphaseInterface* broadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
-	m_physics = new Physics(broadphase, SolverEnumType::NNCGSOLVER);
+	return new Physics(broadphase, SolverEnumType::NNCGSOLVER);
+}
 
-	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
+void Dof6Spring2Setup::initWorld(Physics *physics)
+{
+	// Setup the basic world
+
+	auto m_dynamicsWorld = physics->getDynamicsWorld();
 
 	m_dynamicsWorld->getDispatchInfo().m_useContinuous = true;
-	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 
 	m_dynamicsWorld->setGravity(btVector3(0, 0, 0));
 
@@ -428,7 +417,6 @@ void Dof6Spring2Setup::initPhysics(CommonCameraInterface* camera, struct GUIHelp
 			m_data->m_ChainRightConstraint->setParam(BT_CONSTRAINT_STOP_CFM, 0.0, a);
 		}
 	}
-	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
 void Dof6Spring2Setup::animate()
@@ -487,9 +475,4 @@ void Dof6Spring2Setup::stepSimulation(float deltaTime)
 {
 	animate();
 	m_physics->getDynamicsWorld()->stepSimulation(deltaTime);
-}
-
-class CommonExampleInterface* Dof6Spring2CreateFunc(CommonExampleOptions& options)
-{
-	return new Dof6Spring2Setup(options.m_guiHelper);
 }

@@ -125,6 +125,7 @@ struct ExampleEntry
 
 static ExampleEntry gDefaultExamples[] =
 	{
+		////////////////////////////////////////////
 		ExampleEntry(0, "API"),
 		ExampleEntry(1, "Basic Example", "Create some rigid bodies using box collision shapes. This is a good example to familiarize with the basic initialization of Bullet. The Basic Example can also be compiled without graphical user interface, as a console application. Press W for wireframe, A to show AABBs, I to suspend/restart physics simulation. Press D to toggle auto-deactivation of the simulation. ", [](auto)
 					 { return new BasicExample; }),
@@ -138,26 +139,23 @@ static ExampleEntry gDefaultExamples[] =
 					 { return new TestHingeTorque; }),
 
 		//	ExampleEntry(0,"What's new in 2.83"),
-		ExampleEntry(1, "6DofSpring2", "Show the use of the btGeneric6DofSpring2Constraint. This is a replacement of the btGeneric6DofSpringConstraint, it has various improvements. This includes improved spring implementation and better control over the restitution (bounce) when the constraint hits its limits.",
-					 Dof6Spring2CreateFunc),
+		ExampleEntry(1, "6DofSpring2", "Show the use of the btGeneric6DofSpring2Constraint. This is a replacement of the btGeneric6DofSpringConstraint, it has various improvements. This includes improved spring implementation and better control over the restitution (bounce) when the constraint hits its limits.", [](auto)
+					 { return new Dof6Spring2Setup; }),
 
 		ExampleEntry(1, "Motor Demo", "Dynamic control the target velocity of a motor of a btHingeConstraint. This demo makes use of the 'internal tick callback'. You can press W for wireframe, C and L to visualize constraint frame and limits.", MotorControlCreateFunc),
-
 		ExampleEntry(1, "Gyroscopic", "Show the Dzhanibekov effect using various settings of the gyroscopic term. You can select the gyroscopic term computation using btRigidBody::setFlags, with arguments BT_ENABLE_GYROSCOPIC_FORCE_EXPLICIT (using explicit integration, which adds energy and can lead to explosions), BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_WORLD, BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY. If you don't set any of these flags, there is no gyroscopic term used.", GyroscopicCreateFunc),
-
 		ExampleEntry(1, "Soft Contact", "Using the error correction parameter (ERP) and constraint force mixing (CFM) values for contacts to simulate compliant contact.", RigidBodySoftContactCreateFunc),
 		ExampleEntry(1, "Kinematic Body", "Let the user set the transform, the physics engine computes the velocity for one-way contact and friction interaction.", KinematicRigidBodyExampleCreateFunc),
 
+		////////////////////////////////////////////
 		ExampleEntry(0, "MultiBody"),
 		ExampleEntry(1, "MultiDof", "Create a basic btMultiBody with 3-DOF spherical joints (mobilizers). The demo uses a fixed base or a floating base at restart.", MultiDofCreateFunc),
 		ExampleEntry(1, "TestJointTorque", "Apply a torque to a btMultiBody with 1-DOF joints (mobilizers). This setup is similar to API/TestHingeTorque.", TestJointTorqueCreateFunc),
 		ExampleEntry(1, "TestPendulum", "Simulate a pendulum using btMultiBody with a constant joint torque applied. The same code is also used as a unit test comparing Bullet with the numerical solution of second-order non-linear differential equation stored in pendulum_gold.h", TestPendulumCreateFunc),
-
 		ExampleEntry(1, "Constraint Feedback", "The example shows how to receive joint reaction forces in a btMultiBody. Also the applied impulse is available for a btMultiBodyJointMotor", MultiBodyConstraintFeedbackCreateFunc),
 		ExampleEntry(1, "Inverted Pendulum PD", "Keep an inverted pendulum up using open loop PD control", InvertedPendulumPDControlCreateFunc),
 		ExampleEntry(1, "MultiBody Soft Contact", "Using the error correction parameter (ERP) and constraint force mixing (CFM) values for contacts to simulate compliant contact.", MultiBodySoftContactCreateFunc, 0),
 		ExampleEntry(1, "Kinematic MultiBody", "Let the user set the transform, the physics engine computes the velocity for one-way contact and friction interaction.", KinematicMultiBodyExampleCreateFunc),
-
 		ExampleEntry(0, "Physics Client-Server"),
 		ExampleEntry(1, "Physics Server", "Create a physics server that communicates with a physics client over shared memory. You can connect to the server using pybullet, a PhysicsClient or a UDP/TCP Bridge.",
 					 PhysicsServerCreateFuncBullet2),

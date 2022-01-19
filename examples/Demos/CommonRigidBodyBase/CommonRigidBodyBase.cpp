@@ -316,9 +316,14 @@ CommonRigidBodyBase::~CommonRigidBodyBase()
 	}
 }
 
+Physics* CommonRigidBodyBase::createPhysics()
+{
+	return new Physics;
+}
+
 void CommonRigidBodyBase::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
-	m_physics = new Physics;
+	m_physics = createPhysics();
 	initWorld(m_physics);
 }
 

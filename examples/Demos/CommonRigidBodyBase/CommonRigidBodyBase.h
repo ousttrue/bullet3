@@ -84,5 +84,6 @@ struct CommonRigidBodyBase : public CommonExampleInterface
 	bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags) override;
 	class btDiscreteDynamicsWorld* getDynamicsWorld() override { return m_physics ? m_physics->getDynamicsWorld() : nullptr; }
 
+	virtual Physics* createPhysics();
 	virtual void initWorld(Physics* world) {}
 };
