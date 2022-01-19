@@ -169,81 +169,17 @@ struct CommonRigidBodyMTBase : public CommonExampleInterface
 		return false;  //don't handle this key
 	}
 
-	btVector3 getRayTo(int x, int y)
-	{
-		CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
-
-		if (!renderer)
-		{
-			btAssert(0);
-			return btVector3(0, 0, 0);
-		}
-
-		float top = 1.f;
-		float bottom = -1.f;
-		float nearPlane = 1.f;
-		float tanFov = (top - bottom) * 0.5f / nearPlane;
-		float fov = btScalar(2.0) * btAtan(tanFov);
-
-		btVector3 camPos, camTarget;
-
-		renderer->getActiveCamera()->getCameraPosition(camPos);
-		renderer->getActiveCamera()->getCameraTargetPosition(camTarget);
-
-		btVector3 rayFrom = camPos;
-		btVector3 rayForward = (camTarget - camPos);
-		rayForward.normalize();
-		float farPlane = 10000.f;
-		rayForward *= farPlane;
-
-		btVector3 rightOffset;
-		btVector3 cameraUp = btVector3(0, 0, 0);
-		cameraUp[m_guiHelper->getAppInterface()->getUpAxis()] = 1;
-
-		btVector3 vertical = cameraUp;
-
-		btVector3 hor;
-		hor = rayForward.cross(vertical);
-		hor.safeNormalize();
-		vertical = hor.cross(rayForward);
-		vertical.safeNormalize();
-
-		float tanfov = tanf(0.5f * fov);
-
-		hor *= 2.f * farPlane * tanfov;
-		vertical *= 2.f * farPlane * tanfov;
-
-		btScalar aspect;
-		float width = float(renderer->getScreenWidth());
-		float height = float(renderer->getScreenHeight());
-
-		aspect = width / height;
-
-		hor *= aspect;
-
-		btVector3 rayToCenter = rayFrom + rayForward;
-		btVector3 dHor = hor * 1.f / width;
-		btVector3 dVert = vertical * 1.f / height;
-
-		btVector3 rayTo = rayToCenter - 0.5f * hor + 0.5f * vertical;
-		rayTo += btScalar(x) * dHor;
-		rayTo -= btScalar(y) * dVert;
-		return rayTo;
-	}
-
 	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
 	{
-		CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
-
-		if (!renderer)
+		if (!camera)
 		{
 			btAssert(0);
 			return false;
 		}
 
-		btVector3 rayTo = getRayTo(int(x), int(y));
+		btVector3 rayTo = camera->getRayTo(int(x), int(y));
 		btVector3 rayFrom;
-		renderer->getActiveCamera()->getCameraPosition(rayFrom);
+		camera->getCameraPosition(rayFrom);
 		movePickedBody(rayFrom, rayTo);
 
 		return false;
@@ -251,9 +187,7 @@ struct CommonRigidBodyMTBase : public CommonExampleInterface
 
 	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override
 	{
-		CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
-
-		if (!renderer)
+		if (!camera)
 		{
 			btAssert(0);
 			return false;
@@ -292,10 +226,10 @@ struct CommonRigidBodyMTBase : public CommonExampleInterface
 			if (button == 0 && (!window->isModifierKeyPressed(B3G_ALT) && !window->isModifierKeyPressed(B3G_CONTROL)))
 			{
 				btVector3 camPos;
-				renderer->getActiveCamera()->getCameraPosition(camPos);
+				camera->getCameraPosition(camPos);
 
 				btVector3 rayFrom = camPos;
-				btVector3 rayTo = getRayTo(int(x), int(y));
+				btVector3 rayTo = camera->getRayTo(int(x), int(y));
 
 				pickBody(rayFrom, rayTo);
 			}

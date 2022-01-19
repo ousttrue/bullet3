@@ -359,8 +359,6 @@ static GLint ProjectionMatrixPointSprite = 0;
 GLInstancingRenderer::GLInstancingRenderer(int maxNumObjectCapacity, int maxShapeCapacityInBytes)
 	: m_textureenabled(true),
 	  m_textureinitialized(false),
-	  m_screenWidth(0),
-	  m_screenHeight(0),
 	  m_upAxis(1),
 	  m_planeReflectionShapeIndex(-1)
 {
@@ -1464,8 +1462,6 @@ void GLInstancingRenderer::init()
 void GLInstancingRenderer::resize(int width, int height)
 {
 	getActiveCamera()->resize(width, height);
-	m_screenWidth = width;
-	m_screenHeight = height;
 }
 
 const CommonCameraInterface* GLInstancingRenderer::getActiveCamera() const
@@ -1548,7 +1544,6 @@ void GLInstancingRenderer::updateCamera(int upAxis)
 	m_upAxis = upAxis;
 
 	m_data->m_activeCamera->setCameraUpAxis(upAxis);
-	m_data->m_activeCamera->setAspectRatio((float)m_screenWidth / (float)m_screenHeight);
 	m_data->m_defaultCamera1.update();
 	m_data->m_activeCamera->getCameraProjectionMatrix(m_data->m_projectionMatrix);
 	m_data->m_activeCamera->getCameraViewMatrix(m_data->m_viewMatrix);
@@ -2474,7 +2469,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 						glUseProgram(instancingShaderPointSprite);
 						glUniformMatrix4fv(ProjectionMatrixPointSprite, 1, false, &m_data->m_projectionMatrix[0]);
 						glUniformMatrix4fv(ModelViewMatrixPointSprite, 1, false, &m_data->m_viewMatrix[0]);
-						glUniform1f(screenWidthPointSprite, float(m_screenWidth));
+						glUniform1f(screenWidthPointSprite, float(getActiveCamera()->getScreenWidth()));
 
 						//glUniform1i(uniform_texture_diffusePointSprite, 0);
 						b3Assert(glGetError() == GL_NO_ERROR);

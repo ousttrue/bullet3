@@ -29,9 +29,6 @@ class GLInstancingRenderer : public CommonRenderInterface
 	bool m_textureenabled;
 	bool m_textureinitialized;
 
-	int m_screenWidth;
-	int m_screenHeight;
-
 	int m_upAxis;
 
 	int m_planeReflectionShapeIndex;
@@ -129,14 +126,6 @@ public:
 	virtual void setProjectiveTexture(bool useProjectiveTexture);
 	virtual void setBackgroundColor(const double rgbBackground[3]);
 	virtual void resize(int width, int height);
-	virtual int getScreenWidth()
-	{
-		return m_screenWidth;
-	}
-	virtual int getScreenHeight()
-	{
-		return m_screenHeight;
-	}
 
 	virtual int getMaxShapeCapacity() const;
 

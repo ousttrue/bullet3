@@ -626,7 +626,7 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	int viewport[4] = {0, 0, m_instancingRenderer->getScreenWidth(), m_instancingRenderer->getScreenHeight()};
+	int viewport[4] = {0, 0, cam->getScreenWidth(), cam->getScreenHeight()};
 
 	float posX = position[0];
 	float posY = position[1];
@@ -640,7 +640,7 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 			return;
 		}
 		posX = winx;
-		posY = m_instancingRenderer->getScreenHeight() / 2 + (m_instancingRenderer->getScreenHeight() / 2) - winy;
+		posY = cam->getScreenHeight() / 2 + (cam->getScreenHeight() / 2) - winy;
 		posZ = 0.f;
 	}
 
@@ -654,7 +654,7 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 		{
 			sth_draw_text(m_data->m_fontStash,
 						  m_data->m_droidRegular, fontSize, posX, posY,
-						  txt, &dx, this->m_instancingRenderer->getScreenWidth(), this->m_instancingRenderer->getScreenHeight(), measureOnly, m_window->getRetinaScale(), color);
+						  txt, &dx, cam->getScreenWidth(), cam->getScreenHeight(), measureOnly, m_window->getRetinaScale(), color);
 			sth_end_draw(m_data->m_fontStash);
 			sth_flush_draw(m_data->m_fontStash);
 		}
@@ -694,7 +694,7 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 		if (optionFlag & CommonGraphicsApp::eDrawText3D_OrtogonalFaceCamera)
 		{
 			posX = winx;
-			posY = m_instancingRenderer->getScreenHeight() / 2 + (m_instancingRenderer->getScreenHeight() / 2) - winy;
+			posY = cam->getScreenHeight() / 2 + (cam->getScreenHeight() / 2) - winy;
 			z = 2.f * winz - 1.f;
 			startY = posY - g_DefaultLargeFont->m_CharHeight * size;
 		}
@@ -723,8 +723,8 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 			float x1 = endX;
 			float y0 = startY;
 			float y1 = endY;
-			int screenWidth = m_instancingRenderer->getScreenWidth();
-			int screenHeight = m_instancingRenderer->getScreenHeight();
+			int screenWidth = cam->getScreenWidth();
+			int screenHeight = cam->getScreenHeight();
 
 			float identity[16] = {1, 0, 0, 0,
 								  0, 1, 0, 0,
@@ -791,11 +791,13 @@ void GlfwApp::drawText(const char* txt, int posXi, int posYi, float size, float 
 	{
 		bool measureOnly = false;
 
+		auto cam = m_instancingRenderer->getActiveCamera();
+
 		float fontSize = 64 * size;  //512;//128;
 		sth_draw_text(m_data->m_fontStash,
 					  m_data->m_droidRegular, fontSize, posX, posY,
-					  txt, &dx, this->m_instancingRenderer->getScreenWidth(),
-					  this->m_instancingRenderer->getScreenHeight(),
+					  txt, &dx, cam->getScreenWidth(),
+					  cam->getScreenHeight(),
 					  measureOnly,
 					  m_window->getRetinaScale(), colorRGBA);
 
@@ -1102,14 +1104,16 @@ void GlfwApp::setViewport(int width, int height)
 	}
 	else
 	{
-		glViewport(0, 0, m_window->getRetinaScale() * m_instancingRenderer->getScreenWidth(), m_window->getRetinaScale() * m_instancingRenderer->getScreenHeight());
+		auto cam = m_instancingRenderer->getActiveCamera();
+		glViewport(0, 0, m_window->getRetinaScale() * cam->getScreenWidth(), m_window->getRetinaScale() * cam->getScreenHeight());
 	}
 }
 
 void GlfwApp::getScreenPixels(unsigned char* rgbaBuffer, int bufferSizeInBytes, float* depthBuffer, int depthBufferSizeInBytes)
 {
-	int width = m_data->m_customViewPortWidth >= 0 ? m_data->m_customViewPortWidth : (int)m_window->getRetinaScale() * m_instancingRenderer->getScreenWidth();
-	int height = m_data->m_customViewPortHeight >= 0 ? m_data->m_customViewPortHeight : (int)m_window->getRetinaScale() * m_instancingRenderer->getScreenHeight();
+	auto cam = m_instancingRenderer->getActiveCamera();
+	int width = m_data->m_customViewPortWidth >= 0 ? m_data->m_customViewPortWidth : (int)m_window->getRetinaScale() * cam->getScreenWidth();
+	int height = m_data->m_customViewPortHeight >= 0 ? m_data->m_customViewPortHeight : (int)m_window->getRetinaScale() * cam->getScreenHeight();
 
 	b3Assert((width * height * 4) == bufferSizeInBytes);
 	if ((width * height * 4) == bufferSizeInBytes)
@@ -1193,8 +1197,9 @@ void GlfwApp::swapBuffer()
 {
 	if (m_data->m_frameDumpPngFileName)
 	{
-		int width = (int)m_window->getRetinaScale() * m_instancingRenderer->getScreenWidth();
-		int height = (int)m_window->getRetinaScale() * this->m_instancingRenderer->getScreenHeight();
+		auto cam = m_instancingRenderer->getActiveCamera();
+		int width = (int)m_window->getRetinaScale() * cam->getScreenWidth();
+		int height = (int)m_window->getRetinaScale() * cam->getScreenHeight();
 		writeTextureToFile(width,
 						   height, m_data->m_frameDumpPngFileName,
 						   m_data->m_ffmpegFile);
@@ -1218,8 +1223,9 @@ void GlfwApp::dumpFramesToVideo(const char* mp4FileName)
 {
 	if (mp4FileName)
 	{
-		int width = (int)m_window->getRetinaScale() * m_instancingRenderer->getScreenWidth();
-		int height = (int)m_window->getRetinaScale() * m_instancingRenderer->getScreenHeight();
+		auto cam = m_instancingRenderer->getActiveCamera();
+		int width = (int)m_window->getRetinaScale() * cam->getScreenWidth();
+		int height = (int)m_window->getRetinaScale() * cam->getScreenHeight();
 		char cmd[8192];
 
 		sprintf(cmd,
@@ -1259,6 +1265,7 @@ void GlfwApp::dumpNextFrameToPng(const char* filename)
 	//you could use m_renderTexture to allow to render at higher resolutions, such as 4k or so
 	if (!m_data->m_renderTexture)
 	{
+		auto cam = m_instancingRenderer->getActiveCamera();
 		m_data->m_renderTexture = new GLRenderToTexture();
 		GLuint renderTextureId;
 		glGenTextures(1, &renderTextureId);
@@ -1270,14 +1277,14 @@ void GlfwApp::dumpNextFrameToPng(const char* filename)
 		//glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, g_OpenGLWidth,g_OpenGLHeight, 0,GL_RGBA, GL_UNSIGNED_BYTE, 0);
 		//glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA32F, g_OpenGLWidth,g_OpenGLHeight, 0,GL_RGBA, GL_FLOAT, 0);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F,
-					 m_instancingRenderer->getScreenWidth() * m_window->getRetinaScale(), m_instancingRenderer->getScreenHeight() * m_window->getRetinaScale(), 0, GL_RGBA, GL_FLOAT, 0);
+					 cam->getScreenWidth() * m_window->getRetinaScale(), cam->getScreenHeight() * m_window->getRetinaScale(), 0, GL_RGBA, GL_FLOAT, 0);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		m_data->m_renderTexture->init(m_instancingRenderer->getScreenWidth() * m_window->getRetinaScale(), this->m_instancingRenderer->getScreenHeight() * m_window->getRetinaScale(), renderTextureId, RENDERTEXTURE_COLOR);
+		m_data->m_renderTexture->init(cam->getScreenWidth() * m_window->getRetinaScale(), cam->getScreenHeight() * m_window->getRetinaScale(), renderTextureId, RENDERTEXTURE_COLOR);
 	}
 
 	m_data->m_renderTexture->enable();

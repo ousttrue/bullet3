@@ -658,9 +658,10 @@ public:
 		s_window->setKeyboardCallback(std::bind(&OpenGLExampleBrowserInternalData::MyKeyboardCallback,
 												this, std::placeholders::_1, std::placeholders::_2));
 
-		s_app->m_renderer->getActiveCamera()->setCameraDistance(13);
-		s_app->m_renderer->getActiveCamera()->setCameraPitch(0);
-		s_app->m_renderer->getActiveCamera()->setCameraTargetPosition(0, 0, 0);
+		auto camera = s_app->m_renderer->getActiveCamera();
+		camera->setCameraDistance(13);
+		camera->setCameraPitch(0);
+		camera->setCameraTargetPosition(0, 0, 0);
 
 		float mouseMoveMult = s_app->getMouseMoveMultiplier();
 		if (args.GetCmdLineArgument("mouse_move_multiplier", mouseMoveMult))
@@ -846,7 +847,8 @@ public:
 				if (m_gwen)
 				{
 					gBlockGuiMessages = true;
-					m_gwen->Render(s_instancingRenderer->getScreenWidth(), s_instancingRenderer->getScreenHeight());
+					auto camera = s_instancingRenderer->getActiveCamera();
+					m_gwen->Render(camera->getScreenWidth(), camera->getScreenHeight());
 					gBlockGuiMessages = false;
 				}
 			}
