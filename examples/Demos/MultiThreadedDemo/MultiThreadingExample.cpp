@@ -169,15 +169,12 @@ public:
 		  m_threadSupport(0),
 		  m_numThreads(8)
 	{
-		//int numBodies = 1;
-
-		m_app->setUpAxis(1);
 	}
 	virtual ~MultiThreadingExample()
 	{
 	}
 
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override
 	{
 		b3Printf("initPhysics");
 
@@ -269,6 +266,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 };

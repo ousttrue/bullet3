@@ -12,9 +12,9 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
+#include "RollingFrictionDemo.h"
 
 ///create 125 (5x5x5) dynamic object
-#include "CommonCameraInterface.h"
 #define ARRAY_SIZE_X 5
 #define ARRAY_SIZE_Y 5
 #define ARRAY_SIZE_Z 5
@@ -28,58 +28,31 @@ subject to the following restrictions:
 #define START_POS_Y -5
 #define START_POS_Z -3
 
-#include "RollingFrictionDemo.h"
-///btBulletDynamicsCommon.h is the main Bullet include file, contains most common include files.
-#include "btBulletDynamicsCommon.h"
-#include <stdio.h>  //printf debugging
-
-#include <CommonRigidBodyBase.h>
-#include <b3ResourcePath.h>
-
-///The RollingFrictionDemo shows the use of rolling friction.
-///Spheres will come to a rest on a sloped plane using a constraint. Damping cannot achieve the same.
-///Generally it is best to leave the rolling friction coefficient zero (or close to zero).
-class RollingFrictionDemo : public CommonRigidBodyBase
+CameraResetInfo RollingFrictionDemo::cameraResetInfo() const
 {
-public:
-	RollingFrictionDemo(struct GUIHelperInterface* helper)
-		: CommonRigidBodyBase(helper)
-	{
-	}
-	virtual ~RollingFrictionDemo()
-	{
-	}
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
-	void exitPhysics() override;
-	CameraResetInfo cameraResetInfo() const override
-	{
-		CameraResetInfo info;
-		info.camDist = 35;
-		info.pitch = -14;
-		info.yaw = 0;
-		info.camPosX = 0;
-		info.camPosY = 0;
-		info.camPosZ = 0;
-		info.upAxis = 2;
-		return info;
-	}
-};
+	CameraResetInfo info;
+	info.camDist = 35;
+	info.pitch = -14;
+	info.yaw = 0;
+	info.camPosX = 0;
+	info.camPosY = 0;
+	info.camPosZ = 0;
+	info.upAxis = 2;
+	return info;
+}
 
-void RollingFrictionDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void RollingFrictionDemo::initWorld(Physics* physics)
 {
-	m_physics = new Physics;
-	auto m_dynamicsWorld = m_physics->getDynamicsWorld();
+	auto m_dynamicsWorld = physics->getDynamicsWorld();
 
 	//	m_dynamicsWorld->getSolverInfo().m_singleAxisRollingFrictionThreshold = 0.f;//faster but lower quality
 	m_dynamicsWorld->setGravity(btVector3(0, 0, -10));
-
-	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
 
 	{
 		///create a few basic rigid bodies
 		btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(10.), btScalar(5.), btScalar(25.)));
 
-		m_physics->m_collisionShapes.push_back(groundShape);
+		physics->m_collisionShapes.push_back(groundShape);
 
 		btTransform groundTransform;
 		groundTransform.setIdentity();
@@ -109,7 +82,7 @@ void RollingFrictionDemo::initPhysics(CommonCameraInterface *camera, struct GUIH
 		///create a few basic rigid bodies
 		btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(100.), btScalar(100.), btScalar(50.)));
 
-		m_physics->m_collisionShapes.push_back(groundShape);
+		physics->m_collisionShapes.push_back(groundShape);
 
 		btTransform groundTransform;
 		groundTransform.setIdentity();
@@ -150,7 +123,7 @@ void RollingFrictionDemo::initPhysics(CommonCameraInterface *camera, struct GUIH
 			new btCylinderShapeZ(btVector3(0.25, 0.25, 0.5)),
 		};
 		for (int i = 0; i < NUM_SHAPES; i++)
-			m_physics->m_collisionShapes.push_back(colShapes[i]);
+			physics->m_collisionShapes.push_back(colShapes[i]);
 
 		/// Create Dynamic Objects
 		btTransform startTransform;
@@ -200,29 +173,4 @@ void RollingFrictionDemo::initPhysics(CommonCameraInterface *camera, struct GUIH
 			}
 		}
 	}
-
-	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
-
-	if (0)
-	{
-		btSerializer* s = new btDefaultSerializer;
-		m_dynamicsWorld->serialize(s);
-		char resourcePath[1024];
-		if (b3ResourcePath::findResourcePath("slope.bullet", resourcePath, 1024, 0))
-		{
-			FILE* f = fopen(resourcePath, "wb");
-			fwrite(s->getBufferPointer(), s->getCurrentBufferSize(), 1, f);
-			fclose(f);
-		}
-	}
-}
-
-void RollingFrictionDemo::exitPhysics()
-{
-	delete m_physics;
-}
-
-class CommonExampleInterface* RollingFrictionCreateFunc(struct CommonExampleOptions& options)
-{
-	return new RollingFrictionDemo(options.m_guiHelper);
 }

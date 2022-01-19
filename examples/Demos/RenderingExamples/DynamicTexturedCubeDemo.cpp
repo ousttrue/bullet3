@@ -36,11 +36,9 @@ public:
 		: m_app(app),
 		  m_tinyVrGUI(0)
 	{
-		m_app->setUpAxis(2);
-
 		{
 			b3Vector3 extents = b3MakeVector3(100, 100, 100);
-			extents[m_app->getUpAxis()] = 1;
+			extents[cameraResetInfo().upAxis] = 1;
 
 			int xres = 20;
 			int yres = 20;
@@ -98,6 +96,7 @@ public:
 		info.camPosX = -0.5;
 		info.camPosY = 0.7;
 		info.camPosZ = 1.45;
+		info.upAxis = 2;
 		return info;
 	}
 };

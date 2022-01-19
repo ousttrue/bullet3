@@ -29,7 +29,6 @@ public:
 		  m_guiHelper(helper),
 		  m_options(options)
 	{
-		m_app->setUpAxis(2);
 	}
 
 	virtual ~BoxStackExample()
@@ -101,6 +100,7 @@ public:
 		info.camPosX = -0.2f;
 		info.camPosY = 0.8f;
 		info.camPosZ = 0.3f;
+		info.upAxis = 2;
 		return info;
 	}
 };

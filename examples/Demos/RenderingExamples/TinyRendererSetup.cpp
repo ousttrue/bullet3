@@ -119,6 +119,7 @@ struct TinyRendererSetup : public CommonExampleInterface
 		info.camPosX = 0;
 		info.camPosY = 0.46;
 		info.camPosZ = 0;
+		info.upAxis = 2;
 		return info;
 	}
 };
@@ -240,8 +241,6 @@ void TinyRendererComboCallback(int combobox, const char* item, void* userPointer
 void TinyRendererSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	//request a visual bitma/texture we can render to
-
-	m_app->setUpAxis(2);
 
 	CommonRenderInterface* render = m_app->m_renderer;
 

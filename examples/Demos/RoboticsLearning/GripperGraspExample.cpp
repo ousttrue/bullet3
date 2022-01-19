@@ -47,7 +47,6 @@ public:
 		  m_options(options),
 		  m_gripperIndex(-1)
 	{
-		m_app->setUpAxis(2);
 	}
 	virtual ~GripperGraspExample()
 	{
@@ -724,6 +723,7 @@ public:
 		info.camPosX = -0.2;
 		info.camPosY = 0.8;
 		info.camPosZ = 0.3;
+		info.upAxis = 2;
 		return info;
 	}
 };

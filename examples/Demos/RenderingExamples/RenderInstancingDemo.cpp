@@ -30,11 +30,9 @@ public:
 		  m_y(0),
 		  m_z(0)
 	{
-		m_app->setUpAxis(2);
-
 		{
 			b3Vector3 extents = b3MakeVector3(100, 100, 100);
-			extents[m_app->getUpAxis()] = 1;
+			extents[cameraResetInfo().upAxis] = 1;
 
 			int xres = 20;
 			int yres = 20;
@@ -52,7 +50,7 @@ public:
 				for (int j = -numCubesY / 2; j < numCubesY / 2; j++)
 				{
 					b3Vector3 pos = b3MakeVector3(i, j, j);
-					pos[app->getUpAxis()] = 1;
+					pos[cameraResetInfo().upAxis] = 1;
 					b3Quaternion orn(0, 0, 0, 1);
 					b3Vector4 color = b3MakeVector4(0.3, 0.3, 0.3, 1);
 					b3Vector3 scaling = b3MakeVector3(1, 1, 1);
@@ -64,10 +62,10 @@ public:
 
 		m_app->m_renderer->writeTransforms();
 	}
-	void physicsDebugDraw(int debugDrawMode, struct GUIHelperInterface *m_guiHelper)override{}
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)override{}
-	void exitPhysics()override{}
-	void stepSimulation(float deltaTime)override
+	void physicsDebugDraw(int debugDrawMode, struct GUIHelperInterface* m_guiHelper) override {}
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override {}
+	void exitPhysics() override {}
+	void stepSimulation(float deltaTime) override
 	{
 		m_x += 0.01f;
 		m_y += 0.01f;
@@ -78,7 +76,7 @@ public:
 			for (int j = -numCubesY / 2; j < numCubesY / 2; j++)
 			{
 				b3Vector3 pos = b3MakeVector3(i, j, j);
-				pos[m_app->getUpAxis()] = 1 + 1 * b3Sin(m_x + i - j);
+				pos[cameraResetInfo().upAxis] = 1 + 1 * b3Sin(m_x + i - j);
 				float orn[4] = {0, 0, 0, 1};
 				m_app->m_renderer->writeSingleInstanceTransformToCPU(pos, orn, m_movingInstances[index++]);
 			}
@@ -99,6 +97,7 @@ public:
 		info.camPosX = -1;
 		info.camPosY = 0;
 		info.camPosZ = -0.3;
+		info.upAxis = 2;
 		return info;
 	}
 };

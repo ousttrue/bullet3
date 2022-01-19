@@ -294,8 +294,6 @@ public:
 	{
 		int numBodies = 1;
 
-		m_app->setUpAxis(1);
-
 		switch (m_tutorialIndex)
 		{
 			case TUT_VELOCITY:

@@ -46,7 +46,7 @@ struct CommonRenderInterface
 {
 	virtual ~CommonRenderInterface() {}
 	virtual void init() = 0;
-	virtual void updateCamera(int upAxis) = 0;
+	virtual void updateCamera() = 0;
 	virtual void removeAllInstances() = 0;
 	virtual void removeGraphicsInstance(int instanceUid) = 0;
 

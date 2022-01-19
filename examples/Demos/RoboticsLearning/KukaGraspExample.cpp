@@ -50,7 +50,6 @@ public:
 	{
 		m_targetPos.setValue(0.5, 0, 1);
 		m_worldPos.setValue(0, 0, 0);
-		m_app->setUpAxis(2);
 	}
 	virtual ~KukaGraspExample()
 	{
@@ -249,6 +248,7 @@ public:
 		info.camPosX = -0.2;
 		info.camPosY = 0.8;
 		info.camPosZ = 0.3;
+		info.upAxis = 2;
 		return info;
 	}
 };

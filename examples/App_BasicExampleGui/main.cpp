@@ -5,25 +5,25 @@
 #include <OpenGLGuiHelper.h>
 #include <stdio.h>
 #include <BasicDemo/BasicExample.h>
+#include <RollingFrictionDemo/RollingFrictionDemo.h>
 #include <memory>
 
 int main(int argc, char* argv[])
 {
 	GlfwApp app;
 	auto window = app.createWindow({1024, 768, "Bullet Standalone Example"});
-	if(!window)
+	if (!window)
 	{
 		return 1;
 	}
-	
+
 	OpenGLGuiHelper gui(&app, false);
 	auto camera = app.m_instancingRenderer->getActiveCamera();
-	// auto example = std::make_unique<BasicExample>(&gui);
-	auto example = std::make_unique<BasicExample>();
+	auto example = std::make_unique<RollingFrictionDemo>();
 
 	auto prevMouseButtonCallback = window->getMouseButtonCallback();
 	window->setMouseButtonCallback([&example, &prevMouseButtonCallback, camera](int button, int state, float x, float y, ButtonFlags flags)
-										 {
+								   {
 											 bool handled = example->mouseButtonCallback(camera, button, state, x, y, flags);
 											 if (!handled)
 											 {
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 
 	auto prevMouseMoveCallback = window->getMouseMoveCallback();
 	window->setMouseMoveCallback([&example, &prevMouseMoveCallback, camera](float x, float y)
-									   {
+								 {
 										   bool handled = example->mouseMoveCallback(camera, x, y);
 										   if (!handled)
 										   {
@@ -48,6 +48,19 @@ int main(int argc, char* argv[])
 	// if (m_dynamicsWorld->getDebugDrawer())
 	// 	m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe + btIDebugDraw::DBG_DrawContactPoints);
 	camera->resetCamera(example->cameraResetInfo());
+
+	// if (0)
+	// {
+	// 	btSerializer* s = new btDefaultSerializer;
+	// 	m_dynamicsWorld->serialize(s);
+	// 	char resourcePath[1024];
+	// 	if (b3ResourcePath::findResourcePath("slope.bullet", resourcePath, 1024, 0))
+	// 	{
+	// 		FILE* f = fopen(resourcePath, "wb");
+	// 		fwrite(s->getBufferPointer(), s->getCurrentBufferSize(), 1, f);
+	// 		fclose(f);
+	// 	}
+	// }
 
 	b3Clock clock;
 
@@ -67,7 +80,7 @@ int main(int argc, char* argv[])
 		// render
 		// m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 		app.m_instancingRenderer->init();
-		app.m_instancingRenderer->updateCamera(app.getUpAxis());
+		app.m_instancingRenderer->updateCamera();
 		if (auto world = example->getDynamicsWorld())
 		{
 			gui.syncPhysicsToGraphics(world);
@@ -75,7 +88,7 @@ int main(int argc, char* argv[])
 		}
 
 		DrawGridData dg;
-		dg.upAxis = app.getUpAxis();
+		dg.upAxis = camera->getCameraUpAxis();
 		app.drawGrid(dg);
 
 		app.swapBuffer();

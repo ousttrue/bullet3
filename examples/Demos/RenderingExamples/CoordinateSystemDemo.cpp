@@ -22,8 +22,6 @@ public:
 		  m_y(0),
 		  m_z(0)
 	{
-		m_app->setUpAxis(2);
-
 		{
 			int boxId = m_app->registerCubeShape(0.1, 0.1, 0.1);
 			btVector3 pos(0, 0, 0);
@@ -116,6 +114,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 0;
+		info.upAxis = 2;
 		return info;
 	}
 };

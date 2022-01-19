@@ -97,8 +97,6 @@ struct CommonGraphicsApp
 		return m_mouseMoveMultiplier;
 	}
 	virtual void drawGrid(DrawGridData data = DrawGridData()) = 0;
-	virtual void setUpAxis(int axis) = 0;
-	virtual int getUpAxis() const = 0;
 	virtual void swapBuffer() = 0;
 	virtual void drawText(const char* txt, int posX, int posY)
 	{

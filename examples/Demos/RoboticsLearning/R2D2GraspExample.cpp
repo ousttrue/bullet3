@@ -37,7 +37,6 @@ public:
 		  m_options(options),
 		  m_r2d2Index(-1)
 	{
-		m_app->setUpAxis(2);
 	}
 	virtual ~R2D2GraspExample()
 	{
@@ -163,6 +162,7 @@ public:
 		info.camPosX = -0.2;
 		info.camPosY = 0.8;
 		info.camPosZ = 0.3;
+		info.upAxis = 2;
 		return info;
 	}
 };

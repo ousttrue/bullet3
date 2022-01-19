@@ -645,7 +645,6 @@ public:
 		m_verboseOutput = true;
 
 		m_app = guiHelper->getAppInterface();
-		m_app->setUpAxis(2);
 
 		m_threadSupport = createTCPThreadSupport(1);
 		m_args.m_cs = m_threadSupport->createCriticalSection();
@@ -908,6 +907,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 0;
+		info.upAxis = 2;
 		return info;
 	}
 };

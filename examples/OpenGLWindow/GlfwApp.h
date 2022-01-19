@@ -20,8 +20,6 @@ struct GlfwApp : public CommonGraphicsApp
 	void setViewport(int width, int height) override;
 	void setBackgroundColor(float red, float green, float blue) override;
 	void drawGrid(DrawGridData data = DrawGridData()) override;
-	void setUpAxis(int axis) override;
-	int getUpAxis() const override;
 	void swapBuffer() override;
 	void drawText(const char* txt, int posX, int posY, float size, float colorRGBA[4]) override;
 	void drawText3D(const char* txt, float posX, float posY, float posZ, float size) override;

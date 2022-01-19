@@ -95,9 +95,8 @@ void CommonGraphicsApp::defaultWheelCallback(float deltax, float deltay)
 	if (m_renderer)
 	{
 		b3Vector3 cameraTargetPosition, cameraPosition, cameraUp = b3MakeVector3(0, 0, 0);
-		cameraUp[getUpAxis()] = 1;
 		CommonCameraInterface* camera = m_renderer->getActiveCamera();
-
+		cameraUp[camera->getCameraUpAxis()] = 1;
 		camera->getCameraPosition(cameraPosition);
 		camera->getCameraTargetPosition(cameraTargetPosition);
 

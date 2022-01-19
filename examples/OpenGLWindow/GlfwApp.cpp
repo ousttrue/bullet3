@@ -256,7 +256,6 @@ struct SimpleInternalData
 	FILE* m_ffmpegFile;
 	GLRenderToTexture* m_renderTexture;
 	void* m_userPointer;
-	int m_upAxis;  //y=1 or z=2 is supported
 	int m_customViewPortWidth;
 	int m_customViewPortHeight;
 	int m_mp4Fps;
@@ -275,7 +274,6 @@ struct SimpleInternalData
 		  m_ffmpegFile(0),
 		  m_renderTexture(0),
 		  m_userPointer(0),
-		  m_upAxis(1),
 		  m_customViewPortWidth(-1),
 		  m_customViewPortHeight(-1),
 		  m_mp4Fps(60)
@@ -901,9 +899,10 @@ int GlfwApp::registerCubeShape(float halfExtentsX, float halfExtentsY, float hal
 
 void GlfwApp::registerGrid(int cells_x, int cells_z, float color0[4], float color1[4])
 {
+	auto cam = m_instancingRenderer->getActiveCamera();
 	b3Vector3 cubeExtents = b3MakeVector3(0.5, 0.5, 0.5);
 	double halfHeight = 0.1;
-	cubeExtents[m_data->m_upAxis] = halfHeight;
+	cubeExtents[cam->getCameraUpAxis()] = halfHeight;
 	int cubeId = registerCubeShape(cubeExtents[0], cubeExtents[1], cubeExtents[2]);
 	b3Quaternion orn(0, 0, 0, 1);
 	b3Vector3 center = b3MakeVector3(0, 0, 0, 1);
@@ -922,7 +921,7 @@ void GlfwApp::registerGrid(int cells_x, int cells_z, float color0[4], float colo
 			{
 				color = (float*)color1;
 			}
-			if (this->m_data->m_upAxis == 1)
+			if (cam->getCameraUpAxis() == 1)
 			{
 				center = b3MakeVector3((i + 0.5f) - cells_x * 0.5f, -halfHeight, (j + 0.5f) - cells_z * 0.5f);
 			}
@@ -1309,15 +1308,4 @@ void GlfwApp::dumpNextFrameToPng(const char* filename)
 	}
 
 	m_data->m_renderTexture->enable();
-}
-
-void GlfwApp::setUpAxis(int axis)
-{
-	b3Assert((axis == 1) || (axis == 2));  //only Y or Z is supported at the moment
-	m_data->m_upAxis = axis;
-}
-
-int GlfwApp::getUpAxis() const
-{
-	return m_data->m_upAxis;
 }

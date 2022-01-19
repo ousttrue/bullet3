@@ -157,11 +157,9 @@ public:
 		: m_app(app),
 		  m_ikMethod(option)
 	{
-		m_app->setUpAxis(1);
-
 		{
 			b3Vector3 extents = b3MakeVector3(100, 100, 100);
-			extents[m_app->getUpAxis()] = 1;
+			extents[cameraResetInfo().upAxis] = 1;
 
 			int xres = 20;
 			int yres = 20;
@@ -176,7 +174,7 @@ public:
 		{
 			int sphereId = m_app->registerGraphicsUnitSphereShape(SPHERE_LOD_MEDIUM);
 			b3Vector3 pos = b3MakeVector3(1, 1, 1);
-			pos[app->getUpAxis()] = 1;
+			pos[cameraResetInfo().upAxis] = 1;
 			b3Quaternion orn(0, 0, 0, 1);
 			b3Vector4 color = b3MakeVector4(1., 0.3, 0.3, 1);
 			b3Vector3 scaling = b3MakeVector3(.1, .1, .1);

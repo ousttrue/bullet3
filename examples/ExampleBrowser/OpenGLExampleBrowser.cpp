@@ -304,7 +304,7 @@ private:
 		{
 			//either Y = up or Z
 			int upAxis = enable ? 1 : 2;
-			s_app->setUpAxis(upAxis);
+			s_app->m_instancingRenderer->getActiveCamera()->setCameraUpAxis(upAxis);
 		}
 
 		if (flag == COV_ENABLE_RENDERING)
@@ -735,12 +735,12 @@ public:
 			s_instancingRenderer->init();
 		}
 		DrawGridData dg;
-		dg.upAxis = s_app->getUpAxis();
+		dg.upAxis = s_instancingRenderer->getActiveCamera()->getCameraUpAxis();
 
 		{
 			BT_PROFILE("Update Camera and Light");
 
-			s_instancingRenderer->updateCamera(dg.upAxis);
+			s_instancingRenderer->updateCamera();
 		}
 
 		static int frameCount = 0;

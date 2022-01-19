@@ -359,7 +359,6 @@ static GLint ProjectionMatrixPointSprite = 0;
 GLInstancingRenderer::GLInstancingRenderer(int maxNumObjectCapacity, int maxShapeCapacityInBytes)
 	: m_textureenabled(true),
 	  m_textureinitialized(false),
-	  m_upAxis(1),
 	  m_planeReflectionShapeIndex(-1)
 {
 	m_data = new InternalDataRenderer;
@@ -1538,12 +1537,9 @@ void GLInstancingRenderer::setProjectiveTexture(bool useProjectiveTexture)
 	m_data->m_useProjectiveTexture = useProjectiveTexture;
 }
 
-void GLInstancingRenderer::updateCamera(int upAxis)
+void GLInstancingRenderer::updateCamera()
 {
 	b3Assert(glGetError() == GL_NO_ERROR);
-	m_upAxis = upAxis;
-
-	m_data->m_activeCamera->setCameraUpAxis(upAxis);
 	m_data->m_defaultCamera1.update();
 	m_data->m_activeCamera->getCameraProjectionMatrix(m_data->m_projectionMatrix);
 	m_data->m_activeCamera->getCameraViewMatrix(m_data->m_viewMatrix);

@@ -29,8 +29,6 @@ class GLInstancingRenderer : public CommonRenderInterface
 	bool m_textureenabled;
 	bool m_textureinitialized;
 
-	int m_upAxis;
-
 	int m_planeReflectionShapeIndex;
 
 	int registerGraphicsInstanceInternal(int shapeIndex, const float* position, const float* quaternion, const float* color, const float* scaling);
@@ -110,7 +108,7 @@ public:
 	virtual void drawPoint(const double* position, const double color[4], double pointDrawSize = 1);
 	virtual void drawTexturedTriangleMesh(float worldPosition[3], float worldOrientation[4], const float* vertices, int numvertices, const unsigned int* indices, int numIndices, float color[4], int textureIndex = -1, int vertexLayout = 0);
 
-	virtual void updateCamera(int upAxis = 1);
+	virtual void updateCamera();
 
 	virtual const CommonCameraInterface* getActiveCamera() const;
 	virtual CommonCameraInterface* getActiveCamera();

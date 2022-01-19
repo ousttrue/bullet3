@@ -77,7 +77,6 @@ public:
 	//	m_counter(0)
 	{
 		gTotalPoints = 0;
-		m_app->setUpAxis(1);
 
 		switch (m_tutorialIndex)
 		{
@@ -306,6 +305,7 @@ public:
 		info.camPosX = 0;
 		info.camPosY = 0;
 		info.camPosZ = 0;
+		info.upAxis = 1;
 		return info;
 	}
 };
