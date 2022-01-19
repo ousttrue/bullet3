@@ -1150,25 +1150,25 @@ public:
 	float m_resetCameraCamPosY;
 	float m_resetCameraCamPosZ;
 
-	void resetCamera(const CameraResetInfo& info) override
-	{
-		m_csGUI->lock();
-		m_cameraUpdated = true;
-		m_resetCameraCamDist = info.camDist;
-		m_resetCameraYaw = info.yaw;
-		m_resetCameraPitch = info.pitch;
-		m_resetCameraCamPosX = info.camPosX;
-		m_resetCameraCamPosY = info.camPosY;
-		m_resetCameraCamPosZ = info.camPosZ;
+// 	void resetCamera(const CameraResetInfo& info) override
+// 	{
+// 		m_csGUI->lock();
+// 		m_cameraUpdated = true;
+// 		m_resetCameraCamDist = info.camDist;
+// 		m_resetCameraYaw = info.yaw;
+// 		m_resetCameraPitch = info.pitch;
+// 		m_resetCameraCamPosX = info.camPosX;
+// 		m_resetCameraCamPosY = info.camPosY;
+// 		m_resetCameraCamPosZ = info.camPosZ;
 
-#ifdef SYNC_CAMERA_USING_GUI_CS
-		m_csGUI->unlock();
-#else
-		setSharedParam(1, eGUIHelperResetCamera);
-		workerThreadWait();
-		m_childGuiHelper->resetCamera(camDist, yaw, pitch, camPosX, camPosY, camPosZ);
-#endif  //SYNC_CAMERA_USING_GUI_CS
-	}
+// #ifdef SYNC_CAMERA_USING_GUI_CS
+// 		m_csGUI->unlock();
+// #else
+// 		setSharedParam(1, eGUIHelperResetCamera);
+// 		workerThreadWait();
+// 		m_childGuiHelper->resetCamera(camDist, yaw, pitch, camPosX, camPosY, camPosZ);
+// #endif  //SYNC_CAMERA_USING_GUI_CS
+// 	}
 
 	virtual bool getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float camTarget[3]) const
 	{
@@ -2004,7 +2004,7 @@ void PhysicsServerExample::updateGraphics()
 		info.camPosX = m_multiThreadedHelper->m_resetCameraCamPosX;
 		info.camPosY = m_multiThreadedHelper->m_resetCameraCamPosY;
 		info.camPosZ = m_multiThreadedHelper->m_resetCameraCamPosZ;
-		m_multiThreadedHelper->m_childGuiHelper->resetCamera(info);
+		// m_multiThreadedHelper->m_childGuiHelper->resetCamera(info);
 	}
 	m_multiThreadedHelper->getCriticalSectionGUI()->unlock();
 #endif
@@ -2470,7 +2470,7 @@ void PhysicsServerExample::updateGraphics()
 			info.camPosX = m_multiThreadedHelper->m_resetCameraCamPosX;
 			info.camPosY = m_multiThreadedHelper->m_resetCameraCamPosY;
 			info.camPosZ = m_multiThreadedHelper->m_resetCameraCamPosZ;
-			m_multiThreadedHelper->m_childGuiHelper->resetCamera(info);
+			// m_multiThreadedHelper->m_childGuiHelper->resetCamera(info);
 			m_multiThreadedHelper->mainThreadRelease();
 			break;
 		}

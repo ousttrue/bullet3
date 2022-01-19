@@ -11522,7 +11522,7 @@ bool PhysicsServerCommandProcessor::processConfigureOpenGLVisualizerCommand(cons
 		info.camPosX=clientCmd.m_configureOpenGLVisualizerArguments.m_cameraTargetPosition[0];
 		info.camPosY=clientCmd.m_configureOpenGLVisualizerArguments.m_cameraTargetPosition[1];
 		info.camPosZ=clientCmd.m_configureOpenGLVisualizerArguments.m_cameraTargetPosition[2];
-		m_data->m_guiHelper->resetCamera(info);
+		// m_data->m_guiHelper->resetCamera(info);
 	}
 	if (m_data->m_guiHelper->getRenderInterface())
 	{

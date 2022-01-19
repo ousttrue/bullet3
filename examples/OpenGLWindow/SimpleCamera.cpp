@@ -504,128 +504,128 @@ btVector3 SimpleCamera::getRayTo(int x, int y) const
 	rayTo -= btScalar(y) * dVert;
 	return rayTo;
 }
-	// btVector3 getRayTo(int x, int y)
-	// {
-	// 	CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
+// btVector3 getRayTo(int x, int y)
+// {
+// 	CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
 
-	// 	if (!renderer)
-	// 	{
-	// 		btAssert(0);
-	// 		return btVector3(0, 0, 0);
-	// 	}
+// 	if (!renderer)
+// 	{
+// 		btAssert(0);
+// 		return btVector3(0, 0, 0);
+// 	}
 
-	// 	float top = 1.f;
-	// 	float bottom = -1.f;
-	// 	float nearPlane = 1.f;
-	// 	float tanFov = (top - bottom) * 0.5f / nearPlane;
-	// 	float fov = btScalar(2.0) * btAtan(tanFov);
+// 	float top = 1.f;
+// 	float bottom = -1.f;
+// 	float nearPlane = 1.f;
+// 	float tanFov = (top - bottom) * 0.5f / nearPlane;
+// 	float fov = btScalar(2.0) * btAtan(tanFov);
 
-	// 	btVector3 camPos, camTarget;
-	// 	renderer->getActiveCamera()->getCameraPosition(camPos);
-	// 	renderer->getActiveCamera()->getCameraTargetPosition(camTarget);
+// 	btVector3 camPos, camTarget;
+// 	renderer->getActiveCamera()->getCameraPosition(camPos);
+// 	renderer->getActiveCamera()->getCameraTargetPosition(camTarget);
 
-	// 	btVector3 rayFrom = camPos;
-	// 	btVector3 rayForward = (camTarget - camPos);
-	// 	rayForward.normalize();
-	// 	float farPlane = 10000.f;
-	// 	rayForward *= farPlane;
+// 	btVector3 rayFrom = camPos;
+// 	btVector3 rayForward = (camTarget - camPos);
+// 	rayForward.normalize();
+// 	float farPlane = 10000.f;
+// 	rayForward *= farPlane;
 
-	// 	btVector3 rightOffset;
-	// 	btVector3 cameraUp = btVector3(0, 0, 0);
-	// 	cameraUp[m_guiHelper->getAppInterface()->getUpAxis()] = 1;
+// 	btVector3 rightOffset;
+// 	btVector3 cameraUp = btVector3(0, 0, 0);
+// 	cameraUp[m_guiHelper->getAppInterface()->getUpAxis()] = 1;
 
-	// 	btVector3 vertical = cameraUp;
+// 	btVector3 vertical = cameraUp;
 
-	// 	btVector3 hor;
-	// 	hor = rayForward.cross(vertical);
-	// 	hor.normalize();
-	// 	vertical = hor.cross(rayForward);
-	// 	vertical.normalize();
+// 	btVector3 hor;
+// 	hor = rayForward.cross(vertical);
+// 	hor.normalize();
+// 	vertical = hor.cross(rayForward);
+// 	vertical.normalize();
 
-	// 	float tanfov = tanf(0.5f * fov);
+// 	float tanfov = tanf(0.5f * fov);
 
-	// 	hor *= 2.f * farPlane * tanfov;
-	// 	vertical *= 2.f * farPlane * tanfov;
+// 	hor *= 2.f * farPlane * tanfov;
+// 	vertical *= 2.f * farPlane * tanfov;
 
-	// 	btScalar aspect;
-	// 	float width = float(renderer->getScreenWidth());
-	// 	float height = float(renderer->getScreenHeight());
+// 	btScalar aspect;
+// 	float width = float(renderer->getScreenWidth());
+// 	float height = float(renderer->getScreenHeight());
 
-	// 	aspect = width / height;
+// 	aspect = width / height;
 
-	// 	hor *= aspect;
+// 	hor *= aspect;
 
-	// 	btVector3 rayToCenter = rayFrom + rayForward;
-	// 	btVector3 dHor = hor * 1.f / width;
-	// 	btVector3 dVert = vertical * 1.f / height;
+// 	btVector3 rayToCenter = rayFrom + rayForward;
+// 	btVector3 dHor = hor * 1.f / width;
+// 	btVector3 dVert = vertical * 1.f / height;
 
-	// 	btVector3 rayTo = rayToCenter - 0.5f * hor + 0.5f * vertical;
-	// 	rayTo += btScalar(x) * dHor;
-	// 	rayTo -= btScalar(y) * dVert;
-	// 	return rayTo;
-	// }
+// 	btVector3 rayTo = rayToCenter - 0.5f * hor + 0.5f * vertical;
+// 	rayTo += btScalar(x) * dHor;
+// 	rayTo -= btScalar(y) * dVert;
+// 	return rayTo;
+// }
 
-	// btVector3 getRayTo(int x, int y)
-	// {
-	// 	CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
+// btVector3 getRayTo(int x, int y)
+// {
+// 	CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
 
-	// 	if (!renderer)
-	// 	{
-	// 		btAssert(0);
-	// 		return btVector3(0, 0, 0);
-	// 	}
+// 	if (!renderer)
+// 	{
+// 		btAssert(0);
+// 		return btVector3(0, 0, 0);
+// 	}
 
-	// 	float top = 1.f;
-	// 	float bottom = -1.f;
-	// 	float nearPlane = 1.f;
-	// 	float tanFov = (top - bottom) * 0.5f / nearPlane;
-	// 	float fov = btScalar(2.0) * btAtan(tanFov);
+// 	float top = 1.f;
+// 	float bottom = -1.f;
+// 	float nearPlane = 1.f;
+// 	float tanFov = (top - bottom) * 0.5f / nearPlane;
+// 	float fov = btScalar(2.0) * btAtan(tanFov);
 
-	// 	btVector3 camPos, camTarget;
+// 	btVector3 camPos, camTarget;
 
-	// 	renderer->getActiveCamera()->getCameraPosition(camPos);
-	// 	renderer->getActiveCamera()->getCameraTargetPosition(camTarget);
+// 	renderer->getActiveCamera()->getCameraPosition(camPos);
+// 	renderer->getActiveCamera()->getCameraTargetPosition(camTarget);
 
-	// 	btVector3 rayFrom = camPos;
-	// 	btVector3 rayForward = (camTarget - camPos);
-	// 	rayForward.normalize();
-	// 	float farPlane = 10000.f;
-	// 	rayForward *= farPlane;
+// 	btVector3 rayFrom = camPos;
+// 	btVector3 rayForward = (camTarget - camPos);
+// 	rayForward.normalize();
+// 	float farPlane = 10000.f;
+// 	rayForward *= farPlane;
 
-	// 	btVector3 rightOffset;
-	// 	btVector3 cameraUp = btVector3(0, 0, 0);
-	// 	cameraUp[m_guiHelper->getAppInterface()->getUpAxis()] = 1;
+// 	btVector3 rightOffset;
+// 	btVector3 cameraUp = btVector3(0, 0, 0);
+// 	cameraUp[m_guiHelper->getAppInterface()->getUpAxis()] = 1;
 
-	// 	btVector3 vertical = cameraUp;
+// 	btVector3 vertical = cameraUp;
 
-	// 	btVector3 hor;
-	// 	hor = rayForward.cross(vertical);
-	// 	hor.safeNormalize();
-	// 	vertical = hor.cross(rayForward);
-	// 	vertical.safeNormalize();
+// 	btVector3 hor;
+// 	hor = rayForward.cross(vertical);
+// 	hor.safeNormalize();
+// 	vertical = hor.cross(rayForward);
+// 	vertical.safeNormalize();
 
-	// 	float tanfov = tanf(0.5f * fov);
+// 	float tanfov = tanf(0.5f * fov);
 
-	// 	hor *= 2.f * farPlane * tanfov;
-	// 	vertical *= 2.f * farPlane * tanfov;
+// 	hor *= 2.f * farPlane * tanfov;
+// 	vertical *= 2.f * farPlane * tanfov;
 
-	// 	btScalar aspect;
-	// 	float width = float(renderer->getScreenWidth());
-	// 	float height = float(renderer->getScreenHeight());
+// 	btScalar aspect;
+// 	float width = float(renderer->getScreenWidth());
+// 	float height = float(renderer->getScreenHeight());
 
-	// 	aspect = width / height;
+// 	aspect = width / height;
 
-	// 	hor *= aspect;
+// 	hor *= aspect;
 
-	// 	btVector3 rayToCenter = rayFrom + rayForward;
-	// 	btVector3 dHor = hor * 1.f / width;
-	// 	btVector3 dVert = vertical * 1.f / height;
+// 	btVector3 rayToCenter = rayFrom + rayForward;
+// 	btVector3 dHor = hor * 1.f / width;
+// 	btVector3 dVert = vertical * 1.f / height;
 
-	// 	btVector3 rayTo = rayToCenter - 0.5f * hor + 0.5f * vertical;
-	// 	rayTo += btScalar(x) * dHor;
-	// 	rayTo -= btScalar(y) * dVert;
-	// 	return rayTo;
-	// }
+// 	btVector3 rayTo = rayToCenter - 0.5f * hor + 0.5f * vertical;
+// 	rayTo += btScalar(x) * dHor;
+// 	rayTo -= btScalar(y) * dVert;
+// 	return rayTo;
+// }
 
 // btVector3 PhysicsServerExample::getRayTo(int x, int y)
 // {
@@ -687,3 +687,20 @@ btVector3 SimpleCamera::getRayTo(int x, int y) const
 // 	rayTo -= btScalar(y) * dVert;
 // 	return rayTo;
 // }
+
+void SimpleCamera::resetCamera(const CameraResetInfo& info)
+{
+	setCameraDistance(info.camDist);
+	setCameraPitch(info.pitch);
+	setCameraYaw(info.yaw);
+	setCameraTargetPosition(info.camPosX, info.camPosY, info.camPosZ);
+	switch (info.upAxis)
+	{
+		case 0:
+			setCameraUpAxis(0);
+		case 1:
+			setCameraUpAxis(1);
+		case 2:
+			setCameraUpAxis(2);
+	}
+}

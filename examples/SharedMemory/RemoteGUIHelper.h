@@ -51,8 +51,6 @@ struct RemoteGUIHelper : public GUIHelperInterface
 
 	virtual void setUpAxis(int axis);
 
-	void resetCamera(const CameraResetInfo& info) override;
-
 	virtual void copyCameraImageData(const float viewMatrix[16], const float projectionMatrix[16],
 									 unsigned char* pixelsRGBA, int rgbaBufferSizeInPixels,
 									 float* depthBuffer, int depthBufferSizeInPixels,

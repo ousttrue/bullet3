@@ -61,6 +61,7 @@ struct SimpleCamera : public CommonCameraInterface
 	void resize(int width, int height) override;
 
 	btVector3 getRayTo(int x, int y) const override;
+	void resetCamera(const CameraResetInfo& info) override;
 };
 
 #endif  //SIMPLE_CAMERA_H

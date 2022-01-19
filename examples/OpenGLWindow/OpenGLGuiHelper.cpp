@@ -1176,29 +1176,6 @@ void OpenGLGuiHelper::setVisualizerFlag(int flag, int enable)
 		(m_data->m_visualizerFlagCallback)(flag, enable != 0);
 }
 
-void OpenGLGuiHelper::resetCamera(const CameraResetInfo& info)
-{
-	if (getRenderInterface())
-	{
-		if (auto camera = getRenderInterface()->getActiveCamera())
-		{
-			camera->setCameraDistance(info.camDist);
-			camera->setCameraPitch(info.pitch);
-			camera->setCameraYaw(info.yaw);
-			camera->setCameraTargetPosition(info.camPosX, info.camPosY, info.camPosZ);
-			switch (info.upAxis)
-			{
-				case 0:
-					camera->setCameraUpAxis(0);
-				case 1:
-					camera->setCameraUpAxis(1);
-				case 2:
-					camera->setCameraUpAxis(2);
-			}
-		}
-	}
-}
-
 bool OpenGLGuiHelper::getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float cameraTarget[3]) const
 {
 	if (getRenderInterface() && getRenderInterface()->getActiveCamera())

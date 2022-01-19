@@ -71,8 +71,6 @@ struct GUIHelperInterface
 
 	virtual void setUpAxis(int axis) = 0;
 
-	virtual void resetCamera(const CameraResetInfo& resetInfo) = 0;
-
 	virtual bool getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float camTarget[3]) const
 	{
 		return false;
@@ -178,9 +176,6 @@ struct DummyGUIHelper : public GUIHelperInterface
 	}
 
 	virtual void setUpAxis(int axis)
-	{
-	}
-	void resetCamera(const CameraResetInfo& info) override
 	{
 	}
 

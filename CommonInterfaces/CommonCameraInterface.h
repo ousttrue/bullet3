@@ -58,4 +58,5 @@ struct CommonCameraInterface
 	virtual void resize(int width, int height) = 0;
 
 	virtual btVector3 getRayTo(int x, int y) const = 0;
+	virtual void resetCamera(const CameraResetInfo& info) {}
 };

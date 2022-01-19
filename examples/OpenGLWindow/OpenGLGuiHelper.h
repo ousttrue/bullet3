@@ -42,7 +42,6 @@ struct OpenGLGuiHelper : public GUIHelperInterface
 	CommonParameterInterface* getParameterInterface() override;
 	struct CommonGraphicsApp* getAppInterface() override;
 	void setUpAxis(int axis) override;
-	void resetCamera(const CameraResetInfo& resetInfo) override;
 	bool getCameraInfo(int* width, int* height, float viewMatrix[16], float projectionMatrix[16], float camUp[3], float camForward[3], float hor[3], float vert[3], float* yaw, float* pitch, float* camDist, float cameraTarget[3]) const override;
 	void copyCameraImageData(const float viewMatrix[16], const float projectionMatrix[16],
 							 unsigned char* pixelsRGBA, int rgbaBufferSizeInPixels,

@@ -386,7 +386,7 @@ private:
 		if (sCurrentDemo)
 		{
 			sCurrentDemo->initPhysics(s_guiHelper->getRenderInterface()->getActiveCamera(), s_guiHelper);
-			s_guiHelper->resetCamera(sCurrentDemo->cameraResetInfo());
+			s_guiHelper->getRenderInterface()->getActiveCamera()->resetCamera(sCurrentDemo->cameraResetInfo());
 		}
 	}
 
@@ -426,7 +426,7 @@ private:
 				sCurrentDemo->initPhysics(s_guiHelper->getRenderInterface()->getActiveCamera(), s_guiHelper);
 				if (resetCamera)
 				{
-					s_guiHelper->resetCamera(sCurrentDemo->cameraResetInfo());
+					s_guiHelper->getRenderInterface()->getActiveCamera()->resetCamera(sCurrentDemo->cameraResetInfo());
 				}
 			}
 		}

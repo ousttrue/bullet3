@@ -1272,7 +1272,8 @@ void BenchmarkDemo::createTest8()
 	info.camPosX = 0;
 	info.camPosY = 1;
 	info.camPosZ = 0;
-	m_guiHelper->resetCamera(info);
+	// m_guiHelper->resetCamera(info);
+
 	// Create a shape and rigid body for each Voronoi cell.
 	const float fallHeight = 3.5f;
 	for (int i = 0; i < halton_numc; ++i)

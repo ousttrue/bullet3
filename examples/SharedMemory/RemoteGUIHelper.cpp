@@ -589,9 +589,6 @@ void RemoteGUIHelper::setUpAxis(int axis)
 		}
 	}
 }
-void RemoteGUIHelper::resetCamera(const CameraResetInfo &info)
-{
-}
 
 void RemoteGUIHelper::copyCameraImageData(const float viewMatrix[16], const float projectionMatrix[16],
 										  unsigned char* pixelsRGBA, int rgbaBufferSizeInPixels,
