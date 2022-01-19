@@ -79,7 +79,7 @@ public:
 	PhysicsClientExample(GUIHelperInterface* helper, int options);
 	virtual ~PhysicsClientExample();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void selectComboBox(int comboIndex, const char* name)
 	{
 		if (m_guiHelper && m_guiHelper->getParameterInterface())
@@ -189,7 +189,7 @@ public:
 			b3JointControlSetMaximumForce(commandHandle, uIndex, 5000);
 		}
 	}
-	virtual void physicsDebugDraw(int debugFlags)
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
 	{
 		if (m_options == eCLIENTEXAMPLE_SERVER)
 		{
@@ -711,7 +711,7 @@ void PhysicsClientExample::createButtons()
 	}
 }
 
-void PhysicsClientExample::initPhysics(CommonCameraInterface *camera)
+void PhysicsClientExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	if (m_guiHelper && m_guiHelper->getParameterInterface())
 	{

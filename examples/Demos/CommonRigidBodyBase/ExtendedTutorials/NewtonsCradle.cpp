@@ -52,7 +52,7 @@ struct NewtonsCradleExample : public CommonRigidBodyBase
 	virtual ~NewtonsCradleExample()
 	{
 	}
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void createPendulum(btSphereShape* colShape, const btVector3& position, btScalar length, btScalar mass);
 	virtual void changePendulaLength(btScalar length);
 	virtual void changePendulaRestitution(btScalar restitution);
@@ -83,7 +83,7 @@ void onPendulaRestitutionChanged(float pendulaRestitution, void* userPtr);  // c
 
 void applyForceWithForceScalar(float forceScalar);
 
-void NewtonsCradleExample::initPhysics(CommonCameraInterface *camera)
+void NewtonsCradleExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	{  // create a slider to change the number of pendula
 		SliderParams slider("Number of Pendula", &gPendulaQty);

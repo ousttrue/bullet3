@@ -32,11 +32,11 @@ public:
 		  m_cloth(0)
 	{
 	}
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void exitPhysics();
 	virtual void stepSimulation(float deltaTime);
 	void renderScene() override;
-	virtual void physicsDebugDraw(int debugFlags);  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper);  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override
 	{
 		return false;
@@ -63,7 +63,7 @@ info.camPosZ = -3.6;
 	}
 };
 
-void ImplicitClothExample::initPhysics(CommonCameraInterface *camera)
+void ImplicitClothExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	float size = 10;
 	m_guiHelper->setUpAxis(1);
@@ -91,7 +91,7 @@ void ImplicitClothExample::stepSimulation(float deltaTime)
 void ImplicitClothExample::renderScene()
 {
 }
-void ImplicitClothExample::physicsDebugDraw(int debugFlags)
+void ImplicitClothExample::physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
 {
 	CommonRenderInterface* renderer = m_guiHelper->getRenderInterface();
 

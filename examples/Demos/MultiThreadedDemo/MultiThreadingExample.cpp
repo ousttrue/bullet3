@@ -177,7 +177,7 @@ public:
 	{
 	}
 
-	void initPhysics(CommonCameraInterface* camera) override
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override
 	{
 		b3Printf("initPhysics");
 

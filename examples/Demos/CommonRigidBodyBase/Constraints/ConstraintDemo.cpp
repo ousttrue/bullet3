@@ -33,7 +33,7 @@ class AllConstraintDemo : public CommonRigidBodyBase
 public:
 	AllConstraintDemo(struct GUIHelperInterface* helper);
 	~AllConstraintDemo() override;
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -70,7 +70,7 @@ btGeneric6DofConstraint* spSlider6Dof = NULL;
 
 static bool s_bTestConeTwistMotor = false;
 
-void AllConstraintDemo::initPhysics(CommonCameraInterface *camera)
+void AllConstraintDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

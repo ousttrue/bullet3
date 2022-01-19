@@ -191,7 +191,7 @@ public:
 	{
 	}
 
-	void initPhysics(CommonCameraInterface* camera) override
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override
 	{
 		BuildKukaIIWAShape();
 		m_ikJacobian = new Jacobian(&m_ikTree);

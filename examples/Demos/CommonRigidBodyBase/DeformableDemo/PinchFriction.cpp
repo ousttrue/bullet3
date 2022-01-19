@@ -44,7 +44,7 @@ public:
 	virtual ~PinchFriction()
 	{
 	}
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
@@ -198,7 +198,7 @@ void dynamics2(btScalar time, btDeformableMultiBodyDynamicsWorld* world)
 	rb1->setFriction(200);
 }
 
-void PinchFriction::initPhysics(CommonCameraInterface* camera)
+void PinchFriction::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

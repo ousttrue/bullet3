@@ -30,7 +30,7 @@ public:
 	{
 	}
 
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void stepSimulation(float deltaTime) override;
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -286,7 +286,7 @@ btMultiBody* createInvertedPendulumMultiBody(btMultiBodyDynamicsWorld* world, GU
 	return pMultiBody;
 }
 
-void InvertedPendulumPDControl::initPhysics(CommonCameraInterface *camera)
+void InvertedPendulumPDControl::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	{
 		SliderParams slider("Kp", &kp);

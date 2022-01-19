@@ -51,7 +51,7 @@ struct InclinedPlaneExample : public CommonRigidBodyBase
 	{
 	}
 	virtual ~InclinedPlaneExample() {}
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void resetScene();
 	virtual void stepSimulation(float deltaTime);
 	virtual bool keyboardCallback(int key, int state);
@@ -82,7 +82,7 @@ void onRampFrictionChanged(float friction, void* userPtr);
 
 void onRampRestitutionChanged(float restitution, void* userPtr);
 
-void InclinedPlaneExample::initPhysics(CommonCameraInterface *camera)
+void InclinedPlaneExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	{  // create slider to change the ramp tilt
 		SliderParams slider("Ramp Tilt", &gTilt);

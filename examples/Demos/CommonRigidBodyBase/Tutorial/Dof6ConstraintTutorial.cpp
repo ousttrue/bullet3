@@ -43,7 +43,7 @@ struct Dof6ConstraintTutorial : public CommonRigidBodyBase
 
 	Dof6ConstraintTutorial(struct GUIHelperInterface* helper);
 	virtual ~Dof6ConstraintTutorial();
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -105,7 +105,7 @@ Dof6ConstraintTutorial::~Dof6ConstraintTutorial()
 	exitPhysics();
 	delete m_data;
 }
-void Dof6ConstraintTutorial::initPhysics(CommonCameraInterface *camera)
+void Dof6ConstraintTutorial::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	// Setup the basic world
 	m_guiHelper->setUpAxis(1);

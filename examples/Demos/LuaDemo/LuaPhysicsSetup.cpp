@@ -10,7 +10,7 @@ struct LuaPhysicsSetup : public CommonMultiBodyBase
 	LuaPhysicsSetup(GUIHelperInterface* helper);
 	virtual ~LuaPhysicsSetup();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
 	virtual void exitPhysics();
 
@@ -370,7 +370,7 @@ static void report_errors(lua_State* L, int status)
 	}
 }
 
-void LuaPhysicsSetup::initPhysics(CommonCameraInterface *camera)
+void LuaPhysicsSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(upaxis);
 	const char* prefix[] = {"./", "./data/", "../data/", "../../data/", "../../../data/", "../../../../data/"};

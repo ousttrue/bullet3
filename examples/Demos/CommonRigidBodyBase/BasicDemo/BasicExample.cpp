@@ -32,7 +32,7 @@ struct BasicExample : public CommonRigidBodyBase
 
 	~BasicExample() override {}
 
-	void initPhysics(CommonCameraInterface *camera) override
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override
 	{
 		m_guiHelper->setUpAxis(1);
 

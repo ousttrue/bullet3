@@ -67,7 +67,7 @@ public:
 		delete m_tinyVrGUI;
 	}
 
-	void initPhysics(CommonCameraInterface* camera) override
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override
 	{
 	}
 	void exitPhysics() override

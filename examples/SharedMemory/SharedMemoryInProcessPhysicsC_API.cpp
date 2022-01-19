@@ -171,7 +171,7 @@ public:
 
 		options.m_skipGraphicsUpdate = skipGraphicsUpdate;
 		m_physicsServerExample = PhysicsServerCreateFuncBullet2(options);
-		m_physicsServerExample->initPhysics(m_guiHelper->getRenderInterface()->getActiveCamera());
+		m_physicsServerExample->initPhysics(m_guiHelper->getRenderInterface()->getActiveCamera(), m_guiHelper);
 		//m_physicsServerExample->resetCamera();
 		setSharedMemoryInterface(m_sharedMem);
 		m_clock.reset();

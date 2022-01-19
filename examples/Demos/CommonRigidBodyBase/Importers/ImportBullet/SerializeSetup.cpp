@@ -12,7 +12,7 @@ public:
 	SerializeSetup(struct GUIHelperInterface* helper, const char* fileName);
 	virtual ~SerializeSetup();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime);
 	virtual void setFileName(const char* fileName)
 	{
@@ -47,7 +47,7 @@ SerializeSetup::~SerializeSetup()
 {
 }
 
-void SerializeSetup::initPhysics(CommonCameraInterface *camera)
+void SerializeSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_physics = new Physics;
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();

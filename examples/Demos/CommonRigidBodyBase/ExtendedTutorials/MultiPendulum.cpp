@@ -52,7 +52,7 @@ struct MultiPendulumExample : public CommonRigidBodyBase
 	{
 	}
 
-	void initPhysics(CommonCameraInterface *camera) override;                                                                                                                 // build a multi pendulum
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;                                                                                                                 // build a multi pendulum
 	virtual void createMultiPendulum(btSphereShape* colShape, btScalar pendulaQty, const btVector3& position, btScalar length, btScalar mass);  // create a multi pendulum at the indicated x and y position, the specified number of pendula formed into a chain, each with indicated length and mass
 	virtual void changePendulaLength(btScalar length);                                                                                          // change the pendulum length
 	virtual void changePendulaRestitution(btScalar restitution);                                                                                // change the pendula restitution
@@ -83,7 +83,7 @@ void onMultiPendulaRestitutionChanged(float pendulaRestitution, void*);  // chan
 
 void applyMForceWithForceScalar(float forceScalar);
 
-void MultiPendulumExample::initPhysics(CommonCameraInterface *camera)
+void MultiPendulumExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {  // Setup your physics scene
 
 	{  // create a slider to change the number of pendula

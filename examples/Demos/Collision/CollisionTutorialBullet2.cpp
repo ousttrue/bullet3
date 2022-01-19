@@ -239,7 +239,7 @@ public:
 		m_timeSeriesCanvas0 = 0;
 	}
 
-	void initPhysics(CommonCameraInterface* camera) override
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override
 	{
 	}
 	void exitPhysics() override

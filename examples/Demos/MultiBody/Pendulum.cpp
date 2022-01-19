@@ -35,7 +35,7 @@ struct Pendulum : public CommonMultiBodyBase
 public:
 	Pendulum(struct GUIHelperInterface* helper) : CommonMultiBodyBase(helper) {}
 	Pendulum::~Pendulum() override {}
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime);
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -50,7 +50,7 @@ public:
 	}
 };
 
-void Pendulum::initPhysics(CommonCameraInterface *camera)
+void Pendulum::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	int upAxis = 1;
 
@@ -177,7 +177,7 @@ TEST(BulletDynamicsTest, pendulum)
 {
 	DummyGUIHelper noGfx;
 	Pendulum* setup = new Pendulum(&noGfx);
-	setup->initPhysics({});
+	setup->initPhysics({}, &noGfx);
 	int numGoldValues = sizeof(sPendulumGold) / sizeof(float);
 	for (int i = 0; i < 2000; i++)
 	{

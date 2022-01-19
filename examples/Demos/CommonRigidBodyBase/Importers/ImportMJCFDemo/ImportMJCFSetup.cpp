@@ -28,7 +28,7 @@ public:
 	ImportMJCFSetup(struct GUIHelperInterface* helper, int option, const char* fileName);
 	virtual ~ImportMJCFSetup();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime);
 
 	void setFileName(const char* mjcfFileName);
@@ -176,7 +176,7 @@ struct MyMJCFLogger : public MJCFErrorLogger
 	}
 };
 
-void ImportMJCFSetup::initPhysics(CommonCameraInterface *camera)
+void ImportMJCFSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(m_upAxis);
 

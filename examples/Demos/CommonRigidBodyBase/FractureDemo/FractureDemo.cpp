@@ -54,7 +54,7 @@ public:
 	virtual ~FractureDemo()
 	{
 	}
-	void initPhysics(CommonCameraInterface *camera)override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)override;
 	void exitPhysics()override;
 	void stepSimulation(float deltaTime)override
 	{
@@ -65,14 +65,12 @@ public:
 			BT_PROFILE("recreate graphics");
 			//@todo: make this graphics re-creation better
 			//right now: brute force remove all graphics objects, and re-create them every frame
-			m_guiHelper->getRenderInterface()->removeAllInstances();
 			for (int i = 0; i < m_dynamicsWorld->getNumCollisionObjects(); i++)
 			{
 				btCollisionObject* colObj = m_dynamicsWorld->getCollisionObjectArray()[i];
 				colObj->getCollisionShape()->setUserIndex(-1);
 				colObj->setUserIndex(-1);
 			}
-			m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 		}
 	}
 
@@ -91,7 +89,7 @@ public:
 	}
 };
 
-void FractureDemo::initPhysics(CommonCameraInterface *camera)
+void FractureDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

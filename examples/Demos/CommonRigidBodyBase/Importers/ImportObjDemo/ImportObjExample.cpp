@@ -21,7 +21,7 @@ public:
 	ImportObjSetup(struct GUIHelperInterface* helper, const char* fileName);
 	virtual ~ImportObjSetup();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -83,7 +83,7 @@ int loadAndRegisterMeshFromFile2(const std::string& fileName, CommonRenderInterf
 	return shapeId;
 }
 
-void ImportObjSetup::initPhysics(CommonCameraInterface *camera)
+void ImportObjSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(2);
 	m_physics = new Physics;

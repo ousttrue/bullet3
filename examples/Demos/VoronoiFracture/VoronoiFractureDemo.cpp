@@ -70,7 +70,7 @@ public:
 		btAssert(m_physics == 0);
 	}
 
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
 	//virtual void renderme();
 
@@ -622,7 +622,7 @@ void VoronoiFractureDemo::renderme()
 }
 */
 
-void VoronoiFractureDemo::initPhysics(CommonCameraInterface* camera)
+void VoronoiFractureDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

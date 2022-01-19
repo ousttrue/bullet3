@@ -64,8 +64,8 @@ public:
 
 		m_app->m_renderer->writeTransforms();
 	}
-	void physicsDebugDraw(int debugDrawMode)override{}
-	void initPhysics(CommonCameraInterface *camera)override{}
+	void physicsDebugDraw(int debugDrawMode, struct GUIHelperInterface *m_guiHelper)override{}
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)override{}
 	void exitPhysics()override{}
 	void stepSimulation(float deltaTime)override
 	{

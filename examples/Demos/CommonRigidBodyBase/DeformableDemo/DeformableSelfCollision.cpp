@@ -37,7 +37,7 @@ public:
 	virtual ~DeformableSelfCollision()
 	{
 	}
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
@@ -61,7 +61,7 @@ public:
 	void addCloth(const btVector3& origin);
 };
 
-void DeformableSelfCollision::initPhysics(CommonCameraInterface* camera)
+void DeformableSelfCollision::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 	///collision configuration contains default setup for memory, collision setup

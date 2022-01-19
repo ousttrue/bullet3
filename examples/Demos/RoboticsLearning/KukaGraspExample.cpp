@@ -56,7 +56,7 @@ public:
 	{
 	}
 
-	void initPhysics(CommonCameraInterface* camera) override
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override
 	{
 		///create some graphics proxy for the tracking target
 		///the endeffector tries to track it using Inverse Kinematics

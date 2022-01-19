@@ -39,7 +39,7 @@ public:
 	virtual void updateGraphics() {}
 	virtual void stepSimulation(float deltaTime) = 0;
 	void renderScene() override = 0;
-	virtual void physicsDebugDraw(int debugFlags) = 0;  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper) = 0;  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	//reset camera is only called when switching demo. this way you can restart (initPhysics) and watch in a specific location easier
 	virtual void resetCamera(){};
 	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override = 0;

@@ -36,7 +36,7 @@ public:
 	~MultibodyClothAnchor() override
 	{
 	}
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -61,7 +61,7 @@ public:
 	void addColliders(btMultiBody* pMultiBody, btMultiBodyDynamicsWorld* pWorld, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents);
 };
 
-void MultibodyClothAnchor::initPhysics(CommonCameraInterface* camera)
+void MultibodyClothAnchor::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

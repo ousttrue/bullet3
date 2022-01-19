@@ -15,7 +15,7 @@ struct TestHingeTorque : public CommonRigidBodyBase
 
 	TestHingeTorque(struct GUIHelperInterface* helper);
 	virtual ~TestHingeTorque();
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -96,7 +96,7 @@ void TestHingeTorque::stepSimulation(float deltaTime)
 	//CommonRigidBodyBase::stepSimulation(deltaTime);
 }
 
-void TestHingeTorque::initPhysics(CommonCameraInterface *camera)
+void TestHingeTorque::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	int upAxis = 1;
 	m_guiHelper->setUpAxis(upAxis);

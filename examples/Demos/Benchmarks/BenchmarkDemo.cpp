@@ -94,7 +94,7 @@ public:
 	{
 		exitPhysics();
 	}
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 	void stepSimulation(float deltaTime) override;
 
@@ -334,7 +334,7 @@ void BenchmarkDemo::stepSimulation(float deltaTime)
 	}
 }
 
-void BenchmarkDemo::initPhysics(CommonCameraInterface *camera)
+void BenchmarkDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

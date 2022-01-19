@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 
 	example->processCommandLineArgs(argc, argv);
 
-	example->initPhysics(camera);
+	example->initPhysics(camera, &gui);
 	gui.resetCamera(example->cameraResetInfo());
 	// if (m_app->m_renderer && m_app->m_renderer->getActiveCamera())
 	// {
@@ -56,7 +56,10 @@ int main(int argc, char* argv[])
 		btScalar dtSec = btScalar(clock.getTimeInSeconds());
 		if (dtSec > 0.1)
 			dtSec = 0.1;
+		// m_guiHelper->getRenderInterface()->removeAllInstances();
 		example->stepSimulation(dtSec);
+		// m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
+
 		clock.reset();
 
 		// render

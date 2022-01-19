@@ -56,7 +56,7 @@ struct NewtonsRopeCradleExample : public CommonRigidBodyBase
 	{
 	}
 	virtual ~NewtonsRopeCradleExample() {}
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime);
 	virtual void applyPendulumForce(btScalar pendulumForce);
 
@@ -96,7 +96,7 @@ void onRopePendulaRestitutionChanged(float pendulaRestitution, void*);
 
 void applyRForceWithForceScalar(float forceScalar);
 
-void NewtonsRopeCradleExample::initPhysics(CommonCameraInterface *camera)
+void NewtonsRopeCradleExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	{  // create a slider to change the number of pendula
 		SliderParams slider("Number of Pendula", &gPendulaQty);

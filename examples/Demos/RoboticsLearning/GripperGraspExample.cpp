@@ -53,11 +53,11 @@ public:
 	{
 	}
 
-	void physicsDebugDraw(int debugDrawMode)override
+	void physicsDebugDraw(int debugDrawMode, struct GUIHelperInterface *m_guiHelper)override
 	{
 		m_robotSim.debugDraw(debugDrawMode);
 	}
-	void initPhysics(CommonCameraInterface* camera) override
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override
 	{
 		int mode = eCONNECT_EXISTING_EXAMPLE_BROWSER;
 		m_robotSim.setGuiHelper(m_guiHelper);

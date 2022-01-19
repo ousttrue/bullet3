@@ -87,9 +87,9 @@ public:
 
 	virtual bool keyboardCallback(int key, int state);
 
-	virtual void physicsDebugDraw(int debugFlags);
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper);
 
-	void initPhysics(CommonCameraInterface *camera)override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)override;
 	void exitPhysics()override;
 
 	CameraResetInfo cameraResetInfo() const override
@@ -199,7 +199,7 @@ Hinge2Vehicle::~Hinge2Vehicle()
 	//exitPhysics();
 }
 
-void Hinge2Vehicle::initPhysics(CommonCameraInterface *camera)
+void Hinge2Vehicle::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 
@@ -319,7 +319,7 @@ void Hinge2Vehicle::initPhysics(CommonCameraInterface *camera)
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void Hinge2Vehicle::physicsDebugDraw(int debugFlags)
+void Hinge2Vehicle::physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
 {
 	if (m_physics && m_physics->getDynamicsWorld()->getDebugDrawer())
 	{
@@ -393,7 +393,7 @@ void Hinge2Vehicle::displayCallback(void)
 void Hinge2Vehicle::clientResetScene()
 {
 	exitPhysics();
-	initPhysics({});
+	initPhysics({}, {});
 }
 
 void Hinge2Vehicle::resetForklift()

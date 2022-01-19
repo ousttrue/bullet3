@@ -23,10 +23,10 @@ struct RaytracerPhysicsSetup : public CommonExampleInterface
 
 	RaytracerPhysicsSetup(struct CommonGraphicsApp* app);
 	virtual ~RaytracerPhysicsSetup();
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void exitPhysics();
 	virtual void stepSimulation(float deltaTime);
-	virtual void physicsDebugDraw(int debugFlags);
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper);
 	virtual void syncPhysicsToGraphics(struct GraphicsPhysicsBridge& gfxBridge);
 	///worldRaytest performs a ray versus all objects in a collision world, returning true is a hit is found (filling in worldNormal and worldHitPoint)
 	bool worldRaytest(const btVector3& rayFrom, const btVector3& rayTo, btVector3& worldNormal, btVector3& worldHitPoint);
@@ -108,7 +108,7 @@ RaytracerPhysicsSetup::~RaytracerPhysicsSetup()
 	delete m_internalData;
 }
 
-void RaytracerPhysicsSetup::initPhysics(CommonCameraInterface *camera)
+void RaytracerPhysicsSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	//request a visual bitma/texture we can render to
 
@@ -314,7 +314,7 @@ void RaytracerPhysicsSetup::stepSimulation(float deltaTime)
 	m_internalData->m_canvas->refreshImageData(m_internalData->m_canvasIndex);
 }
 
-void RaytracerPhysicsSetup::physicsDebugDraw(int debugDrawFlags)
+void RaytracerPhysicsSetup::physicsDebugDraw(int debugDrawFlags, struct GUIHelperInterface *m_guiHelper)
 {
 }
 

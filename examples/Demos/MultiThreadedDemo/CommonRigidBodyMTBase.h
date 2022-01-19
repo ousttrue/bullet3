@@ -88,7 +88,7 @@ struct CommonRigidBodyMTBase : public CommonExampleInterface
 	}
 
 	virtual void drawScreenText();
-	virtual void physicsDebugDraw(int debugFlags);
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper);
 
 	virtual void exitPhysics()
 	{

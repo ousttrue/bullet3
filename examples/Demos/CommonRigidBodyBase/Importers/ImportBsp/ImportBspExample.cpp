@@ -46,9 +46,9 @@ public:
 
 	virtual ~BspDemo();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
-	void initPhysics(const char* bspfilename);
+	void initPhysics(const char* bspfilename, struct GUIHelperInterface *m_guiHelper);
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -107,14 +107,14 @@ BspDemo::~BspDemo()
 	exitPhysics();  //will delete all default data
 }
 
-void BspDemo::initPhysics(CommonCameraInterface *camera)
+void BspDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	const char* bspfilename = "BspDemo.bsp";
 
-	initPhysics(bspfilename);
+	initPhysics(bspfilename, m_guiHelper);
 }
 
-void BspDemo::initPhysics(const char* bspfilename)
+void BspDemo::initPhysics(const char* bspfilename, struct GUIHelperInterface *m_guiHelper)
 {
 	int cameraUpAxis = 2;
 	m_guiHelper->setUpAxis(cameraUpAxis);
@@ -239,7 +239,7 @@ CommonExampleInterface* ImportBspCreateFunc(struct CommonExampleOptions& options
 {
 	BspDemo* demo = new BspDemo(options.m_guiHelper);
 
-	demo->initPhysics("BspDemo.bsp");
+	demo->initPhysics("BspDemo.bsp", {});
 	return demo;
 }
 /*

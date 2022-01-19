@@ -52,7 +52,7 @@ public:
 		m_maxPickingForce = 1e10;  // allow large picking force with implicit scheme.
 	}
 	~VolumetricDeformable() override {}
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -130,7 +130,7 @@ public:
 	}
 };
 
-void VolumetricDeformable::initPhysics(CommonCameraInterface* camera)
+void VolumetricDeformable::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

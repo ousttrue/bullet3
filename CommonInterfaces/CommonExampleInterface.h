@@ -42,11 +42,11 @@ class CommonExampleInterface
 public:
 	typedef class CommonExampleInterface*(CreateFunc)(CommonExampleOptions& options);
 	virtual ~CommonExampleInterface() {}
-	virtual void initPhysics(CommonCameraInterface* camera) = 0;
+	virtual void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) = 0;
 	virtual void exitPhysics() = 0;
 	virtual void updateGraphics() {}
 	virtual void stepSimulation(float deltaTime) = 0;
-	virtual void physicsDebugDraw(int debugFlags) {}  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper=0) {}  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	virtual CameraResetInfo cameraResetInfo() const { return {}; }
 	virtual bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) { return false; }
 	virtual bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags) { return false; }
@@ -66,7 +66,7 @@ public:
 	{
 		return new EmptyExample;
 	}
-	void initPhysics(CommonCameraInterface* camera) override {}
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override {}
 	void exitPhysics() override {}
 	void stepSimulation(float deltaTime) override {}
 };

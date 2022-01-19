@@ -43,7 +43,7 @@ public:
 	PairBench(GUIHelperInterface* helper);
 	virtual ~PairBench();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void exitPhysics();
 
 	void createBroadphase(int xdim, int ydim, int zdim);
@@ -167,7 +167,7 @@ enum PairToggleButtons
 
 #define PAIRS_CL_PROGRAM_PATH "Demos3/GpuDemos/broadphase/pairsKernel.cl"
 
-void PairBench::initPhysics(CommonCameraInterface *camera)
+void PairBench::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	dimensions[0] = 10;
 	dimensions[1] = 10;

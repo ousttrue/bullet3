@@ -46,7 +46,7 @@ public:
 	{
 	}
 
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
@@ -68,7 +68,7 @@ public:
 	void addColliders_testMultiDof(btMultiBody* pMultiBody, btMultiBodyDynamicsWorld* pWorld, const btVector3& baseHalfExtents, const btVector3& linkHalfExtents);
 };
 
-void DeformableMultibody::initPhysics(CommonCameraInterface* camera)
+void DeformableMultibody::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

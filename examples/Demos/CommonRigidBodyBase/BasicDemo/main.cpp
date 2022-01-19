@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	CommonExampleOptions options(&noGfx);
 	CommonExampleInterface* example = BasicExampleCreateFunc(options);
 
-	example->initPhysics(noGfx.getRenderInterface()->getActiveCamera());
+	example->initPhysics(noGfx.getRenderInterface()->getActiveCamera(), &noGfx);
 	example->stepSimulation(1.f / 60.f);
 	example->exitPhysics();
 

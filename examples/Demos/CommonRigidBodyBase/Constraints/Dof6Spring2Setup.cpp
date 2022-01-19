@@ -42,7 +42,7 @@ struct Dof6Spring2Setup : public CommonRigidBodyBase
 
 	Dof6Spring2Setup(struct GUIHelperInterface* helper);
 	virtual ~Dof6Spring2Setup();
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -95,7 +95,7 @@ Dof6Spring2Setup::~Dof6Spring2Setup()
 	exitPhysics();
 	delete m_data;
 }
-void Dof6Spring2Setup::initPhysics(CommonCameraInterface *camera)
+void Dof6Spring2Setup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	// Setup the basic world
 	m_guiHelper->setUpAxis(1);

@@ -17,6 +17,7 @@
 #define NN3D_WALKERS_TIME_WARP_BASE_H
 
 #include "CommonCameraInterface.h"
+#include "CommonGUIHelperInterface.h"
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
@@ -250,10 +251,10 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 	{
 	}
 
-	void initPhysics(CommonCameraInterface *camera) override
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override
 	{  // initialize the demo
 
-		setupBasicParamInterface();  // setup adjustable sliders and buttons for parameters
+		setupBasicParamInterface(m_guiHelper);  // setup adjustable sliders and buttons for parameters
 
 		m_guiHelper->setUpAxis(1);  // Set Y axis as Up axis
 
@@ -283,7 +284,7 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 		m_guiHelper->autogenerateGraphicsObjects(m_physics->getDynamicsWorld());
 	}
 
-	void setupBasicParamInterface()
+	void setupBasicParamInterface(GUIHelperInterface *m_guiHelper)
 	{  // setup the adjustable sliders and button for parameters
 
 		{  // create a slider to adjust the simulation speed
@@ -327,7 +328,7 @@ struct NN3DWalkersTimeWarpBase : public CommonRigidBodyBase
 		}
 	}
 
-	void setupAdvancedParamInterface()
+	void setupAdvancedParamInterface(GUIHelperInterface *m_guiHelper)
 	{
 		solverTypes[0] = SolverType::SEQUENTIALIMPULSESOLVER;
 		solverTypes[1] = SolverType::GAUSSSEIDELSOLVER;

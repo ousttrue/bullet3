@@ -10,9 +10,9 @@ struct GyroscopicSetup : public CommonRigidBodyBase
 	virtual ~GyroscopicSetup()
 	{
 	}
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
-	virtual void physicsDebugDraw(int debugFlags);
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper);
 
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -44,7 +44,7 @@ GyroscopicSetup::GyroscopicSetup(struct GUIHelperInterface* helper)
 {
 }
 
-void GyroscopicSetup::initPhysics(CommonCameraInterface *camera)
+void GyroscopicSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 	m_physics = new Physics;
@@ -103,9 +103,9 @@ void GyroscopicSetup::initPhysics(CommonCameraInterface *camera)
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void GyroscopicSetup::physicsDebugDraw(int debugFlags)
+void GyroscopicSetup::physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
 {
-	CommonRigidBodyBase::physicsDebugDraw(debugFlags);
+	CommonRigidBodyBase::physicsDebugDraw(debugFlags, m_guiHelper);
 
 	//render method names above objects
 	auto m_dynamicsWorld = m_physics->getDynamicsWorld();

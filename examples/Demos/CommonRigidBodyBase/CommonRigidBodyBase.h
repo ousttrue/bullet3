@@ -72,13 +72,12 @@ struct Physics
 
 struct CommonRigidBodyBase : public CommonExampleInterface
 {
-	struct GUIHelperInterface* m_guiHelper = nullptr;
 	Physics* m_physics = nullptr;
 
 	CommonRigidBodyBase(struct GUIHelperInterface* helper);
 	~CommonRigidBodyBase() override;
 	void stepSimulation(float deltaTime) override;
-	void physicsDebugDraw(int debugFlags) override;
+	void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 	bool keyboardCallback(int key, int state) override;
 	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y) override;

@@ -15,10 +15,10 @@ struct TimeSeriesExample : public CommonExampleInterface
 
 	TimeSeriesExample(struct CommonGraphicsApp* app);
 	virtual ~TimeSeriesExample();
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void exitPhysics();
 	virtual void stepSimulation(float deltaTime);
-	virtual void physicsDebugDraw(int debugFlags);
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper);
 	virtual void syncPhysicsToGraphics(struct GraphicsPhysicsBridge& gfxBridge);
 	virtual bool keyboardCallback(int key, int state);
 };
@@ -45,7 +45,7 @@ TimeSeriesExample::~TimeSeriesExample()
 	delete m_internalData;
 }
 
-void TimeSeriesExample::initPhysics(CommonCameraInterface *camera)
+void TimeSeriesExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	//request a visual bitma/texture we can render to
 
@@ -77,7 +77,7 @@ void TimeSeriesExample::stepSimulation(float deltaTime)
 	m_internalData->m_timeSeriesCanvas->nextTick();
 }
 
-void TimeSeriesExample::physicsDebugDraw(int debugDrawFlags)
+void TimeSeriesExample::physicsDebugDraw(int debugDrawFlags, struct GUIHelperInterface *m_guiHelper)
 {
 }
 

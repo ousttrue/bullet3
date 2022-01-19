@@ -93,10 +93,10 @@ struct TinyRendererSetup : public CommonExampleInterface
 
 	TinyRendererSetup(struct GUIHelperInterface* guiHelper);
 	virtual ~TinyRendererSetup();
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void exitPhysics();
 	virtual void stepSimulation(float deltaTime);
-	virtual void physicsDebugDraw(int debugFlags);
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper);
 	virtual void syncPhysicsToGraphics(struct GraphicsPhysicsBridge& gfxBridge);
 	virtual bool keyboardCallback(int key, int state);
 
@@ -237,7 +237,7 @@ void TinyRendererComboCallback(int combobox, const char* item, void* userPointer
 	cl->selectRenderer(index);
 }
 
-void TinyRendererSetup::initPhysics(CommonCameraInterface *camera)
+void TinyRendererSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	//request a visual bitma/texture we can render to
 
@@ -416,7 +416,7 @@ void TinyRendererSetup::stepSimulation(float deltaTime)
 // 	}
 // }
 
-void TinyRendererSetup::physicsDebugDraw(int debugDrawFlags)
+void TinyRendererSetup::physicsDebugDraw(int debugDrawFlags, struct GUIHelperInterface *m_guiHelper)
 {
 }
 

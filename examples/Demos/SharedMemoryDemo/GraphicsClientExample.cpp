@@ -25,7 +25,7 @@ public:
 	GraphicsClientExample(GUIHelperInterface* helper, int options);
 	virtual ~GraphicsClientExample();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime);
 
 	CameraResetInfo cameraResetInfo() const override
@@ -224,7 +224,7 @@ GraphicsClientExample::~GraphicsClientExample()
 	delete m_sharedMemory;
 }
 
-void GraphicsClientExample::initPhysics(CommonCameraInterface *camera)
+void GraphicsClientExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	if (m_guiHelper && m_guiHelper->getParameterInterface())
 	{

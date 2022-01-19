@@ -20,7 +20,7 @@ public:
 	MultiBodyConstraintFeedbackSetup(struct GUIHelperInterface* helper);
 	virtual ~MultiBodyConstraintFeedbackSetup();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
 	virtual void stepSimulation(float deltaTime);
 
@@ -48,7 +48,7 @@ MultiBodyConstraintFeedbackSetup::~MultiBodyConstraintFeedbackSetup()
 {
 }
 
-void MultiBodyConstraintFeedbackSetup::initPhysics(CommonCameraInterface *camera)
+void MultiBodyConstraintFeedbackSetup::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	int upAxis = 2;
 	m_guiHelper->setUpAxis(upAxis);

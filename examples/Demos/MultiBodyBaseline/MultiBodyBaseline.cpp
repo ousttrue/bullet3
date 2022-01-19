@@ -87,7 +87,7 @@ info.camPosZ = 0;
 
 };
 
-void MultiBodyBaseline::initPhysics(CommonCameraInterface *camera)
+void MultiBodyBaseline::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

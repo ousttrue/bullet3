@@ -17,7 +17,7 @@ public:
 	GpuRigidBodyDemo(GUIHelperInterface* helper);
 	virtual ~GpuRigidBodyDemo();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
 	virtual void setupScene();
 

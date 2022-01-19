@@ -49,7 +49,7 @@ public:
 	virtual ~RollingFrictionDemo()
 	{
 	}
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -64,7 +64,7 @@ public:
 	}
 };
 
-void RollingFrictionDemo::initPhysics(CommonCameraInterface* camera)
+void RollingFrictionDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(2);
 

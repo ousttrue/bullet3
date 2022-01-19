@@ -939,7 +939,7 @@ void CommonRigidBodyMTBase::drawScreenText()
 	}
 }
 
-void CommonRigidBodyMTBase::physicsDebugDraw(int debugFlags)
+void CommonRigidBodyMTBase::physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
 {
 	if (m_dynamicsWorld && m_dynamicsWorld->getDebugDrawer())
 	{

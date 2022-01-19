@@ -99,7 +99,7 @@ public:
 	{
 	}
 
-	virtual void physicsDebugDraw(int debugFlags)
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
 	{
 	}
 	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y)override

@@ -81,7 +81,7 @@ public:
 	InverseDynamicsExample(struct GUIHelperInterface* helper, btInverseDynamicsExampleOptions option);
 	virtual ~InverseDynamicsExample();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	virtual void stepSimulation(float deltaTime);
 
 	void setFileName(const char* urdfFileName);
@@ -117,7 +117,7 @@ InverseDynamicsExample::~InverseDynamicsExample()
 //todo(erwincoumans) Quick hack, reference to InvertedPendulumPDControl implementation. Will create a separate header/source file for this.
 btMultiBody* createInvertedPendulumMultiBody(btMultiBodyDynamicsWorld* world, GUIHelperInterface* guiHelper, const btTransform& baseWorldTrans, bool fixedBase);
 
-void InverseDynamicsExample::initPhysics(CommonCameraInterface *camera)
+void InverseDynamicsExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	//roboticists like Z up
 	int upAxis = 2;

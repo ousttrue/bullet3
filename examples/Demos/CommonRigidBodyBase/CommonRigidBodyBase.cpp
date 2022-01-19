@@ -304,7 +304,6 @@ void Physics::switchSolver(bool useMCLPSolver)
 /// CommonRigidBodyBase
 ///
 CommonRigidBodyBase::CommonRigidBodyBase(GUIHelperInterface* helper)
-	: m_guiHelper(helper)
 {
 }
 
@@ -320,7 +319,7 @@ void CommonRigidBodyBase::stepSimulation(float deltaTime)
 	}
 }
 
-void CommonRigidBodyBase::physicsDebugDraw(int debugFlags)
+void CommonRigidBodyBase::physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
 {
 	if (m_physics)
 	{

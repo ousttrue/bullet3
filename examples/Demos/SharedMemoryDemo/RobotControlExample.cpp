@@ -97,7 +97,7 @@ public:
 	}
 	virtual void    exitPhysics(){}
 	
-	virtual void	physicsDebugDraw(int debugFlags)
+	virtual void	physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
 	{
 		m_physicsServer.physicsDebugDraw(debugFlags);
 		
@@ -331,7 +331,7 @@ RobotControlExample::~RobotControlExample()
 	m_physicsServer.disconnectSharedMemory(deInitializeSharedMemory);
 }
 
-void	RobotControlExample::initPhysics(CommonCameraInterface *camera)
+void	RobotControlExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	///for this testing we use Z-axis up
 	int upAxis = 2;

@@ -76,9 +76,9 @@ public:
 	btCollisionAlgorithmCreateFunc* m_boxBoxCF;
 
 public:
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	void exitPhysics() override;
-	void resetCamera()
+	CameraResetInfo cameraResetInfo() const override
 	{
 		//@todo depends on current_demo?
 		CameraResetInfo info;
@@ -88,7 +88,7 @@ public:
 		info.camPosX = 10;
 		info.camPosY = -1;
 		info.camPosZ = 0;
-		m_guiHelper->resetCamera(info);
+		return info;
 	}
 
 	SoftDemo(struct GUIHelperInterface* helper)
@@ -130,11 +130,6 @@ public:
 	void keyboardCallback(unsigned char key, int x, int y);
 	void mouseFunc(int button, int state, int x, int y);
 	void mouseMotionFunc(int x, int y);
-
-	GUIHelperInterface* getGUIHelper()
-	{
-		return m_guiHelper;
-	}
 };
 
 #define MACRO_SOFT_DEMO(a)                    \
@@ -254,9 +249,9 @@ void pickingPreTickCallback(btDynamicsWorld* world, btScalar timeStep)
 		const int x = softDemo->m_lastmousepos[0];
 		const int y = softDemo->m_lastmousepos[1];
 		float rf[3];
-		softDemo->getGUIHelper()->getRenderInterface()->getActiveCamera()->getCameraPosition(rf);
+		camera->getCameraPosition(rf);
 		float target[3];
-		softDemo->getGUIHelper()->getRenderInterface()->getActiveCamera()->getCameraTargetPosition(target);
+		camera->getCameraTargetPosition(target);
 		btVector3 cameraTargetPosition(target[0], target[1], target[2]);
 
 		const btVector3 cameraPosition(rf[0], rf[1], rf[2]);
@@ -2001,7 +1996,7 @@ void	SoftDemo::mouseFunc(int button, int state, int x, int y)
 }
 #endif
 
-void SoftDemo::initPhysics(CommonCameraInterface* camera)
+void SoftDemo::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
 	btVector3 worldAabbMin(-1000, -1000, -1000);
 	btVector3 worldAabbMax(1000, 1000, 1000);

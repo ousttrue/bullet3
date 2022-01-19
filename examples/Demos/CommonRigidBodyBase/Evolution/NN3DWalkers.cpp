@@ -135,7 +135,7 @@ public:
 		delete m_timeSeriesCanvas;
 	}
 
-	void initPhysics(CommonCameraInterface *camera)override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)override;
 	void exitPhysics()override;
 
 	void spawnWalker(int index, const btVector3& startOffset, bool bFixed);
@@ -592,9 +592,9 @@ struct WalkerFilterCallback : public btOverlapFilterCallback
 	}
 };
 
-void NN3DWalkersExample::initPhysics(CommonCameraInterface *camera)
+void NN3DWalkersExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
-	setupBasicParamInterface();  // parameter interface to use timewarp
+	setupBasicParamInterface(m_guiHelper);  // parameter interface to use timewarp
 
 	gContactProcessedCallback = legContactProcessedCallback;
 
@@ -1072,7 +1072,7 @@ void NN3DWalkersExample::scheduleEvaluations()
 			}
 
 			m_walkersInPopulation[i]->addToWorld();
-			m_guiHelper->autogenerateGraphicsObjects(m_physics->getDynamicsWorld());
+			// m_guiHelper->autogenerateGraphicsObjects(m_physics->getDynamicsWorld());
 		}
 	}
 
@@ -1098,7 +1098,7 @@ void NN3DWalkersExample::drawMarkings()
 				btVector3 walkerPosition = m_walkersInPopulation[i]->getPosition();
 				char performance[20];
 				sprintf(performance, "%.2f m", btSqrt(m_walkersInPopulation[i]->getDistanceFitness()));
-				m_guiHelper->drawText3D(performance, walkerPosition.x(), walkerPosition.y() + 1, walkerPosition.z(), 1);
+				// m_guiHelper->drawText3D(performance, walkerPosition.x(), walkerPosition.y() + 1, walkerPosition.z(), 1);
 			}
 		}
 

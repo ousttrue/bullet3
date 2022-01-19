@@ -688,7 +688,7 @@ public:
 	HeightfieldExample(struct GUIHelperInterface* helper);
 	virtual ~HeightfieldExample();
 
-	void initPhysics(CommonCameraInterface *camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 
 	// public class methods ------------------------------------------------
 
@@ -1094,7 +1094,7 @@ void HeightfieldExample::stepSimulation(float deltaTime)
 ////////////////////////////////////////////////////////////////////////////////
 
 /// one-time class and physics initialization
-void HeightfieldExample::initPhysics(CommonCameraInterface *camera)
+void HeightfieldExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	//	std::cerr << "initializing...\n";
 

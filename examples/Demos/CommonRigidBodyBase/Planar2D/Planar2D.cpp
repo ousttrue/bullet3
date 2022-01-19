@@ -72,7 +72,7 @@ public:
 	{
 		exitPhysics();
 	}
-	void initPhysics(CommonCameraInterface* camera) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 	CameraResetInfo cameraResetInfo() const override
 	{
@@ -87,7 +87,7 @@ public:
 	}
 };
 
-void Planar2D::initPhysics(CommonCameraInterface* camera)
+void Planar2D::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	m_guiHelper->setUpAxis(1);
 

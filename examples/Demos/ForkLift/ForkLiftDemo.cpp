@@ -112,8 +112,8 @@ public:
 	virtual void specialKeyboard(int key, int x, int y);
 	virtual void specialKeyboardUp(int key, int x, int y);
 	bool keyboardCallback(int key, int state) override;
-	void physicsDebugDraw(int debugFlags) override;
-	void initPhysics(CommonCameraInterface *camera) override;
+	void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper) override;
+	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
 	void exitPhysics() override;
 
 	CameraResetInfo cameraResetInfo() const override
@@ -290,7 +290,7 @@ ForkLiftDemo::~ForkLiftDemo()
 	//exitPhysics();
 }
 
-void ForkLiftDemo::initPhysics(CommonCameraInterface *camera)
+void ForkLiftDemo::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
 {
 	int upAxis = 1;
 
@@ -512,7 +512,7 @@ void ForkLiftDemo::initPhysics(CommonCameraInterface *camera)
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void ForkLiftDemo::physicsDebugDraw(int debugFlags)
+void ForkLiftDemo::physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper)
 {
 	if (m_dynamicsWorld && m_dynamicsWorld->getDebugDrawer())
 	{
@@ -599,7 +599,7 @@ void ForkLiftDemo::displayCallback(void)
 void ForkLiftDemo::clientResetScene()
 {
 	exitPhysics();
-	initPhysics({});
+	initPhysics({}, {});
 }
 
 void ForkLiftDemo::resetForklift()
