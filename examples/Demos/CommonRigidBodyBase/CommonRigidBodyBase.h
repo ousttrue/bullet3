@@ -81,7 +81,6 @@ struct CommonRigidBodyBase : public CommonExampleInterface
 	void physicsDebugDraw(int debugFlags) override;
 	void exitPhysics() override;
 	bool keyboardCallback(int key, int state) override;
-	btVector3 getRayTo(int x, int y);
 	bool mouseMoveCallback(const CommonCameraInterface *camera, float x, float y) override;
 	bool mouseButtonCallback(const CommonCameraInterface *camera, int button, int state, float x, float y) override;
 	class btDiscreteDynamicsWorld* getDynamicsWorld() override { return m_physics ? m_physics->getDynamicsWorld() : nullptr; }

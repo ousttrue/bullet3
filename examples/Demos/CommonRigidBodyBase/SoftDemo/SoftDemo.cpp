@@ -248,6 +248,7 @@ void SoftDemo::createStack(btCollisionShape* boxShape, float halfCubeSize, int s
 ///for mouse picking
 void pickingPreTickCallback(btDynamicsWorld* world, btScalar timeStep)
 {
+	CommonCameraInterface *camera = {};
 	SoftDemo* softDemo = (SoftDemo*)world->getWorldUserInfo();
 
 	if (softDemo->m_drag)
@@ -263,7 +264,7 @@ void pickingPreTickCallback(btDynamicsWorld* world, btScalar timeStep)
 		const btVector3 cameraPosition(rf[0], rf[1], rf[2]);
 		const btVector3 rayFrom = cameraPosition;
 
-		const btVector3 rayTo = softDemo->getRayTo(x, y);
+		const btVector3 rayTo = camera->getRayTo(x, y);
 		const btVector3 rayDir = (rayTo - rayFrom).normalized();
 		const btVector3 N = (cameraTargetPosition - cameraPosition).normalized();
 		const btScalar O = btDot(softDemo->m_impact, N);

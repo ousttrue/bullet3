@@ -1,4 +1,5 @@
 #pragma once
+#include <LinearMath/btVector3.h>
 
 struct CameraResetInfo
 {
@@ -50,4 +51,10 @@ struct CommonCameraInterface
 
 	virtual float getCameraFrustumFar() const = 0;
 	virtual float getCameraFrustumNear() const = 0;
+
+	virtual int getScreenWidth() const = 0;
+	virtual int getScreenHeight() const = 0;
+	virtual void resize(int width, int height) = 0;
+
+	virtual btVector3 getRayTo(int x, int y) const = 0;
 };

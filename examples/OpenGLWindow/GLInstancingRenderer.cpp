@@ -1463,6 +1463,7 @@ void GLInstancingRenderer::init()
 
 void GLInstancingRenderer::resize(int width, int height)
 {
+	getActiveCamera()->resize(width, height);
 	m_screenWidth = width;
 	m_screenHeight = height;
 }

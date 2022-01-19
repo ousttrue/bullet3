@@ -68,9 +68,9 @@ struct CommonRenderInterface
 
 	virtual void renderScene() = 0;
 	virtual void renderSceneInternal(int renderMode = B3_DEFAULT_RENDERMODE){};
+
 	virtual int getScreenWidth() = 0;
 	virtual int getScreenHeight() = 0;
-
 	virtual void resize(int width, int height) = 0;
 
 	virtual int registerGraphicsInstance(int shapeIndex, const float* position, const float* quaternion, const float* color, const float* scaling) = 0;
