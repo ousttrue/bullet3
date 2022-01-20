@@ -1,9 +1,9 @@
-#ifndef NO_OPENGL3
 #include "GLPrimitiveRenderer.h"
 #include "GLPrimInternalData.h"
 #include "GLShader.h"
 #include "GLVBO.h"
 #include "GLVAO.h"
+#include "GLTexture.h"
 #include <assert.h>
 
 auto VIEW_MATRIX = "viewMatrix";
@@ -182,13 +182,7 @@ void GLPrimitiveRenderer::loadBufferData()
 		}
 	}
 
-	glGenTextures(1, (GLuint *)&m_data->m_texturehandle);
-	glBindTexture(GL_TEXTURE_2D, m_data->m_texturehandle);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	assert(glGetError() == GL_NO_ERROR);
+	m_data->m_texturehandle = GLTexture::load(image, 256, 256);
 
 	delete[] image;
 }
@@ -208,12 +202,7 @@ void GLPrimitiveRenderer::drawLine()
 
 void GLPrimitiveRenderer::drawRect(float x0, float y0, float x1, float y1, float color[4])
 {
-	assert(glGetError() == GL_NO_ERROR);
-	glActiveTexture(GL_TEXTURE0);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glBindTexture(GL_TEXTURE_2D, m_data->m_texturehandle);
-	assert(glGetError() == GL_NO_ERROR);
+	m_data->m_texturehandle->bind();
 	drawTexturedRect(x0, y0, x1, y1, color, 0, 0, 1, 1);
 	assert(glGetError() == GL_NO_ERROR);
 }
@@ -427,9 +416,7 @@ void GLPrimitiveRenderer::flushBatchedRects()
 	if (m_data2->m_numVerticesRect == 0)
 		return;
 
-	glActiveTexture(GL_TEXTURE0);
-	assert(glGetError() == GL_NO_ERROR);
-	glBindTexture(GL_TEXTURE_2D, m_data->m_texturehandle);
+	m_data->m_texturehandle->bind();
 	drawTexturedRect3D2(m_data2->m_verticesRect, m_data2->m_numVerticesRect, 0);
 	m_data2->m_numVerticesRect = 0;
 }
@@ -475,4 +462,3 @@ void GLPrimitiveRenderer::setScreenSize(int width, int height)
 	m_screenWidth = width;
 	m_screenHeight = height;
 }
-#endif

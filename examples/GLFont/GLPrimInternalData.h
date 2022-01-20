@@ -18,5 +18,5 @@ struct PrimInternalData
 
 	unsigned int m_indexBuffer;
 	unsigned int m_indexBuffer2;
-	unsigned int m_texturehandle;
+	std::shared_ptr<class GLTexture> m_texturehandle;
 };
