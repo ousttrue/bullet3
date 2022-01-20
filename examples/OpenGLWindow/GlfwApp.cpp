@@ -98,56 +98,6 @@ public:
 	{
 		return glfwGetKey(m_window, GLFW_KEY_LEFT_ALT);
 	}
-	// onMove
-	b3MouseMoveCallback m_onMove;
-	void setMouseMoveCallback(b3MouseMoveCallback mouseCallback) override
-	{
-		m_onMove = mouseCallback;
-	}
-	b3MouseMoveCallback getMouseMoveCallback() override
-	{
-		return m_onMove;
-	}
-	// onButton
-	b3MouseButtonCallback m_onBUtton;
-	void setMouseButtonCallback(b3MouseButtonCallback mouseCallback) override
-	{
-		m_onBUtton = mouseCallback;
-	}
-	b3MouseButtonCallback getMouseButtonCallback() override
-	{
-		return m_onBUtton;
-	}
-	// onResize
-	b3ResizeCallback m_onResize;
-	void setResizeCallback(b3ResizeCallback resizeCallback) override
-	{
-		m_onResize = resizeCallback;
-	}
-	b3ResizeCallback getResizeCallback() override
-	{
-		return m_onResize;
-	}
-	// onWheel
-	b3WheelCallback m_onWheel;
-	void setWheelCallback(b3WheelCallback wheelCallback) override
-	{
-		m_onWheel = wheelCallback;
-	}
-	b3WheelCallback getWheelCallback() override
-	{
-		return m_onWheel;
-	}
-	// onKey
-	b3KeyboardCallback m_onKey;
-	void setKeyboardCallback(b3KeyboardCallback keyboardCallback) override
-	{
-		m_onKey = keyboardCallback;
-	}
-	b3KeyboardCallback getKeyboardCallback() override
-	{
-		return m_onKey;
-	}
 	// render
 	b3RenderCallback m_render;
 	void setRenderCallback(b3RenderCallback renderCallback) override
@@ -180,13 +130,22 @@ public:
 static void SimpleResizeCallback(GLFWwindow* window, int width, int height)
 {
 	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
-	gApp->m_onResize(width, height);
+	for (auto& callback : gApp->resizeCallback)
+	{
+		callback(width, height);
+	}
 }
 
 static void SimpleKeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
-	gApp->m_onKey(key, action);
+	for (auto& callback : gApp->keyboardCallback)
+	{
+		if (callback(key, action))
+		{
+			break;
+		}
+	}
 }
 
 int s_x = 0;
@@ -215,7 +174,14 @@ static void SimpleMouseButtonCallback(GLFWwindow* window, int button, int action
 	{
 		flags = (ButtonFlags)(flags | ButtonFlagsCtrl);
 	}
-	gApp->m_onBUtton(button, action, s_x, s_y, flags);
+
+	for (auto& callback : gApp->mouseButtonCallback)
+	{
+		if (callback(button, action, s_x, s_y, flags))
+		{
+			break;
+		}
+	}
 }
 
 static void SimpleMouseMoveCallback(GLFWwindow* window, double x, double y)
@@ -223,18 +189,25 @@ static void SimpleMouseMoveCallback(GLFWwindow* window, double x, double y)
 	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
 	s_x = x;
 	s_y = y;
-	if (gApp->m_onMove)
+
+	for (auto& callback : gApp->mouseMoveCallback)
 	{
-		gApp->m_onMove(x, y);
+		if (callback(x, y))
+		{
+			break;
+		}
 	}
 }
 
 static void SimpleWheelCallback(GLFWwindow* window, double deltax, double deltay)
 {
 	auto gApp = (GlfwWindowInterface*)glfwGetWindowUserPointer(window);
-	if (gApp->m_onWheel)
+	for (auto& callback : gApp->wheelCallback)
 	{
-		gApp->m_onWheel(deltax, deltay);
+		if (callback(deltax, deltay))
+		{
+			break;
+		}
 	}
 }
 
@@ -526,30 +499,43 @@ CommonWindowInterface* GlfwApp::createWindow(const b3gWindowConstructionInfo& ci
 
 	b3Assert(glGetError() == GL_NO_ERROR);
 
-	m_window->setResizeCallback([gApp = this](int width, int height)
-								{
-									glViewport(0, 0, width, height);
-
-									if (gApp->m_instancingRenderer)
-										gApp->m_instancingRenderer->resize(width, height);
-									if (gApp->m_primRenderer)
-										gApp->m_primRenderer->setScreenSize(width, height); });
-	m_window->setMouseMoveCallback([gApp = this](int x, int y)
-								   { gApp->defaultMouseMoveCallback(x, y); });
-	m_window->setMouseButtonCallback([gApp = this](int button, int state, float x, float y, ButtonFlags flags)
-									 { gApp->defaultMouseButtonCallback(button, state, x, y); });
-	m_window->setKeyboardCallback([gApp = this](int keycode, int state)
-								  {
-									  if (keycode == B3G_ESCAPE && gApp->m_window)
-									  {
-										  gApp->m_window->setRequestExit();
-									  }
-									  else
-									  {
-										  //gApp->defaultKeyboardCallback(key,state);
-									  } });
-	m_window->setWheelCallback([gApp = this](float deltax, float deltay)
-							   { gApp->defaultWheelCallback(deltax, deltay); });
+	m_window->resizeCallback.push_back(
+		[gApp = this](int width, int height)
+		{
+			glViewport(0, 0, width, height);
+			if (gApp->m_instancingRenderer)
+				gApp->m_instancingRenderer->resize(width, height);
+			if (gApp->m_primRenderer)
+				gApp->m_primRenderer->setScreenSize(width, height);
+		});
+	m_window->mouseMoveCallback.push_back(
+		[gApp = this](int x, int y)
+		{
+			gApp->defaultMouseMoveCallback(x, y);
+			return true;
+		});
+	m_window->mouseButtonCallback.push_back(
+		[gApp = this](int button, int state, float x, float y, ButtonFlags flags)
+		{
+			gApp->defaultMouseButtonCallback(button, state, x, y);
+			return true;
+		});
+	m_window->keyboardCallback.push_back(
+		[gApp = this](int keycode, int state)
+		{
+			if (keycode == B3G_ESCAPE && gApp->m_window)
+			{
+				gApp->m_window->setRequestExit();
+				return true;
+			}
+			return false;
+		});
+	m_window->wheelCallback.push_back(
+		[gApp = this](float deltax, float deltay)
+		{
+			gApp->defaultWheelCallback(deltax, deltay);
+			return true;
+		});
 
 	m_data = new SimpleInternalData;
 

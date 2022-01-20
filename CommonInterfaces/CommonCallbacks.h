@@ -3,12 +3,13 @@
 #include <functional>
 #include "CommonExampleInterface.h"
 
-using b3WheelCallback = std::function<void(float deltax, float deltay)>;
 using b3ResizeCallback = std::function<void(float width, float height)>;
-using b3MouseMoveCallback = std::function<void(float x, float y)>;
-using b3MouseButtonCallback = std::function<void(int button, int state, float x, float y, ButtonFlags flags)>;
-using b3KeyboardCallback = std::function<void(int keycode, int state)>;
 using b3RenderCallback = std::function<void()>;
+// input callback return true if cosume the event
+using b3WheelCallback = std::function<bool(float deltax, float deltay)>;
+using b3MouseMoveCallback = std::function<bool(float x, float y)>;
+using b3MouseButtonCallback = std::function<bool(int button, int state, float x, float y, ButtonFlags flags)>;
+using b3KeyboardCallback = std::function<bool(int keycode, int state)>;
 
 enum
 {

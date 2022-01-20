@@ -71,9 +71,6 @@ private:
 
 	const char* gPngFileName = 0;
 	int gPngSkipFrames = 0;
-	b3KeyboardCallback prevKeyboardCallback = 0;
-	b3MouseMoveCallback prevMouseMoveCallback = 0;
-	b3MouseButtonCallback prevMouseButtonCallback = 0;
 
 public:
 	bool pauseSimulation = false;
@@ -132,7 +129,7 @@ private:
 		}
 	}
 
-	void MyKeyboardCallback(int key, int state)
+	bool MyKeyboardCallback(int key, int state)
 	{
 		//b3Printf("key=%d, state=%d", key, state);
 		bool handled = false;
@@ -257,11 +254,10 @@ private:
 			s_window->setRequestExit();
 		}
 
-		if (prevKeyboardCallback)
-			prevKeyboardCallback(key, state);
+		return false;
 	}
 
-	void MyMouseMoveCallback(float x, float y)
+	bool MyMouseMoveCallback(float x, float y)
 	{
 		bool handled = false;
 		if (sCurrentDemo)
@@ -270,14 +266,10 @@ private:
 		{
 			handled = m_gwen->OnMouseMove(x, y);
 		}
-		if (!handled)
-		{
-			if (prevMouseMoveCallback)
-				prevMouseMoveCallback(x, y);
-		}
+		return handled;
 	}
 
-	void MyMouseButtonCallback(int button, int state, float x, float y, ButtonFlags flags)
+	bool MyMouseButtonCallback(int button, int state, float x, float y, ButtonFlags flags)
 	{
 		bool handled = false;
 		//try picking first
@@ -290,14 +282,8 @@ private:
 		{
 			handled = m_gwen->OnMouseButton(button, state, x, y);
 		}
-		if (!handled)
-		{
-			if (prevMouseButtonCallback)
-			{
-				prevMouseButtonCallback(button, state, x, y, flags);
-			}
-		}
-		// b3DefaultMouseButtonCallback(button,state,x,y);
+
+		return handled;
 	}
 
 	void OpenGLExampleBrowserVisualizerFlagCallback(int flag, bool enable)
@@ -655,16 +641,12 @@ public:
 		width = s_window->getWidth();
 		height = s_window->getHeight();
 
-		prevMouseMoveCallback = s_window->getMouseMoveCallback();
-		s_window->setMouseMoveCallback(std::bind(&OpenGLExampleBrowserInternalData::MyMouseMoveCallback,
-												 this, std::placeholders::_1, std::placeholders::_2));
-
-		prevMouseButtonCallback = s_window->getMouseButtonCallback();
-		s_window->setMouseButtonCallback(std::bind(&OpenGLExampleBrowserInternalData::MyMouseButtonCallback,
-												   this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
-		prevKeyboardCallback = s_window->getKeyboardCallback();
-		s_window->setKeyboardCallback(std::bind(&OpenGLExampleBrowserInternalData::MyKeyboardCallback,
-												this, std::placeholders::_1, std::placeholders::_2));
+		s_window->mouseMoveCallback.push_front(std::bind(&OpenGLExampleBrowserInternalData::MyMouseMoveCallback,
+														 this, std::placeholders::_1, std::placeholders::_2));
+		s_window->mouseButtonCallback.push_front(std::bind(&OpenGLExampleBrowserInternalData::MyMouseButtonCallback,
+														   this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
+		s_window->keyboardCallback.push_front(std::bind(&OpenGLExampleBrowserInternalData::MyKeyboardCallback,
+														this, std::placeholders::_1, std::placeholders::_2));
 
 		auto camera = s_app->m_renderer->getActiveCamera();
 		camera->setCameraDistance(13);
