@@ -117,12 +117,12 @@ void GLPrimitiveRenderer::loadBufferData()
 	m_data->m_vertexArrayObject = GLVAO::create();
 	m_data->m_vertexArrayObject->bind();
 
-	m_data->m_vertexBuffer = GLVBO::load_vertices_dynamic(vertexData, sizeof(vertexData));
+	m_data->m_vertexBuffer = GLVBO::load(vertexData, sizeof(vertexData), true);
 
 	m_data->m_vertexArrayObject2 = GLVAO::create();
 	m_data->m_vertexArrayObject2->bind();
 
-	m_data->m_vertexBuffer2 = GLVBO::load_vertices_dynamic(nullptr, MAX_VERTICES2 * sizeof(PrimVertex));
+	m_data->m_vertexBuffer2 = GLVBO::load(nullptr, MAX_VERTICES2 * sizeof(PrimVertex), true);
 
 	m_data->m_indexBuffer = GLIBO::load(s_indexData, sizeof(s_indexData));
 

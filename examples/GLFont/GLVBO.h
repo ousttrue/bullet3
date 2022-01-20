@@ -10,7 +10,7 @@ class GLVBO
 
 public:
 	~GLVBO();
-	static std::shared_ptr<GLVBO> load_vertices_dynamic(const void* bytes, size_t size);
+	static std::shared_ptr<GLVBO> load(const void* bytes, size_t size, bool isDynamic);
 	void bind();
 	void unbind();
 	void upload(const void* bytes, size_t size);

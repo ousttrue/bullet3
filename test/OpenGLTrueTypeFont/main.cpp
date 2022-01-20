@@ -4,6 +4,8 @@
 #include <Bullet3Common/b3Quaternion.h>
 #include <Bullet3Common/b3CommandLineArgs.h>
 #include <GLShader.h>
+#include <GLVAO.h>
+#include <GLVBO.h>
 #include <GLPrimInternalData.h>
 #include <GLPrimitiveRenderer.h>
 #include <OpenSans.h>
@@ -27,53 +29,43 @@ static PrimInternalData sData;
 // GLuint  m_indexBuffer;
 // */
 
-// unsigned int indexData[6] = {0, 1, 2, 0, 2, 3};
-
 void loadBufferData()
 {
-	// 	Vertex vertexDataOrg[4] = {
-	// 		{vec4(-0.5, -0.5, 0.0, 1.0), vec4(1.0, 0.0, 0.0, 1.0), vec2(0, 0)},
-	// 		{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0, 1)},
-	// 		{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 1)},
-	// 		{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 0)}};
+	Vertex vertexData[4] = {
+		{vec4(-0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.015625)},
+		{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
+		{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
+		{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
+	sData.m_vertexArrayObject = GLVAO::create();
+	sData.m_vertexArrayObject->bind();
+	sData.m_vertexBuffer = GLVBO::load(vertexData, sizeof(vertexData), false);
 
-	// 	Vertex vertexData[4] = {
-	// 		{vec4(-0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.015625)},
-	// 		{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
-	// 		{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
-	// 		{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
+	unsigned int indexData[6] = {0, 1, 2, 0, 2, 3};
+	sData.m_indexBuffer = GLIBO::load(indexData, sizeof(indexData));
 
-	// 	Vertex vertexData2[4] = {
-	// 		{vec4(0, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.015625)},
-	// 		{vec4(0.0234375, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
-	// 		{vec4(0.0234375, 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
-	// 		{vec4(0., 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
+	glEnableVertexAttribArray(sData.m_positionAttribute);
+	glEnableVertexAttribArray(sData.m_colourAttribute);
+	auto err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
+	glEnableVertexAttribArray(sData.m_textureAttribute);
 
-	// 	glGenVertexArrays(1, &sData.m_vertexArrayObject);
-	// 	glBindVertexArray(sData.m_vertexArrayObject);
+	// Vertex vertexDataOrg[4] = {
+	// 	{vec4(-0.5, -0.5, 0.0, 1.0), vec4(1.0, 0.0, 0.0, 1.0), vec2(0, 0)},
+	// 	{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0, 1)},
+	// 	{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 1)},
+	// 	{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 0)}};
 
-	// 	glGenBuffers(1, &sData.m_vertexBuffer);
-	// 	glBindBuffer(GL_ARRAY_BUFFER, sData.m_vertexBuffer);
-	// 	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex), vertexData, GL_STATIC_DRAW);
-	// 	GLuint err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
+	// Vertex vertexData2[4] = {
+	// 	{vec4(0, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.015625)},
+	// 	{vec4(0.0234375, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
+	// 	{vec4(0.0234375, 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
+	// 	{vec4(0., 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
 
-	// 	glGenBuffers(1, &sData.m_indexBuffer);
-	// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sData.m_indexBuffer);
-	// 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(int), indexData, GL_STATIC_DRAW);
-
-	// 	glEnableVertexAttribArray(sData.m_positionAttribute);
-	// 	glEnableVertexAttribArray(sData.m_colourAttribute);
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
-
-	// 	glEnableVertexAttribArray(sData.m_textureAttribute);
-
-	// 	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
-	// 	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
-	// 	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
+	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
+	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
+	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
+	err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
 }
 
 void initTestTexture()
@@ -160,84 +152,78 @@ static const char* fragmentShader =
 void loadShader()
 {
 	sData.m_shaderProg = GLShader::load(vertexShader, fragmentShader);
-
-	// 	sData.m_positionUniform = glGetUniformLocation(sData.m_shaderProg, "p");
-	// 	if (sData.m_positionUniform < 0)
-	// 	{
-	// 		b3Assert(0);
-	// 	}
-	// 	sData.m_colourAttribute = glGetAttribLocation(sData.m_shaderProg, "colour");
-	// 	if (sData.m_colourAttribute < 0)
-	// 	{
-	// 		b3Assert(0);
-	// 	}
-	// 	sData.m_positionAttribute = glGetAttribLocation(sData.m_shaderProg, "position");
-	// 	if (sData.m_positionAttribute < 0)
-	// 	{
-	// 		b3Assert(0);
-	// 	}
-	// 	sData.m_textureAttribute = glGetAttribLocation(sData.m_shaderProg, "texuv");
-	// 	if (sData.m_textureAttribute < 0)
-	// 	{
-	// 		b3Assert(0);
-	// 	}
+	sData.m_positionUniform = sData.m_shaderProg->getUniformLocation("p");
+	if (sData.m_positionUniform < 0)
+	{
+		b3Assert(0);
+	}
+	sData.m_colourAttribute = sData.m_shaderProg->getAttributeLocation("colour");
+	if (sData.m_colourAttribute < 0)
+	{
+		b3Assert(0);
+	}
+	sData.m_positionAttribute = sData.m_shaderProg->getAttributeLocation("position");
+	if (sData.m_positionAttribute < 0)
+	{
+		b3Assert(0);
+	}
+	sData.m_textureAttribute = sData.m_shaderProg->getAttributeLocation("texuv");
+	if (sData.m_textureAttribute < 0)
+	{
+		b3Assert(0);
+	}
 }
 
 void display()
 {
-	// 	GLint err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
+	GLint err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
 
-	// 	const float timeScale = 0.008f;
+	const float timeScale = 0.008f;
 
-	// 	glUseProgram(sData.m_shaderProg);
-	// 	glBindBuffer(GL_ARRAY_BUFFER, sData.m_vertexBuffer);
-	// 	glBindVertexArray(sData.m_vertexArrayObject);
+	sData.m_shaderProg->use();
+	sData.m_vertexBuffer->bind();
+	sData.m_vertexArrayObject->bind();
 
+	err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
+
+	//  glBindTexture(GL_TEXTURE_2D,sData.m_texturehandle);
 	// 	err = glGetError();
 	// 	b3Assert(err == GL_NO_ERROR);
 
-	// 	//   glBindTexture(GL_TEXTURE_2D,sData.m_texturehandle);
+	vec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
+	glUniform2fv(sData.m_positionUniform, 1, (const GLfloat*)&p);
 
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
+	err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
 
-	// 	vec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
-	// 	glUniform2fv(sData.m_positionUniform, 1, (const GLfloat*)&p);
+	glEnableVertexAttribArray(sData.m_positionAttribute);
+	err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
 
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
+	glEnableVertexAttribArray(sData.m_colourAttribute);
+	err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
 
-	// 	glEnableVertexAttribArray(sData.m_positionAttribute);
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
+	glEnableVertexAttribArray(sData.m_textureAttribute);
 
-	// 	glEnableVertexAttribArray(sData.m_colourAttribute);
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
+	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
+	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
+	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
+	err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
 
-	// 	glEnableVertexAttribArray(sData.m_textureAttribute);
+	sData.m_indexBuffer->bind();
 
-	// 	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
-	// 	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
-	// 	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
+	// glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	int indexCount = 6;
+	err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
 
-	// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sData.m_indexBuffer);
-
-	// 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-	// 	int indexCount = 6;
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
-
-	// 	// glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-	// 	err = glGetError();
-	// 	b3Assert(err == GL_NO_ERROR);
-
-	// 	//	glutSwapBuffers();
+	// glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+	err = glGetError();
+	b3Assert(err == GL_NO_ERROR);
 }
 
 const char* fileName = "../../bin/1000 stack.bullet";

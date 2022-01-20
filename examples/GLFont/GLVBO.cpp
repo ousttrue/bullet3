@@ -9,13 +9,15 @@ GLVBO::~GLVBO()
 	glDeleteBuffers(1, &m_vbo);
 }
 
-std::shared_ptr<GLVBO> GLVBO::load_vertices_dynamic(const void* bytes, size_t size)
+std::shared_ptr<GLVBO> GLVBO::load(const void* bytes, size_t size, bool isDynamic)
 {
 	uint32_t vbo;
 	glGenBuffers(1, &vbo);
 	assert(vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, size, bytes, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, bytes, isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+	GLuint err = glGetError();
+	assert(err == GL_NO_ERROR);
 	return std::shared_ptr<GLVBO>(new GLVBO(vbo));
 }
 
