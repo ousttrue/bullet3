@@ -41,5 +41,6 @@ CTestTestFile.cmake
 /.venv/
 /public/
 /.cache/
+/_build/
 
 0_Bullet3Demo.txt

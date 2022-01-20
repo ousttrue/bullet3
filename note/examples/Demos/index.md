@@ -59,5 +59,6 @@ class CommonExampleInterface* BasicExampleCreateFunc(struct CommonExampleOptions
 ```
 
 ```{toctree}
-CommonRigidBodyBase
+CommonRigidBodyBase/index
+RenderingExamples
 ```
