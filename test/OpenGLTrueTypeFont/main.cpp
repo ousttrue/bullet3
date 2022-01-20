@@ -334,7 +334,7 @@ int main(int argc, char* argv[])
 		//sprintf(fullFontFileName,"%s%s",fontPath,"arial.ttf");//cour.ttf");//times.ttf");//DroidSerif-Regular.ttf");
 
 		FontStash stash(fontTextureWidth, fontTextureHeight, renderCallbacks);
-		int droidRegular = stash.add_from_memory(OpenSansData);
+		int droidRegular = stash.add_font_from_memory(OpenSansData);
 		if (!droidRegular)
 		{
 			printf("error!\n");

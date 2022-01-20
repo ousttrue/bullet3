@@ -138,9 +138,21 @@ class FontStash
 public:
 	FontStash(int w, int h, RenderCallbacks* callbacks);
 	~FontStash();
-	int add_from_memory(const unsigned char* buffer);
+	int add_font_from_memory(const unsigned char* buffer);
 	void begin_draw();
 	void end_draw();
-	void draw_text(int idx, float size, float x, float y,
-				   const char* string, float* dx, int screenwidth, int screenheight);
+	void draw_text(int idx, float size,
+				   float x, float y, const char* string, float* dx, int screenwidth, int screenheight, int measureOnly, float retinaScale, float colorRGBA[4]);
+	void draw_text(
+		int idx, float size,
+		float x, float y, const char* string, float* dx, int screenwidth, int screenheight, int measureOnly = false, float retinaScale = 1.)
+	{
+		float colorRGBA[4] = {1, 1, 1, 1};
+		draw_text(idx, size, x, y, string, dx, screenwidth, screenheight, measureOnly, retinaScale, colorRGBA);
+	}
+	void draw_text3D(
+		int idx, float fontSize,
+		float x, float y, float z,
+		const char* s, float* dx, float textScale, float colorRGBA[4], int bla);
+	void flush_draw();
 };

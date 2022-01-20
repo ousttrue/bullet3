@@ -904,7 +904,7 @@ FontStash::~FontStash()
 	sth_delete(m_stash);
 }
 
-int FontStash::add_from_memory(const unsigned char* buffer)
+int FontStash::add_font_from_memory(const unsigned char* buffer)
 {
 	return sth_add_font_from_memory(m_stash, const_cast<unsigned char*>(buffer));
 }
@@ -919,8 +919,21 @@ void FontStash::end_draw()
 	sth_end_draw(m_stash);
 }
 
-void FontStash::draw_text(int idx, float size, float x, float y,
-						  const char* string, float* dx, int screenwidth, int screenheight)
+void FontStash::draw_text(int idx, float size,
+						  float x, float y, const char* string, float* dx, int screenwidth, int screenheight, int measureOnly, float retinaScale, float colorRGBA[4])
 {
-	sth_draw_text(m_stash, idx, size, x, y, string, dx, screenwidth, screenwidth);
+	sth_draw_text(m_stash, idx, size, x, y, string, dx, screenwidth, screenwidth, measureOnly, retinaScale, colorRGBA);
+}
+
+void FontStash::draw_text3D(
+	int idx, float fontSize,
+	float x, float y, float z,
+	const char* s, float* dx, float textScale, float colorRGBA[4], int bla)
+{
+	sth_draw_text3D(m_stash, idx, fontSize, x, y, z, s, dx, textScale, colorRGBA, bla);
+}
+
+void FontStash::flush_draw()
+{
+	sth_flush_draw(m_stash);
 }

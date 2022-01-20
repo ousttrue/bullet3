@@ -8,6 +8,7 @@
 #include "ShapeData.h"
 #include <Bullet3Common/b3Quaternion.h>
 #include <stb_image_write.h>
+#include <memory>
 #include <stdexcept>
 #include <assert.h>
 #include <stdio.h>
@@ -19,8 +20,8 @@ struct SimpleInternalData
 {
 	GLuint m_fontTextureId;
 	GLuint m_largeFontTextureId;
-	struct sth_stash* m_fontStash;
-	struct sth_stash* m_fontStash2;
+	std::shared_ptr<FontStash> m_fontStash;
+	std::shared_ptr<FontStash> m_fontStash2;
 
 	RenderCallbacks* m_renderCallbacks;
 	RenderCallbacks* m_renderCallbacks2;
@@ -55,6 +56,12 @@ struct SimpleInternalData
 		  m_customViewPortHeight(-1),
 		  m_mp4Fps(60)
 	{
+	}
+
+	~SimpleInternalData()
+	{
+		delete m_renderCallbacks;
+		delete m_renderCallbacks2;
 	}
 };
 
@@ -256,18 +263,10 @@ GlfwApp::GlfwApp()
 
 GlfwApp::~GlfwApp()
 {
+	delete m_data;
 	delete m_instancingRenderer;
 	delete m_primRenderer;
-	sth_delete(m_data->m_fontStash);
-	delete m_data->m_renderCallbacks;
-
-	sth_delete(m_data->m_fontStash2);
-	delete m_data->m_renderCallbacks2;
-
 	TwDeleteDefaultFonts();
-
-	delete m_data;
-
 	glfwTerminate();
 }
 
@@ -357,8 +356,8 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 	{
 		m_data->m_renderCallbacks = new OpenGL2RenderCallbacks(m_primRenderer);
 		m_data->m_renderCallbacks2 = new MyRenderCallbacks(m_instancingRenderer);
-		m_data->m_fontStash2 = sth_create(512, 512, m_data->m_renderCallbacks2);
-		m_data->m_fontStash = sth_create(512, 512, m_data->m_renderCallbacks);  //256,256);//,1024);//512,512);
+		m_data->m_fontStash2 = std::make_shared<FontStash>(512, 512, m_data->m_renderCallbacks2);
+		m_data->m_fontStash = std::make_shared<FontStash>(512, 512, m_data->m_renderCallbacks);  //256,256);//,1024);//512,512);
 
 		b3Assert(glGetError() == GL_NO_ERROR);
 
@@ -375,11 +374,11 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 
 		unsigned char* data2 = OpenSansData;
 		unsigned char* data = (unsigned char*)data2;
-		if (!(m_data->m_droidRegular = sth_add_font_from_memory(m_data->m_fontStash, data)))
+		if (!(m_data->m_droidRegular = m_data->m_fontStash->add_font_from_memory(data)))
 		{
 			b3Warning("error!\n");
 		}
-		if (!(m_data->m_droidRegular2 = sth_add_font_from_memory(m_data->m_fontStash2, data)))
+		if (!(m_data->m_droidRegular2 = m_data->m_fontStash2->add_font_from_memory(data)))
 		{
 			b3Warning("error!\n");
 		}
@@ -389,7 +388,7 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 	return window;
 }
 
-struct sth_stash* GlfwApp::getFontStash()
+std::shared_ptr<FontStash> GlfwApp::getFontStash()
 {
 	return m_data->m_fontStash;
 }
@@ -445,11 +444,11 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 
 		if (optionFlag & CommonGraphicsApp::eDrawText3D_OrtogonalFaceCamera)
 		{
-			sth_draw_text(m_data->m_fontStash,
-						  m_data->m_droidRegular, fontSize, posX, posY,
-						  txt, &dx, cam->getScreenWidth(), cam->getScreenHeight(), measureOnly, m_retinaScale, color);
-			sth_end_draw(m_data->m_fontStash);
-			sth_flush_draw(m_data->m_fontStash);
+			m_data->m_fontStash->draw_text(
+				m_data->m_droidRegular, fontSize, posX, posY,
+				txt, &dx, cam->getScreenWidth(), cam->getScreenHeight(), measureOnly, m_retinaScale, color);
+			m_data->m_fontStash->end_draw();
+			m_data->m_fontStash->flush_draw();
 		}
 		else
 		{
@@ -461,11 +460,11 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 			m_data->m_renderCallbacks2->setWorldPosition(position);
 			m_data->m_renderCallbacks2->setWorldOrientation(orientation);
 
-			sth_draw_text3D(m_data->m_fontStash2,
-							m_data->m_droidRegular2, fontSize, 0, 0, 0,
-							txt, &dx, size, color, 0);
-			sth_end_draw(m_data->m_fontStash2);
-			sth_flush_draw(m_data->m_fontStash2);
+			m_data->m_fontStash2->draw_text3D(
+				m_data->m_droidRegular2, fontSize, 0, 0, 0,
+				txt, &dx, size, color, 0);
+			m_data->m_fontStash2->end_draw();
+			m_data->m_fontStash2->flush_draw();
 			glDisable(GL_BLEND);
 		}
 	}
@@ -587,15 +586,15 @@ void GlfwApp::drawText(const char* txt, int posXi, int posYi, float size, float 
 		auto cam = m_instancingRenderer->getActiveCamera();
 
 		float fontSize = 64 * size;  //512;//128;
-		sth_draw_text(m_data->m_fontStash,
-					  m_data->m_droidRegular, fontSize, posX, posY,
-					  txt, &dx, cam->getScreenWidth(),
-					  cam->getScreenHeight(),
-					  measureOnly,
-					  m_retinaScale, colorRGBA);
+		m_data->m_fontStash->draw_text(
+			m_data->m_droidRegular, fontSize, posX, posY,
+			txt, &dx, cam->getScreenWidth(),
+			cam->getScreenHeight(),
+			measureOnly,
+			m_retinaScale, colorRGBA);
 
-		sth_end_draw(m_data->m_fontStash);
-		sth_flush_draw(m_data->m_fontStash);
+		m_data->m_fontStash->end_draw();
+		m_data->m_fontStash->flush_draw();
 	}
 	else
 	{

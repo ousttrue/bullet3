@@ -1,6 +1,7 @@
 #include <CommonGraphicsAppInterface.h>
 #include "GLInstancingRenderer.h"
 #include "GLPrimitiveRenderer.h"
+#include <memory>
 
 struct GlfwApp : public CommonGraphicsApp
 {
@@ -28,5 +29,5 @@ struct GlfwApp : public CommonGraphicsApp
 	int registerCubeShape(float halfExtentsX, float halfExtentsY, float halfExtentsZ, int textureIndex = -1, float textureScaling = 1) override;
 	int registerGraphicsUnitSphereShape(EnumSphereLevelOfDetail lod, int textureId = -1) override;
 	void registerGrid(int xres, int yres, float color0[4], float color1[4]) override;
-	struct sth_stash* getFontStash();
+	std::shared_ptr<class FontStash> getFontStash();
 };

@@ -64,7 +64,7 @@ class GwenOpenGL3CoreRenderer : public Gwen::Renderer::Base
 	GLPrimitiveRenderer* m_primitiveRenderer;
 	float m_currentColor[4];
 	float m_yOffset;
-	sth_stash* m_font;
+	std::shared_ptr<FontStash> m_font;
 	float m_screenWidth;
 	float m_screenHeight;
 	float m_fontScaling;
@@ -76,7 +76,7 @@ class GwenOpenGL3CoreRenderer : public Gwen::Renderer::Base
 	MyTextureLoader* m_textureLoader;
 
 public:
-	GwenOpenGL3CoreRenderer(GLPrimitiveRenderer* primRender, sth_stash* font, float screenWidth, float screenHeight, float retinaScale, MyTextureLoader* loader = 0)
+	GwenOpenGL3CoreRenderer(GLPrimitiveRenderer* primRender, const std::shared_ptr<FontStash>& font, float screenWidth, float screenHeight, float retinaScale, MyTextureLoader* loader = 0)
 		: m_primitiveRenderer(primRender),
 		  m_font(font),
 		  m_screenWidth(screenWidth),
@@ -155,7 +155,7 @@ public:
 	virtual void StartClip()
 	{
 		if (m_useTrueTypeFont)
-			sth_flush_draw(m_font);
+			m_font->flush_draw();
 		Gwen::Rect rect = ClipRegion();
 
 		// OpenGL's coords are from the bottom left
@@ -174,7 +174,7 @@ public:
 	virtual void EndClip()
 	{
 		if (m_useTrueTypeFont)
-			sth_flush_draw(m_font);
+			m_font->flush_draw();
 		glDisable(GL_SCISSOR_TEST);
 	};
 
@@ -227,10 +227,10 @@ public:
 				yoffset = -12;
 			}
 			Translate(r);
-			sth_draw_text(m_font,
-						  1, m_fontScaling,
-						  r.x, r.y + yoffset,
-						  unicodeText, &dx, m_screenWidth, m_screenHeight, measureOnly, m_retinaScale);
+			m_font->draw_text(
+				1, m_fontScaling,
+				r.x, r.y + yoffset,
+				unicodeText, &dx, m_screenWidth, m_screenHeight, measureOnly, m_retinaScale);
 		}
 		else
 		{
@@ -275,10 +275,10 @@ public:
 		float dx = 0;
 		if (m_useTrueTypeFont)
 		{
-			sth_draw_text(m_font,
-						  1, m_fontScaling,
-						  xpos, ypos,
-						  unicodeText, &dx, m_screenWidth, m_screenHeight, measureOnly);
+			m_font->draw_text(
+				1, m_fontScaling,
+				xpos, ypos,
+				unicodeText, &dx, m_screenWidth, m_screenHeight, measureOnly);
 
 			Gwen::Point pt;
 
