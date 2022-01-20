@@ -2,7 +2,7 @@
 #include "opengl_fontstashcallbacks.h"
 #include <GLPrimitiveRenderer.h>
 #include <GLPrimInternalData.h>
-
+#include "GLShader.h"
 #include "fontstash.h"
 #include <glad/gl.h>
 #include <assert.h>
@@ -39,7 +39,7 @@ void InternalOpenGL2RenderCallbacks::display2()
 	//const float timeScale = 0.008f;
 	PrimInternalData* data = getData();
 
-	glUseProgram(data->m_shaderProg);
+	data->m_shaderProg->use();
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertexBuffer);
 	glBindVertexArray(s_vertexArrayObject);
 

@@ -1,8 +1,11 @@
 #ifndef NO_OPENGL3
 #include "GLPrimitiveRenderer.h"
 #include "GLPrimInternalData.h"
-#include "LoadShader.h"
+#include "GLShader.h"
 #include <assert.h>
+
+auto VIEW_MATRIX = "viewMatrix";
+auto PROJECTION_MATRIX = "projMatrix";
 
 static const char *vertexShader3D =
 	"#version 150   \n"
@@ -65,34 +68,34 @@ GLPrimitiveRenderer::GLPrimitiveRenderer(int screenWidth, int screenHeight)
 	m_data = new PrimInternalData;
 	m_data2 = new PrimInternalData2;
 
-	m_data->m_shaderProg = gltLoadShaderPair(vertexShader3D, fragmentShader3D);
+	m_data->m_shaderProg = GLShader::Load(vertexShader3D, fragmentShader3D);
 
-	m_data->m_viewmatUniform = glGetUniformLocation(m_data->m_shaderProg, "viewMatrix");
+	m_data->m_viewmatUniform = m_data->m_shaderProg->getUniformLocation(VIEW_MATRIX);
 	if (m_data->m_viewmatUniform < 0)
 	{
 		assert(0);
 	}
-	m_data->m_projMatUniform = glGetUniformLocation(m_data->m_shaderProg, "projMatrix");
+	m_data->m_projMatUniform = m_data->m_shaderProg->getUniformLocation(PROJECTION_MATRIX);
 	if (m_data->m_projMatUniform < 0)
 	{
 		assert(0);
 	}
-	m_data->m_positionUniform = glGetUniformLocation(m_data->m_shaderProg, "p");
+	m_data->m_positionUniform = m_data->m_shaderProg->getUniformLocation("p");
 	if (m_data->m_positionUniform < 0)
 	{
 		assert(0);
 	}
-	m_data->m_colourAttribute = glGetAttribLocation(m_data->m_shaderProg, "colour");
+	m_data->m_colourAttribute = m_data->m_shaderProg->getAttributeLocation("colour");
 	if (m_data->m_colourAttribute < 0)
 	{
 		assert(0);
 	}
-	m_data->m_positionAttribute = glGetAttribLocation(m_data->m_shaderProg, "position");
+	m_data->m_positionAttribute = m_data->m_shaderProg->getAttributeLocation("position");
 	if (m_data->m_positionAttribute < 0)
 	{
 		assert(0);
 	}
-	m_data->m_textureAttribute = glGetAttribLocation(m_data->m_shaderProg, "texuv");
+	m_data->m_textureAttribute = m_data->m_shaderProg->getAttributeLocation("texuv");
 	if (m_data->m_textureAttribute < 0)
 	{
 		assert(0);
@@ -198,7 +201,6 @@ GLPrimitiveRenderer::~GLPrimitiveRenderer()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glDeleteProgram(m_data->m_shaderProg);
 	delete m_data;
 	delete m_data2;
 }
@@ -221,20 +223,12 @@ void GLPrimitiveRenderer::drawRect(float x0, float y0, float x1, float y1, float
 
 void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVertex &v1, const PrimVertex &v2, const PrimVertex &v3, float viewMat[16], float projMat[16], bool useRGBA)
 {
-	//B3_PROFILE("GLPrimitiveRenderer::drawTexturedRect3D");
-
-	assert(glGetError() == GL_NO_ERROR);
-
-	glUseProgram(m_data->m_shaderProg);
-
-	glUniformMatrix4fv(m_data->m_viewmatUniform, 1, false, viewMat);
-	glUniformMatrix4fv(m_data->m_projMatUniform, 1, false, projMat);
-
-	assert(glGetError() == GL_NO_ERROR);
+	m_data->m_shaderProg->use();
+	m_data->m_shaderProg->setMatrix4x4(VIEW_MATRIX, viewMat);
+	m_data->m_shaderProg->setMatrix4x4(PROJECTION_MATRIX, projMat);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vertexBuffer);
 	glBindVertexArray(m_data->m_vertexArrayObject);
-
 	bool useFiltering = false;
 	if (useFiltering)
 	{
@@ -327,7 +321,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 						  0, 0, 1, 0,
 						  0, 0, 0, 1};
 
-	glUseProgram(m_data->m_shaderProg);
+	m_data->m_shaderProg->use();
 
 	glUniformMatrix4fv(m_data->m_viewmatUniform, 1, false, identity);
 	glUniformMatrix4fv(m_data->m_projMatUniform, 1, false, identity);

@@ -1,8 +1,9 @@
 #pragma once
+#include <memory>
 
 struct PrimInternalData
 {
-	unsigned int m_shaderProg;
+	std::shared_ptr<class GLShader> m_shaderProg;
 	int m_viewmatUniform;
 	int m_projMatUniform;
 	int m_positionUniform;

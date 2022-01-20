@@ -1,4 +1,4 @@
-#include "LoadShader.h"
+#include "GLShader.h"
 #include "OpenGLInclude.h"
 #include <assert.h>
 #include <stdio.h>
@@ -13,7 +13,12 @@ void gltLoadShaderSrc(const char *szShaderSrc, GLuint shader)
 	glShaderSource(shader, 1, (const GLchar **)fsStringPtr, NULL);
 }
 
-GLuint gltLoadShaderPair(const char *szVertexProg, const char *szFragmentProg)
+GLShader::~GLShader()
+{
+	glDeleteProgram(m_program);
+}
+
+std::shared_ptr<GLShader> GLShader::Load(const char *szVertexProg, const char *szFragmentProg)
 {
 	assert(glGetError() == GL_NO_ERROR);
 
@@ -44,7 +49,7 @@ GLuint gltLoadShaderPair(const char *szVertexProg, const char *szFragmentProg)
 		return 0;
 		glDeleteShader(hVertexShader);
 		glDeleteShader(hFragmentShader);
-		return (GLuint)0;
+		return {};
 	}
 
 	assert(glGetError() == GL_NO_ERROR);
@@ -62,7 +67,7 @@ GLuint gltLoadShaderPair(const char *szVertexProg, const char *szFragmentProg)
 		exit(EXIT_FAILURE);
 		glDeleteShader(hVertexShader);
 		glDeleteShader(hFragmentShader);
-		return (GLuint)0;
+		return {};
 	}
 
 	assert(glGetError() == GL_NO_ERROR);
@@ -96,8 +101,33 @@ GLuint gltLoadShaderPair(const char *szVertexProg, const char *szFragmentProg)
 		printf("Warning/Error in GLSL shader:\n");
 		printf("%s\n", infoLog);
 		glDeleteProgram(hReturn);
-		return (GLuint)0;
+		return {};
 	}
 
-	return hReturn;
+	return std::shared_ptr<GLShader>(new GLShader(hReturn));
+}
+
+int GLShader::getUniformLocation(const char *name)
+{
+	return glGetUniformLocation(m_program, name);
+}
+
+int GLShader::getAttributeLocation(const char *name)
+{
+	return glGetAttribLocation(m_program, name);
+}
+
+void GLShader::use()
+{
+	glUseProgram(m_program);
+}
+
+void GLShader::unuse()
+{
+	glUseProgram(0);
+}
+
+void GLShader::setMatrix4x4(const char *name, const float value[16])
+{
+	glUniformMatrix4fv(getUniformLocation(name), 1, false, value);
 }
