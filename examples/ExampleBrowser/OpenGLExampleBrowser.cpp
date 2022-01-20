@@ -13,7 +13,9 @@
 #include <LinearMath/btIDebugDraw.h>
 #include <OpenGLInclude.h>
 #include <assert.h>
+#include <functional>
 #include <string>
+#include "CommonCameraInterface.h"
 #include "CommonExampleInterface.h"
 
 #define DEMO_SELECTION_COMBOBOX 13
@@ -428,8 +430,6 @@ private:
 		if (f)
 		{
 			fprintf(f, "--start_demo_name=%s\n", gAllExamples->getExampleName(sCurrentDemoIndex));
-			fprintf(f, "--mouse_move_multiplier=%f\n", s_app->getMouseMoveMultiplier());
-			fprintf(f, "--mouse_wheel_multiplier=%f\n", s_app->getMouseWheelMultiplier());
 			float red, green, blue;
 			s_app->getBackgroundColor(&red, &green, &blue);
 			fprintf(f, "--background_color_red= %f\n", red);
@@ -641,29 +641,21 @@ public:
 		width = s_window->getWidth();
 		height = s_window->getHeight();
 
-		s_window->mouseMoveCallback.push_front(std::bind(&OpenGLExampleBrowserInternalData::MyMouseMoveCallback,
-														 this, std::placeholders::_1, std::placeholders::_2));
-		s_window->mouseButtonCallback.push_front(std::bind(&OpenGLExampleBrowserInternalData::MyMouseButtonCallback,
-														   this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
-		s_window->keyboardCallback.push_front(std::bind(&OpenGLExampleBrowserInternalData::MyKeyboardCallback,
-														this, std::placeholders::_1, std::placeholders::_2));
-
 		auto camera = s_app->m_renderer->getActiveCamera();
 		camera->setCameraDistance(13);
 		camera->setCameraPitch(0);
 		camera->setCameraTargetPosition(0, 0, 0);
 
-		float mouseMoveMult = s_app->getMouseMoveMultiplier();
-		if (args.GetCmdLineArgument("mouse_move_multiplier", mouseMoveMult))
-		{
-			s_app->setMouseMoveMultiplier(mouseMoveMult);
-		}
+		s_window->mouseMoveCallback.push_back(std::bind(&OpenGLExampleBrowserInternalData::MyMouseMoveCallback,
+														this, std::placeholders::_1, std::placeholders::_2));
+		s_window->mouseMoveCallback.push_back(std::bind(&CommonCameraInterface::mouseMoveCallback, camera, std::placeholders::_1, std::placeholders::_2));
 
-		float mouseWheelMult = s_app->getMouseWheelMultiplier();
-		if (args.GetCmdLineArgument("mouse_wheel_multiplier", mouseWheelMult))
-		{
-			s_app->setMouseWheelMultiplier(mouseWheelMult);
-		}
+		s_window->mouseButtonCallback.push_back(std::bind(&OpenGLExampleBrowserInternalData::MyMouseButtonCallback,
+														  this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
+		s_window->mouseButtonCallback.push_back(std::bind(&CommonCameraInterface::mouseButtonCallback, camera, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
+
+		s_window->keyboardCallback.push_front(std::bind(&OpenGLExampleBrowserInternalData::MyKeyboardCallback,
+														this, std::placeholders::_1, std::placeholders::_2));
 
 		args.GetCmdLineArgument("shared_memory_key", gSharedMemoryKey);
 

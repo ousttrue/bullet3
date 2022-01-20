@@ -132,8 +132,6 @@ You can just run it though a terminal/command prompt, or by clicking it.
 ```
 [--start_demo_name="Demo Name"]     Start with a selected demo  
 [--mp4=moviename.mp4]               Create a mp4 movie of the window, requires ffmpeg installed
-[--mouse_move_multiplier=0.400000]  Set the mouse move sensitivity
-[--mouse_wheel_multiplier=0.01]     Set the mouse wheel sensitivity
 [--background_color_red= 0.9]       Set the red component for background color. Same for green and blue
 [--fixed_timestep= 0.0]             Use either a real-time delta time (0.0) or a fixed step size (0.016666)
 ```

@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include <BasicDemo/BasicExample.h>
 #include <RollingFrictionDemo/RollingFrictionDemo.h>
+#include <functional>
 #include <memory>
+#include "CommonCameraInterface.h"
 
 int main(int argc, char* argv[])
 {
@@ -18,19 +20,23 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	auto example = std::make_unique<RollingFrictionDemo>();
+	auto example = std::make_unique<BasicExample>();
 	auto camera = app.m_instancingRenderer->getActiveCamera();
-	window->mouseButtonCallback.push_front(
+	window->mouseButtonCallback.push_back(
 		[&example, camera](int button, int state, float x, float y, ButtonFlags flags)
 		{
 			return example->mouseButtonCallback(camera, button, state, x, y, flags);
 		});
+	window->mouseButtonCallback.push_back(
+		std::bind(&CommonCameraInterface::mouseButtonCallback, camera, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
 
-	window->mouseMoveCallback.push_front(
+	window->mouseMoveCallback.push_back(
 		[&example, camera](float x, float y)
 		{
 			return example->mouseMoveCallback(camera, x, y);
 		});
+	window->mouseMoveCallback.push_back(
+		std::bind(&CommonCameraInterface::mouseMoveCallback, camera, std::placeholders::_1, std::placeholders::_2));
 
 	example->processCommandLineArgs(argc, argv);
 

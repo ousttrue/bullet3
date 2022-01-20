@@ -1,15 +1,12 @@
-#ifndef COMMON_CALLBACKS_H
-#define COMMON_CALLBACKS_H
+#pragma once
 #include <functional>
-#include "CommonExampleInterface.h"
 
-using b3ResizeCallback = std::function<void(float width, float height)>;
-using b3RenderCallback = std::function<void()>;
-// input callback return true if cosume the event
-using b3WheelCallback = std::function<bool(float deltax, float deltay)>;
-using b3MouseMoveCallback = std::function<bool(float x, float y)>;
-using b3MouseButtonCallback = std::function<bool(int button, int state, float x, float y, ButtonFlags flags)>;
-using b3KeyboardCallback = std::function<bool(int keycode, int state)>;
+enum ButtonFlags
+{
+	ButtonFlagsNone = 0,
+	ButtonFlagsAlt = 1,
+	ButtonFlagsCtrl = 1 << 1,
+};
 
 enum
 {
@@ -45,7 +42,12 @@ enum
 	B3G_CONTROL,
 	B3G_ALT,
 	B3G_RETURN,
-
 };
 
-#endif
+using b3ResizeCallback = std::function<void(float width, float height)>;
+using b3RenderCallback = std::function<void()>;
+// input callback return true if cosume the event
+using b3WheelCallback = std::function<bool(float deltax, float deltay)>;
+using b3MouseMoveCallback = std::function<bool(float x, float y)>;
+using b3MouseButtonCallback = std::function<bool(int button, int state, float x, float y, ButtonFlags flags)>;
+using b3KeyboardCallback = std::function<bool(int keycode, int state)>;

@@ -508,18 +508,6 @@ CommonWindowInterface* GlfwApp::createWindow(const b3gWindowConstructionInfo& ci
 			if (gApp->m_primRenderer)
 				gApp->m_primRenderer->setScreenSize(width, height);
 		});
-	m_window->mouseMoveCallback.push_back(
-		[gApp = this](int x, int y)
-		{
-			gApp->defaultMouseMoveCallback(x, y);
-			return true;
-		});
-	m_window->mouseButtonCallback.push_back(
-		[gApp = this](int button, int state, float x, float y, ButtonFlags flags)
-		{
-			gApp->defaultMouseButtonCallback(button, state, x, y);
-			return true;
-		});
 	m_window->keyboardCallback.push_back(
 		[gApp = this](int keycode, int state)
 		{
@@ -530,13 +518,6 @@ CommonWindowInterface* GlfwApp::createWindow(const b3gWindowConstructionInfo& ci
 			}
 			return false;
 		});
-	m_window->wheelCallback.push_back(
-		[gApp = this](float deltax, float deltay)
-		{
-			gApp->defaultWheelCallback(deltax, deltay);
-			return true;
-		});
-
 	m_data = new SimpleInternalData;
 
 	glClearColor(m_backgroundColorRGB[0],

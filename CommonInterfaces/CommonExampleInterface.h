@@ -2,13 +2,6 @@
 #include "CommonCameraInterface.h"
 #include <functional>
 
-enum ButtonFlags
-{
-	ButtonFlagsNone = 0,
-	ButtonFlagsAlt = 1,
-	ButtonFlagsCtrl = 1 << 1,
-};
-
 struct CommandProcessorCreationInterface
 {
 	virtual ~CommandProcessorCreationInterface() {}
@@ -43,11 +36,11 @@ class CommonExampleInterface
 public:
 	using CreateFunc = std::function<class CommonExampleInterface*(CommonExampleOptions& options)>;
 	virtual ~CommonExampleInterface() {}
-	virtual void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) = 0;
-	virtual void exitPhysics(){}
+	virtual void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) = 0;
+	virtual void exitPhysics() {}
 	virtual void updateGraphics() {}
 	virtual void stepSimulation(float deltaTime) = 0;
-	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper=0) {}  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
+	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper = 0) {}  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	virtual CameraResetInfo cameraResetInfo() const { return {}; }
 	virtual bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) { return false; }
 	virtual bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags) { return false; }
@@ -67,7 +60,7 @@ public:
 	{
 		return new EmptyExample;
 	}
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override {}
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override {}
 	void exitPhysics() override {}
 	void stepSimulation(float deltaTime) override {}
 };

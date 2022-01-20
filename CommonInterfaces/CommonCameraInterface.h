@@ -1,4 +1,5 @@
 #pragma once
+#include "CommonCallbacks.h"
 #include <LinearMath/btVector3.h>
 
 struct CameraResetInfo
@@ -15,6 +16,10 @@ struct CameraResetInfo
 struct CommonCameraInterface
 {
 	virtual ~CommonCameraInterface() {}
+	virtual bool mouseButtonCallback(int button, int state, float x, float y, ButtonFlags flags) { return false; }
+	virtual bool mouseMoveCallback(float x, float y) { return false; }
+	virtual bool wheelCallback(float deltax, float deltay) { return false; }
+
 	virtual void getCameraProjectionMatrix(float m[16]) const = 0;
 	virtual void getCameraViewMatrix(float m[16]) const = 0;
 

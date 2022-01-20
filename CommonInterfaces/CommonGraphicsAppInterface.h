@@ -44,14 +44,7 @@ struct CommonGraphicsApp
 	struct CommonRenderInterface* m_renderer = nullptr;
 	struct CommonParameterInterface* m_parameterInterface = nullptr;
 	struct Common2dCanvasInterface* m_2dCanvasInterface = nullptr;
-	bool m_leftMouseButton = false;
-	bool m_middleMouseButton = false;
-	bool m_rightMouseButton = false;
-	float m_wheelMultiplier = 0.01f;
-	float m_mouseMoveMultiplier = 0.4f;
-	float m_mouseXpos = 0;
-	float m_mouseYpos = 0;
-	bool m_mouseInitialized = false;
+
 	float m_backgroundColorRGB[3] = {0.7f, 0.7f, 0.8f};
 
 	virtual ~CommonGraphicsApp()
@@ -80,22 +73,6 @@ struct CommonGraphicsApp
 		m_backgroundColorRGB[1] = green;
 		m_backgroundColorRGB[2] = blue;
 	}
-	virtual void setMouseWheelMultiplier(float mult)
-	{
-		m_wheelMultiplier = mult;
-	}
-	virtual float getMouseWheelMultiplier() const
-	{
-		return m_wheelMultiplier;
-	}
-	virtual void setMouseMoveMultiplier(float mult)
-	{
-		m_mouseMoveMultiplier = mult;
-	}
-	virtual float getMouseMoveMultiplier() const
-	{
-		return m_mouseMoveMultiplier;
-	}
 	virtual void drawGrid(DrawGridData data = DrawGridData()) = 0;
 	virtual void swapBuffer() = 0;
 	virtual void drawText(const char* txt, int posX, int posY)
@@ -116,7 +93,4 @@ struct CommonGraphicsApp
 	virtual int registerCubeShape(float halfExtentsX, float halfExtentsY, float halfExtentsZ, int textureIndex = -1, float textureScaling = 1) = 0;
 	virtual int registerGraphicsUnitSphereShape(EnumSphereLevelOfDetail lod, int textureId = -1) = 0;
 	virtual void registerGrid(int xres, int yres, float color0[4], float color1[4]) = 0;
-	void defaultMouseButtonCallback(int button, int state, float x, float y);
-	void defaultMouseMoveCallback(float x, float y);
-	void defaultWheelCallback(float deltax, float deltay);
 };

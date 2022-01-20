@@ -2,25 +2,39 @@
 #define SIMPLE_CAMERA_H
 
 #include <CommonCameraInterface.h>
+#include "CommonCallbacks.h"
 
 struct SimpleCamera : public CommonCameraInterface
 {
 	struct SimpleCameraInternalData* m_data;
+	bool m_leftMouseButton = false;
+	bool m_middleMouseButton = false;
+	bool m_rightMouseButton = false;
+	float m_wheelMultiplier = 0.01f;
+	float m_mouseMoveMultiplier = 0.4f;
+	float m_mouseXpos = 0;
+	float m_mouseYpos = 0;
+	bool m_mouseInitialized = false;
+	bool m_isAltPressed = false;
+	bool m_isControlPressed = false;
 
 	SimpleCamera();
-	virtual ~SimpleCamera();
+	~SimpleCamera() override;
+	bool mouseButtonCallback(int button, int state, float x, float y, ButtonFlags flags) override;
+	bool mouseMoveCallback(float x, float y) override;
+	bool wheelCallback(float deltax, float deltay) override;
 
 	void update();
-	virtual void getCameraProjectionMatrix(float m[16]) const;
-	virtual void getCameraViewMatrix(float m[16]) const;
 
-	virtual void setVRCamera(const float viewMat[16], const float projectionMatrix[16]);
-	virtual bool getVRCamera(float viewMat[16], float projectionMatrix[16]);
+	void getCameraProjectionMatrix(float m[16]) const override;
+	void getCameraViewMatrix(float m[16]) const override;
 
-	virtual void setVRCameraOffsetTransform(const float offset[16]);
-	virtual void disableVRCamera();
-
-	virtual bool isVRCamera() const;
+	// VRCamera
+	void setVRCamera(const float viewMat[16], const float projectionMatrix[16]) override;
+	bool getVRCamera(float viewMat[16], float projectionMatrix[16]);
+	void setVRCameraOffsetTransform(const float offset[16]) override;
+	void disableVRCamera() override;
+	bool isVRCamera() const override;
 
 	virtual void getCameraTargetPosition(float pos[3]) const;
 	virtual void getCameraPosition(float pos[3]) const;
