@@ -57,7 +57,7 @@ class GLPrimitiveRenderer
 	void loadBufferData();
 
 public:
-	GLPrimitiveRenderer(int screenWidth, int screenHeight);
+	GLPrimitiveRenderer(int screenWidth=1, int screenHeight=1);
 	virtual ~GLPrimitiveRenderer();
 
 	void drawRect(float x0, float y0, float x1, float y1, float color[4]);

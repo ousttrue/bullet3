@@ -1,275 +1,246 @@
-/*
-Copyright (c) 2012 Advanced Micro Devices, Inc.  
+#include <GlfwApp.h>
+#include <OpenGLInclude.h>
+#include <opengl_fontstashcallbacks.h>
+#include <Bullet3Common/b3Quaternion.h>
+#include <Bullet3Common/b3CommandLineArgs.h>
+#include <GLShader.h>
+#include <GLPrimInternalData.h>
+#include <GLPrimitiveRenderer.h>
+#include <OpenSans.h>
 
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
-*/
-//Originally written by Erwin Coumans
-
-//
-//#include "vld.h"
-#ifndef __APPLE__
-#include <GL/glew.h>
-#endif
-#include <string.h>  //memset
-
-#ifdef __APPLE__
-#include "OpenGLWindow/MacOpenGLWindow.h"
-#elif defined(_WIN32)
-#include "OpenGLWindow/Win32OpenGLWindow.h"
-#elif defined(__linux)
-#include "OpenGLWindow/X11OpenGLWindow.h"
-#endif
-
-#include "fontstash.h"
-#include "opengl_fontstashcallbacks.h"
-#include <stdio.h>
-
-//#include "Bullet3Common/b3Quickprof.h"
-#include "Bullet3Common/b3Quaternion.h"
-#include "Bullet3Common/b3CommandLineArgs.h"
-#include <LoadShader.h>
-extern char OpenSansData[];
-bool printStats = false;
+// extern char OpenSansData[];
+// bool printStats = false;
 bool pauseSimulation = false;
-bool shootObject = false;
+// bool shootObject = false;
 
-int m_glutScreenWidth;
-int m_glutScreenHeight;
+// int m_glutScreenWidth;
+// int m_glutScreenHeight;
 
 bool useInterop = false;
 
-#include <GLPrimInternalData.h>
 
-static PrimInternalData sData;
+// static PrimInternalData sData;
 
-/*GLuint sData.m_texturehandle;
-GLuint sData.m_shaderProg;
-GLint m_positionUniform;
-GLint m_colourAttribute, m_positionAttribute,m_textureAttribute;
-GLuint m_vertexArrayObject,m_vertexBuffer;
-GLuint  m_indexBuffer;
-*/
+// /*GLuint sData.m_texturehandle;
+// GLuint sData.m_shaderProg;
+// GLint m_positionUniform;
+// GLint m_colourAttribute, m_positionAttribute,m_textureAttribute;
+// GLuint m_vertexArrayObject,m_vertexBuffer;
+// GLuint  m_indexBuffer;
+// */
 
 void loadShader();
-unsigned int indexData[6] = {0, 1, 2, 0, 2, 3};
+// unsigned int indexData[6] = {0, 1, 2, 0, 2, 3};
 
 void loadBufferData()
 {
-	Vertex vertexDataOrg[4] = {
-		{vec4(-0.5, -0.5, 0.0, 1.0), vec4(1.0, 0.0, 0.0, 1.0), vec2(0, 0)},
-		{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0, 1)},
-		{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 1)},
-		{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 0)}};
+// 	Vertex vertexDataOrg[4] = {
+// 		{vec4(-0.5, -0.5, 0.0, 1.0), vec4(1.0, 0.0, 0.0, 1.0), vec2(0, 0)},
+// 		{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0, 1)},
+// 		{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 1)},
+// 		{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 0)}};
 
-	Vertex vertexData[4] = {
-		{vec4(-0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.015625)},
-		{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
-		{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
-		{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
+// 	Vertex vertexData[4] = {
+// 		{vec4(-0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.015625)},
+// 		{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
+// 		{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
+// 		{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
 
-	Vertex vertexData2[4] = {
-		{vec4(0, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.015625)},
-		{vec4(0.0234375, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
-		{vec4(0.0234375, 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
-		{vec4(0., 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
+// 	Vertex vertexData2[4] = {
+// 		{vec4(0, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.015625)},
+// 		{vec4(0.0234375, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
+// 		{vec4(0.0234375, 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
+// 		{vec4(0., 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
 
-	glGenVertexArrays(1, &sData.m_vertexArrayObject);
-	glBindVertexArray(sData.m_vertexArrayObject);
+// 	glGenVertexArrays(1, &sData.m_vertexArrayObject);
+// 	glBindVertexArray(sData.m_vertexArrayObject);
 
-	glGenBuffers(1, &sData.m_vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, sData.m_vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex), vertexData, GL_STATIC_DRAW);
-	GLuint err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	glGenBuffers(1, &sData.m_vertexBuffer);
+// 	glBindBuffer(GL_ARRAY_BUFFER, sData.m_vertexBuffer);
+// 	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex), vertexData, GL_STATIC_DRAW);
+// 	GLuint err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	glGenBuffers(1, &sData.m_indexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sData.m_indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(int), indexData, GL_STATIC_DRAW);
+// 	glGenBuffers(1, &sData.m_indexBuffer);
+// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sData.m_indexBuffer);
+// 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(int), indexData, GL_STATIC_DRAW);
 
-	glEnableVertexAttribArray(sData.m_positionAttribute);
-	glEnableVertexAttribArray(sData.m_colourAttribute);
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	glEnableVertexAttribArray(sData.m_positionAttribute);
+// 	glEnableVertexAttribArray(sData.m_colourAttribute);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(sData.m_textureAttribute);
+// 	glEnableVertexAttribArray(sData.m_textureAttribute);
 
-	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
-	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
-	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
+// 	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
+// 	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 }
 
 void initTestTexture()
 {
-	//	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, (GLuint*)&sData.m_texturehandle);
+// 	//	glEnable(GL_TEXTURE_2D);
+// 	glGenTextures(1, (GLuint*)&sData.m_texturehandle);
 
-	GLint err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	GLint err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	glBindTexture(GL_TEXTURE_2D, sData.m_texturehandle);
+// 	glBindTexture(GL_TEXTURE_2D, sData.m_texturehandle);
 
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	int width = 256;
-	int height = 256;
-	unsigned char* image = (unsigned char*)malloc(width * height);
-	memset(image, 0, width * height);
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			if (i == j)
-				image[i + width * j] = 0;
-			else
-				image[i + width * j] = 255;
-		}
-	}
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, image);
+// 	int width = 256;
+// 	int height = 256;
+// 	unsigned char* image = (unsigned char*)malloc(width * height);
+// 	memset(image, 0, width * height);
+// 	for (int i = 0; i < width; i++)
+// 	{
+// 		for (int j = 0; j < height; j++)
+// 		{
+// 			if (i == j)
+// 				image[i + width * j] = 0;
+// 			else
+// 				image[i + width * j] = 255;
+// 		}
+// 	}
+// 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, image);
 
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	glGenerateMipmap(GL_TEXTURE_2D);
+// 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	free(image);
+// 	free(image);
 }
 
-static const char* vertexShader =
-	"#version 150   \n"
-	"\n"
-	"uniform vec2 p;\n"
-	"\n"
-	"in vec4 position;\n"
-	"in vec4 colour;\n"
-	"out vec4 colourV;\n"
-	"\n"
-	"in vec2 texuv;\n"
-	"out vec2 texuvV;\n"
-	"\n"
-	"\n"
-	"void main (void)\n"
-	"{\n"
-	"    colourV = colour;\n"
-	"	gl_Position = vec4(p.x+position.x, p.y+position.y,0.f,1.f);\n"
-	"	texuvV=texuv;\n"
-	"}\n";
+// static const char* vertexShader =
+// 	"#version 150   \n"
+// 	"\n"
+// 	"uniform vec2 p;\n"
+// 	"\n"
+// 	"in vec4 position;\n"
+// 	"in vec4 colour;\n"
+// 	"out vec4 colourV;\n"
+// 	"\n"
+// 	"in vec2 texuv;\n"
+// 	"out vec2 texuvV;\n"
+// 	"\n"
+// 	"\n"
+// 	"void main (void)\n"
+// 	"{\n"
+// 	"    colourV = colour;\n"
+// 	"	gl_Position = vec4(p.x+position.x, p.y+position.y,0.f,1.f);\n"
+// 	"	texuvV=texuv;\n"
+// 	"}\n";
 
-static const char* fragmentShader =
-	"#version 150\n"
-	"\n"
-	"in vec4 colourV;\n"
-	"out vec4 fragColour;\n"
-	"in vec2 texuvV;\n"
-	"\n"
-	"uniform sampler2D Diffuse;\n"
-	"\n"
-	"void main(void)\n"
-	"{\n"
-	"	vec4 texcolorred = texture(Diffuse,texuvV);\n"
-	"//	vec4 texcolor = vec4(texcolorred.x,texcolorred.x,texcolorred.x,texcolorred.x);\n"
-	"	vec4 texcolor = vec4(1,1,1,texcolorred.x);\n"
-	"\n"
-	"    fragColour = colourV*texcolor;\n"
-	"}\n";
+// static const char* fragmentShader =
+// 	"#version 150\n"
+// 	"\n"
+// 	"in vec4 colourV;\n"
+// 	"out vec4 fragColour;\n"
+// 	"in vec2 texuvV;\n"
+// 	"\n"
+// 	"uniform sampler2D Diffuse;\n"
+// 	"\n"
+// 	"void main(void)\n"
+// 	"{\n"
+// 	"	vec4 texcolorred = texture(Diffuse,texuvV);\n"
+// 	"//	vec4 texcolor = vec4(texcolorred.x,texcolorred.x,texcolorred.x,texcolorred.x);\n"
+// 	"	vec4 texcolor = vec4(1,1,1,texcolorred.x);\n"
+// 	"\n"
+// 	"    fragColour = colourV*texcolor;\n"
+// 	"}\n";
 
-void loadShader()
-{
-	sData.m_shaderProg = gltLoadShaderPair(vertexShader, fragmentShader);
+// void loadShader()
+// {
+// 	sData.m_shaderProg = gltLoadShaderPair(vertexShader, fragmentShader);
 
-	sData.m_positionUniform = glGetUniformLocation(sData.m_shaderProg, "p");
-	if (sData.m_positionUniform < 0)
-	{
-		b3Assert(0);
-	}
-	sData.m_colourAttribute = glGetAttribLocation(sData.m_shaderProg, "colour");
-	if (sData.m_colourAttribute < 0)
-	{
-		b3Assert(0);
-	}
-	sData.m_positionAttribute = glGetAttribLocation(sData.m_shaderProg, "position");
-	if (sData.m_positionAttribute < 0)
-	{
-		b3Assert(0);
-	}
-	sData.m_textureAttribute = glGetAttribLocation(sData.m_shaderProg, "texuv");
-	if (sData.m_textureAttribute < 0)
-	{
-		b3Assert(0);
-	}
-}
+// 	sData.m_positionUniform = glGetUniformLocation(sData.m_shaderProg, "p");
+// 	if (sData.m_positionUniform < 0)
+// 	{
+// 		b3Assert(0);
+// 	}
+// 	sData.m_colourAttribute = glGetAttribLocation(sData.m_shaderProg, "colour");
+// 	if (sData.m_colourAttribute < 0)
+// 	{
+// 		b3Assert(0);
+// 	}
+// 	sData.m_positionAttribute = glGetAttribLocation(sData.m_shaderProg, "position");
+// 	if (sData.m_positionAttribute < 0)
+// 	{
+// 		b3Assert(0);
+// 	}
+// 	sData.m_textureAttribute = glGetAttribLocation(sData.m_shaderProg, "texuv");
+// 	if (sData.m_textureAttribute < 0)
+// 	{
+// 		b3Assert(0);
+// 	}
+// }
 
 void display()
 {
-	GLint err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	GLint err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	const float timeScale = 0.008f;
+// 	const float timeScale = 0.008f;
 
-	glUseProgram(sData.m_shaderProg);
-	glBindBuffer(GL_ARRAY_BUFFER, sData.m_vertexBuffer);
-	glBindVertexArray(sData.m_vertexArrayObject);
+// 	glUseProgram(sData.m_shaderProg);
+// 	glBindBuffer(GL_ARRAY_BUFFER, sData.m_vertexBuffer);
+// 	glBindVertexArray(sData.m_vertexArrayObject);
 
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	//   glBindTexture(GL_TEXTURE_2D,sData.m_texturehandle);
+// 	//   glBindTexture(GL_TEXTURE_2D,sData.m_texturehandle);
 
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	vec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
-	glUniform2fv(sData.m_positionUniform, 1, (const GLfloat*)&p);
+// 	vec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
+// 	glUniform2fv(sData.m_positionUniform, 1, (const GLfloat*)&p);
 
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(sData.m_positionAttribute);
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	glEnableVertexAttribArray(sData.m_positionAttribute);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(sData.m_colourAttribute);
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	glEnableVertexAttribArray(sData.m_colourAttribute);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(sData.m_textureAttribute);
+// 	glEnableVertexAttribArray(sData.m_textureAttribute);
 
-	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
-	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
-	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
+// 	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
+// 	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sData.m_indexBuffer);
+// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sData.m_indexBuffer);
 
-	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-	int indexCount = 6;
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+// 	int indexCount = 6;
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	// glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+// 	// glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+// 	err = glGetError();
+// 	b3Assert(err == GL_NO_ERROR);
 
-	//	glutSwapBuffers();
+// 	//	glutSwapBuffers();
 }
 
 const char* fileName = "../../bin/1000 stack.bullet";
@@ -280,9 +251,8 @@ void Usage()
 
 int main(int argc, char* argv[])
 {
-	GLint err;
+	// GLint err;
 	b3CommandLineArgs args(argc, argv);
-
 	if (args.CheckCmdLineFlag("help"))
 	{
 		Usage();
@@ -306,14 +276,12 @@ int main(int argc, char* argv[])
 	int height = 512;
 	printf("\n");
 
-	b3gDefaultOpenGLWindow* window = new b3gDefaultOpenGLWindow();
-	window->createWindow(b3gWindowConstructionInfo(width, height));
-	window->setWindowTitle("font test");
-
-#ifndef __APPLE__
-	err = glewInit();
-#endif
-	window->runMainLoop();
+	GlfwApp app;
+	auto window = app.createWindow({1600, 1200, "title"});
+	if (!window)
+	{
+		return 1;
+	}
 
 	loadShader();
 
@@ -324,7 +292,7 @@ int main(int argc, char* argv[])
 	window->startRendering();
 	window->endRendering();
 
-	err = glGetError();
+	auto err = glGetError();
 	b3Assert(err == GL_NO_ERROR);
 
 	//	render.InitShaders();
@@ -351,7 +319,9 @@ int main(int argc, char* argv[])
 
 	int fontTextureWidth = 512;
 	int fontTextureHeight = 512;
-	SimpleOpenGL2RenderCallbacks* renderCallbacks = new SimpleOpenGL2RenderCallbacks(&sData);
+
+	auto primRenderer = new GLPrimitiveRenderer();
+	auto renderCallbacks = new OpenGL2RenderCallbacks(primRenderer);
 
 	stash = sth_create(fontTextureWidth, fontTextureHeight, renderCallbacks);
 
@@ -433,8 +403,7 @@ int main(int argc, char* argv[])
 	err = glGetError();
 	b3Assert(err == GL_NO_ERROR);
 #else   //LOAD_FONT_FROM_FILE
-	char* data2 = OpenSansData;
-	unsigned char* data = (unsigned char*)data2;
+	unsigned char* data = (unsigned char*)OpenSansData;
 	if (!(droidRegular = sth_add_font_from_memory(stash, data)))
 	{
 		printf("error!\n");
@@ -570,8 +539,8 @@ int main(int argc, char* argv[])
 
 						err = glGetError();
 						b3Assert(err == GL_NO_ERROR);
-
-						sth_draw_texture(stash, droidRegular, 16.f, 0, 0, width, height, "a", &dx);
+						float color[] = {1, 1, 1 ,1};
+						sth_draw_texture(stash, droidRegular, 16.f, 0, 0, width, height, "a", &dx, color);
 						err = glGetError();
 						b3Assert(err == GL_NO_ERROR);
 
@@ -630,10 +599,6 @@ int main(int argc, char* argv[])
 	free(data);
 #endif  //LOAD_FONT_FROM_FILE
 #endif
-
-	//	render.CleanupShaders();
-	window->closeWindow();
-	delete window;
 
 	return 0;
 }

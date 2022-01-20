@@ -1,6 +1,4 @@
-#ifndef _OPENGL_FONTSTASH_CALLBACKS_H
-#define _OPENGL_FONTSTASH_CALLBACKS_H
-
+#pragma once
 #include "fontstash.h"
 struct PrimInternalData;
 class GLPrimitiveRenderer;
@@ -47,5 +45,3 @@ struct OpenGL2RenderCallbacks : public InternalOpenGL2RenderCallbacks
 	OpenGL2RenderCallbacks(GLPrimitiveRenderer* primRender);
 	virtual ~OpenGL2RenderCallbacks();
 };
-
-#endif  //_OPENGL_FONTSTASH_CALLBACKS_H
