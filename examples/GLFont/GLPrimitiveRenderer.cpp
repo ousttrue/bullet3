@@ -124,9 +124,7 @@ void GLPrimitiveRenderer::loadBufferData()
 
 	m_data->m_vertexBuffer2 = GLVBO::load_vertices_dynamic(nullptr, MAX_VERTICES2 * sizeof(PrimVertex));
 
-	glGenBuffers(1, &m_data->m_indexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_data->m_indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(int), s_indexData, GL_STATIC_DRAW);
+	m_data->m_indexBuffer = GLIBO::load(s_indexData, sizeof(s_indexData));
 
 	unsigned int indexData[MAX_VERTICES2 * 2];
 	int count = 0;
@@ -140,9 +138,7 @@ void GLPrimitiveRenderer::loadBufferData()
 		indexData[count++] = i + 2;
 		indexData[count++] = i + 3;
 	}
-	glGenBuffers(1, &m_data->m_indexBuffer2);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_data->m_indexBuffer2);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(int), indexData, GL_STATIC_DRAW);
+	m_data->m_indexBuffer2 = GLIBO::load(indexData, sizeof(indexData));
 
 	glEnableVertexAttribArray(m_data->m_positionAttribute);
 	glEnableVertexAttribArray(m_data->m_colourAttribute);
@@ -260,7 +256,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
 	assert(glGetError() == GL_NO_ERROR);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_data->m_indexBuffer);
+	m_data->m_indexBuffer->bind();
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = 6;
@@ -364,7 +360,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
 	assert(glGetError() == GL_NO_ERROR);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_data->m_indexBuffer2);
+	m_data->m_indexBuffer2->bind();
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = (numVertices / 4) * 6;

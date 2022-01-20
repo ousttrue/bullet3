@@ -13,4 +13,18 @@ public:
 	static std::shared_ptr<GLVBO> load_vertices_dynamic(const void* bytes, size_t size);
 	void bind();
 	void unbind();
+	void upload(const void* bytes, size_t size);
+};
+
+class GLIBO
+{
+	uint32_t m_ibo = 0;
+
+	GLIBO(uint32_t buffer) : m_ibo(buffer) {}
+
+public:
+	~GLIBO();
+	static std::shared_ptr<GLIBO> load(const void* bytes, size_t size);
+	void bind();
+	void unbind();
 };

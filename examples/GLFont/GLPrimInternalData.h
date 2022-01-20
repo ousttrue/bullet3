@@ -16,7 +16,7 @@ struct PrimInternalData
 	std::shared_ptr<class GLVAO> m_vertexArrayObject;
 	std::shared_ptr<class GLVAO> m_vertexArrayObject2;
 
-	unsigned int m_indexBuffer;
-	unsigned int m_indexBuffer2;
+	std::shared_ptr<class GLIBO> m_indexBuffer;
+	std::shared_ptr<class GLIBO> m_indexBuffer2;
 	std::shared_ptr<class GLTexture> m_texturehandle;
 };
