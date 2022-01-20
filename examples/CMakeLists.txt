@@ -1,5 +1,5 @@
 subdirs(UrdfParser)
-subdirs(OpenGLWindow)
+subdirs(GLFont OpenGLWindow)
 subdirs(UrdfImporter)
 subdirs(TinyRenderer)
 subdirs(GwenGUISupport)

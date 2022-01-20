@@ -13,11 +13,9 @@ add_library(
   opengl_fontstashcallbacks.cpp
   OpenSans.cpp
   SimpleCamera.cpp
-  TwFonts.cpp
   OpenGLGuiHelper.cpp
   CollisionShape2TriangleMesh.cpp
-  b3ImportMeshUtility.cpp
-  )
+  b3ImportMeshUtility.cpp)
 target_compile_definitions(${TARGET_NAME} PUBLIC GLEW_STATIC)
 target_compile_options(${TARGET_NAME} PRIVATE /wd4244)
 target_include_directories(
@@ -27,6 +25,7 @@ target_include_directories(
 target_link_libraries(
   ${TARGET_NAME}
   PUBLIC glad
+         GLFont
          Bullet3Common
          CommonInterfaces
          OpenGL32.lib
