@@ -11,24 +11,15 @@ struct CommandProcessorCreationInterface
 
 struct CommonExampleOptions
 {
-	struct GUIHelperInterface* m_guiHelper;
+	struct GUIHelperInterface* m_guiHelper = nullptr;
 
 	//Those are optional, some examples will use them others don't. Each example should work with them being 0.
-	int m_option;
-	const char* m_fileName;
-	class SharedMemoryInterface* m_sharedMem;
-	CommandProcessorCreationInterface* m_commandProcessorCreation;
-	bool m_skipGraphicsUpdate;
-
-	CommonExampleOptions(struct GUIHelperInterface* helper, int option = 0)
-		: m_guiHelper(helper),
-		  m_option(option),
-		  m_fileName(0),
-		  m_sharedMem(0),
-		  m_commandProcessorCreation(0),
-		  m_skipGraphicsUpdate(false)
-	{
-	}
+	int m_option = 0;
+	struct CommonGraphicsApp* m_app = nullptr;
+	const char* m_fileName = nullptr;
+	class SharedMemoryInterface* m_sharedMem = nullptr;
+	CommandProcessorCreationInterface* m_commandProcessorCreation = nullptr;
+	bool m_skipGraphicsUpdate = false;
 };
 
 class CommonExampleInterface
@@ -40,7 +31,7 @@ public:
 	virtual void exitPhysics() {}
 	virtual void updateGraphics() {}
 	virtual void stepSimulation(float deltaTime) = 0;
-	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper = 0) {}  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
+	virtual void physicsDebugDraw(int debugFlags) {}  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	virtual CameraResetInfo cameraResetInfo() const { return {}; }
 	virtual bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) { return false; }
 	virtual bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags) { return false; }

@@ -7,10 +7,10 @@ subdirs(
   InverseKinematics
   MultiThreadedDemo
   Collision
-  RenderingExamples
   SharedMemoryDemo
   VoronoiFracture
   RoboticsLearning
+  RenderingExamples
   )
 
 set(TARGET_NAME Demos)

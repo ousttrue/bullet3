@@ -40,7 +40,7 @@ public:
 	{
 	}
 
-	void physicsDebugDraw(int debugDrawMode, struct GUIHelperInterface *m_guiHelper) override
+	void physicsDebugDraw(int debugDrawMode) override
 	{
 		m_robotSim.debugDraw(debugDrawMode);
 	}

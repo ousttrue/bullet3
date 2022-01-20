@@ -161,7 +161,7 @@ public:
 		}
 
 		m_sharedMem = 0;
-		CommonExampleOptions options(guiHelper);
+		CommonExampleOptions options{guiHelper};
 
 		if (useInProcessMemory)
 		{

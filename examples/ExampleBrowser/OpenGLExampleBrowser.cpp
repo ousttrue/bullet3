@@ -359,7 +359,7 @@ private:
 
 		s_parameterInterface->removeAllParameters();
 
-		CommonExampleOptions options(s_guiHelper, 1);
+		CommonExampleOptions options{s_guiHelper, 1, s_app};
 		options.m_fileName = filename;
 		char fullPath[1024];
 		sprintf(fullPath, "%s", filename);
@@ -405,7 +405,7 @@ private:
 			s_guiHelper->setVisualizerFlagCallback(std::bind(&OpenGLExampleBrowserInternalData::OpenGLExampleBrowserVisualizerFlagCallback,
 															 this, std::placeholders::_1, std::placeholders::_2));
 
-			CommonExampleOptions options(s_guiHelper, option);
+			CommonExampleOptions options{s_guiHelper, option, s_app};
 			options.m_sharedMem = sSharedMem;
 			sCurrentDemo = (func)(options);
 			if (sCurrentDemo)

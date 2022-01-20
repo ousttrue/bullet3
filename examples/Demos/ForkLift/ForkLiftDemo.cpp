@@ -112,7 +112,7 @@ public:
 	virtual void specialKeyboard(int key, int x, int y);
 	virtual void specialKeyboardUp(int key, int x, int y);
 	bool keyboardCallback(int key, int state) override;
-	void physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper) override;
+	void physicsDebugDraw(int debugFlags) override;
 	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	void exitPhysics() override;
 
@@ -509,7 +509,7 @@ void ForkLiftDemo::initPhysics(CommonCameraInterface* camera, struct GUIHelperIn
 	m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void ForkLiftDemo::physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper)
+void ForkLiftDemo::physicsDebugDraw(int debugFlags)
 {
 	if (m_dynamicsWorld && m_dynamicsWorld->getDebugDrawer())
 	{

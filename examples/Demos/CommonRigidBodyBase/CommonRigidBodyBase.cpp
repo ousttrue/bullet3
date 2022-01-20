@@ -335,7 +335,7 @@ void CommonRigidBodyBase::stepSimulation(float deltaTime)
 	}
 }
 
-void CommonRigidBodyBase::physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper)
+void CommonRigidBodyBase::physicsDebugDraw(int debugFlags)
 {
 	if (m_physics)
 	{

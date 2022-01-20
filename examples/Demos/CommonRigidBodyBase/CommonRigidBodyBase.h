@@ -78,7 +78,7 @@ struct CommonRigidBodyBase : public CommonExampleInterface
 	~CommonRigidBodyBase() override;
 	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
 	void stepSimulation(float deltaTime) override;
-	void physicsDebugDraw(int debugFlags, struct GUIHelperInterface* m_guiHelper) override;
+	void physicsDebugDraw(int debugFlags) override;
 	bool keyboardCallback(int key, int state) override;
 	bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) override;
 	bool mouseButtonCallback(const CommonCameraInterface* camera, int button, int state, float x, float y, ButtonFlags flags) override;

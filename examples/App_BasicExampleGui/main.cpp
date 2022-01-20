@@ -4,8 +4,11 @@
 #include <b3Clock.h>
 #include <OpenGLGuiHelper.h>
 #include <stdio.h>
+//
 #include <BasicDemo/BasicExample.h>
 #include <RollingFrictionDemo/RollingFrictionDemo.h>
+#include "../RenderingExamples/CoordinateSystemDemo.h"
+//
 #include <functional>
 #include <memory>
 #include "CommonCameraInterface.h"
@@ -20,7 +23,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	auto example = std::make_unique<BasicExample>();
+	auto example = std::make_unique<CoordinateSystemDemo>(&app);
 	auto camera = app.m_instancingRenderer->getActiveCamera();
 	window->mouseButtonCallback.push_back(
 		[&example, camera](int button, int state, float x, float y, ButtonFlags flags)
@@ -73,6 +76,7 @@ int main(int argc, char* argv[])
 			gui.syncPhysicsToGraphics(world);
 			gui.render(world);
 		}
+		example->physicsDebugDraw(0);
 
 		DrawGridData dg;
 		dg.upAxis = camera->getCameraUpAxis();
