@@ -4,7 +4,7 @@
 #include <GLPrimInternalData.h>
 
 #include "fontstash.h"
-#include <OpenGLInclude.h>
+#include <glad/gl.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

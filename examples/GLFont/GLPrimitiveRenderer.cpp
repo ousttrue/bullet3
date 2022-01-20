@@ -1,8 +1,8 @@
 #ifndef NO_OPENGL3
 #include "GLPrimitiveRenderer.h"
 #include "GLPrimInternalData.h"
-#include "Bullet3Common/b3Scalar.h"
 #include "LoadShader.h"
+#include <assert.h>
 
 static const char *vertexShader3D =
 	"#version 150   \n"
@@ -70,32 +70,32 @@ GLPrimitiveRenderer::GLPrimitiveRenderer(int screenWidth, int screenHeight)
 	m_data->m_viewmatUniform = glGetUniformLocation(m_data->m_shaderProg, "viewMatrix");
 	if (m_data->m_viewmatUniform < 0)
 	{
-		b3Assert(0);
+		assert(0);
 	}
 	m_data->m_projMatUniform = glGetUniformLocation(m_data->m_shaderProg, "projMatrix");
 	if (m_data->m_projMatUniform < 0)
 	{
-		b3Assert(0);
+		assert(0);
 	}
 	m_data->m_positionUniform = glGetUniformLocation(m_data->m_shaderProg, "p");
 	if (m_data->m_positionUniform < 0)
 	{
-		b3Assert(0);
+		assert(0);
 	}
 	m_data->m_colourAttribute = glGetAttribLocation(m_data->m_shaderProg, "colour");
 	if (m_data->m_colourAttribute < 0)
 	{
-		b3Assert(0);
+		assert(0);
 	}
 	m_data->m_positionAttribute = glGetAttribLocation(m_data->m_shaderProg, "position");
 	if (m_data->m_positionAttribute < 0)
 	{
-		b3Assert(0);
+		assert(0);
 	}
 	m_data->m_textureAttribute = glGetAttribLocation(m_data->m_shaderProg, "texuv");
 	if (m_data->m_textureAttribute < 0)
 	{
-		b3Assert(0);
+		assert(0);
 	}
 
 	loadBufferData();
@@ -122,7 +122,7 @@ void GLPrimitiveRenderer::loadBufferData()
 	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vertexBuffer2);
 	glBufferData(GL_ARRAY_BUFFER, MAX_VERTICES2 * sizeof(PrimVertex), 0, GL_DYNAMIC_DRAW);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glGenBuffers(1, &m_data->m_indexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_data->m_indexBuffer);
@@ -146,14 +146,14 @@ void GLPrimitiveRenderer::loadBufferData()
 
 	glEnableVertexAttribArray(m_data->m_positionAttribute);
 	glEnableVertexAttribArray(m_data->m_colourAttribute);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glEnableVertexAttribArray(m_data->m_textureAttribute);
 
 	glVertexAttribPointer(m_data->m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
 	glVertexAttribPointer(m_data->m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
 	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glActiveTexture(GL_TEXTURE0);
 
@@ -188,7 +188,7 @@ void GLPrimitiveRenderer::loadBufferData()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	delete[] image;
 }
@@ -209,28 +209,28 @@ void GLPrimitiveRenderer::drawLine()
 
 void GLPrimitiveRenderer::drawRect(float x0, float y0, float x1, float y1, float color[4])
 {
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 	glActiveTexture(GL_TEXTURE0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindTexture(GL_TEXTURE_2D, m_data->m_texturehandle);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 	drawTexturedRect(x0, y0, x1, y1, color, 0, 0, 1, 1);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 }
 
 void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVertex &v1, const PrimVertex &v2, const PrimVertex &v3, float viewMat[16], float projMat[16], bool useRGBA)
 {
 	//B3_PROFILE("GLPrimitiveRenderer::drawTexturedRect3D");
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glUseProgram(m_data->m_shaderProg);
 
 	glUniformMatrix4fv(m_data->m_viewmatUniform, 1, false, viewMat);
 	glUniformMatrix4fv(m_data->m_projMatUniform, 1, false, projMat);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vertexBuffer);
 	glBindVertexArray(m_data->m_vertexArrayObject);
@@ -252,7 +252,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(PrimVertex), vertexData);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	PrimVec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
 	if (useRGBA)
@@ -265,45 +265,45 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glEnableVertexAttribArray(m_data->m_positionAttribute);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glEnableVertexAttribArray(m_data->m_colourAttribute);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glEnableVertexAttribArray(m_data->m_textureAttribute);
 
 	glVertexAttribPointer(m_data->m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
 	glVertexAttribPointer(m_data->m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
 	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_data->m_indexBuffer);
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = 6;
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindVertexArray(0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	//glDisableVertexAttribArray(m_data->m_textureAttribute);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glUseProgram(0);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 }
 
 void GLPrimitiveRenderer::drawTexturedRect3D2Text(bool useRGBA)
@@ -321,7 +321,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 	}
 	//B3_PROFILE("GLPrimitiveRenderer::drawTexturedRect3D");
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 	float identity[16] = {1, 0, 0, 0,
 						  0, 1, 0, 0,
 						  0, 0, 1, 0,
@@ -332,7 +332,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 	glUniformMatrix4fv(m_data->m_viewmatUniform, 1, false, identity);
 	glUniformMatrix4fv(m_data->m_projMatUniform, 1, false, identity);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vertexBuffer2);
 	glBindVertexArray(m_data->m_vertexArrayObject2);
@@ -356,7 +356,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, numVertices * sizeof(PrimVertex), vertices);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	PrimVec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
 	if (useRGBA)
@@ -369,45 +369,45 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glEnableVertexAttribArray(m_data->m_positionAttribute);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glEnableVertexAttribArray(m_data->m_colourAttribute);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glEnableVertexAttribArray(m_data->m_textureAttribute);
 
 	glVertexAttribPointer(m_data->m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
 	glVertexAttribPointer(m_data->m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
 	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_data->m_indexBuffer2);
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = (numVertices / 4) * 6;
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindVertexArray(0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	//glDisableVertexAttribArray(m_data->m_textureAttribute);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 
 	glUseProgram(0);
 
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 }
 
 void GLPrimitiveRenderer::drawTexturedRect2a(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA)
@@ -437,7 +437,7 @@ void GLPrimitiveRenderer::flushBatchedRects()
 		return;
 
 	glActiveTexture(GL_TEXTURE0);
-	b3Assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);
 	glBindTexture(GL_TEXTURE_2D, m_data->m_texturehandle);
 	drawTexturedRect3D2(m_data2->m_verticesRect, m_data2->m_numVerticesRect, 0);
 	m_data2->m_numVerticesRect = 0;

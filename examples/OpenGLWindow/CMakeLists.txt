@@ -3,14 +3,10 @@ add_library(
   ${TARGET_NAME}
   GlfwApp.cpp
   GLInstancingRenderer.cpp
-  GLPrimitiveRenderer.cpp
   GLRenderToTexture.cpp
-  LoadShader.cpp
   LoadMeshFromObj.cpp
   Wavefront2GLInstanceGraphicsShape.cpp
   LoadMeshFromCollada.cpp
-  opengl_fontstashcallbacks.cpp
-  OpenSans.cpp
   SimpleCamera.cpp
   OpenGLGuiHelper.cpp
   CollisionShape2TriangleMesh.cpp
