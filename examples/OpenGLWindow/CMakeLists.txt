@@ -1,7 +1,6 @@
 set(TARGET_NAME OpenGLWindow)
 add_library(
   ${TARGET_NAME}
-  fontstash.cpp
   GlfwApp.cpp
   GLInstancingRenderer.cpp
   GLPrimitiveRenderer.cpp
