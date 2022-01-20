@@ -2,6 +2,7 @@
 #include "GLPrimitiveRenderer.h"
 #include "GLPrimInternalData.h"
 #include "GLShader.h"
+#include "GLVBO.h"
 #include <assert.h>
 
 auto VIEW_MATRIX = "viewMatrix";
@@ -68,7 +69,7 @@ GLPrimitiveRenderer::GLPrimitiveRenderer(int screenWidth, int screenHeight)
 	m_data = new PrimInternalData;
 	m_data2 = new PrimInternalData2;
 
-	m_data->m_shaderProg = GLShader::Load(vertexShader3D, fragmentShader3D);
+	m_data->m_shaderProg = GLShader::load(vertexShader3D, fragmentShader3D);
 
 	m_data->m_viewmatUniform = m_data->m_shaderProg->getUniformLocation(VIEW_MATRIX);
 	if (m_data->m_viewmatUniform < 0)
@@ -115,17 +116,12 @@ void GLPrimitiveRenderer::loadBufferData()
 	glGenVertexArrays(1, &m_data->m_vertexArrayObject);
 	glBindVertexArray(m_data->m_vertexArrayObject);
 
-	glGenBuffers(1, &m_data->m_vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(PrimVertex), vertexData, GL_DYNAMIC_DRAW);
+	m_data->m_vertexBuffer = GLVBO::load_vertices_dynamic(vertexData, sizeof(vertexData));
 
 	glGenVertexArrays(1, &m_data->m_vertexArrayObject2);
 	glBindVertexArray(m_data->m_vertexArrayObject2);
-	glGenBuffers(1, &m_data->m_vertexBuffer2);
-	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vertexBuffer2);
-	glBufferData(GL_ARRAY_BUFFER, MAX_VERTICES2 * sizeof(PrimVertex), 0, GL_DYNAMIC_DRAW);
 
-	assert(glGetError() == GL_NO_ERROR);
+	m_data->m_vertexBuffer2 = GLVBO::load_vertices_dynamic(nullptr, MAX_VERTICES2 * sizeof(PrimVertex));
 
 	glGenBuffers(1, &m_data->m_indexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_data->m_indexBuffer);
@@ -227,7 +223,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 	m_data->m_shaderProg->setMatrix4x4(VIEW_MATRIX, viewMat);
 	m_data->m_shaderProg->setMatrix4x4(PROJECTION_MATRIX, projMat);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vertexBuffer);
+	m_data->m_vertexBuffer->bind();
 	glBindVertexArray(m_data->m_vertexArrayObject);
 	bool useFiltering = false;
 	if (useFiltering)
@@ -328,7 +324,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 
 	assert(glGetError() == GL_NO_ERROR);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vertexBuffer2);
+	m_data->m_vertexBuffer2->bind();
 	glBindVertexArray(m_data->m_vertexArrayObject2);
 
 	bool useFiltering = false;

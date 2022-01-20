@@ -10,8 +10,8 @@ struct PrimInternalData
 	int m_colourAttribute;
 	int m_positionAttribute;
 	int m_textureAttribute;
-	unsigned int m_vertexBuffer;
-	unsigned int m_vertexBuffer2;
+	std::shared_ptr<class GLVBO> m_vertexBuffer;
+	std::shared_ptr<class GLVBO> m_vertexBuffer2;
 
 	unsigned int m_vertexArrayObject;
 	unsigned int m_vertexArrayObject2;

@@ -1211,7 +1211,7 @@ void GLInstancingRenderer::InitShaders()
 	int SCALE_BUFFER_SIZE = (m_data->m_maxNumObjectCapacity * sizeof(float) * 4);
 
 	{
-		triangleShaderProgram = GLShader::Load(triangleVertexShaderText, triangleFragmentShader);
+		triangleShaderProgram = GLShader::load(triangleVertexShaderText, triangleFragmentShader);
 
 		//triangle_vpos_location = glGetAttribLocation(triangleShaderProgram, "vPos");
 		//triangle_vUV_location = glGetAttribLocation(triangleShaderProgram, "vUV");
@@ -1234,7 +1234,7 @@ void GLInstancingRenderer::InitShaders()
 		glBindVertexArray(0);
 	}
 
-	linesShader = GLShader::Load(linesVertexShader, linesFragmentShader);
+	linesShader = GLShader::load(linesVertexShader, linesFragmentShader);
 	lines_ModelViewMatrix = linesShader->getUniformLocation("ModelViewMatrix");
 	lines_ProjectionMatrix = linesShader->getUniformLocation("ProjectionMatrix");
 	lines_colour = linesShader->getUniformLocation("colour");
@@ -1273,7 +1273,7 @@ void GLInstancingRenderer::InitShaders()
 	//glGetIntegerv(GL_ALIASED_LINE_WIDTH_RANGE, range);
 	glGetIntegerv(GL_SMOOTH_LINE_WIDTH_RANGE, lineWidthRange);
 
-	projectiveTextureInstancingShader = GLShader::Load(projectiveTextureInstancingVertexShader, projectiveTextureInstancingFragmentShader);
+	projectiveTextureInstancingShader = GLShader::load(projectiveTextureInstancingVertexShader, projectiveTextureInstancingFragmentShader);
 	projectiveTextureInstancingShader->use();
 	projectiveTexture_ViewMatrixInverse = projectiveTextureInstancingShader->getUniformLocation("ViewMatrixInverse");
 	projectiveTexture_ModelViewMatrix = projectiveTextureInstancingShader->getUniformLocation("ModelViewMatrix");
@@ -1288,7 +1288,7 @@ void GLInstancingRenderer::InitShaders()
 	projectiveTexture_cameraPositionIn = projectiveTextureInstancingShader->getUniformLocation("cameraPositionIn");
 	projectiveTexture_materialShininessIn = projectiveTextureInstancingShader->getUniformLocation("materialShininessIn");
 
-	useShadowMapInstancingShader = GLShader::Load(useShadowMapInstancingVertexShader, useShadowMapInstancingFragmentShader);
+	useShadowMapInstancingShader = GLShader::load(useShadowMapInstancingVertexShader, useShadowMapInstancingFragmentShader);
 	useShadow_ViewMatrixInverse = useShadowMapInstancingShader->getUniformLocation("ViewMatrixInverse");
 	useShadow_ModelViewMatrix = useShadowMapInstancingShader->getUniformLocation("ModelViewMatrix");
 	useShadow_lightSpecularIntensity = useShadowMapInstancingShader->getUniformLocation("lightSpecularIntensityIn");
@@ -1303,20 +1303,20 @@ void GLInstancingRenderer::InitShaders()
 	useShadow_materialShininessIn = useShadowMapInstancingShader->getUniformLocation("materialShininessIn");
 	useShadow_shadowmapIntensityIn = useShadowMapInstancingShader->getUniformLocation("shadowmapIntensityIn");
 
-	createShadowMapInstancingShader = GLShader::Load(createShadowMapInstancingVertexShader, createShadowMapInstancingFragmentShader);
+	createShadowMapInstancingShader = GLShader::load(createShadowMapInstancingVertexShader, createShadowMapInstancingFragmentShader);
 	createShadow_depthMVP = createShadowMapInstancingShader->getUniformLocation("depthMVP");
 
-	segmentationMaskInstancingShader = GLShader::Load(segmentationMaskInstancingVertexShader, segmentationMaskInstancingFragmentShader);
+	segmentationMaskInstancingShader = GLShader::load(segmentationMaskInstancingVertexShader, segmentationMaskInstancingFragmentShader);
 	segmentationMaskModelViewMatrix = segmentationMaskInstancingShader->getUniformLocation("ModelViewMatrix");
 	segmentationMaskProjectionMatrix = segmentationMaskInstancingShader->getUniformLocation("ProjectionMatrix");
 
-	instancingShader = GLShader::Load(instancingVertexShader, instancingFragmentShader);
+	instancingShader = GLShader::load(instancingVertexShader, instancingFragmentShader);
 	ModelViewMatrix = instancingShader->getUniformLocation("ModelViewMatrix");
 	ProjectionMatrix = instancingShader->getUniformLocation("ProjectionMatrix");
 	uniform_texture_diffuse = instancingShader->getUniformLocation("Diffuse");
 	regularLightDirIn = instancingShader->getUniformLocation("lightDirIn");
 
-	instancingShaderPointSprite = GLShader::Load(pointSpriteVertexShader, pointSpriteFragmentShader);
+	instancingShaderPointSprite = GLShader::load(pointSpriteVertexShader, pointSpriteFragmentShader);
 	ModelViewMatrixPointSprite = instancingShaderPointSprite->getUniformLocation("ModelViewMatrix");
 	ProjectionMatrixPointSprite = instancingShaderPointSprite->getUniformLocation("ProjectionMatrix");
 	screenWidthPointSprite = instancingShaderPointSprite->getUniformLocation("screenWidth");

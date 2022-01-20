@@ -18,7 +18,7 @@ GLShader::~GLShader()
 	glDeleteProgram(m_program);
 }
 
-std::shared_ptr<GLShader> GLShader::Load(const char *szVertexProg, const char *szFragmentProg)
+std::shared_ptr<GLShader> GLShader::load(const char *szVertexProg, const char *szFragmentProg)
 {
 	assert(glGetError() == GL_NO_ERROR);
 

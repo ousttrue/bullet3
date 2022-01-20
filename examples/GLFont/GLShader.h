@@ -11,7 +11,7 @@ class GLShader
 
 public:
 	~GLShader();
-	static std::shared_ptr<GLShader> Load(const char *szVertexProg, const char *szFragmentProg);
+	static std::shared_ptr<GLShader> load(const char *szVertexProg, const char *szFragmentProg);
 	int getUniformLocation(const char *name);
 	int getAttributeLocation(const char *name);
 	void use();
