@@ -78,7 +78,7 @@ public:
 	bool pauseSimulation = false;
 	bool singleStepSimulation = false;
 	btAlignedObjectArray<FileImporterByExtension> gFileImporterByExtension;
-	CommonWindowInterface* s_window = 0;
+	std::shared_ptr<CommonWindowInterface> s_window;
 	CommonExampleInterface* sCurrentDemo = 0;
 	bool gDisableDemoSelection = false;
 	SharedMemoryInterface* sSharedMem = 0;
@@ -619,7 +619,7 @@ public:
 		char title[1024];
 		sprintf(title, "%s using OpenGL3+ %s %s", appTitle, glContext, optMode);
 		s_app = new GlfwApp();
-		auto window = s_app->createWindow({width, height, title});
+		s_window = s_app->createWindow({width, height, title});
 
 		char* gVideoFileName = 0;
 		args.GetCmdLineArgument("mp4", gVideoFileName);
@@ -636,7 +636,6 @@ public:
 #endif
 
 		s_instancingRenderer = s_app->m_renderer;
-		s_window = s_app->m_window;
 
 		width = s_window->getWidth();
 		height = s_window->getHeight();
@@ -698,6 +697,7 @@ public:
 	void update(float deltaTime)
 	{
 		b3ChromeUtilsEnableProfiling();
+		s_window->startRendering();
 
 		if (!gEnableRenderLoop && !singleStepSimulation)
 		{
@@ -848,7 +848,7 @@ public:
 		}
 		{
 			BT_PROFILE("Swap Buffers");
-			s_app->swapBuffer();
+			s_window->endRendering();
 		}
 
 		if (m_gwen)

@@ -408,7 +408,7 @@ void Hinge2Vehicle::resetForklift()
 bool Hinge2Vehicle::keyboardCallback(int key, int state)
 {
 	bool handled = false;
-	bool isShiftPressed = m_guiHelper->getAppInterface()->m_window->isModifierKeyPressed(B3G_SHIFT);
+	bool isShiftPressed = false; // m_guiHelper->getAppInterface()->m_window->isModifierKeyPressed(B3G_SHIFT);
 
 	if (state)
 	{

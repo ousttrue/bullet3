@@ -53,6 +53,7 @@ int main(int argc, char* argv[])
 	OpenGLGuiHelper gui(&app, false);
 	while (!window->requestedExit())
 	{
+		window->startRendering();
 		// m_guiHelper->getRenderInterface()->removeAllInstances();
 
 		// step simulation
@@ -77,7 +78,7 @@ int main(int argc, char* argv[])
 		dg.upAxis = camera->getCameraUpAxis();
 		app.drawGrid(dg);
 
-		app.swapBuffer();
+		window->endRendering();
 	}
 
 	return 0;

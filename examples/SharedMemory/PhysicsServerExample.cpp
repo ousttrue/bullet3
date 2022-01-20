@@ -1666,9 +1666,9 @@ public:
 		*/
 		double shift = 0.1;
 
-		CommonWindowInterface* window = m_guiHelper->getAppInterface()->m_window;
-		if (window->isModifierKeyPressed(B3G_SHIFT))
-			shift = 0.01;
+		// CommonWindowInterface* window = m_guiHelper->getAppInterface()->m_window;
+		// if (window->isModifierKeyPressed(B3G_SHIFT))
+		// 	shift = 0.01;
 
 		btVector3 VRTeleportPos = this->m_physicsServer.getVRTeleportPosition();
 

@@ -1188,178 +1188,178 @@ void OpenGLGuiHelper::copyCameraImageData(const float viewMatrix[16], const floa
 										  int startPixelIndex, int destinationWidth,
 										  int destinationHeight, int* numPixelsCopied)
 {
-	int sourceWidth = btMin(destinationWidth, (int)(m_data->m_glApp->m_window->getWidth() * m_data->m_glApp->m_window->getRetinaScale()));
-	int sourceHeight = btMin(destinationHeight, (int)(m_data->m_glApp->m_window->getHeight() * m_data->m_glApp->m_window->getRetinaScale()));
-	m_data->m_glApp->setViewport(sourceWidth, sourceHeight);
+// 	int sourceWidth = btMin(destinationWidth, (int)(m_data->m_glApp->m_window->getWidth() * m_data->m_glApp->m_window->getRetinaScale()));
+// 	int sourceHeight = btMin(destinationHeight, (int)(m_data->m_glApp->m_window->getHeight() * m_data->m_glApp->m_window->getRetinaScale()));
+// 	m_data->m_glApp->setViewport(sourceWidth, sourceHeight);
 
-	if (numPixelsCopied)
-		*numPixelsCopied = 0;
+// 	if (numPixelsCopied)
+// 		*numPixelsCopied = 0;
 
-	int numTotalPixels = destinationWidth * destinationHeight;
-	int numRemainingPixels = numTotalPixels - startPixelIndex;
-	int numBytesPerPixel = 4;  //RGBA
-	int numRequestedPixels = btMin(rgbaBufferSizeInPixels, numRemainingPixels);
-	if (numRequestedPixels)
-	{
-		if (startPixelIndex == 0)
-		{
-			CommonCameraInterface* oldCam = getRenderInterface()->getActiveCamera();
-			SimpleCamera tempCam;
-			getRenderInterface()->setActiveCamera(&tempCam);
-			getRenderInterface()->getActiveCamera()->setVRCamera(viewMatrix, projectionMatrix);
-			{
-				BT_PROFILE("renderScene");
-				getRenderInterface()->renderScene();
-			}
+// 	int numTotalPixels = destinationWidth * destinationHeight;
+// 	int numRemainingPixels = numTotalPixels - startPixelIndex;
+// 	int numBytesPerPixel = 4;  //RGBA
+// 	int numRequestedPixels = btMin(rgbaBufferSizeInPixels, numRemainingPixels);
+// 	if (numRequestedPixels)
+// 	{
+// 		if (startPixelIndex == 0)
+// 		{
+// 			CommonCameraInterface* oldCam = getRenderInterface()->getActiveCamera();
+// 			SimpleCamera tempCam;
+// 			getRenderInterface()->setActiveCamera(&tempCam);
+// 			getRenderInterface()->getActiveCamera()->setVRCamera(viewMatrix, projectionMatrix);
+// 			{
+// 				BT_PROFILE("renderScene");
+// 				getRenderInterface()->renderScene();
+// 			}
 
-			{
-				BT_PROFILE("copy pixels");
-				btAlignedObjectArray<unsigned char> sourceRgbaPixelBuffer;
-				btAlignedObjectArray<float> sourceDepthBuffer;
-				//copy the image into our local cache
-				sourceRgbaPixelBuffer.resize(sourceWidth * sourceHeight * numBytesPerPixel);
-				sourceDepthBuffer.resize(sourceWidth * sourceHeight);
-				{
-					BT_PROFILE("getScreenPixels");
-					m_data->m_glApp->getScreenPixels(&(sourceRgbaPixelBuffer[0]), sourceRgbaPixelBuffer.size(), &sourceDepthBuffer[0], sizeof(float) * sourceDepthBuffer.size());
-				}
+// 			{
+// 				BT_PROFILE("copy pixels");
+// 				btAlignedObjectArray<unsigned char> sourceRgbaPixelBuffer;
+// 				btAlignedObjectArray<float> sourceDepthBuffer;
+// 				//copy the image into our local cache
+// 				sourceRgbaPixelBuffer.resize(sourceWidth * sourceHeight * numBytesPerPixel);
+// 				sourceDepthBuffer.resize(sourceWidth * sourceHeight);
+// 				{
+// 					BT_PROFILE("getScreenPixels");
+// 					m_data->m_glApp->getScreenPixels(&(sourceRgbaPixelBuffer[0]), sourceRgbaPixelBuffer.size(), &sourceDepthBuffer[0], sizeof(float) * sourceDepthBuffer.size());
+// 				}
 
-				m_data->m_rgbaPixelBuffer1.resize(destinationWidth * destinationHeight * numBytesPerPixel);
-				m_data->m_depthBuffer1.resize(destinationWidth * destinationHeight);
-				//rescale and flip
-				{
-					BT_PROFILE("resize and flip");
-					for (int j = 0; j < destinationHeight; j++)
-					{
-						for (int i = 0; i < destinationWidth; i++)
-						{
-							int xIndex = int(float(i) * (float(sourceWidth) / float(destinationWidth)));
-							int yIndex = int(float(destinationHeight - 1 - j) * (float(sourceHeight) / float(destinationHeight)));
-							btClamp(xIndex, 0, sourceWidth);
-							btClamp(yIndex, 0, sourceHeight);
-							int bytesPerPixel = 4;  //RGBA
+// 				m_data->m_rgbaPixelBuffer1.resize(destinationWidth * destinationHeight * numBytesPerPixel);
+// 				m_data->m_depthBuffer1.resize(destinationWidth * destinationHeight);
+// 				//rescale and flip
+// 				{
+// 					BT_PROFILE("resize and flip");
+// 					for (int j = 0; j < destinationHeight; j++)
+// 					{
+// 						for (int i = 0; i < destinationWidth; i++)
+// 						{
+// 							int xIndex = int(float(i) * (float(sourceWidth) / float(destinationWidth)));
+// 							int yIndex = int(float(destinationHeight - 1 - j) * (float(sourceHeight) / float(destinationHeight)));
+// 							btClamp(xIndex, 0, sourceWidth);
+// 							btClamp(yIndex, 0, sourceHeight);
+// 							int bytesPerPixel = 4;  //RGBA
 
-							int sourcePixelIndex = (xIndex + yIndex * sourceWidth) * bytesPerPixel;
-							int sourceDepthIndex = xIndex + yIndex * sourceWidth;
-#define COPY4PIXELS 1
-#ifdef COPY4PIXELS
-							int* dst = (int*)&m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 0];
-							int* src = (int*)&sourceRgbaPixelBuffer[sourcePixelIndex + 0];
-							*dst = *src;
+// 							int sourcePixelIndex = (xIndex + yIndex * sourceWidth) * bytesPerPixel;
+// 							int sourceDepthIndex = xIndex + yIndex * sourceWidth;
+// #define COPY4PIXELS 1
+// #ifdef COPY4PIXELS
+// 							int* dst = (int*)&m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 0];
+// 							int* src = (int*)&sourceRgbaPixelBuffer[sourcePixelIndex + 0];
+// 							*dst = *src;
 
-#else
-							m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 0] = sourceRgbaPixelBuffer[sourcePixelIndex + 0];
-							m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 1] = sourceRgbaPixelBuffer[sourcePixelIndex + 1];
-							m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 2] = sourceRgbaPixelBuffer[sourcePixelIndex + 2];
-							m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 3] = 255;
-#endif
-							if (depthBuffer)
-							{
-								m_data->m_depthBuffer1[i + j * destinationWidth] = sourceDepthBuffer[sourceDepthIndex];
-							}
-						}
-					}
-				}
-			}
+// #else
+// 							m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 0] = sourceRgbaPixelBuffer[sourcePixelIndex + 0];
+// 							m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 1] = sourceRgbaPixelBuffer[sourcePixelIndex + 1];
+// 							m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 2] = sourceRgbaPixelBuffer[sourcePixelIndex + 2];
+// 							m_data->m_rgbaPixelBuffer1[(i + j * destinationWidth) * 4 + 3] = 255;
+// #endif
+// 							if (depthBuffer)
+// 							{
+// 								m_data->m_depthBuffer1[i + j * destinationWidth] = sourceDepthBuffer[sourceDepthIndex];
+// 							}
+// 						}
+// 					}
+// 				}
+// 			}
 
-			//segmentation mask
+// 			//segmentation mask
 
-			if (segmentationMaskBuffer)
-			{
-				{
-					m_data->m_glApp->m_window->startRendering();
-					m_data->m_glApp->setViewport(sourceWidth, sourceHeight);
-					BT_PROFILE("renderScene");
-					getRenderInterface()->renderSceneInternal(B3_SEGMENTATION_MASK_RENDERMODE);
-				}
+// 			if (segmentationMaskBuffer)
+// 			{
+// 				{
+// 					m_data->m_glApp->m_window->startRendering();
+// 					m_data->m_glApp->setViewport(sourceWidth, sourceHeight);
+// 					BT_PROFILE("renderScene");
+// 					getRenderInterface()->renderSceneInternal(B3_SEGMENTATION_MASK_RENDERMODE);
+// 				}
 
-				{
-					BT_PROFILE("copy pixels");
-					btAlignedObjectArray<unsigned char> sourceRgbaPixelBuffer;
-					btAlignedObjectArray<float> sourceDepthBuffer;
-					//copy the image into our local cache
-					sourceRgbaPixelBuffer.resize(sourceWidth * sourceHeight * numBytesPerPixel);
-					sourceDepthBuffer.resize(sourceWidth * sourceHeight);
-					{
-						BT_PROFILE("getScreenPixelsSegmentationMask");
-						m_data->m_glApp->getScreenPixels(&(sourceRgbaPixelBuffer[0]), sourceRgbaPixelBuffer.size(), &sourceDepthBuffer[0], sizeof(float) * sourceDepthBuffer.size());
-					}
-					m_data->m_segmentationMaskBuffer.resize(destinationWidth * destinationHeight, -1);
+// 				{
+// 					BT_PROFILE("copy pixels");
+// 					btAlignedObjectArray<unsigned char> sourceRgbaPixelBuffer;
+// 					btAlignedObjectArray<float> sourceDepthBuffer;
+// 					//copy the image into our local cache
+// 					sourceRgbaPixelBuffer.resize(sourceWidth * sourceHeight * numBytesPerPixel);
+// 					sourceDepthBuffer.resize(sourceWidth * sourceHeight);
+// 					{
+// 						BT_PROFILE("getScreenPixelsSegmentationMask");
+// 						m_data->m_glApp->getScreenPixels(&(sourceRgbaPixelBuffer[0]), sourceRgbaPixelBuffer.size(), &sourceDepthBuffer[0], sizeof(float) * sourceDepthBuffer.size());
+// 					}
+// 					m_data->m_segmentationMaskBuffer.resize(destinationWidth * destinationHeight, -1);
 
-					//rescale and flip
-					{
-						BT_PROFILE("resize and flip segmentation mask");
-						for (int j = 0; j < destinationHeight; j++)
-						{
-							for (int i = 0; i < destinationWidth; i++)
-							{
-								int xIndex = int(float(i) * (float(sourceWidth) / float(destinationWidth)));
-								int yIndex = int(float(destinationHeight - 1 - j) * (float(sourceHeight) / float(destinationHeight)));
-								btClamp(xIndex, 0, sourceWidth);
-								btClamp(yIndex, 0, sourceHeight);
-								int bytesPerPixel = 4;  //RGBA
-								int sourcePixelIndex = (xIndex + yIndex * sourceWidth) * bytesPerPixel;
-								int sourceDepthIndex = xIndex + yIndex * sourceWidth;
+// 					//rescale and flip
+// 					{
+// 						BT_PROFILE("resize and flip segmentation mask");
+// 						for (int j = 0; j < destinationHeight; j++)
+// 						{
+// 							for (int i = 0; i < destinationWidth; i++)
+// 							{
+// 								int xIndex = int(float(i) * (float(sourceWidth) / float(destinationWidth)));
+// 								int yIndex = int(float(destinationHeight - 1 - j) * (float(sourceHeight) / float(destinationHeight)));
+// 								btClamp(xIndex, 0, sourceWidth);
+// 								btClamp(yIndex, 0, sourceHeight);
+// 								int bytesPerPixel = 4;  //RGBA
+// 								int sourcePixelIndex = (xIndex + yIndex * sourceWidth) * bytesPerPixel;
+// 								int sourceDepthIndex = xIndex + yIndex * sourceWidth;
 
-								if (segmentationMaskBuffer)
-								{
-									float depth = sourceDepthBuffer[sourceDepthIndex];
-									if (depth < 1)
-									{
-										int segMask = sourceRgbaPixelBuffer[sourcePixelIndex + 0] + 256 * (sourceRgbaPixelBuffer[sourcePixelIndex + 1]) + 256 * 256 * (sourceRgbaPixelBuffer[sourcePixelIndex + 2]);
-										m_data->m_segmentationMaskBuffer[i + j * destinationWidth] = segMask;
-									}
-									else
-									{
-										m_data->m_segmentationMaskBuffer[i + j * destinationWidth] = -1;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+// 								if (segmentationMaskBuffer)
+// 								{
+// 									float depth = sourceDepthBuffer[sourceDepthIndex];
+// 									if (depth < 1)
+// 									{
+// 										int segMask = sourceRgbaPixelBuffer[sourcePixelIndex + 0] + 256 * (sourceRgbaPixelBuffer[sourcePixelIndex + 1]) + 256 * 256 * (sourceRgbaPixelBuffer[sourcePixelIndex + 2]);
+// 										m_data->m_segmentationMaskBuffer[i + j * destinationWidth] = segMask;
+// 									}
+// 									else
+// 									{
+// 										m_data->m_segmentationMaskBuffer[i + j * destinationWidth] = -1;
+// 									}
+// 								}
+// 							}
+// 						}
+// 					}
+// 				}
+// 			}
 
-			getRenderInterface()->setActiveCamera(oldCam);
+// 			getRenderInterface()->setActiveCamera(oldCam);
 
-			if (1)
-			{
-				getRenderInterface()->getActiveCamera()->disableVRCamera();
-				getRenderInterface()->updateCamera();
-				m_data->m_glApp->m_window->startRendering();
-			}
-		}
-		if (pixelsRGBA)
-		{
-			BT_PROFILE("copy rgba pixels");
+// 			if (1)
+// 			{
+// 				getRenderInterface()->getActiveCamera()->disableVRCamera();
+// 				getRenderInterface()->updateCamera();
+// 				m_data->m_glApp->m_window->startRendering();
+// 			}
+// 		}
+// 		if (pixelsRGBA)
+// 		{
+// 			BT_PROFILE("copy rgba pixels");
 
-			for (int i = 0; i < numRequestedPixels * numBytesPerPixel; i++)
-			{
-				pixelsRGBA[i] = m_data->m_rgbaPixelBuffer1[i + startPixelIndex * numBytesPerPixel];
-			}
-		}
-		if (depthBuffer)
-		{
-			BT_PROFILE("copy depth buffer pixels");
+// 			for (int i = 0; i < numRequestedPixels * numBytesPerPixel; i++)
+// 			{
+// 				pixelsRGBA[i] = m_data->m_rgbaPixelBuffer1[i + startPixelIndex * numBytesPerPixel];
+// 			}
+// 		}
+// 		if (depthBuffer)
+// 		{
+// 			BT_PROFILE("copy depth buffer pixels");
 
-			for (int i = 0; i < numRequestedPixels; i++)
-			{
-				depthBuffer[i] = m_data->m_depthBuffer1[i + startPixelIndex];
-			}
-		}
-		if (segmentationMaskBuffer)
-		{
-			BT_PROFILE("copy segmentation mask pixels");
-			for (int i = 0; i < numRequestedPixels; i++)
-			{
-				segmentationMaskBuffer[i] = m_data->m_segmentationMaskBuffer[i + startPixelIndex];
-			}
-		}
-		if (numPixelsCopied)
-			*numPixelsCopied = numRequestedPixels;
-	}
+// 			for (int i = 0; i < numRequestedPixels; i++)
+// 			{
+// 				depthBuffer[i] = m_data->m_depthBuffer1[i + startPixelIndex];
+// 			}
+// 		}
+// 		if (segmentationMaskBuffer)
+// 		{
+// 			BT_PROFILE("copy segmentation mask pixels");
+// 			for (int i = 0; i < numRequestedPixels; i++)
+// 			{
+// 				segmentationMaskBuffer[i] = m_data->m_segmentationMaskBuffer[i + startPixelIndex];
+// 			}
+// 		}
+// 		if (numPixelsCopied)
+// 			*numPixelsCopied = numRequestedPixels;
+// 	}
 
-	m_data->m_glApp->setViewport(-1, -1);
+// 	m_data->m_glApp->setViewport(-1, -1);
 }
 
 struct MyConvertPointerSizeT

@@ -7,12 +7,13 @@ struct GlfwApp : public CommonGraphicsApp
 	struct SimpleInternalData* m_data;
 	class GLPrimitiveRenderer* m_primRenderer;
 	class GLInstancingRenderer* m_instancingRenderer;
+	float m_retinaScale = 1.0f;
 	GlfwApp();
 	GlfwApp(const GlfwApp&) = delete;
 	GlfwApp& operator=(const GlfwApp&) = delete;
 
 	~GlfwApp() override;
-	CommonWindowInterface* createWindow(const b3gWindowConstructionInfo& ci) override;
+	std::shared_ptr<CommonWindowInterface> createWindow(const b3gWindowConstructionInfo& ci) override;
 	void dumpNextFrameToPng(const char* filename) override;
 	void dumpFramesToVideo(const char* mp4Filename) override;
 	void getScreenPixels(unsigned char* rgbaBuffer, int bufferSizeInBytes, float* depthBuffer, int depthBufferSizeInBytes) override;
@@ -20,7 +21,6 @@ struct GlfwApp : public CommonGraphicsApp
 	void setViewport(int width, int height) override;
 	void setBackgroundColor(float red, float green, float blue) override;
 	void drawGrid(DrawGridData data = DrawGridData()) override;
-	void swapBuffer() override;
 	void drawText(const char* txt, int posX, int posY, float size, float colorRGBA[4]) override;
 	void drawText3D(const char* txt, float posX, float posY, float posZ, float size) override;
 	void drawText3D(const char* txt, float position[3], float orientation[4], float color[4], float size, int optionFlag) override;

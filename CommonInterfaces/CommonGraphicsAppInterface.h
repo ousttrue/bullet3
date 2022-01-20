@@ -3,6 +3,7 @@
 #include "CommonRenderInterface.h"
 #include "CommonWindowInterface.h"
 #include "CommonCameraInterface.h"
+#include <memory>
 
 struct DrawGridData
 {
@@ -40,7 +41,6 @@ struct CommonGraphicsApp
 		eDrawText3D_TrueType = 2,
 		eDrawText3D_TrackObject = 4,
 	};
-	class CommonWindowInterface* m_window = nullptr;
 	struct CommonRenderInterface* m_renderer = nullptr;
 	struct CommonParameterInterface* m_parameterInterface = nullptr;
 	struct Common2dCanvasInterface* m_2dCanvasInterface = nullptr;
@@ -51,7 +51,7 @@ struct CommonGraphicsApp
 	{
 	}
 
-	virtual CommonWindowInterface* createWindow(const b3gWindowConstructionInfo& ci) = 0;
+	virtual std::shared_ptr<CommonWindowInterface> createWindow(const b3gWindowConstructionInfo& ci) = 0;
 
 	virtual void dumpNextFrameToPng(const char* pngFilename) {}
 	virtual void dumpFramesToVideo(const char* mp4Filename) {}
@@ -74,7 +74,6 @@ struct CommonGraphicsApp
 		m_backgroundColorRGB[2] = blue;
 	}
 	virtual void drawGrid(DrawGridData data = DrawGridData()) = 0;
-	virtual void swapBuffer() = 0;
 	virtual void drawText(const char* txt, int posX, int posY)
 	{
 		float size = 1;
