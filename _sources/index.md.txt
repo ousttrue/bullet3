@@ -8,12 +8,12 @@
 
 ## bullet3
 
-* shared memoery やそのラッパーである pybullet はこっちぽい
+* shared memory やそのラッパーである pybullet はこっちぽい
 
 ```{toctree}
 :maxdepth: 1
 examples/index
-btIDebugDraw/index
+api/index
 pybullet/index
 format/index
 SharedMemory/index
