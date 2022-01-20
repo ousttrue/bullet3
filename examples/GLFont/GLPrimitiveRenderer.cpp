@@ -3,6 +3,7 @@
 #include "GLPrimInternalData.h"
 #include "GLShader.h"
 #include "GLVBO.h"
+#include "GLVAO.h"
 #include <assert.h>
 
 auto VIEW_MATRIX = "viewMatrix";
@@ -113,13 +114,13 @@ void GLPrimitiveRenderer::loadBufferData()
 		PrimVertex(PrimVec4(1, 1, 0.0, 1.0), PrimVec4(0.0, 0.0, 1.0, 1.0), PrimVec2(1, 1)),
 		PrimVertex(PrimVec4(1, -1, 0.0, 1.0), PrimVec4(1.0, 1.0, 1.0, 1.0), PrimVec2(1, 0))};
 
-	glGenVertexArrays(1, &m_data->m_vertexArrayObject);
-	glBindVertexArray(m_data->m_vertexArrayObject);
+	m_data->m_vertexArrayObject = GLVAO::create();
+	m_data->m_vertexArrayObject->bind();
 
 	m_data->m_vertexBuffer = GLVBO::load_vertices_dynamic(vertexData, sizeof(vertexData));
 
-	glGenVertexArrays(1, &m_data->m_vertexArrayObject2);
-	glBindVertexArray(m_data->m_vertexArrayObject2);
+	m_data->m_vertexArrayObject2 = GLVAO::create();
+	m_data->m_vertexArrayObject2->bind();
 
 	m_data->m_vertexBuffer2 = GLVBO::load_vertices_dynamic(nullptr, MAX_VERTICES2 * sizeof(PrimVertex));
 
@@ -224,7 +225,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 	m_data->m_shaderProg->setMatrix4x4(PROJECTION_MATRIX, projMat);
 
 	m_data->m_vertexBuffer->bind();
-	glBindVertexArray(m_data->m_vertexArrayObject);
+	m_data->m_vertexArrayObject->bind();
 	bool useFiltering = false;
 	if (useFiltering)
 	{
@@ -325,7 +326,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 	assert(glGetError() == GL_NO_ERROR);
 
 	m_data->m_vertexBuffer2->bind();
-	glBindVertexArray(m_data->m_vertexArrayObject2);
+	m_data->m_vertexArrayObject2->bind();
 
 	bool useFiltering = false;
 	if (useFiltering)
