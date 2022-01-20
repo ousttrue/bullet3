@@ -2,6 +2,7 @@ set(TARGET_NAME GLFont)
 add_library(
   ${TARGET_NAME}
   TwFonts.cpp
+  OpenSans.cpp
   fontstash.cpp
   opengl_fontstashcallbacks.cpp
   GLPrimitiveRenderer.cpp

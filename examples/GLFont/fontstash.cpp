@@ -17,6 +17,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
+#include <memory>
+#include <stdexcept>
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stdio.h>
 #include <stdlib.h>
@@ -886,4 +888,39 @@ void sth_delete(struct sth_stash* stash)
 		free(curfnt);
 	}
 	free(stash);
+}
+
+FontStash::FontStash(int w, int h, RenderCallbacks* callbacks)
+	: m_stash(sth_create(w, h, callbacks))
+{
+	if (!m_stash)
+	{
+		throw std::runtime_error("Could not create stash.");
+	}
+}
+
+FontStash::~FontStash()
+{
+	sth_delete(m_stash);
+}
+
+int FontStash::add_from_memory(const unsigned char* buffer)
+{
+	return sth_add_font_from_memory(m_stash, const_cast<unsigned char*>(buffer));
+}
+
+void FontStash::begin_draw()
+{
+	sth_begin_draw(m_stash);
+}
+
+void FontStash::end_draw()
+{
+	sth_end_draw(m_stash);
+}
+
+void FontStash::draw_text(int idx, float size, float x, float y,
+						  const char* string, float* dx, int screenwidth, int screenheight)
+{
+	sth_draw_text(m_stash, idx, size, x, y, string, dx, screenwidth, screenwidth);
 }
