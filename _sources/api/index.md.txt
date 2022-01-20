@@ -2,5 +2,5 @@
 
 ```{toctree}
 btDefaultSerializer
-btDebugDraw
+btIDebugDraw
 ```
