@@ -1,42 +1,26 @@
-#ifndef NO_OPENGL3
 #include "opengl_fontstashcallbacks.h"
-#include <GLPrimitiveRenderer.h>
+#include "GLPrimitiveRenderer.h"
 #include "GLShader.h"
-#include "fontstash.h"
 #include <glad/gl.h>
 #include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <stb_image_write.h>
 
 static unsigned int s_indexData[INDEX_COUNT];
-static GLuint s_indexArrayObject, s_indexBuffer;
+static GLuint s_indexBuffer;
 static GLuint s_vertexArrayObject, s_vertexBuffer;
 
 OpenGL2RenderCallbacks::OpenGL2RenderCallbacks(GLPrimitiveRenderer* primRender)
 	: m_primRender2(primRender)
 {
 }
-OpenGL2RenderCallbacks::~OpenGL2RenderCallbacks()
-{
-}
 
-PrimInternalData* OpenGL2RenderCallbacks::getData()
-{
-	return m_primRender2->getData();
-}
-InternalOpenGL2RenderCallbacks::~InternalOpenGL2RenderCallbacks()
-{
-}
-
-void InternalOpenGL2RenderCallbacks::display2()
+void OpenGL2RenderCallbacks::display2()
 {
 	assert(glGetError() == GL_NO_ERROR);
 	// glViewport(0,0,10,10);
 
 	//const float timeScale = 0.008f;
-	PrimInternalData* data = getData();
+	PrimInternalData* data = m_primRender2->getData();
 
 	data->m_shaderProg->use();
 	glBindBuffer(GL_ARRAY_BUFFER, s_vertexBuffer);
@@ -87,7 +71,7 @@ void InternalOpenGL2RenderCallbacks::display2()
 	//	glutSwapBuffers();
 }
 
-void InternalOpenGL2RenderCallbacks::updateTexture(sth_texture* texture, sth_glyph* glyph, int textureWidth, int textureHeight)
+void OpenGL2RenderCallbacks::updateTexture(sth_texture* texture, sth_glyph* glyph, int textureWidth, int textureHeight)
 {
 	assert(glGetError() == GL_NO_ERROR);
 
@@ -162,7 +146,7 @@ void InternalOpenGL2RenderCallbacks::updateTexture(sth_texture* texture, sth_gly
 	}
 }
 
-void InternalOpenGL2RenderCallbacks::render(sth_texture* texture)
+void OpenGL2RenderCallbacks::render(sth_texture* texture)
 {
 	display2();
 
@@ -238,4 +222,3 @@ void dumpTextureToPng(int textureWidth, int textureHeight, const char* fileName)
 
 	free(pixels);
 }
-#endif

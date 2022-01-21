@@ -77,9 +77,9 @@ struct sth_texture
 struct RenderCallbacks
 {
 	virtual ~RenderCallbacks() {}
-	virtual void setColorRGBA(float color[4]) = 0;
-	virtual void setWorldPosition(float pos[3]) = 0;
-	virtual void setWorldOrientation(float orn[4]) = 0;
+	virtual void setColorRGBA(float color[4]){};
+	virtual void setWorldPosition(float pos[3]){};
+	virtual void setWorldOrientation(float orn[4]){};
 	virtual void updateTexture(sth_texture* texture, sth_glyph* glyph, int textureWidth, int textureHeight) = 0;
 	virtual void render(sth_texture* texture) = 0;
 };
