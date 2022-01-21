@@ -3,6 +3,7 @@
 #define MAX_ROWS 128
 #define VERT_COUNT (16 * 128)
 #define INDEX_COUNT (VERT_COUNT * 2)
+
 struct vec2
 {
 	vec2(float x, float y)
@@ -26,12 +27,12 @@ struct vec4
 	float p[4];
 };
 
-typedef struct
+struct Vertex
 {
 	vec4 position;
 	vec4 colour;
 	vec2 uv;
-} Vertex;
+};
 
 struct sth_quad
 {
@@ -83,53 +84,53 @@ struct RenderCallbacks
 	virtual void render(sth_texture* texture) = 0;
 };
 
-struct sth_stash* sth_create(int cachew, int cacheh, RenderCallbacks* callbacks);
+// struct sth_stash* sth_create(int cachew, int cacheh, RenderCallbacks* callbacks);
 
-int sth_add_font(struct sth_stash* stash, const char* path);
-int sth_add_font_from_memory(struct sth_stash* stash, unsigned char* buffer);
+// int sth_add_font(struct sth_stash* stash, const char* path);
+// int sth_add_font_from_memory(struct sth_stash* stash, unsigned char* buffer);
 
-int sth_add_bitmap_font(struct sth_stash* stash, int ascent, int descent, int line_gap);
-/*void sth_add_glyph(struct sth_stash* stash, int idx, unsigned int uid, const char* s,
-                  short size, short base, int x, int y, int w, int h,
-                  float xoffset, float yoffset, float xadvance);
-				  */
+// int sth_add_bitmap_font(struct sth_stash* stash, int ascent, int descent, int line_gap);
+// /*void sth_add_glyph(struct sth_stash* stash, int idx, unsigned int uid, const char* s,
+//                   short size, short base, int x, int y, int w, int h,
+//                   float xoffset, float yoffset, float xadvance);
+// 				  */
 
-void sth_begin_draw(struct sth_stash* stash);
-void sth_end_draw(struct sth_stash* stash);
+// void sth_begin_draw(struct sth_stash* stash);
+// void sth_end_draw(struct sth_stash* stash);
 
-void sth_draw_texture(struct sth_stash* stash,
-					  int idx, float size,
-					  float x, float y,
-					  int screenwidth, int screenheight,
-					  const char* s, float* dx, float colorRGBA[4]);
+// void sth_draw_texture(struct sth_stash* stash,
+// 					  int idx, float size,
+// 					  float x, float y,
+// 					  int screenwidth, int screenheight,
+// 					  const char* s, float* dx, float colorRGBA[4]);
 
-void sth_flush_draw(struct sth_stash* stash);
+// void sth_flush_draw(struct sth_stash* stash);
 
-void sth_draw_text3D(struct sth_stash* stash,
-					 int idx, float fontSize,
-					 float x, float y, float z,
-					 const char* s, float* dx, float textScale, float colorRGBA[4], int bla);
+// void sth_draw_text3D(struct sth_stash* stash,
+// 					 int idx, float fontSize,
+// 					 float x, float y, float z,
+// 					 const char* s, float* dx, float textScale, float colorRGBA[4], int bla);
 
-void sth_draw_text(struct sth_stash* stash,
-				   int idx, float size,
-				   float x, float y, const char* string, float* dx, int screenwidth, int screenheight, int measureOnly, float retinaScale, float colorRGBA[4]);
+// void sth_draw_text(struct sth_stash* stash,
+// 				   int idx, float size,
+// 				   float x, float y, const char* string, float* dx, int screenwidth, int screenheight, int measureOnly, float retinaScale, float colorRGBA[4]);
 
-inline void sth_draw_text(struct sth_stash* stash,
-						  int idx, float size,
-						  float x, float y, const char* string, float* dx, int screenwidth, int screenheight, int measureOnly = false, float retinaScale = 1.)
-{
-	float colorRGBA[4] = {1, 1, 1, 1};
-	sth_draw_text(stash, idx, size, x, y, string, dx, screenwidth, screenheight, measureOnly, retinaScale, colorRGBA);
-}
+// inline void sth_draw_text(struct sth_stash* stash,
+// 						  int idx, float size,
+// 						  float x, float y, const char* string, float* dx, int screenwidth, int screenheight, int measureOnly = false, float retinaScale = 1.)
+// {
+// 	float colorRGBA[4] = {1, 1, 1, 1};
+// 	sth_draw_text(stash, idx, size, x, y, string, dx, screenwidth, screenheight, measureOnly, retinaScale, colorRGBA);
+// }
 
-void sth_dim_text(struct sth_stash* stash, int idx, float size, const char* string,
-				  float* minx, float* miny, float* maxx, float* maxy);
+// void sth_dim_text(struct sth_stash* stash, int idx, float size, const char* string,
+// 				  float* minx, float* miny, float* maxx, float* maxy);
 
-void sth_vmetrics(struct sth_stash* stash,
-				  int idx, float size,
-				  float* ascender, float* descender, float* lineh);
+// void sth_vmetrics(struct sth_stash* stash,
+// 				  int idx, float size,
+// 				  float* ascender, float* descender, float* lineh);
 
-void sth_delete(struct sth_stash* stash);
+// void sth_delete(struct sth_stash* stash);
 
 class FontStash
 {
