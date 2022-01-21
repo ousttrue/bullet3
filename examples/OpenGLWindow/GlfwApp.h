@@ -54,7 +54,6 @@ public:
 	void setRequestExit() override;
 	void startRendering() override;
 	void endRendering() override;
-	bool isModifierKeyPressed(int key) override;
 	void setWindowTitle(const char* title) override {}
 	float getRetinaScale() const override { return m_retinaScale; }
 	void setAllowRetina(bool /*allowRetina*/) override{};

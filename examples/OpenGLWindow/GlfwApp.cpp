@@ -873,11 +873,6 @@ void GlfwApp::endRendering()
 	glfwSwapBuffers(m_window);
 }
 
-bool GlfwApp::isModifierKeyPressed(int key)
-{
-	return glfwGetKey(m_window, GLFW_KEY_LEFT_ALT);
-}
-
 int GlfwApp::getWidth() const
 {
 	int width;
