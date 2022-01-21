@@ -11,31 +11,30 @@
 
 void OpenGL2RenderCallbacks::display2()
 {
-	PrimInternalData* data = m_primRender2->getData();
-	data->m_shaderProg->use();
+	m_data->m_shaderProg->use();
 	float identity[16] = {1, 0, 0, 0,
 						  0, 1, 0, 0,
 						  0, 0, 1, 0,
 						  0, 0, 0, 1};
-	glUniformMatrix4fv(data->m_viewmatUniform, 1, false, identity);
-	glUniformMatrix4fv(data->m_projMatUniform, 1, false, identity);
+	glUniformMatrix4fv(m_data->m_viewmatUniform, 1, false, identity);
+	glUniformMatrix4fv(m_data->m_projMatUniform, 1, false, identity);
 
 	vec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
-	glUniform2fv(data->m_positionUniform, 1, (const GLfloat*)&p);
+	glUniform2fv(m_data->m_positionUniform, 1, (const GLfloat*)&p);
 
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(data->m_positionAttribute);
+	glEnableVertexAttribArray(m_data->m_positionAttribute);
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(data->m_colourAttribute);
+	glEnableVertexAttribArray(m_data->m_colourAttribute);
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(data->m_textureAttribute);
+	glEnableVertexAttribArray(m_data->m_textureAttribute);
 
-	glVertexAttribPointer(data->m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
-	glVertexAttribPointer(data->m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
-	glVertexAttribPointer(data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
+	glVertexAttribPointer(m_data->m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
+	glVertexAttribPointer(m_data->m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
+	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
 	assert(glGetError() == GL_NO_ERROR);
 	/*    
  
@@ -99,7 +98,7 @@ void OpenGL2RenderCallbacks::updateTexture(sth_texture* texture, sth_glyph* glyp
 					s_indexData[i] = i;
 				}
 				auto indices = GLIBO::load(s_indexData);
-				s_mesh = std::make_shared<GLMesh>(vertices, indices);
+				m_mesh = std::make_shared<GLMesh>(vertices, indices);
 			}
 		}
 		else
@@ -143,13 +142,13 @@ void OpenGL2RenderCallbacks::render(sth_texture* texture)
 	}
 	assert(glGetError() == GL_NO_ERROR);
 
-	s_mesh->vbo()->upload(&texture->newverts[0].position.p[0], texture->nverts * sizeof(Vertex));
+	m_mesh->vbo()->upload(&texture->newverts[0].position.p[0], texture->nverts * sizeof(Vertex));
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = texture->nverts;
 	assert(glGetError() == GL_NO_ERROR);
 
-	s_mesh->draw(indexCount);
+	m_mesh->draw(indexCount);
 
 	glBindVertexArray(0);
 

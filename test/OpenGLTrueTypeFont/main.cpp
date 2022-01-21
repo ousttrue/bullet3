@@ -302,7 +302,7 @@ int main(int argc, char* argv[])
 		int fontTextureHeight = 512;
 
 		auto primRenderer = new GLPrimitiveRenderer();
-		auto renderCallbacks = new OpenGL2RenderCallbacks(primRenderer);
+		auto renderCallbacks = new OpenGL2RenderCallbacks(primRenderer->getData());
 
 		err = glGetError();
 		b3Assert(err == GL_NO_ERROR);

@@ -355,7 +355,7 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 	m_data->m_largeFontTextureId = BindFont(g_DefaultLargeFont);
 
 	{
-		m_data->m_renderCallbacks = new OpenGL2RenderCallbacks(m_primRenderer);
+		m_data->m_renderCallbacks = new OpenGL2RenderCallbacks(m_primRenderer->getData());
 		m_data->m_renderCallbacks2 = new MyRenderCallbacks(m_instancingRenderer);
 		m_data->m_fontStash2 = std::make_shared<FontStash>(512, 512, m_data->m_renderCallbacks2);
 		m_data->m_fontStash = std::make_shared<FontStash>(512, 512, m_data->m_renderCallbacks);  //256,256);//,1024);//512,512);
