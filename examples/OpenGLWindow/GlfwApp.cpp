@@ -15,55 +15,7 @@
 #include <stdlib.h>
 #include <list>
 #include <GLFW/glfw3.h>
-
-struct SimpleInternalData
-{
-	GLuint m_fontTextureId;
-	GLuint m_largeFontTextureId;
-	std::shared_ptr<FontStash> m_fontStash;
-	std::shared_ptr<FontStash> m_fontStash2;
-
-	RenderCallbacks* m_renderCallbacks;
-	RenderCallbacks* m_renderCallbacks2;
-
-	int m_droidRegular;
-	int m_droidRegular2;
-	int m_textureId;
-
-	const char* m_frameDumpPngFileName;
-	FILE* m_ffmpegFile;
-	GLRenderToTexture* m_renderTexture;
-	void* m_userPointer;
-	int m_customViewPortWidth;
-	int m_customViewPortHeight;
-	int m_mp4Fps;
-
-	SimpleInternalData()
-		: m_fontTextureId(0),
-		  m_largeFontTextureId(0),
-		  m_fontStash(0),
-		  m_fontStash2(0),
-		  m_renderCallbacks(0),
-		  m_renderCallbacks2(0),
-		  m_droidRegular(0),
-		  m_droidRegular2(0),
-		  m_textureId(-1),
-		  m_frameDumpPngFileName(0),
-		  m_ffmpegFile(0),
-		  m_renderTexture(0),
-		  m_userPointer(0),
-		  m_customViewPortWidth(-1),
-		  m_customViewPortHeight(-1),
-		  m_mp4Fps(60)
-	{
-	}
-
-	~SimpleInternalData()
-	{
-		delete m_renderCallbacks;
-		delete m_renderCallbacks2;
-	}
-};
+#include <OpenSans.h>
 
 static GLuint BindFont(const CTexFont* _Font)
 {
@@ -82,15 +34,8 @@ static GLuint BindFont(const CTexFont* _Font)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 	return TexID;
 }
-
-// //static unsigned int s_indexData[INDEX_COUNT];
-// //static GLuint s_indexArrayObject, s_indexBuffer;
-// //static GLuint s_vertexArrayObject,s_vertexBuffer;
-
-extern unsigned char OpenSansData[];
 
 struct MyRenderCallbacks : public RenderCallbacks
 {
@@ -247,8 +192,6 @@ static void printGLString(const char* name, GLenum s)
 	printf("%s = %s\n", name, v);
 }
 
-// bool sOpenGLVerbose = true;
-
 ///
 /// GlfwApp
 ///
@@ -263,7 +206,6 @@ GlfwApp::GlfwApp()
 
 GlfwApp::~GlfwApp()
 {
-	delete m_data;
 	delete m_instancingRenderer;
 	delete m_primRenderer;
 	TwDeleteDefaultFonts();
@@ -324,7 +266,6 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 			}
 			return false;
 		});
-	m_data = new SimpleInternalData;
 
 	glClearColor(m_backgroundColorRGB[0],
 				 m_backgroundColorRGB[1],
@@ -351,35 +292,35 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 	m_instancingRenderer->InitShaders();
 
 	TwGenerateDefaultFonts();
-	m_data->m_fontTextureId = BindFont(g_DefaultNormalFont);
-	m_data->m_largeFontTextureId = BindFont(g_DefaultLargeFont);
+	m_fontTextureId = BindFont(g_DefaultNormalFont);
+	m_largeFontTextureId = BindFont(g_DefaultLargeFont);
 
 	{
-		m_data->m_renderCallbacks = new OpenGL2RenderCallbacks(m_primRenderer->getData());
-		m_data->m_renderCallbacks2 = new MyRenderCallbacks(m_instancingRenderer);
-		m_data->m_fontStash2 = std::make_shared<FontStash>(512, 512, m_data->m_renderCallbacks2);
-		m_data->m_fontStash = std::make_shared<FontStash>(512, 512, m_data->m_renderCallbacks);  //256,256);//,1024);//512,512);
+		m_renderCallbacks = new OpenGL2RenderCallbacks(m_primRenderer->getData());
+		m_renderCallbacks2 = new MyRenderCallbacks(m_instancingRenderer);
+		m_fontStash2 = std::make_shared<FontStash>(512, 512, m_renderCallbacks2);
+		m_fontStash = std::make_shared<FontStash>(512, 512, m_renderCallbacks);  //256,256);//,1024);//512,512);
 
 		b3Assert(glGetError() == GL_NO_ERROR);
 
-		if (!m_data->m_fontStash)
+		if (!m_fontStash)
 		{
 			b3Warning("Could not create stash");
 			//fprintf(stderr, "Could not create stash.\n");
 		}
 
-		if (!m_data->m_fontStash2)
+		if (!m_fontStash2)
 		{
 			b3Warning("Could not create fontStash2");
 		}
 
 		unsigned char* data2 = OpenSansData;
 		unsigned char* data = (unsigned char*)data2;
-		if (!(m_data->m_droidRegular = m_data->m_fontStash->add_font_from_memory(data)))
+		if (!(m_droidRegular = m_fontStash->add_font_from_memory(data)))
 		{
 			b3Warning("error!\n");
 		}
-		if (!(m_data->m_droidRegular2 = m_data->m_fontStash2->add_font_from_memory(data)))
+		if (!(m_droidRegular2 = m_fontStash2->add_font_from_memory(data)))
 		{
 			b3Warning("error!\n");
 		}
@@ -391,7 +332,7 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 
 std::shared_ptr<FontStash> GlfwApp::getFontStash()
 {
-	return m_data->m_fontStash;
+	return m_fontStash;
 }
 
 void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4], float color[4], float size, int optionFlag)
@@ -445,27 +386,27 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 
 		if (optionFlag & CommonGraphicsApp::eDrawText3D_OrtogonalFaceCamera)
 		{
-			m_data->m_fontStash->draw_text(
-				m_data->m_droidRegular, fontSize, posX, posY,
+			m_fontStash->draw_text(
+				m_droidRegular, fontSize, posX, posY,
 				txt, &dx, cam->getScreenWidth(), cam->getScreenHeight(), measureOnly, m_retinaScale, color);
-			m_data->m_fontStash->end_draw();
-			m_data->m_fontStash->flush_draw();
+			m_fontStash->end_draw();
+			m_fontStash->flush_draw();
 		}
 		else
 		{
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			m_data->m_renderCallbacks2->setColorRGBA(color);
+			m_renderCallbacks2->setColorRGBA(color);
 
-			m_data->m_renderCallbacks2->setWorldPosition(position);
-			m_data->m_renderCallbacks2->setWorldOrientation(orientation);
+			m_renderCallbacks2->setWorldPosition(position);
+			m_renderCallbacks2->setWorldOrientation(orientation);
 
-			m_data->m_fontStash2->draw_text3D(
-				m_data->m_droidRegular2, fontSize, 0, 0, 0,
+			m_fontStash2->draw_text3D(
+				m_droidRegular2, fontSize, 0, 0, 0,
 				txt, &dx, size, color, 0);
-			m_data->m_fontStash2->end_draw();
-			m_data->m_fontStash2->flush_draw();
+			m_fontStash2->end_draw();
+			m_fontStash2->flush_draw();
 			glDisable(GL_BLEND);
 		}
 	}
@@ -475,7 +416,7 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 		int pos = 0;
 		//float color[]={0.2f,0.2,0.2f,1.f};
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_data->m_largeFontTextureId);
+		glBindTexture(GL_TEXTURE_2D, m_largeFontTextureId);
 
 		//float width = r.x;
 		//float extraSpacing = 0.;
@@ -587,15 +528,15 @@ void GlfwApp::drawText(const char* txt, int posXi, int posYi, float size, float 
 		auto cam = m_instancingRenderer->getActiveCamera();
 
 		float fontSize = 64 * size;  //512;//128;
-		m_data->m_fontStash->draw_text(
-			m_data->m_droidRegular, fontSize, posX, posY,
+		m_fontStash->draw_text(
+			m_droidRegular, fontSize, posX, posY,
 			txt, &dx, cam->getScreenWidth(),
 			cam->getScreenHeight(),
 			measureOnly,
 			m_retinaScale, colorRGBA);
 
-		m_data->m_fontStash->end_draw();
-		m_data->m_fontStash->flush_draw();
+		m_fontStash->end_draw();
+		m_fontStash->flush_draw();
 	}
 	else
 	{
@@ -603,7 +544,7 @@ void GlfwApp::drawText(const char* txt, int posXi, int posYi, float size, float 
 		int pos = 0;
 		//float color[]={0.2f,0.2,0.2f,1.f};
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_data->m_largeFontTextureId);
+		glBindTexture(GL_TEXTURE_2D, m_largeFontTextureId);
 
 		//float width = r.x;
 		//float extraSpacing = 0.;
@@ -715,7 +656,7 @@ int GlfwApp::registerGraphicsUnitSphereShape(EnumSphereLevelOfDetail lod, int te
 	int blue = 128;
 	if (textureId < 0)
 	{
-		if (m_data->m_textureId < 0)
+		if (m_textureId < 0)
 		{
 			int texWidth = 1024;
 			int texHeight = 1024;
@@ -748,9 +689,9 @@ int GlfwApp::registerGraphicsUnitSphereShape(EnumSphereLevelOfDetail lod, int te
 				}
 			}
 
-			m_data->m_textureId = m_instancingRenderer->registerTexture(&texels[0], texWidth, texHeight);
+			m_textureId = m_instancingRenderer->registerTexture(&texels[0], texWidth, texHeight);
 		}
-		textureId = m_data->m_textureId;
+		textureId = m_textureId;
 	}
 
 	int strideInBytes = 9 * sizeof(float);
@@ -890,8 +831,8 @@ void GlfwApp::setBackgroundColor(float red, float green, float blue)
 
 void GlfwApp::setViewport(int width, int height)
 {
-	m_data->m_customViewPortWidth = width;
-	m_data->m_customViewPortHeight = height;
+	m_customViewPortWidth = width;
+	m_customViewPortHeight = height;
 	if (width >= 0)
 	{
 		glViewport(0, 0, width, height);
@@ -906,8 +847,8 @@ void GlfwApp::setViewport(int width, int height)
 void GlfwApp::getScreenPixels(unsigned char* rgbaBuffer, int bufferSizeInBytes, float* depthBuffer, int depthBufferSizeInBytes)
 {
 	auto cam = m_instancingRenderer->getActiveCamera();
-	int width = m_data->m_customViewPortWidth >= 0 ? m_data->m_customViewPortWidth : (int)m_retinaScale * cam->getScreenWidth();
-	int height = m_data->m_customViewPortHeight >= 0 ? m_data->m_customViewPortHeight : (int)m_retinaScale * cam->getScreenHeight();
+	int width = m_customViewPortWidth >= 0 ? m_customViewPortWidth : (int)m_retinaScale * cam->getScreenWidth();
+	int height = m_customViewPortHeight >= 0 ? m_customViewPortHeight : (int)m_retinaScale * cam->getScreenHeight();
 
 	b3Assert((width * height * 4) == bufferSizeInBytes);
 	if ((width * height * 4) == bufferSizeInBytes)
@@ -989,18 +930,18 @@ static void writeTextureToFile(int textureWidth, int textureHeight, const char* 
 
 // void GlfwApp::swapBuffer()
 // {
-// 	if (m_data->m_frameDumpPngFileName)
+// 	if (m_frameDumpPngFileName)
 // 	{
 // 		auto cam = m_instancingRenderer->getActiveCamera();
 // 		int width = (int)m_retinaScale * cam->getScreenWidth();
 // 		int height = (int)m_retinaScale * cam->getScreenHeight();
 // 		writeTextureToFile(width,
-// 						   height, m_data->m_frameDumpPngFileName,
-// 						   m_data->m_ffmpegFile);
-// 		m_data->m_renderTexture->disable();
-// 		if (m_data->m_ffmpegFile == 0)
+// 						   height, m_frameDumpPngFileName,
+// 						   m_ffmpegFile);
+// 		m_renderTexture->disable();
+// 		if (m_ffmpegFile == 0)
 // 		{
-// 			m_data->m_frameDumpPngFileName = 0;
+// 			m_frameDumpPngFileName = 0;
 // 		}
 // 	}
 // 	m_window->endRendering();
@@ -1009,7 +950,7 @@ static void writeTextureToFile(int textureWidth, int textureHeight, const char* 
 
 void GlfwApp::setMp4Fps(int fps)
 {
-	m_data->m_mp4Fps = fps;
+	m_mp4Fps = fps;
 }
 
 // see also http://blog.mmacklin.com/2013/06/11/real-time-video-capture-with-ffmpeg/
@@ -1025,28 +966,28 @@ void GlfwApp::dumpFramesToVideo(const char* mp4FileName)
 		sprintf(cmd,
 				"ffmpeg -r %d -f rawvideo -pix_fmt rgba -s %dx%d -i - "
 				"-threads 0 -y -b:v 50000k   -c:v libx264 -preset slow -crf 22 -an   -pix_fmt yuv420p -vf vflip %s",
-				m_data->m_mp4Fps, width, height, mp4FileName);
+				m_mp4Fps, width, height, mp4FileName);
 
-		if (m_data->m_ffmpegFile)
+		if (m_ffmpegFile)
 		{
-			_pclose(m_data->m_ffmpegFile);
+			_pclose(m_ffmpegFile);
 		}
 		if (mp4FileName)
 		{
-			m_data->m_ffmpegFile = _popen(cmd, "w");
+			m_ffmpegFile = _popen(cmd, "w");
 
-			m_data->m_frameDumpPngFileName = mp4FileName;
+			m_frameDumpPngFileName = mp4FileName;
 		}
 	}
 	else
 	{
-		if (m_data->m_ffmpegFile)
+		if (m_ffmpegFile)
 		{
-			fflush(m_data->m_ffmpegFile);
-			_pclose(m_data->m_ffmpegFile);
-			m_data->m_frameDumpPngFileName = 0;
+			fflush(m_ffmpegFile);
+			_pclose(m_ffmpegFile);
+			m_frameDumpPngFileName = 0;
 		}
-		m_data->m_ffmpegFile = 0;
+		m_ffmpegFile = 0;
 	}
 }
 
@@ -1054,13 +995,13 @@ void GlfwApp::dumpNextFrameToPng(const char* filename)
 {
 	// open pipe to ffmpeg's stdin in binary write mode
 
-	m_data->m_frameDumpPngFileName = filename;
+	m_frameDumpPngFileName = filename;
 
 	//you could use m_renderTexture to allow to render at higher resolutions, such as 4k or so
-	if (!m_data->m_renderTexture)
+	if (!m_renderTexture)
 	{
 		auto cam = m_instancingRenderer->getActiveCamera();
-		m_data->m_renderTexture = new GLRenderToTexture();
+		m_renderTexture = new GLRenderToTexture();
 		GLuint renderTextureId;
 		glGenTextures(1, &renderTextureId);
 
@@ -1078,8 +1019,8 @@ void GlfwApp::dumpNextFrameToPng(const char* filename)
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		m_data->m_renderTexture->init(cam->getScreenWidth() * m_retinaScale, cam->getScreenHeight() * m_retinaScale, renderTextureId, RENDERTEXTURE_COLOR);
+		m_renderTexture->init(cam->getScreenWidth() * m_retinaScale, cam->getScreenHeight() * m_retinaScale, renderTextureId, RENDERTEXTURE_COLOR);
 	}
 
-	m_data->m_renderTexture->enable();
+	m_renderTexture->enable();
 }

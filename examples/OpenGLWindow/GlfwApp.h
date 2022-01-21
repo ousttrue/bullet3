@@ -5,7 +5,24 @@
 
 struct GlfwApp : public CommonGraphicsApp
 {
-	struct SimpleInternalData* m_data;
+	unsigned int m_fontTextureId = 0;
+	unsigned int m_largeFontTextureId = 0;
+	std::shared_ptr<class FontStash> m_fontStash;
+	std::shared_ptr<class FontStash> m_fontStash2;
+	class RenderCallbacks* m_renderCallbacks = nullptr;
+	class RenderCallbacks* m_renderCallbacks2 = nullptr;
+	int m_droidRegular = 0;
+	int m_droidRegular2 = 0;
+	int m_textureId = -1;
+
+	const char* m_frameDumpPngFileName = nullptr;
+	FILE* m_ffmpegFile = nullptr;
+	class GLRenderToTexture* m_renderTexture = nullptr;
+	void* m_userPointer = nullptr;
+	int m_customViewPortWidth = -1;
+	int m_customViewPortHeight = -1;
+	int m_mp4Fps = 60;
+
 	class GLPrimitiveRenderer* m_primRenderer;
 	class GLInstancingRenderer* m_instancingRenderer;
 	float m_retinaScale = 1.0f;
