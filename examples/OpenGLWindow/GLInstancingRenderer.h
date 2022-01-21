@@ -46,21 +46,15 @@ class GLInstancingRenderer : public CommonRenderInterface
 	SimpleCamera m_defaultCamera1;
 	CommonCameraInterface* m_activeCamera;
 
-	float m_projectionMatrix[16] = {0};
-	float m_viewMatrix[16] = {0};
 	float m_projectiveTextureProjectionMatrix[16] = {0};
 	float m_projectiveTextureViewMatrix[16] = {0};
 	float m_viewMatrixInverse[16] = {0};
 	bool m_useProjectiveTexture = false;
 
-	b3Vector3 m_lightPos = b3MakeVector3(-50, 30, 40);
-	b3Vector3 m_lightSpecularIntensity = b3MakeVector3(1, 1, 1);
-	float m_shadowmapIntensity = 0.3f;
 	unsigned int m_defaultTexturehandle;
 	b3AlignedObjectArray<InternalTextureHandle> m_textureHandles;
 
 	class GLRenderToTexture* m_shadowMap = nullptr;
-	unsigned int m_shadowTexture = 0;
 
 	unsigned int m_renderFrameBuffer = 0;
 
