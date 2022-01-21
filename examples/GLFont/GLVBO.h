@@ -25,6 +25,15 @@ class GLIBO
 public:
 	~GLIBO();
 	static std::shared_ptr<GLIBO> load(const void* bytes, size_t size);
+	template <typename T, size_t TN>
+	static std::shared_ptr<GLIBO> load(const T (&values)[TN])
+	{
+		return load(values, sizeof(values));
+		// glGenBuffers(1, &s_indexBuffer);
+		// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_indexBuffer);
+		// glBufferData(GL_ELEMENT_ARRAY_BUFFER, INDEX_COUNT * sizeof(int), s_indexData, GL_STATIC_DRAW);
+		// assert(glGetError() == GL_NO_ERROR);
+	}
 	void bind();
 	void unbind();
 };

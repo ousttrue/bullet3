@@ -1,36 +1,19 @@
 #include "opengl_fontstashcallbacks.h"
 #include "GLPrimitiveRenderer.h"
 #include "GLShader.h"
+#include "GLVAO.h"
+#include "GLVBO.h"
 #include <glad/gl.h>
 #include <assert.h>
 #include <stb_image_write.h>
 
-static unsigned int s_indexData[INDEX_COUNT];
-static GLuint s_indexBuffer;
-static GLuint s_vertexArrayObject, s_vertexBuffer;
-
-OpenGL2RenderCallbacks::OpenGL2RenderCallbacks(GLPrimitiveRenderer* primRender)
-	: m_primRender2(primRender)
-{
-}
-
 void OpenGL2RenderCallbacks::display2()
 {
-	assert(glGetError() == GL_NO_ERROR);
-	// glViewport(0,0,10,10);
+	s_vertexBuffer->bind();
+	s_vertexArrayObject->bind();
 
-	//const float timeScale = 0.008f;
 	PrimInternalData* data = m_primRender2->getData();
-
 	data->m_shaderProg->use();
-	glBindBuffer(GL_ARRAY_BUFFER, s_vertexBuffer);
-	glBindVertexArray(s_vertexArrayObject);
-
-	assert(glGetError() == GL_NO_ERROR);
-
-	//   glBindTexture(GL_TEXTURE_2D,m_texturehandle);
-
-	assert(glGetError() == GL_NO_ERROR);
 	float identity[16] = {1, 0, 0, 0,
 						  0, 1, 0, 0,
 						  0, 0, 1, 0,
@@ -110,24 +93,14 @@ void OpenGL2RenderCallbacks::updateTexture(sth_texture* texture, sth_glyph* glyp
 			////////////////////////////
 			//create the other data
 			{
-				glGenVertexArrays(1, &s_vertexArrayObject);
-				glBindVertexArray(s_vertexArrayObject);
-
-				glGenBuffers(1, &s_vertexBuffer);
-				glBindBuffer(GL_ARRAY_BUFFER, s_vertexBuffer);
-				glBufferData(GL_ARRAY_BUFFER, VERT_COUNT * sizeof(Vertex), texture->newverts, GL_DYNAMIC_DRAW);
-				assert(glGetError() == GL_NO_ERROR);
-
+				s_vertexArrayObject = GLVAO::create();
+				s_vertexBuffer = GLVBO::load(texture->newverts, VERT_COUNT * sizeof(Vertex), true);
+				unsigned int s_indexData[INDEX_COUNT];
 				for (int i = 0; i < INDEX_COUNT; i++)
 				{
 					s_indexData[i] = i;
 				}
-
-				glGenBuffers(1, &s_indexBuffer);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_indexBuffer);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, INDEX_COUNT * sizeof(int), s_indexData, GL_STATIC_DRAW);
-
-				assert(glGetError() == GL_NO_ERROR);
+				s_indexBuffer = GLIBO::load(s_indexData);
 			}
 		}
 		else
@@ -170,13 +143,13 @@ void OpenGL2RenderCallbacks::render(sth_texture* texture)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 	assert(glGetError() == GL_NO_ERROR);
-	glBindBuffer(GL_ARRAY_BUFFER, s_vertexBuffer);
-	glBindVertexArray(s_vertexArrayObject);
+	s_vertexBuffer->bind();
+	s_vertexArrayObject->bind();
 	glBufferData(GL_ARRAY_BUFFER, texture->nverts * sizeof(Vertex), &texture->newverts[0].position.p[0], GL_DYNAMIC_DRAW);
 
 	assert(glGetError() == GL_NO_ERROR);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_indexBuffer);
+	s_indexBuffer->bind();
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = texture->nverts;
