@@ -36,6 +36,7 @@ void GLVBO::upload(const void* bytes, size_t size)
 	bind();
 	glBufferData(GL_ARRAY_BUFFER, size, bytes, GL_DYNAMIC_DRAW);
 	assert(glGetError() == GL_NO_ERROR);
+	unbind();
 }
 
 //
