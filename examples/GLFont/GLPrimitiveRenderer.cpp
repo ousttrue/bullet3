@@ -4,7 +4,6 @@
 #include "GLMesh.h"
 #include <assert.h>
 #include <memory>
-#include <glad/gl.h>
 
 auto VIEW_MATRIX = "viewMatrix";
 auto PROJECTION_MATRIX = "projMatrix";
@@ -141,7 +140,7 @@ PrimInternalData::PrimInternalData()
 				pi += 3;
 			}
 		}
-		m_texturehandle = GLTexture::load(image, 256, 256);
+		m_texture = GLTexture::load(image, 256, 256);
 	}
 }
 
@@ -161,7 +160,7 @@ void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices,
 	m_shader->setMatrix4x4("viewMatrix", identity);
 	m_shader->setMatrix4x4("projMatrix", identity);
 
-	m_texturehandle->setFiltering(false);
+	m_texture->setFiltering(false);
 
 	m_mesh2->vbo()->upload(vertices, numVertices * sizeof(PrimVertex));
 
@@ -188,30 +187,17 @@ GLPrimitiveRenderer::GLPrimitiveRenderer()
 
 void GLPrimitiveRenderer::drawRect(float x0, float y0, float x1, float y1, float color[4])
 {
-	m_data.m_texturehandle->bind();
+	m_data.m_texture->bind();
 	drawTexturedRect(x0, y0, x1, y1, color, 0, 0, 1, 1);
-	assert(glGetError() == GL_NO_ERROR);
 }
 
 void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVertex &v1, const PrimVertex &v2, const PrimVertex &v3, float viewMat[16], float projMat[16], bool useRGBA)
 {
-	assert(glGetError() == GL_NO_ERROR);
-
 	m_data.m_shader->use();
 	m_data.m_shader->setMatrix4x4(VIEW_MATRIX, viewMat);
 	m_data.m_shader->setMatrix4x4(PROJECTION_MATRIX, projMat);
 
-	bool useFiltering = false;
-	if (useFiltering)
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	}
-	else
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	}
+	m_data.m_texture->setFiltering(false);
 
 	PrimVertex vertexData[4] = {
 		v0, v1, v2, v3};
@@ -223,13 +209,11 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 		p.p[0] = 1.f;
 		p.p[1] = 1.f;
 	}
-	glUniform2fv(m_data.m_positionUniform, 1, (const GLfloat *)&p);
+	m_data.m_shader->setFloat2("p", p.p);
 
-	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = 6;
 	m_data.m_mesh->draw(indexCount);
 	m_data.m_shader->unuse();
-	assert(glGetError() == GL_NO_ERROR);
 }
 
 void GLPrimitiveRenderer::drawTexturedRect3D2Text(bool useRGBA)
@@ -246,8 +230,6 @@ void GLPrimitiveRenderer::drawTexturedRect2a(float x0, float y0, float x1, float
 		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v1)},
 		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v0)}};
 
-	//	int sz = m_numVerticesText;
-
 	m_verticesRect[m_numVerticesRect++] = vertexData[0];
 	m_verticesRect[m_numVerticesRect++] = vertexData[1];
 	m_verticesRect[m_numVerticesRect++] = vertexData[2];
@@ -261,7 +243,7 @@ void GLPrimitiveRenderer::drawTexturedRect2a(float x0, float y0, float x1, float
 
 void GLPrimitiveRenderer::flushBatchedRects()
 {
-	m_data.m_texturehandle->bind();
+	m_data.m_texture->bind();
 	m_data.drawTexturedRect3D(m_verticesRect, m_numVerticesRect, 0);
 	m_numVerticesRect = 0;
 }
@@ -272,8 +254,6 @@ void GLPrimitiveRenderer::drawTexturedRect2(float x0, float y0, float x1, float 
 		PrimVertex{PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v1)},
 		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v1)},
 		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v0)}};
-
-	//	int sz = m_numVerticesText;
 
 	m_verticesText[m_numVerticesText++] = vertexData[0];
 	m_verticesText[m_numVerticesText++] = vertexData[1];

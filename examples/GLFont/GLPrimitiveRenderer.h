@@ -47,7 +47,7 @@ struct PrimInternalData
 	std::shared_ptr<class GLMesh> m_mesh;
 	std::shared_ptr<class GLMesh> m_mesh2;
 
-	std::shared_ptr<class GLTexture> m_texturehandle;
+	std::shared_ptr<class GLTexture> m_texture;
 	PrimInternalData();
 	void drawTexturedRect3D(PrimVertex* vertices, int numVertices, bool useRGBA);
 };
