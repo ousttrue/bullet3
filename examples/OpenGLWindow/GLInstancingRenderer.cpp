@@ -212,8 +212,19 @@ struct b3PublicGraphicsInstanceData
 
 typedef b3PoolBodyHandle<b3PublicGraphicsInstanceData> b3PublicGraphicsInstance;
 
-struct InternalDataRenderer : public GLInstanceRendererInternalData
+struct InternalDataRenderer
 {
+	b3AlignedObjectArray<GLfloat> m_instance_positions_ptr;
+	b3AlignedObjectArray<GLfloat> m_instance_quaternion_ptr;
+	b3AlignedObjectArray<GLfloat> m_instance_colors_ptr;
+	b3AlignedObjectArray<GLfloat> m_instance_scale_ptr;
+
+	int m_vboSize;
+	std::shared_ptr<GLVBO> m_vbo;
+	int m_totalNumInstances;
+	int m_maxNumObjectCapacity;
+	int m_maxShapeCapacityInBytes;
+
 	SimpleCamera m_defaultCamera1;
 	CommonCameraInterface* m_activeCamera;
 
@@ -269,11 +280,6 @@ struct InternalDataRenderer : public GLInstanceRendererInternalData
 		m_useProjectiveTexture = false;
 	}
 };
-
-struct GLInstanceRendererInternalData* GLInstancingRenderer::getInternalData()
-{
-	return m_data;
-}
 
 static std::shared_ptr<GLShader> triangleShaderProgram;
 static GLint triangle_mvp_location = -1;

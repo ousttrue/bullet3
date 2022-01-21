@@ -110,10 +110,6 @@ struct CommonRenderInterface
 	virtual void writeTransforms() = 0;
 
 	virtual void clearZBuffer() = 0;
-
-	//This is internal access to OpenGL3+ features, mainly used for OpenCL-OpenGL interop
-	//Only the GLInstancingRenderer supports it, just return 0 otherwise.
-	virtual struct GLInstanceRendererInternalData* getInternalData() = 0;
 };
 
 template <typename T>

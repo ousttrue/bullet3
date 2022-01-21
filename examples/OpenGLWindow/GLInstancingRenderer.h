@@ -98,8 +98,6 @@ public:
 	virtual void writeSingleInstanceScaleToCPU(const float* scale, int srcIndex);
 	virtual void writeSingleInstanceScaleToCPU(const double* scale, int srcIndex);
 
-	virtual struct GLInstanceRendererInternalData* getInternalData();
-
 	virtual void drawLine(const float from[4], const float to[4], const float color[4], float lineWidth = 1);
 	virtual void drawLine(const double from[4], const double to[4], const double color[4], double lineWidth = 1);
 	virtual void drawLines(const float* positions, const float color[4], int numPoints, int pointStrideInBytes, const unsigned int* indices, int numIndices, float pointDrawSize);
