@@ -26,6 +26,7 @@ private:
 	class GLPrimitiveRenderer* m_primRenderer;
 	class GLInstancingRenderer* m_instancingRenderer;
 	float m_retinaScale = 1.0f;
+	struct GLFWwindow* m_window = nullptr;
 
 public:
 	GlfwApp();
@@ -35,7 +36,7 @@ public:
 	~GlfwApp() override;
 	class GLPrimitiveRenderer* getPrimRenderer() { return m_primRenderer; }
 	class GLInstancingRenderer* getRenderer() { return m_instancingRenderer; }
-	std::shared_ptr<CommonWindowInterface> createWindow(const b3gWindowConstructionInfo& ci) override;
+	bool createWindow(const b3gWindowConstructionInfo& ci) override;
 	void dumpNextFrameToPng(const char* filename) override;
 	void dumpFramesToVideo(const char* mp4Filename) override;
 	void getScreenPixels(unsigned char* rgbaBuffer, int bufferSizeInBytes, float* depthBuffer, int depthBufferSizeInBytes) override;
@@ -51,4 +52,26 @@ public:
 	int registerGraphicsUnitSphereShape(EnumSphereLevelOfDetail lod, int textureId = -1) override;
 	void registerGrid(int xres, int yres, float color0[4], float color1[4]) override;
 	std::shared_ptr<class FontStash> getFontStash();
+public:
+	void closeWindow() override;
+	void runMainLoop() override {}
+	float getTimeInSeconds() override;
+	bool requestedExit() const override;
+	void setRequestExit() override;
+	void startRendering() override;
+	void endRendering() override;
+	bool isModifierKeyPressed(int key) override;
+	// render
+	b3RenderCallback m_render;
+	void setRenderCallback(b3RenderCallback renderCallback) override
+	{
+		m_render = renderCallback;
+	}
+	void setWindowTitle(const char* title) override {}
+	float getRetinaScale() const override { return m_retinaScale; }
+	void setAllowRetina(bool /*allowRetina*/) override{};
+	int getWidth() const override;
+	int getHeight() const override;
+	int fileOpenDialog(char* fileName, int maxFileNameLength) override;
+
 };

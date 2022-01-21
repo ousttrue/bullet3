@@ -17,8 +17,7 @@ int main(int argc, char* argv[])
 {
 	GlfwApp app;
 
-	auto window = app.createWindow({1024, 768, "Bullet Standalone Example"});
-	if (!window)
+	if(!app.createWindow({1024, 768, "Bullet Standalone Example"}))
 	{
 		return 1;
 	}
@@ -26,20 +25,20 @@ int main(int argc, char* argv[])
 	auto example = std::make_unique<CoordinateSystemDemo>(&app);
 	auto renderer = app.getRenderer();
 	auto camera = renderer->getActiveCamera();
-	window->mouseButtonCallback.push_back(
+	app.mouseButtonCallback.push_back(
 		[&example, camera](int button, int state, float x, float y, ButtonFlags flags)
 		{
 			return example->mouseButtonCallback(camera, button, state, x, y, flags);
 		});
-	window->mouseButtonCallback.push_back(
+	app.mouseButtonCallback.push_back(
 		std::bind(&CommonCameraInterface::mouseButtonCallback, camera, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
 
-	window->mouseMoveCallback.push_back(
+	app.mouseMoveCallback.push_back(
 		[&example, camera](float x, float y)
 		{
 			return example->mouseMoveCallback(camera, x, y);
 		});
-	window->mouseMoveCallback.push_back(
+	app.mouseMoveCallback.push_back(
 		std::bind(&CommonCameraInterface::mouseMoveCallback, camera, std::placeholders::_1, std::placeholders::_2));
 
 	example->processCommandLineArgs(argc, argv);
@@ -55,9 +54,9 @@ int main(int argc, char* argv[])
 
 	b3Clock clock;
 	OpenGLGuiHelper gui(&app, false);
-	while (!window->requestedExit())
+	while (!app.requestedExit())
 	{
-		window->startRendering();
+		app.startRendering();
 		// m_guiHelper->getRenderInterface()->removeAllInstances();
 
 		// step simulation
@@ -83,7 +82,7 @@ int main(int argc, char* argv[])
 		dg.upAxis = camera->getCameraUpAxis();
 		app.drawGrid(dg);
 
-		window->endRendering();
+		app.endRendering();
 	}
 
 	return 0;

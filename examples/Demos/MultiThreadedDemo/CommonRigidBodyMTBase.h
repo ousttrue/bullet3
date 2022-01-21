@@ -8,7 +8,6 @@
 #include <CommonRenderInterface.h>
 #include <CommonCameraInterface.h>
 #include <CommonGraphicsAppInterface.h>
-#include <CommonWindowInterface.h>
 
 enum SolverType
 {

@@ -230,8 +230,7 @@ int main(int argc, char* argv[])
 
 	{
 		GlfwApp app;
-		auto window = app.createWindow({1600, 1200, "title"});
-		if (!window)
+		if(!app.createWindow({1600, 1200, "title"}))
 		{
 			return 1;
 		}
@@ -242,8 +241,8 @@ int main(int argc, char* argv[])
 
 		initTestTexture();
 
-		window->startRendering();
-		window->endRendering();
+		app.startRendering();
+		app.endRendering();
 
 		auto err = glGetError();
 		b3Assert(err == GL_NO_ERROR);
@@ -252,11 +251,11 @@ int main(int argc, char* argv[])
 
 		//	render.writeTransforms();
 
-		window->runMainLoop();
+		app.runMainLoop();
 
-		//	window->setMouseCallback(b3DefaultMouseCallback);
-		//	window->setKeyboardCallback(b3DefaultKeyboardCallback);
-		//  window->setWheelCallback(b3DefaultWheelCallback);
+		//	app.setMouseCallback(b3DefaultMouseCallback);
+		//	app.setKeyboardCallback(b3DefaultKeyboardCallback);
+		//  app.setWheelCallback(b3DefaultWheelCallback);
 
 		err = glGetError();
 		b3Assert(err == GL_NO_ERROR);
@@ -296,9 +295,9 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 
-		while (!window->requestedExit())
+		while (!app.requestedExit())
 		{
-			window->startRendering();
+			app.startRendering();
 
 			GLint err = glGetError();
 			b3Assert(err == GL_NO_ERROR);
@@ -308,7 +307,7 @@ int main(int argc, char* argv[])
 			err = glGetError();
 			b3Assert(err == GL_NO_ERROR);
 
-			window->startRendering();
+			app.startRendering();
 
 			err = glGetError();
 			b3Assert(err == GL_NO_ERROR);
@@ -449,7 +448,7 @@ int main(int argc, char* argv[])
 			err = glGetError();
 			b3Assert(err == GL_NO_ERROR);
 
-			window->endRendering();
+			app.endRendering();
 
 			err = glGetError();
 			b3Assert(err == GL_NO_ERROR);

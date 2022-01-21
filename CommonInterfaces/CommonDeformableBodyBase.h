@@ -11,7 +11,6 @@
 #include "CommonGUIHelperInterface.h"
 #include "CommonRenderInterface.h"
 #include "CommonGraphicsAppInterface.h"
-#include "CommonWindowInterface.h"
 #include "CommonCameraInterface.h"
 #include "CommonMultiBodyBase.h"
 #include "BulletSoftBody/btSoftBody.h"

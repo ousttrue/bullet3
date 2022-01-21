@@ -3,7 +3,6 @@
 #include "gwenInternalData.h"
 #include "GwenOpenGL3CoreRenderer.h"
 #include "GwenParameterInterface.h"
-#include <CommonWindowInterface.h>
 #include <CommonGUIInterface.h>
 #include <Common2dCanvasInterface.h>
 #include <CommonExampleInterface.h>

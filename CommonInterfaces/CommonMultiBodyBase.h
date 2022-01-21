@@ -14,7 +14,6 @@
 #include "CommonGUIHelperInterface.h"
 #include "CommonRenderInterface.h"
 #include "CommonGraphicsAppInterface.h"
-#include "CommonWindowInterface.h"
 #include "CommonCameraInterface.h"
 
 enum MyFilterModes

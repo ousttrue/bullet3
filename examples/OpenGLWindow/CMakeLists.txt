@@ -2,7 +2,6 @@ set(TARGET_NAME OpenGLWindow)
 add_library(
   ${TARGET_NAME}
   GlfwApp.cpp
-  GlfwWindowInterface.cpp  
   GLInstancingRenderer.cpp
   GLRenderToTexture.cpp
   LoadMeshFromObj.cpp

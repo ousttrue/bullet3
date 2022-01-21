@@ -39,7 +39,6 @@ class btCollisionShape;
 #include "btBulletCollisionCommon.h"
 #include <CommonGUIHelperInterface.h>
 #include <CommonRenderInterface.h>
-#include <CommonWindowInterface.h>
 #include <CommonGraphicsAppInterface.h>
 
 ///VehicleDemo shows how to setup and use the built-in raycast vehicle

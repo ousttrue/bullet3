@@ -43,7 +43,7 @@ struct caster2
 #define MAX_TRIANGLES_IN_BATCH 8192
 
 #include "OpenGLInclude.h"
-#include <CommonWindowInterface.h>
+// #include <CommonWindowInterface.h>
 //#include "Bullet3Common/b3MinMax.h"
 #ifdef B3_USE_GLFW
 

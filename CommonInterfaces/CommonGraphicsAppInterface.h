@@ -1,9 +1,22 @@
 #pragma once
 #include <Bullet3Common/b3Vector3.h>
 #include "CommonRenderInterface.h"
-#include "CommonWindowInterface.h"
 #include "CommonCameraInterface.h"
+#include "CommonCallbacks.h"
 #include <memory>
+#include <list>
+
+struct b3gWindowConstructionInfo
+{
+	int m_width = 1024;
+	int m_height = 768;
+	const char* m_title;
+	bool m_fullscreen = false;
+	int m_colorBitsPerPixel = 32;
+	void* m_windowHandle = nullptr;
+	int m_openglVersion = 3;
+	int m_renderDevice = -1;
+};
 
 struct DrawGridData
 {
@@ -51,7 +64,7 @@ struct CommonGraphicsApp
 	{
 	}
 
-	virtual std::shared_ptr<CommonWindowInterface> createWindow(const b3gWindowConstructionInfo& ci) = 0;
+	virtual bool createWindow(const b3gWindowConstructionInfo& ci) = 0;
 
 	virtual void dumpNextFrameToPng(const char* pngFilename) {}
 	virtual void dumpFramesToVideo(const char* mp4Filename) {}
@@ -92,4 +105,26 @@ struct CommonGraphicsApp
 	virtual int registerCubeShape(float halfExtentsX, float halfExtentsY, float halfExtentsZ, int textureIndex = -1, float textureScaling = 1) = 0;
 	virtual int registerGraphicsUnitSphereShape(EnumSphereLevelOfDetail lod, int textureId = -1) = 0;
 	virtual void registerGrid(int xres, int yres, float color0[4], float color1[4]) = 0;
+
+	std::list<b3ResizeCallback> resizeCallback;
+	std::list<b3MouseMoveCallback> mouseMoveCallback;
+	std::list<b3MouseButtonCallback> mouseButtonCallback;
+	std::list<b3WheelCallback> wheelCallback;
+	std::list<b3KeyboardCallback> keyboardCallback;
+
+	virtual void closeWindow() = 0;
+	virtual void runMainLoop() = 0;
+	virtual float getTimeInSeconds() = 0;
+	virtual bool requestedExit() const = 0;
+	virtual void setRequestExit() = 0;
+	virtual void startRendering() = 0;
+	virtual void endRendering() = 0;
+	virtual bool isModifierKeyPressed(int key) = 0;
+	virtual void setRenderCallback(b3RenderCallback renderCallback) = 0;
+	virtual void setWindowTitle(const char* title) = 0;
+	virtual float getRetinaScale() const = 0;
+	virtual void setAllowRetina(bool allow) = 0;
+	virtual int getWidth() const = 0;
+	virtual int getHeight() const = 0;
+	virtual int fileOpenDialog(char* fileName, int maxFileNameLength) = 0;
 };

@@ -1,7 +1,6 @@
 #include "GlfwApp.h"
-#include "CommonExampleInterface.h"
-#include "GlfwWindowInterface.h"
-#include "fontstash.h"
+#include <CommonExampleInterface.h>
+#include <fontstash.h>
 #include "GLRenderToTexture.h"
 #include "opengl_fontstashcallbacks.h"
 #include "ShapeData.h"
@@ -17,6 +16,100 @@
 #include <GLFW/glfw3.h>
 #include <OpenSans.h>
 #include <TwFonts.h>
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <assert.h>
+#include <glad/gl.h>
+
+static void window_close_callback(GLFWwindow* window)
+{
+	glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
+
+static void SimpleResizeCallback(GLFWwindow* window, int width, int height)
+{
+	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
+	for (auto& callback : gApp->resizeCallback)
+	{
+		callback(width, height);
+	}
+}
+
+static void SimpleKeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
+	for (auto& callback : gApp->keyboardCallback)
+	{
+		if (callback(key, action))
+		{
+			break;
+		}
+	}
+}
+
+int s_x = 0;
+int s_y = 0;
+static void SimpleMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
+	switch (button)
+	{
+		case GLFW_MOUSE_BUTTON_LEFT:
+			break;
+		case GLFW_MOUSE_BUTTON_RIGHT:
+			button = 2;
+			break;
+		case GLFW_MOUSE_BUTTON_MIDDLE:
+			button = 1;
+			break;
+	}
+
+	ButtonFlags flags = {};
+	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT))
+	{
+		flags = (ButtonFlags)(flags | ButtonFlagsAlt);
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL))
+	{
+		flags = (ButtonFlags)(flags | ButtonFlagsCtrl);
+	}
+
+	for (auto& callback : gApp->mouseButtonCallback)
+	{
+		if (callback(button, action, s_x, s_y, flags))
+		{
+			break;
+		}
+	}
+}
+
+static void SimpleMouseMoveCallback(GLFWwindow* window, double x, double y)
+{
+	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
+	s_x = x;
+	s_y = y;
+
+	for (auto& callback : gApp->mouseMoveCallback)
+	{
+		if (callback(x, y))
+		{
+			break;
+		}
+	}
+}
+
+static void SimpleWheelCallback(GLFWwindow* window, double deltax, double deltay)
+{
+	auto gApp = (GlfwApp*)glfwGetWindowUserPointer(window);
+	for (auto& callback : gApp->wheelCallback)
+	{
+		if (callback(deltax, deltay))
+		{
+			break;
+		}
+	}
+}
 
 struct MyRenderCallbacks : public RenderCallbacks
 {
@@ -189,20 +282,30 @@ GlfwApp::~GlfwApp()
 {
 	delete m_instancingRenderer;
 	delete m_primRenderer;
+	glfwDestroyWindow(m_window);
 	glfwTerminate();
 }
 
-std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowConstructionInfo& ci)
+bool GlfwApp::createWindow(const b3gWindowConstructionInfo& ci)
 {
-	auto p = GlfwWindowInterface::createWindow(ci);
-	if (!p)
+	m_window = glfwCreateWindow(ci.m_width, ci.m_height, ci.m_title, NULL, NULL);
+	if (!m_window)
 	{
-		// throw std::runtime_error("glfwInit");
-		return nullptr;
+		return false;
 	}
-	std::shared_ptr<CommonWindowInterface> window(p);
 
-	window->setWindowTitle(ci.m_title);
+	glfwSetWindowCloseCallback(m_window, window_close_callback);
+	glfwSetWindowUserPointer(m_window, this);
+	glfwSetWindowSizeCallback(m_window, SimpleResizeCallback);
+	glfwSetCursorPosCallback(m_window, SimpleMouseMoveCallback);
+	glfwSetMouseButtonCallback(m_window, SimpleMouseButtonCallback);
+	glfwSetKeyCallback(m_window, SimpleKeyboardCallback);
+	glfwSetScrollCallback(m_window, SimpleWheelCallback);
+	glfwMakeContextCurrent(m_window);
+	gladLoadGL(glfwGetProcAddress);
+	glfwSwapInterval(1);
+
+	setWindowTitle(ci.m_title);
 
 	b3Assert(glGetError() == GL_NO_ERROR);
 
@@ -217,13 +320,13 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 				 m_backgroundColorRGB[2],
 				 1.f);
 
-	window->startRendering();
-	auto width = window->getWidth();
-	auto height = window->getHeight();
+	startRendering();
+	auto width = getWidth();
+	auto height = getHeight();
 
 	b3Assert(glGetError() == GL_NO_ERROR);
 
-	window->resizeCallback.push_back(
+	resizeCallback.push_back(
 		[gApp = this](int width, int height)
 		{
 			glViewport(0, 0, width, height);
@@ -232,16 +335,12 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 			if (gApp->m_primRenderer)
 				gApp->m_primRenderer->setScreenSize(width, height);
 		});
-	std::weak_ptr<CommonWindowInterface> weak = window;
-	window->keyboardCallback.push_back(
-		[weak](int keycode, int state)
+	keyboardCallback.push_back(
+		[self = this](int keycode, int state)
 		{
 			if (keycode == B3G_ESCAPE)
 			{
-				if (auto w = weak.lock())
-				{
-					w->setRequestExit();
-				}
+				self->setRequestExit();
 				return true;
 			}
 			return false;
@@ -305,7 +404,7 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 
 		b3Assert(glGetError() == GL_NO_ERROR);
 	}
-	return window;
+	return true;
 }
 
 std::shared_ptr<FontStash> GlfwApp::getFontStash()
@@ -949,4 +1048,74 @@ void GlfwApp::dumpNextFrameToPng(const char* filename)
 	}
 
 	m_renderTexture->enable();
+}
+
+void GlfwApp::closeWindow()
+{
+	setRequestExit();
+}
+
+float GlfwApp::getTimeInSeconds()
+{
+	return glfwGetTime();
+}
+
+bool GlfwApp::requestedExit() const
+{
+	if (!m_window)
+	{
+		return true;
+	}
+	if (glfwWindowShouldClose(m_window))
+	{
+		return true;
+	}
+	return false;
+	;
+}
+
+void GlfwApp::setRequestExit()
+{
+	glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+}
+
+void GlfwApp::startRendering()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CCW);
+	glEnable(GL_DEPTH_TEST);
+	glfwPollEvents();
+}
+
+void GlfwApp::endRendering()
+{
+	glfwSwapBuffers(m_window);
+}
+
+bool GlfwApp::isModifierKeyPressed(int key)
+{
+	return glfwGetKey(m_window, GLFW_KEY_LEFT_ALT);
+}
+
+int GlfwApp::getWidth() const
+{
+	int width;
+	int height;
+	glfwGetWindowSize(m_window, &width, &height);
+	return width;
+}
+
+int GlfwApp::getHeight() const
+{
+	int width;
+	int height;
+	glfwGetWindowSize(m_window, &width, &height);
+	return height;
+}
+
+int GlfwApp::fileOpenDialog(char* fileName, int maxFileNameLength)
+{
+	return 0;
 }

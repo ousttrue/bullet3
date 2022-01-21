@@ -17,6 +17,7 @@
 #include <string>
 #include "CommonCameraInterface.h"
 #include "CommonExampleInterface.h"
+#include "CommonGraphicsAppInterface.h"
 
 #define DEMO_SELECTION_COMBOBOX 13
 
@@ -35,7 +36,6 @@ class OpenGLExampleBrowserInternalData
 {
 	CommonGUIInterface* m_gwen = nullptr;
 
-	GlfwApp* s_app = 0;
 
 	CommonParameterInterface* s_parameterInterface = 0;
 	CommonRenderInterface* s_instancingRenderer = 0;
@@ -75,10 +75,10 @@ private:
 	int gPngSkipFrames = 0;
 
 public:
+	GlfwApp* s_app = 0;
 	bool pauseSimulation = false;
 	bool singleStepSimulation = false;
 	btAlignedObjectArray<FileImporterByExtension> gFileImporterByExtension;
-	std::shared_ptr<CommonWindowInterface> s_window;
 	CommonExampleInterface* sCurrentDemo = 0;
 	bool gDisableDemoSelection = false;
 	SharedMemoryInterface* sSharedMem = 0;
@@ -251,9 +251,9 @@ private:
 				}
 			}
 		}
-		if (key == B3G_ESCAPE && s_window)
+		if (key == B3G_ESCAPE && s_app)
 		{
-			s_window->setRequestExit();
+			s_app->setRequestExit();
 		}
 
 		return false;
@@ -520,13 +520,13 @@ private:
 
 	void quitCallback()
 	{
-		s_window->setRequestExit();
+		s_app->setRequestExit();
 	}
 
 	void fileOpenCallback()
 	{
 		char filename[1024];
-		int len = s_window->fileOpenDialog(filename, 1024);
+		int len = s_app->fileOpenDialog(filename, 1024);
 		if (len)
 		{
 			//todo(erwincoumans) check if it is actually URDF
@@ -621,7 +621,7 @@ public:
 		char title[1024];
 		sprintf(title, "%s using OpenGL3+ %s %s", appTitle, glContext, optMode);
 		s_app = new GlfwApp();
-		s_window = s_app->createWindow({width, height, title});
+		s_app->createWindow({width, height, title});
 
 		char* gVideoFileName = 0;
 		args.GetCmdLineArgument("mp4", gVideoFileName);
@@ -639,23 +639,23 @@ public:
 
 		s_instancingRenderer = s_app->m_renderer;
 
-		width = s_window->getWidth();
-		height = s_window->getHeight();
+		width = s_app->getWidth();
+		height = s_app->getHeight();
 
 		auto camera = s_app->m_renderer->getActiveCamera();
 		camera->setCameraDistance(13);
 		camera->setCameraPitch(0);
 		camera->setCameraTargetPosition(0, 0, 0);
 
-		s_window->mouseMoveCallback.push_back(std::bind(&OpenGLExampleBrowserInternalData::MyMouseMoveCallback,
+		s_app->mouseMoveCallback.push_back(std::bind(&OpenGLExampleBrowserInternalData::MyMouseMoveCallback,
 														this, std::placeholders::_1, std::placeholders::_2));
-		s_window->mouseMoveCallback.push_back(std::bind(&CommonCameraInterface::mouseMoveCallback, camera, std::placeholders::_1, std::placeholders::_2));
+		s_app->mouseMoveCallback.push_back(std::bind(&CommonCameraInterface::mouseMoveCallback, camera, std::placeholders::_1, std::placeholders::_2));
 
-		s_window->mouseButtonCallback.push_back(std::bind(&OpenGLExampleBrowserInternalData::MyMouseButtonCallback,
+		s_app->mouseButtonCallback.push_back(std::bind(&OpenGLExampleBrowserInternalData::MyMouseButtonCallback,
 														  this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
-		s_window->mouseButtonCallback.push_back(std::bind(&CommonCameraInterface::mouseButtonCallback, camera, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
+		s_app->mouseButtonCallback.push_back(std::bind(&CommonCameraInterface::mouseButtonCallback, camera, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
 
-		s_window->keyboardCallback.push_front(std::bind(&OpenGLExampleBrowserInternalData::MyKeyboardCallback,
+		s_app->keyboardCallback.push_front(std::bind(&OpenGLExampleBrowserInternalData::MyKeyboardCallback,
 														this, std::placeholders::_1, std::placeholders::_2));
 
 		args.GetCmdLineArgument("shared_memory_key", gSharedMemoryKey);
@@ -677,7 +677,7 @@ public:
 		args.GetCmdLineArgument("start_demo_name", demoNameFromCommandOption);
 
 		int demo_index;
-		std::tie(m_gwen, demo_index) = factory(s_app, width, height, s_window->getRetinaScale(),
+		std::tie(m_gwen, demo_index) = factory(s_app, width, height, s_app->getRetinaScale(),
 											   gAllExamples, demoNameFromCommandOption,
 											   std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
 											   std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
@@ -699,7 +699,7 @@ public:
 	void update(float deltaTime)
 	{
 		b3ChromeUtilsEnableProfiling();
-		s_window->startRendering();
+		s_app->startRendering();
 
 		if (!gEnableRenderLoop && !singleStepSimulation)
 		{
@@ -850,7 +850,7 @@ public:
 		}
 		{
 			BT_PROFILE("Swap Buffers");
-			s_window->endRendering();
+			s_app->endRendering();
 		}
 
 		if (m_gwen)
@@ -894,7 +894,7 @@ CommonExampleInterface* OpenGLExampleBrowser::getCurrentExample()
 
 bool OpenGLExampleBrowser::requestedExit()
 {
-	return m_internalData->s_window->requestedExit();
+	return m_internalData->s_app->requestedExit();
 }
 
 void OpenGLExampleBrowser::updateGraphics()
