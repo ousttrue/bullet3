@@ -1,24 +1,80 @@
-/*
-Copyright (c) 2012 Advanced Micro Devices, Inc.  
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
-*/
-//Originally written by Erwin Coumans
-
-#ifndef GL_INSTANCING_RENDERER_H
-#define GL_INSTANCING_RENDERER_H
-
+#pragma once
 #include "Bullet3Common/b3AlignedObjectArray.h"
 #include <CommonRenderInterface.h>
 #include "SimpleCamera.h"
+#include <GLVBO.h>
+#include <Bullet3Common/b3Vector3.h>
+#include <Bullet3Common/b3ResizablePool.h>
+
+struct b3PublicGraphicsInstanceData
+{
+	int m_shapeIndex;
+	int m_internalInstanceIndex;
+	float m_position[4];
+	float m_orientation[4];
+	float m_color[4];
+	float m_scale[4];
+
+	void clear()
+	{
+	}
+};
+
+using b3PublicGraphicsInstance = b3PoolBodyHandle<b3PublicGraphicsInstanceData>;
+
+struct InternalTextureHandle
+{
+	unsigned int m_glTexture;
+	int m_width;
+	int m_height;
+	int m_enableFiltering;
+};
+
+struct InternalDataRenderer
+{
+	b3AlignedObjectArray<float> m_instance_positions_ptr;
+	b3AlignedObjectArray<float> m_instance_quaternion_ptr;
+	b3AlignedObjectArray<float> m_instance_colors_ptr;
+	b3AlignedObjectArray<float> m_instance_scale_ptr;
+
+	int m_vboSize;
+	std::shared_ptr<GLVBO> m_vbo;
+	int m_totalNumInstances;
+	int m_maxNumObjectCapacity;
+	int m_maxShapeCapacityInBytes;
+
+	SimpleCamera m_defaultCamera1;
+	CommonCameraInterface* m_activeCamera;
+
+	float m_projectionMatrix[16] = {0};
+	float m_viewMatrix[16] = {0};
+	float m_projectiveTextureProjectionMatrix[16] = {0};
+	float m_projectiveTextureViewMatrix[16] = {0};
+	float m_viewMatrixInverse[16] = {0};
+	bool m_useProjectiveTexture = false;
+
+	b3Vector3 m_lightPos = b3MakeVector3(-50, 30, 40);
+	b3Vector3 m_lightSpecularIntensity = b3MakeVector3(1, 1, 1);
+	float m_shadowmapIntensity = 0.3f;
+	unsigned int m_defaultTexturehandle;
+	b3AlignedObjectArray<InternalTextureHandle> m_textureHandles;
+
+	class GLRenderToTexture* m_shadowMap = nullptr;
+	unsigned int m_shadowTexture = 0;
+
+	unsigned int m_renderFrameBuffer = 0;
+
+	b3ResizablePool<b3PublicGraphicsInstance> m_publicGraphicsInstances;
+
+	int m_shadowMapWidth = 4096;
+	int m_shadowMapHeight = 4096;
+	float m_shadowMapWorldSize = 10;
+	bool m_updateShadowMap = true;
+
+	InternalDataRenderer() : m_activeCamera(&m_defaultCamera1)
+	{
+	}
+};
 
 class GLInstancingRenderer : public CommonRenderInterface
 {
@@ -137,5 +193,3 @@ public:
 
 	virtual void setRenderFrameBuffer(unsigned int renderFrameBuffer);
 };
-
-#endif  //GL_INSTANCING_RENDERER_H

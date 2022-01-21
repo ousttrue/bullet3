@@ -1,18 +1,4 @@
-#ifndef NO_OPENGL3
-/*
-Copyright (c) 2012 Advanced Micro Devices, Inc.
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it freely,
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
-*/
-//Originally written by Erwin Coumans
+#include "GLInstancingRenderer.h"
 
 ///todo: make this configurable in the gui
 bool useShadowMap = true;  // true;//false;//true;
@@ -66,17 +52,14 @@ struct caster2
 #endif
 #endif  //__APPLE__
 #endif  //B3_USE_GLFW
-#include "GLInstancingRenderer.h"
 
 #include <string.h>
 //#include "DemoSettings.h"
 #include <stdio.h>
 
-#include "Bullet3Common/b3Vector3.h"
 #include "Bullet3Common/b3Quaternion.h"
 #include "Bullet3Common/b3Transform.h"
 #include "Bullet3Common/b3Matrix3x3.h"
-#include "Bullet3Common/b3ResizablePool.h"
 
 #include "GLShader.h"
 
@@ -187,99 +170,6 @@ static void checkError(const char* functionName)
 }
 
 extern int gShapeIndex;
-
-struct InternalTextureHandle
-{
-	GLuint m_glTexture;
-	int m_width;
-	int m_height;
-	int m_enableFiltering;
-};
-
-struct b3PublicGraphicsInstanceData
-{
-	int m_shapeIndex;
-	int m_internalInstanceIndex;
-	GLfloat m_position[4];
-	GLfloat m_orientation[4];
-	GLfloat m_color[4];
-	GLfloat m_scale[4];
-
-	void clear()
-	{
-	}
-};
-
-typedef b3PoolBodyHandle<b3PublicGraphicsInstanceData> b3PublicGraphicsInstance;
-
-struct InternalDataRenderer
-{
-	b3AlignedObjectArray<GLfloat> m_instance_positions_ptr;
-	b3AlignedObjectArray<GLfloat> m_instance_quaternion_ptr;
-	b3AlignedObjectArray<GLfloat> m_instance_colors_ptr;
-	b3AlignedObjectArray<GLfloat> m_instance_scale_ptr;
-
-	int m_vboSize;
-	std::shared_ptr<GLVBO> m_vbo;
-	int m_totalNumInstances;
-	int m_maxNumObjectCapacity;
-	int m_maxShapeCapacityInBytes;
-
-	SimpleCamera m_defaultCamera1;
-	CommonCameraInterface* m_activeCamera;
-
-	GLfloat m_projectionMatrix[16];
-	GLfloat m_viewMatrix[16];
-	GLfloat m_projectiveTextureProjectionMatrix[16];
-	GLfloat m_projectiveTextureViewMatrix[16];
-	GLfloat m_viewMatrixInverse[16];
-	bool m_useProjectiveTexture;
-
-	b3Vector3 m_lightPos;
-	b3Vector3 m_lightSpecularIntensity;
-	float m_shadowmapIntensity;
-	GLuint m_defaultTexturehandle;
-	b3AlignedObjectArray<InternalTextureHandle> m_textureHandles;
-
-	GLRenderToTexture* m_shadowMap;
-	GLuint m_shadowTexture;
-
-	GLuint m_renderFrameBuffer;
-
-	b3ResizablePool<b3PublicGraphicsInstance> m_publicGraphicsInstances;
-
-	int m_shadowMapWidth;
-	int m_shadowMapHeight;
-	float m_shadowMapWorldSize;
-	bool m_updateShadowMap;
-
-	InternalDataRenderer() : m_activeCamera(&m_defaultCamera1),
-							 m_shadowMap(0),
-							 m_shadowTexture(0),
-							 m_renderFrameBuffer(0),
-							 m_shadowMapWidth(4096),
-							 m_shadowMapHeight(4096),
-							 m_shadowMapWorldSize(10),
-							 m_updateShadowMap(true)
-
-	{
-		m_lightPos = b3MakeVector3(-50, 30, 40);
-		m_lightSpecularIntensity.setValue(1, 1, 1);
-		m_shadowmapIntensity = 0.3;
-
-		//clear to zero to make it obvious if the matrix is used uninitialized
-		for (int i = 0; i < 16; i++)
-		{
-			m_projectionMatrix[i] = 0;
-			m_viewMatrix[i] = 0;
-			m_viewMatrixInverse[i] = 0;
-			m_projectiveTextureProjectionMatrix[i] = 0;
-			m_projectiveTextureViewMatrix[i] = 0;
-		}
-
-		m_useProjectiveTexture = false;
-	}
-};
 
 static std::shared_ptr<GLShader> triangleShaderProgram;
 static GLint triangle_mvp_location = -1;
@@ -1115,7 +1005,7 @@ void GLInstancingRenderer::updateShape(int shapeIndex, const float* vertices, in
 	int numvertices = gfxObj->m_numVertices;
 	if (numvertices != numVertices)
 		b3Assert(false);
-		return;
+	return;
 
 	int vertexStrideInBytes = 9 * sizeof(float);
 	int sz = numvertices * vertexStrideInBytes;
@@ -2730,5 +2620,3 @@ int GLInstancingRenderer::getTotalNumInstances() const
 {
 	return m_data->m_totalNumInstances;
 }
-
-#endif  //NO_OPENGL3
