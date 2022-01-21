@@ -2880,9 +2880,9 @@ void PhysicsServerExample::drawUserDebugLines()
 									   (float)result.getOrigin()[1],
 									   (float)result.getOrigin()[2]};
 
-					m_guiHelper->getAppInterface()->drawText3D(pieces[t].c_str(),
-															   newpos, orientation, colorRGBA,
-															   sz, optionFlag);
+					// m_guiHelper->getAppInterface()->drawText3D(pieces[t].c_str(),
+					// 										   newpos, orientation, colorRGBA,
+					// 										   sz, optionFlag);
 				}
 			}
 

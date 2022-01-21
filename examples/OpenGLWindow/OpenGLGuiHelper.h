@@ -50,8 +50,6 @@ struct OpenGLGuiHelper : public GUIHelperInterface
 	void setProjectiveTextureMatrices(const float viewMatrix[16], const float projectionMatrix[16]) override;
 	void setProjectiveTexture(bool useProjectiveTexture) override;
 	void autogenerateGraphicsObjects(const btDiscreteDynamicsWorld* rbWorld) override;
-	void drawText3D(const char* txt, float position[3], float orientation[4], float color[4], float size, int optionFlag) override;
-	void drawText3D(const char* txt, float posX, float posY, float posZ, float size) override;
 	int addUserDebugLine(const double debugLineFromXYZ[3], const double debugLineToXYZ[3], const double debugLineColorRGB[3], double lineWidth, double lifeTime, int trackingVisualShapeIndex, int replaceItemUid) override
 	{
 		return -1;

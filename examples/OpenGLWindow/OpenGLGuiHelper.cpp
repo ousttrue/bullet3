@@ -1413,22 +1413,6 @@ void OpenGLGuiHelper::autogenerateGraphicsObjects(const btDiscreteDynamicsWorld*
 	}
 }
 
-void OpenGLGuiHelper::drawText3D(const char* txt, float position[3], float orientation[4], float color[4], float size, int optionFlags)
-{
-	B3_PROFILE("OpenGLGuiHelper::drawText3D");
-
-	btAssert(m_data->m_glApp);
-	m_data->m_glApp->drawText3D(txt, position, orientation, color, size, optionFlags);
-}
-
-void OpenGLGuiHelper::drawText3D(const char* txt, float posX, float posY, float posZ, float size)
-{
-	B3_PROFILE("OpenGLGuiHelper::drawText3D");
-
-	btAssert(m_data->m_glApp);
-	m_data->m_glApp->drawText3D(txt, posX, posY, posZ, size);
-}
-
 struct CommonGraphicsApp* OpenGLGuiHelper::getAppInterface()
 {
 	return m_data->m_glApp;
