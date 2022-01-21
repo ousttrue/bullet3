@@ -55,17 +55,10 @@ public:
 	void startRendering() override;
 	void endRendering() override;
 	bool isModifierKeyPressed(int key) override;
-	// render
-	b3RenderCallback m_render;
-	void setRenderCallback(b3RenderCallback renderCallback) override
-	{
-		m_render = renderCallback;
-	}
 	void setWindowTitle(const char* title) override {}
 	float getRetinaScale() const override { return m_retinaScale; }
 	void setAllowRetina(bool /*allowRetina*/) override{};
 	int getWidth() const override;
 	int getHeight() const override;
 	int fileOpenDialog(char* fileName, int maxFileNameLength) override;
-
 };

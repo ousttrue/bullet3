@@ -105,7 +105,6 @@ struct CommonGraphicsApp
 	virtual void startRendering() = 0;
 	virtual void endRendering() = 0;
 	virtual bool isModifierKeyPressed(int key) = 0;
-	virtual void setRenderCallback(b3RenderCallback renderCallback) = 0;
 	virtual void setWindowTitle(const char* title) = 0;
 	virtual float getRetinaScale() const = 0;
 	virtual void setAllowRetina(bool allow) = 0;
