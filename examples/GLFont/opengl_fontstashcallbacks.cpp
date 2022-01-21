@@ -1,4 +1,5 @@
 #include "opengl_fontstashcallbacks.h"
+#include "GLMesh.h"
 #include "GLPrimitiveRenderer.h"
 #include "GLShader.h"
 #include "GLVAO.h"
@@ -6,12 +7,10 @@
 #include <glad/gl.h>
 #include <assert.h>
 #include <stb_image_write.h>
+#include <memory>
 
 void OpenGL2RenderCallbacks::display2()
 {
-	s_vertexBuffer->bind();
-	s_vertexArrayObject->bind();
-
 	PrimInternalData* data = m_primRender2->getData();
 	data->m_shaderProg->use();
 	float identity[16] = {1, 0, 0, 0,
@@ -93,14 +92,14 @@ void OpenGL2RenderCallbacks::updateTexture(sth_texture* texture, sth_glyph* glyp
 			////////////////////////////
 			//create the other data
 			{
-				s_vertexArrayObject = GLVAO::create();
-				s_vertexBuffer = GLVBO::load(texture->newverts, VERT_COUNT * sizeof(Vertex), true);
+				auto vertices = GLVBO::load(texture->newverts, VERT_COUNT * sizeof(Vertex), true);
 				unsigned int s_indexData[INDEX_COUNT];
 				for (int i = 0; i < INDEX_COUNT; i++)
 				{
 					s_indexData[i] = i;
 				}
-				s_indexBuffer = GLIBO::load(s_indexData);
+				auto indices = GLIBO::load(s_indexData);
+				s_mesh = std::make_shared<GLMesh>(vertices, indices);
 			}
 		}
 		else
@@ -143,20 +142,14 @@ void OpenGL2RenderCallbacks::render(sth_texture* texture)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 	assert(glGetError() == GL_NO_ERROR);
-	s_vertexBuffer->bind();
-	s_vertexArrayObject->bind();
-	glBufferData(GL_ARRAY_BUFFER, texture->nverts * sizeof(Vertex), &texture->newverts[0].position.p[0], GL_DYNAMIC_DRAW);
 
-	assert(glGetError() == GL_NO_ERROR);
-
-	s_indexBuffer->bind();
+	s_mesh->vbo()->upload(&texture->newverts[0].position.p[0], texture->nverts * sizeof(Vertex));
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = texture->nverts;
 	assert(glGetError() == GL_NO_ERROR);
 
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-	assert(glGetError() == GL_NO_ERROR);
+	s_mesh->draw(indexCount);
 
 	glBindVertexArray(0);
 

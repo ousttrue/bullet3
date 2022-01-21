@@ -1,16 +1,13 @@
 #pragma once
 #include <memory>
 #include "fontstash.h"
-#include "GLVBO.h"
-#include "GLVAO.h"
+#include "GLMesh.h"
 class GLPrimitiveRenderer;
 
 class OpenGL2RenderCallbacks : public RenderCallbacks
 {
 	GLPrimitiveRenderer* m_primRender2 = nullptr;
-	std::shared_ptr<GLIBO> s_indexBuffer;
-	std::shared_ptr<GLVAO> s_vertexArrayObject;
-	std::shared_ptr<GLVBO> s_vertexBuffer;
+	std::shared_ptr<GLMesh> s_mesh;
 
 public:
 	OpenGL2RenderCallbacks(GLPrimitiveRenderer* primRender) : m_primRender2(primRender) {}

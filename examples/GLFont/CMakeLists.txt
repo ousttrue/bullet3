@@ -9,7 +9,9 @@ add_library(
   GLShader.cpp
   GLVBO.cpp
   GLVAO.cpp
-  GLTexture.cpp)
+  GLTexture.cpp
+  GLMesh.cpp
+  )
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(
   ${TARGET_NAME}
