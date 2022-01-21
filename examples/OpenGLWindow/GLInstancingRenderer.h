@@ -30,7 +30,7 @@ struct InternalTextureHandle
 	int m_enableFiltering;
 };
 
-struct InternalDataRenderer
+class GLInstancingRenderer : public CommonRenderInterface
 {
 	b3AlignedObjectArray<float> m_instance_positions_ptr;
 	b3AlignedObjectArray<float> m_instance_quaternion_ptr;
@@ -71,16 +71,7 @@ struct InternalDataRenderer
 	float m_shadowMapWorldSize = 10;
 	bool m_updateShadowMap = true;
 
-	InternalDataRenderer() : m_activeCamera(&m_defaultCamera1)
-	{
-	}
-};
-
-class GLInstancingRenderer : public CommonRenderInterface
-{
 	b3AlignedObjectArray<struct b3GraphicsInstance*> m_graphicsInstances;
-
-	struct InternalDataRenderer* m_data;
 
 	bool m_textureenabled;
 	bool m_textureinitialized;
