@@ -825,7 +825,7 @@ void CommonRigidBodyMTBase::drawScreenText()
 	if (m_solverType != gSolverType)
 	{
 		sprintf(msg, "restart example to change solver type");
-		m_guiHelper->getAppInterface()->drawText(msg, 300, yCoord, 0.4f);
+		// m_guiHelper->getAppInterface()->drawText(msg, 300, yCoord, 0.4f);
 		yCoord += yStep;
 	}
 	if (m_multithreadCapable)
@@ -834,7 +834,7 @@ void CommonRigidBodyMTBase::drawScreenText()
 		{
 			sprintf(msg, "restart example to begin in %s mode",
 					gMultithreadedWorld ? "multithreaded" : "single threaded");
-			m_guiHelper->getAppInterface()->drawText(msg, 300, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, 300, yCoord, 0.4f);
 			yCoord += yStep;
 		}
 	}
@@ -872,12 +872,12 @@ void CommonRigidBodyMTBase::drawScreenText()
 					sm & SOLVER_USE_2_FRICTION_DIRECTIONS ? " friction2x" : "",
 					sm & SOLVER_ENABLE_FRICTION_DIRECTION_CACHING ? " frictionDirCaching" : "",
 					sm & SOLVER_USE_WARMSTARTING ? " warm" : "");
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
 			yCoord += yStep;
 		}
 		sprintf(msg, "internalSimStep %5.3f ms",
 				gProfiler.getAverageTime(Profiler::kRecordInternalTimeStep) * 0.001f);
-		m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
+		// m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
 		yCoord += yStep;
 
 		if (m_multithreadedWorld)
@@ -885,55 +885,55 @@ void CommonRigidBodyMTBase::drawScreenText()
 			sprintf(msg,
 					"DispatchCollisionPairs %5.3f ms",
 					gProfiler.getAverageTime(Profiler::kRecordDispatchAllCollisionPairs) * 0.001f);
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
 			yCoord += yStep;
 
 			sprintf(msg,
 					"SolveAllIslands %5.3f ms",
 					gProfiler.getAverageTime(Profiler::kRecordDispatchIslands) * 0.001f);
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
 			yCoord += yStep;
 
 			sprintf(msg,
 					"SolverTotal %5.3f ms",
 					gProfiler.getAverageTime(Profiler::kRecordSolverTotal) * 0.001f);
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
 			yCoord += yStep;
 
 			sprintf(msg,
 					"SolverSetup %5.3f ms",
 					gProfiler.getAverageTime(Profiler::kRecordSolverSetup) * 0.001f);
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord + indent, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord + indent, yCoord, 0.4f);
 			yCoord += yStep;
 
 			sprintf(msg,
 					"SolverIterations %5.3f ms",
 					gProfiler.getAverageTime(Profiler::kRecordSolverIterations) * 0.001f);
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord + indent, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord + indent, yCoord, 0.4f);
 			yCoord += yStep;
 
 			sprintf(msg,
 					"SolverFinish %5.3f ms",
 					gProfiler.getAverageTime(Profiler::kRecordSolverFinish) * 0.001f);
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord + indent, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord + indent, yCoord, 0.4f);
 			yCoord += yStep;
 
 			sprintf(msg,
 					"PredictUnconstrainedMotion %5.3f ms",
 					gProfiler.getAverageTime(Profiler::kRecordPredictUnconstrainedMotion) * 0.001f);
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
 			yCoord += yStep;
 
 			sprintf(msg,
 					"CreatePredictiveContacts %5.3f ms",
 					gProfiler.getAverageTime(Profiler::kRecordCreatePredictiveContacts) * 0.001f);
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
 			yCoord += yStep;
 
 			sprintf(msg,
 					"IntegrateTransforms %5.3f ms",
 					gProfiler.getAverageTime(Profiler::kRecordIntegrateTransforms) * 0.001f);
-			m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
+			// m_guiHelper->getAppInterface()->drawText(msg, xCoord, yCoord, 0.4f);
 			yCoord += yStep;
 		}
 	}

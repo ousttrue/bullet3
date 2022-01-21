@@ -43,7 +43,7 @@ public:
 	void setViewport(int width, int height) override;
 	void setBackgroundColor(float red, float green, float blue) override;
 	void drawGrid(DrawGridData data = DrawGridData()) override;
-	void drawText(const char* txt, int posX, int posY, float size, float colorRGBA[4]) override;
+	
 	void drawText3D(const char* txt, float posX, float posY, float posZ, float size) override;
 	void drawText3D(const char* txt, float position[3], float orientation[4], float color[4], float size, int optionFlag) override;
 	void drawTexturedRect(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA) override;

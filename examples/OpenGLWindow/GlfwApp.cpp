@@ -577,26 +577,26 @@ void GlfwApp::drawText3D(const char* txt, float worldPosX, float worldPosY, floa
 	drawText3D(txt, position, orientation, color, size1, optionFlags);
 }
 
-void GlfwApp::drawText(const char* txt, int posXi, int posYi, float size, float colorRGBA[4])
-{
-	float posX = (float)posXi;
-	float posY = (float)posYi;
-	float dx = 0;
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	bool measureOnly = false;
-	auto cam = m_instancingRenderer->getActiveCamera();
-	float fontSize = 64 * size;  //512;//128;
-	m_fontStash->draw_text(
-		m_droidRegular, fontSize, posX, posY,
-		txt, &dx, cam->getScreenWidth(),
-		cam->getScreenHeight(),
-		measureOnly,
-		m_retinaScale, colorRGBA);
-	m_fontStash->end_draw();
-	m_fontStash->flush_draw();
-	glDisable(GL_BLEND);
-}
+// void GlfwApp::drawText(const char* txt, int posXi, int posYi, float size, float colorRGBA[4])
+// {
+// 	float posX = (float)posXi;
+// 	float posY = (float)posYi;
+// 	float dx = 0;
+// 	glEnable(GL_BLEND);
+// 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+// 	bool measureOnly = false;
+// 	auto cam = m_instancingRenderer->getActiveCamera();
+// 	float fontSize = 64 * size;  //512;//128;
+// 	m_fontStash->draw_text(
+// 		m_droidRegular, fontSize, posX, posY,
+// 		txt, &dx, cam->getScreenWidth(),
+// 		cam->getScreenHeight(),
+// 		measureOnly,
+// 		m_retinaScale, colorRGBA);
+// 	m_fontStash->end_draw();
+// 	m_fontStash->flush_draw();
+// 	glDisable(GL_BLEND);
+// }
 
 void GlfwApp::drawTexturedRect(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA)
 {
