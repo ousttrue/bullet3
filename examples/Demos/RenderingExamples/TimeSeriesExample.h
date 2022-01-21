@@ -1,6 +1,12 @@
-#ifndef TIME_SERIES_EXAMPLE_H
-#define TIME_SERIES_EXAMPLE_H
+#pragma once
+#include <CommonExampleInterface.h>
+struct TimeSeriesExample : public CommonExampleInterface
+{
+	struct CommonGraphicsApp* m_app;
+	struct TimeSeriesExampleInternalData* m_internalData;
 
-class CommonExampleInterface* TimeSeriesCreateFunc(struct CommonExampleOptions& options);
-
-#endif  //TIME_SERIES_EXAMPLE_H
+	TimeSeriesExample(struct CommonGraphicsApp* app);
+	~TimeSeriesExample() override;
+	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override;
+	void stepSimulation(float deltaTime) override;
+};

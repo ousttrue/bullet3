@@ -339,7 +339,8 @@ static ExampleEntry gDefaultExamples[] =
 					 { return new RenderInstancingDemo(options.m_app); }),
 		ExampleEntry(1, "CoordinateSystemDemo", "Show the axis and positive rotation direction around the axis.", [](auto options)
 					 { return new CoordinateSystemDemo(options.m_app); }),
-		ExampleEntry(1, "Time Series", "Render some value(s) in a 2D graph window, shifting to the left", TimeSeriesCreateFunc),
+		ExampleEntry(1, "Time Series", "Render some value(s) in a 2D graph window, shifting to the left", [](auto options)
+					 { return new TimeSeriesExample(options.m_app); }),
 		ExampleEntry(1, "TinyRenderer", "Very small software renderer.", TinyRendererCreateFunc),
 		ExampleEntry(1, "Dynamic Texture", "Dynamic updated textured applied to a cube.", DynamicTexturedCubeDemoCreateFunc),
 
@@ -368,7 +369,6 @@ static ExampleEntry gDefaultExamples[] =
 		//todo: create a category/tutorial about advanced topics, such as optimizations, using different collision detection algorithm, different constraint solvers etc.
 		//ExampleEntry(0,"Advanced"),
 		//ExampleEntry(1,"Obj2RigidBody Add Features", "Load a triangle mesh from Wavefront .obj and create polyhedral features to perform the separating axis test (instead of GJK/MPR). It is best to combine optimization and polyhedral feature generation.", ET_RigidBodyFromObjCreateFunc,OptimizeConvexObj+ComputePolyhedralFeatures),
-
 };
 
 #ifdef B3_USE_CLEW

@@ -1,27 +1,11 @@
 #include "TimeSeriesExample.h"
 #include <CommonGraphicsAppInterface.h>
-#include <CommonRenderInterface.h>
-#include <Common2dCanvasInterface.h>
-#include <CommonExampleInterface.h>
-#include "LinearMath/btAlignedObjectArray.h"
-#include "btBulletCollisionCommon.h"
-#include <CommonGUIHelperInterface.h>
+// #include <CommonRenderInterface.h>
+// #include <Common2dCanvasInterface.h>
+// #include "LinearMath/btAlignedObjectArray.h"
+// #include "btBulletCollisionCommon.h"
+// #include <CommonGUIHelperInterface.h>
 #include "TimeSeriesCanvas.h"
-
-struct TimeSeriesExample : public CommonExampleInterface
-{
-	struct CommonGraphicsApp* m_app;
-	struct TimeSeriesExampleInternalData* m_internalData;
-
-	TimeSeriesExample(struct CommonGraphicsApp* app);
-	virtual ~TimeSeriesExample();
-	void initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper) override;
-	virtual void exitPhysics();
-	virtual void stepSimulation(float deltaTime);
-	virtual void physicsDebugDraw(int debugFlags, struct GUIHelperInterface *m_guiHelper);
-	virtual void syncPhysicsToGraphics(struct GraphicsPhysicsBridge& gfxBridge);
-	virtual bool keyboardCallback(int key, int state);
-};
 
 struct TimeSeriesExampleInternalData
 {
@@ -45,7 +29,7 @@ TimeSeriesExample::~TimeSeriesExample()
 	delete m_internalData;
 }
 
-void TimeSeriesExample::initPhysics(CommonCameraInterface *camera, struct GUIHelperInterface *m_guiHelper)
+void TimeSeriesExample::initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper)
 {
 	//request a visual bitma/texture we can render to
 
@@ -57,10 +41,6 @@ void TimeSeriesExample::initPhysics(CommonCameraInterface *camera, struct GUIHel
 	m_internalData->m_timeSeriesCanvas->addDataSource("Tan", 255, 0, 255);
 	m_internalData->m_timeSeriesCanvas->addDataSource("Some cosine wave2", 255, 255, 0);
 	m_internalData->m_timeSeriesCanvas->addDataSource("Empty source2", 255, 0, 255);
-}
-
-void TimeSeriesExample::exitPhysics()
-{
 }
 
 void TimeSeriesExample::stepSimulation(float deltaTime)
@@ -75,22 +55,4 @@ void TimeSeriesExample::stepSimulation(float deltaTime)
 	m_internalData->m_timeSeriesCanvas->insertDataAtCurrentTime(deltaTime * 10, 2, true);
 
 	m_internalData->m_timeSeriesCanvas->nextTick();
-}
-
-void TimeSeriesExample::physicsDebugDraw(int debugDrawFlags, struct GUIHelperInterface *m_guiHelper)
-{
-}
-
-bool TimeSeriesExample::keyboardCallback(int key, int state)
-{
-	return false;
-}
-
-void TimeSeriesExample::syncPhysicsToGraphics(GraphicsPhysicsBridge& gfxBridge)
-{
-}
-
-CommonExampleInterface* TimeSeriesCreateFunc(struct CommonExampleOptions& options)
-{
-	return new TimeSeriesExample(options.m_guiHelper->getAppInterface());
 }
