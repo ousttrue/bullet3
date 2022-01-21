@@ -25,7 +25,7 @@ file(
   "Gwen/Platforms/*.h"
   "Gwen/Renderers/*.h"
   "Gwen/Skins/*.h")
-add_library(${TARGET_NAME} ${gwen_SRCS} ${gwen_HDRS})
+add_library(${TARGET_NAME} SHARED ${gwen_SRCS} ${gwen_HDRS})
 target_compile_options(${TARGET_NAME} PRIVATE /wd4267)
 target_compile_definitions(${TARGET_NAME} PRIVATE GWEN_COMPILE_STATIC
                                                   _HAS_EXCEPTIONS=0)
