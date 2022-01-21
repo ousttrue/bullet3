@@ -8,6 +8,7 @@
 #include <GLVBO.h>
 #include <GLPrimitiveRenderer.h>
 #include <OpenSans.h>
+#include <memory>
 
 // bool printStats = false;
 bool pauseSimulation = false;
@@ -35,12 +36,10 @@ void loadBufferData()
 		{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
 		{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
 		{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
-	sData.m_vertexArrayObject = GLVAO::create();
-	sData.m_vertexArrayObject->bind();
-	sData.m_vertexBuffer = GLVBO::load(vertexData, sizeof(vertexData), false);
-
+	auto vbo = GLVBO::load(vertexData, sizeof(vertexData), false);
 	unsigned int indexData[6] = {0, 1, 2, 0, 2, 3};
-	sData.m_indexBuffer = GLIBO::load(indexData, sizeof(indexData));
+	auto ibo = GLIBO::load(indexData, sizeof(indexData));
+	sData.m_mesh= std::make_shared<GLMesh>(vbo, ibo);
 
 	glEnableVertexAttribArray(sData.m_positionAttribute);
 	glEnableVertexAttribArray(sData.m_colourAttribute);
@@ -181,8 +180,6 @@ void display()
 	const float timeScale = 0.008f;
 
 	sData.m_shaderProg->use();
-	sData.m_vertexBuffer->bind();
-	sData.m_vertexArrayObject->bind();
 
 	err = glGetError();
 	b3Assert(err == GL_NO_ERROR);
@@ -194,35 +191,8 @@ void display()
 	vec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
 	glUniform2fv(sData.m_positionUniform, 1, (const GLfloat*)&p);
 
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(sData.m_positionAttribute);
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(sData.m_colourAttribute);
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(sData.m_textureAttribute);
-
-	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
-	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
-	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
-
-	sData.m_indexBuffer->bind();
-
-	// glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = 6;
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
-
-	// glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-	err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
+	sData.m_mesh->draw(indexCount);
 }
 
 const char* fileName = "../../bin/1000 stack.bullet";

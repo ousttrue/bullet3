@@ -16,8 +16,7 @@ std::shared_ptr<GLVBO> GLVBO::load(const void* bytes, size_t size, bool isDynami
 	assert(vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, size, bytes, isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
-	GLuint err = glGetError();
-	assert(err == GL_NO_ERROR);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return std::shared_ptr<GLVBO>(new GLVBO(vbo));
 }
 

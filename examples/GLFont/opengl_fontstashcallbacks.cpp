@@ -21,35 +21,6 @@ void OpenGL2RenderCallbacks::display2()
 
 	vec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
 	glUniform2fv(m_data->m_positionUniform, 1, (const GLfloat*)&p);
-
-	assert(glGetError() == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(m_data->m_positionAttribute);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(m_data->m_colourAttribute);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(m_data->m_textureAttribute);
-
-	glVertexAttribPointer(m_data->m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
-	glVertexAttribPointer(m_data->m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
-	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
-	assert(glGetError() == GL_NO_ERROR);
-	/*    
- 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
-    //glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    int indexCount = 6;
-    err = glGetError();
-    assert(err==GL_NO_ERROR);
-    
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-    err = glGetError();
-    assert(err==GL_NO_ERROR);
-  */
-
-	//	glutSwapBuffers();
 }
 
 void OpenGL2RenderCallbacks::updateTexture(sth_texture* texture, sth_glyph* glyph, int textureWidth, int textureHeight)
@@ -147,13 +118,7 @@ void OpenGL2RenderCallbacks::render(sth_texture* texture)
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = texture->nverts;
 	assert(glGetError() == GL_NO_ERROR);
-
 	m_mesh->draw(indexCount);
-
-	glBindVertexArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	//	 glDisableVertexAttribArray(m_textureAttribute);
 	glUseProgram(0);
 }

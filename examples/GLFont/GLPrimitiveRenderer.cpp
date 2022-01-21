@@ -1,9 +1,9 @@
 #include "GLPrimitiveRenderer.h"
 #include "GLShader.h"
-#include "GLVBO.h"
-#include "GLVAO.h"
 #include "GLTexture.h"
+#include "GLMesh.h"
 #include <assert.h>
+#include <memory>
 
 auto VIEW_MATRIX = "viewMatrix";
 auto PROJECTION_MATRIX = "projMatrix";
@@ -46,8 +46,6 @@ static const char *fragmentShader3D =
 	"  }\n"
 	"   fragColour = colourV*texcolor;\n"
 	"}\n";
-
-static unsigned int s_indexData[6] = {0, 1, 2, 0, 2, 3};
 
 //
 // PrimInternalData
@@ -93,19 +91,13 @@ PrimInternalData::PrimInternalData()
 			PrimVertex{PrimVec4(-1, 1, 0.0, 1.0), PrimVec4(0.0, 1.0, 0.0, 1.0), PrimVec2(0, 1)},
 			PrimVertex{PrimVec4(1, 1, 0.0, 1.0), PrimVec4(0.0, 0.0, 1.0, 1.0), PrimVec2(1, 1)},
 			PrimVertex{PrimVec4(1, -1, 0.0, 1.0), PrimVec4(1.0, 1.0, 1.0, 1.0), PrimVec2(1, 0)}};
+		static unsigned int s_indexData[6] = {0, 1, 2, 0, 2, 3};
+		auto vbo = GLVBO::load(vertexData, sizeof(vertexData), true);
+		auto ibo = GLIBO::load(s_indexData, sizeof(s_indexData));
+		m_mesh = std::make_shared<GLMesh>(vbo, ibo);
+	}
 
-		m_vertexArrayObject = GLVAO::create();
-		m_vertexArrayObject->bind();
-
-		m_vertexBuffer = GLVBO::load(vertexData, sizeof(vertexData), true);
-
-		m_vertexArrayObject2 = GLVAO::create();
-		m_vertexArrayObject2->bind();
-
-		m_vertexBuffer2 = GLVBO::load(nullptr, MAX_VERTICES2 * sizeof(PrimVertex), true);
-
-		m_indexBuffer = GLIBO::load(s_indexData, sizeof(s_indexData));
-
+	{
 		unsigned int indexData[MAX_VERTICES2 * 2];
 		int count = 0;
 		for (int i = 0; i < MAX_VERTICES2; i += 4)
@@ -118,19 +110,12 @@ PrimInternalData::PrimInternalData()
 			indexData[count++] = i + 2;
 			indexData[count++] = i + 3;
 		}
-		m_indexBuffer2 = GLIBO::load(indexData, sizeof(indexData));
+		auto vbo = GLVBO::load(nullptr, MAX_VERTICES2 * sizeof(PrimVertex), true);
+		auto ibo = GLIBO::load(indexData, sizeof(indexData));
+		m_mesh2 = std::make_shared<GLMesh>(vbo, ibo);
+	}
 
-		glEnableVertexAttribArray(m_positionAttribute);
-		glEnableVertexAttribArray(m_colourAttribute);
-		assert(glGetError() == GL_NO_ERROR);
-
-		glEnableVertexAttribArray(m_textureAttribute);
-
-		glVertexAttribPointer(m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
-		glVertexAttribPointer(m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
-		glVertexAttribPointer(m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
-		assert(glGetError() == GL_NO_ERROR);
-
+	{
 		glActiveTexture(GL_TEXTURE0);
 
 		GLubyte *image = new GLubyte[256 * 256 * 3];
@@ -162,6 +147,8 @@ PrimInternalData::PrimInternalData()
 
 		delete[] image;
 	}
+
+	assert(glGetError() == GL_NO_ERROR);
 }
 
 void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices, bool useRGBA)
@@ -196,9 +183,7 @@ void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices,
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 
-	m_vertexArrayObject2->bind();
-	m_vertexBuffer2->upload(vertices, numVertices * sizeof(PrimVertex));
-	m_vertexBuffer2->bind();
+	m_mesh2->vbo()->upload(vertices, numVertices * sizeof(PrimVertex));
 
 	PrimVec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
 	if (useRGBA)
@@ -208,48 +193,9 @@ void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices,
 	}
 
 	glUniform2fv(m_positionUniform, 1, (const GLfloat *)&p);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	assert(glGetError() == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(m_positionAttribute);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(m_colourAttribute);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(m_textureAttribute);
-
-	glVertexAttribPointer(m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
-	glVertexAttribPointer(m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
-	glVertexAttribPointer(m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
-	assert(glGetError() == GL_NO_ERROR);
-
-	m_indexBuffer2->bind();
-
-	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = (numVertices / 4) * 6;
-	assert(glGetError() == GL_NO_ERROR);
-
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glBindVertexArray(0);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	assert(glGetError() == GL_NO_ERROR);
-
-	//glDisableVertexAttribArray(m_data.m_textureAttribute);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glUseProgram(0);
-
-	assert(glGetError() == GL_NO_ERROR);
+	m_mesh2->draw(indexCount);
+	m_shaderProg->unuse();
 }
 
 //
@@ -268,6 +214,8 @@ void GLPrimitiveRenderer::drawRect(float x0, float y0, float x1, float y1, float
 
 void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVertex &v1, const PrimVertex &v2, const PrimVertex &v3, float viewMat[16], float projMat[16], bool useRGBA)
 {
+	assert(glGetError() == GL_NO_ERROR);
+
 	m_data.m_shaderProg->use();
 	m_data.m_shaderProg->setMatrix4x4(VIEW_MATRIX, viewMat);
 	m_data.m_shaderProg->setMatrix4x4(PROJECTION_MATRIX, projMat);
@@ -284,12 +232,9 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 
-	m_data.m_vertexBuffer->bind();
-	m_data.m_vertexArrayObject->bind();
 	PrimVertex vertexData[4] = {
 		v0, v1, v2, v3};
-	m_data.m_vertexBuffer->upload(vertexData, 4 * sizeof(PrimVertex));
-	m_data.m_vertexBuffer->bind();
+	m_data.m_mesh->vbo()->upload(vertexData, 4 * sizeof(PrimVertex));
 
 	PrimVec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
 	if (useRGBA)
@@ -297,49 +242,12 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 		p.p[0] = 1.f;
 		p.p[1] = 1.f;
 	}
-
 	glUniform2fv(m_data.m_positionUniform, 1, (const GLfloat *)&p);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	assert(glGetError() == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(m_data.m_positionAttribute);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(m_data.m_colourAttribute);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glEnableVertexAttribArray(m_data.m_textureAttribute);
-
-	glVertexAttribPointer(m_data.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
-	glVertexAttribPointer(m_data.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
-	glVertexAttribPointer(m_data.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
-	assert(glGetError() == GL_NO_ERROR);
-
-	m_data.m_indexBuffer->bind();
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = 6;
-	assert(glGetError() == GL_NO_ERROR);
-
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glBindVertexArray(0);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	assert(glGetError() == GL_NO_ERROR);
-
-	//glDisableVertexAttribArray(m_data.m_textureAttribute);
-	assert(glGetError() == GL_NO_ERROR);
-
-	glUseProgram(0);
-
+	m_data.m_mesh->draw(indexCount);
+	m_data.m_shaderProg->unuse();
 	assert(glGetError() == GL_NO_ERROR);
 }
 

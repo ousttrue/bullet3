@@ -25,5 +25,5 @@ void GLVAO::bind()
 
 void GLVAO::unbind()
 {
-	glBindVertexArray(m_vao);
+	glBindVertexArray(0);
 }

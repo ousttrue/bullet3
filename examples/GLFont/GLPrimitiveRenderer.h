@@ -43,16 +43,11 @@ struct PrimInternalData
 	int m_colourAttribute;
 	int m_positionAttribute;
 	int m_textureAttribute;
-	std::shared_ptr<class GLVBO> m_vertexBuffer;
-	std::shared_ptr<class GLVBO> m_vertexBuffer2;
 
-	std::shared_ptr<class GLVAO> m_vertexArrayObject;
-	std::shared_ptr<class GLVAO> m_vertexArrayObject2;
+	std::shared_ptr<class GLMesh> m_mesh;
+	std::shared_ptr<class GLMesh> m_mesh2;
 
-	std::shared_ptr<class GLIBO> m_indexBuffer;
-	std::shared_ptr<class GLIBO> m_indexBuffer2;
 	std::shared_ptr<class GLTexture> m_texturehandle;
-
 	PrimInternalData();
 	void drawTexturedRect3D(PrimVertex* vertices, int numVertices, bool useRGBA);
 };

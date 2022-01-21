@@ -18,6 +18,8 @@ GLMesh::GLMesh(const std::shared_ptr<GLVBO> &vbo, const std::shared_ptr<GLIBO> &
 void GLMesh::draw(int indexCount)
 {
 	m_vao->bind();
+	m_vbo->bind();
+	m_ibo->bind();
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
