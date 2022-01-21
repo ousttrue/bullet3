@@ -5,7 +5,7 @@
 #include "GLVAO.h"
 #include "GLPrimitiveRenderer.h"
 
-GLMesh::GLMesh(const std::shared_ptr<GLVBO> &vbo, const std::shared_ptr<GLIBO> &ibo)
+GLMesh::GLMesh(const std::shared_ptr<GLVBO> &vbo, const std::shared_ptr<GLIBO> &ibo, const VertexAttributeLayout *layout, int attributeCount)
 	: m_vbo(vbo), m_ibo(ibo)
 {
 	m_vao = GLVAO::create();
@@ -14,12 +14,11 @@ GLMesh::GLMesh(const std::shared_ptr<GLVBO> &vbo, const std::shared_ptr<GLIBO> &
 		m_vao->bind();
 		m_vbo->bind();
 		m_ibo->bind();
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
+		for (int i = 0; i < attributeCount; ++i)
+		{
+			glEnableVertexAttribArray(i);
+			glVertexAttribPointer(i, layout[i].itemCount, GL_FLOAT, GL_FALSE, layout[i].stride, (const GLvoid *)layout[i].offset);
+		}
 	}
 	m_vao->unbind();
 }

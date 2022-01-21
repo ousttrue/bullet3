@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <GLMesh.h>
 
 struct PrimVec2
 {
@@ -32,6 +33,8 @@ struct PrimVertex
 	PrimVec4 position;
 	PrimVec4 colour;
 	PrimVec2 uv;
+
+	static VertexAttributeLayout layout[3];
 };
 
 struct PrimInternalData

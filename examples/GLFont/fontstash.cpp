@@ -59,6 +59,12 @@ static unsigned int hashint(unsigned int a)
 	return a;
 }
 
+VertexAttributeLayout Vertex::layout[3] = {
+	VertexAttributeLayout{4, sizeof(Vertex), 0},
+	VertexAttributeLayout{4, sizeof(Vertex), offsetof(Vertex, colour)},
+	VertexAttributeLayout{2, sizeof(Vertex), offsetof(Vertex, uv)},
+};
+
 struct sth_font
 {
 	int idx;

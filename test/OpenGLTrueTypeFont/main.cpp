@@ -39,7 +39,7 @@ void loadBufferData()
 	auto vbo = GLVBO::load(vertexData, sizeof(vertexData), false);
 	unsigned int indexData[6] = {0, 1, 2, 0, 2, 3};
 	auto ibo = GLIBO::load(indexData, sizeof(indexData));
-	sData.m_mesh= std::make_shared<GLMesh>(vbo, ibo);
+	sData.m_mesh= GLMesh::create(vbo, ibo, Vertex::layout);
 
 	glEnableVertexAttribArray(sData.m_positionAttribute);
 	glEnableVertexAttribArray(sData.m_colourAttribute);

@@ -69,7 +69,7 @@ void OpenGL2RenderCallbacks::updateTexture(sth_texture* texture, sth_glyph* glyp
 					s_indexData[i] = i;
 				}
 				auto indices = GLIBO::load(s_indexData);
-				m_mesh = std::make_shared<GLMesh>(vertices, indices);
+				m_mesh = GLMesh::create(vertices, indices, Vertex::layout);
 			}
 		}
 		else

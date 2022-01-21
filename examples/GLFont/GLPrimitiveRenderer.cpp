@@ -3,7 +3,20 @@
 #include "GLTexture.h"
 #include "GLMesh.h"
 #include <assert.h>
+#include <stdlib.h>
 #include <memory>
+
+// glEnableVertexAttribArray(0);
+// glEnableVertexAttribArray(1);
+// glEnableVertexAttribArray(2);
+// glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
+// glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
+// glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
+VertexAttributeLayout PrimVertex::layout[3] = {
+	VertexAttributeLayout{4, sizeof(PrimVertex), 0},
+	VertexAttributeLayout{4, sizeof(PrimVertex), offsetof(PrimVertex, colour)},
+	VertexAttributeLayout{2, sizeof(PrimVertex), offsetof(PrimVertex, uv)},
+};
 
 auto VIEW_MATRIX = "viewMatrix";
 auto PROJECTION_MATRIX = "projMatrix";
@@ -94,7 +107,7 @@ PrimInternalData::PrimInternalData()
 		static unsigned int s_indexData[6] = {0, 1, 2, 0, 2, 3};
 		auto vbo = GLVBO::load(vertexData, sizeof(vertexData), true);
 		auto ibo = GLIBO::load(s_indexData, sizeof(s_indexData));
-		m_mesh = std::make_shared<GLMesh>(vbo, ibo);
+		m_mesh = GLMesh::create(vbo, ibo, PrimVertex::layout);
 	}
 
 	{
@@ -112,7 +125,7 @@ PrimInternalData::PrimInternalData()
 		}
 		auto vbo = GLVBO::load(nullptr, MAX_VERTICES2 * sizeof(PrimVertex), true);
 		auto ibo = GLIBO::load(indexData, sizeof(indexData));
-		m_mesh2 = std::make_shared<GLMesh>(vbo, ibo);
+		m_mesh2 = GLMesh::create(vbo, ibo, PrimVertex::layout);
 	}
 
 	{

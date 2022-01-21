@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include "GLMesh.h"
 #define MAX_ROWS 128
 #define VERT_COUNT (16 * 128)
 #define INDEX_COUNT (VERT_COUNT * 2)
@@ -32,6 +33,8 @@ struct Vertex
 	vec4 position;
 	vec4 colour;
 	vec2 uv;
+
+	static VertexAttributeLayout layout[3];
 };
 
 struct sth_quad
