@@ -2,10 +2,10 @@
 #include "CommonExampleInterface.h"
 #include "GlfwWindowInterface.h"
 #include "fontstash.h"
-#include "TwFonts.h"
 #include "GLRenderToTexture.h"
 #include "opengl_fontstashcallbacks.h"
 #include "ShapeData.h"
+#include <GLTexture.h>
 #include <Bullet3Common/b3Quaternion.h>
 #include <stb_image_write.h>
 #include <memory>
@@ -16,26 +16,7 @@
 #include <list>
 #include <GLFW/glfw3.h>
 #include <OpenSans.h>
-
-static GLuint BindFont(const CTexFont* _Font)
-{
-	GLuint TexID = 0;
-	glGenTextures(1, &TexID);
-	glBindTexture(GL_TEXTURE_2D, TexID);
-	glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
-	glPixelStorei(GL_UNPACK_LSB_FIRST, GL_FALSE);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, _Font->m_TexWidth, _Font->m_TexHeight, 0, GL_RED, GL_UNSIGNED_BYTE, _Font->m_TexBytes);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	return TexID;
-}
+#include <TwFonts.h>
 
 struct MyRenderCallbacks : public RenderCallbacks
 {
@@ -208,7 +189,6 @@ GlfwApp::~GlfwApp()
 {
 	delete m_instancingRenderer;
 	delete m_primRenderer;
-	TwDeleteDefaultFonts();
 	glfwTerminate();
 }
 
@@ -291,9 +271,7 @@ std::shared_ptr<CommonWindowInterface> GlfwApp::createWindow(const b3gWindowCons
 
 	m_instancingRenderer->InitShaders();
 
-	TwGenerateDefaultFonts();
-	m_fontTextureId = BindFont(g_DefaultNormalFont);
-	m_largeFontTextureId = BindFont(g_DefaultLargeFont);
+	m_largeFontTextureId = GLTexture::load_tw_large();
 
 	{
 		m_renderCallbacks = new OpenGL2RenderCallbacks(m_primRenderer->getData());
@@ -415,8 +393,7 @@ void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4
 		//float width = 0.f;
 		int pos = 0;
 		//float color[]={0.2f,0.2,0.2f,1.f};
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_largeFontTextureId);
+		m_largeFontTextureId->bind();
 
 		//float width = r.x;
 		//float extraSpacing = 0.;
@@ -510,71 +487,20 @@ void GlfwApp::drawText(const char* txt, int posXi, int posYi, float size, float 
 {
 	float posX = (float)posXi;
 	float posY = (float)posYi;
-
-	//
-	//printf("str = %s\n",unicodeText);
-
 	float dx = 0;
-
-	//int measureOnly=0;
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	if (1)  //m_useTrueTypeFont)
-	{
-		bool measureOnly = false;
-
-		auto cam = m_instancingRenderer->getActiveCamera();
-
-		float fontSize = 64 * size;  //512;//128;
-		m_fontStash->draw_text(
-			m_droidRegular, fontSize, posX, posY,
-			txt, &dx, cam->getScreenWidth(),
-			cam->getScreenHeight(),
-			measureOnly,
-			m_retinaScale, colorRGBA);
-
-		m_fontStash->end_draw();
-		m_fontStash->flush_draw();
-	}
-	else
-	{
-		//float width = 0.f;
-		int pos = 0;
-		//float color[]={0.2f,0.2,0.2f,1.f};
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_largeFontTextureId);
-
-		//float width = r.x;
-		//float extraSpacing = 0.;
-
-		float startX = posX;
-		float startY = posY;
-
-		while (txt[pos])
-		{
-			int c = txt[pos];
-			//r.h = g_DefaultNormalFont->m_CharHeight;
-			//r.w = g_DefaultNormalFont->m_CharWidth[c]+extraSpacing;
-			float endX = startX + g_DefaultLargeFont->m_CharWidth[c];
-			float endY = startY + g_DefaultLargeFont->m_CharHeight;
-
-			float currentColor[] = {0.2f, 0.2, 0.2f, 1.f};
-
-			m_primRenderer->drawTexturedRect(startX, startY, endX, endY, currentColor, g_DefaultLargeFont->m_CharU0[c], g_DefaultLargeFont->m_CharV0[c], g_DefaultLargeFont->m_CharU1[c], g_DefaultLargeFont->m_CharV1[c]);
-
-			//DrawTexturedRect(0,r,g_DefaultNormalFont->m_CharU0[c],g_DefaultNormalFont->m_CharV0[c],g_DefaultNormalFont->m_CharU1[c],g_DefaultNormalFont->m_CharV1[c]);
-			//	DrawFilledRect(r);
-
-			startX = endX;
-			//startY = endY;
-
-			pos++;
-		}
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
+	bool measureOnly = false;
+	auto cam = m_instancingRenderer->getActiveCamera();
+	float fontSize = 64 * size;  //512;//128;
+	m_fontStash->draw_text(
+		m_droidRegular, fontSize, posX, posY,
+		txt, &dx, cam->getScreenWidth(),
+		cam->getScreenHeight(),
+		measureOnly,
+		m_retinaScale, colorRGBA);
+	m_fontStash->end_draw();
+	m_fontStash->flush_draw();
 	glDisable(GL_BLEND);
 }
 

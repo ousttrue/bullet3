@@ -6,8 +6,7 @@
 struct GlfwApp : public CommonGraphicsApp
 {
 private:
-	unsigned int m_fontTextureId = 0;
-	unsigned int m_largeFontTextureId = 0;
+	std::shared_ptr<GLTexture> m_largeFontTextureId;
 	std::shared_ptr<class FontStash> m_fontStash;
 	std::shared_ptr<class FontStash> m_fontStash2;
 	struct RenderCallbacks* m_renderCallbacks = nullptr;
