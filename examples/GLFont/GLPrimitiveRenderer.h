@@ -1,7 +1,5 @@
-#ifndef _GL_PRIMITIVE_RENDERER_H
-#define _GL_PRIMITIVE_RENDERER_H
-
-//#include "OpenGLInclude.h"
+#pragma once
+#include <memory>
 
 struct PrimVec2
 {
@@ -26,57 +24,74 @@ struct PrimVec4
 		p[2] = z;
 		p[3] = w;
 	}
-
 	float p[4];
 };
 
 struct PrimVertex
 {
-	PrimVertex(const PrimVec4& p, const PrimVec4& c, const PrimVec2& u)
-		: position(p),
-		  colour(c),
-		  uv(u)
-	{
-	}
-
-	PrimVertex()
-	{
-	}
 	PrimVec4 position;
 	PrimVec4 colour;
 	PrimVec2 uv;
 };
 
+struct PrimInternalData
+{
+	std::shared_ptr<class GLShader> m_shaderProg;
+	int m_viewmatUniform;
+	int m_projMatUniform;
+	int m_positionUniform;
+	int m_colourAttribute;
+	int m_positionAttribute;
+	int m_textureAttribute;
+	std::shared_ptr<class GLVBO> m_vertexBuffer;
+	std::shared_ptr<class GLVBO> m_vertexBuffer2;
+
+	std::shared_ptr<class GLVAO> m_vertexArrayObject;
+	std::shared_ptr<class GLVAO> m_vertexArrayObject2;
+
+	std::shared_ptr<class GLIBO> m_indexBuffer;
+	std::shared_ptr<class GLIBO> m_indexBuffer2;
+	std::shared_ptr<class GLTexture> m_texturehandle;
+};
+
+#define MAX_VERTICES2 8192
+struct PrimInternalData2
+{
+	PrimInternalData2()
+		: m_numVerticesText(0),
+		  m_numVerticesRect(0)
+	{
+	}
+	int m_numVerticesText;
+	int m_numVerticesRect;
+	PrimVertex m_verticesText[MAX_VERTICES2];
+	PrimVertex m_verticesRect[MAX_VERTICES2];
+};
+
 class GLPrimitiveRenderer
 {
-	int m_screenWidth;
-	int m_screenHeight;
+	int m_screenWidth=1;
+	int m_screenHeight=1;
 
-	struct PrimInternalData* m_data;
-	struct PrimInternalData2* m_data2;
+	PrimInternalData m_data;
+	PrimInternalData2 m_data2;
 	void loadBufferData();
 
 public:
-	GLPrimitiveRenderer(int screenWidth=1, int screenHeight=1);
-	virtual ~GLPrimitiveRenderer();
-
+	GLPrimitiveRenderer();
+	PrimInternalData* getData()
+	{
+		return &m_data;
+	}
 	void drawRect(float x0, float y0, float x1, float y1, float color[4]);
 	void drawTexturedRect(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA = 0);
 	void drawTexturedRect3D(const PrimVertex& v0, const PrimVertex& v1, const PrimVertex& v2, const PrimVertex& v3, float viewMat[16], float projMat[16], bool useRGBA = true);
-	void drawLine();  //float from[4], float to[4], float color[4]);
 	void setScreenSize(int width, int height);
-
 	void drawTexturedRect2(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA = 0);
+	void drawTexturedRect3D2Text(bool useRGBA = true);
+
+private:
 	void drawTexturedRect2a(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA = 0);
 	void flushBatchedRects();
-
-	void drawTexturedRect3D2Text(bool useRGBA = true);
 	void drawTexturedRect3D2(PrimVertex* vertices, int numVertices, bool useRGBA = true);
-
-	PrimInternalData* getData()
-	{
-		return m_data;
-	}
 };
-
-#endif  //_GL_PRIMITIVE_RENDERER_H

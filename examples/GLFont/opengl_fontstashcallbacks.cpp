@@ -1,7 +1,6 @@
 #ifndef NO_OPENGL3
 #include "opengl_fontstashcallbacks.h"
 #include <GLPrimitiveRenderer.h>
-#include <GLPrimInternalData.h>
 #include "GLShader.h"
 #include "fontstash.h"
 #include <glad/gl.h>

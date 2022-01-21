@@ -1,5 +1,4 @@
 #include "GLPrimitiveRenderer.h"
-#include "GLPrimInternalData.h"
 #include "GLShader.h"
 #include "GLVBO.h"
 #include "GLVAO.h"
@@ -49,56 +48,38 @@ static const char *fragmentShader3D =
 	"}\n";
 
 static unsigned int s_indexData[6] = {0, 1, 2, 0, 2, 3};
-#define MAX_VERTICES2 8192
-struct PrimInternalData2
+
+GLPrimitiveRenderer::GLPrimitiveRenderer()
 {
-	PrimInternalData2()
-		: m_numVerticesText(0),
-		  m_numVerticesRect(0)
-	{
-	}
-	int m_numVerticesText;
-	int m_numVerticesRect;
-	PrimVertex m_verticesText[MAX_VERTICES2];
-	PrimVertex m_verticesRect[MAX_VERTICES2];
-};
+	m_data.m_shaderProg = GLShader::load(vertexShader3D, fragmentShader3D);
 
-GLPrimitiveRenderer::GLPrimitiveRenderer(int screenWidth, int screenHeight)
-	: m_screenWidth(screenWidth),
-	  m_screenHeight(screenHeight)
-{
-	m_data = new PrimInternalData;
-	m_data2 = new PrimInternalData2;
-
-	m_data->m_shaderProg = GLShader::load(vertexShader3D, fragmentShader3D);
-
-	m_data->m_viewmatUniform = m_data->m_shaderProg->getUniformLocation(VIEW_MATRIX);
-	if (m_data->m_viewmatUniform < 0)
+	m_data.m_viewmatUniform = m_data.m_shaderProg->getUniformLocation(VIEW_MATRIX);
+	if (m_data.m_viewmatUniform < 0)
 	{
 		assert(0);
 	}
-	m_data->m_projMatUniform = m_data->m_shaderProg->getUniformLocation(PROJECTION_MATRIX);
-	if (m_data->m_projMatUniform < 0)
+	m_data.m_projMatUniform = m_data.m_shaderProg->getUniformLocation(PROJECTION_MATRIX);
+	if (m_data.m_projMatUniform < 0)
 	{
 		assert(0);
 	}
-	m_data->m_positionUniform = m_data->m_shaderProg->getUniformLocation("p");
-	if (m_data->m_positionUniform < 0)
+	m_data.m_positionUniform = m_data.m_shaderProg->getUniformLocation("p");
+	if (m_data.m_positionUniform < 0)
 	{
 		assert(0);
 	}
-	m_data->m_colourAttribute = m_data->m_shaderProg->getAttributeLocation("colour");
-	if (m_data->m_colourAttribute < 0)
+	m_data.m_colourAttribute = m_data.m_shaderProg->getAttributeLocation("colour");
+	if (m_data.m_colourAttribute < 0)
 	{
 		assert(0);
 	}
-	m_data->m_positionAttribute = m_data->m_shaderProg->getAttributeLocation("position");
-	if (m_data->m_positionAttribute < 0)
+	m_data.m_positionAttribute = m_data.m_shaderProg->getAttributeLocation("position");
+	if (m_data.m_positionAttribute < 0)
 	{
 		assert(0);
 	}
-	m_data->m_textureAttribute = m_data->m_shaderProg->getAttributeLocation("texuv");
-	if (m_data->m_textureAttribute < 0)
+	m_data.m_textureAttribute = m_data.m_shaderProg->getAttributeLocation("texuv");
+	if (m_data.m_textureAttribute < 0)
 	{
 		assert(0);
 	}
@@ -109,22 +90,22 @@ GLPrimitiveRenderer::GLPrimitiveRenderer(int screenWidth, int screenHeight)
 void GLPrimitiveRenderer::loadBufferData()
 {
 	PrimVertex vertexData[4] = {
-		PrimVertex(PrimVec4(-1, -1, 0.0, 1.0), PrimVec4(1.0, 0.0, 0.0, 1.0), PrimVec2(0, 0)),
-		PrimVertex(PrimVec4(-1, 1, 0.0, 1.0), PrimVec4(0.0, 1.0, 0.0, 1.0), PrimVec2(0, 1)),
-		PrimVertex(PrimVec4(1, 1, 0.0, 1.0), PrimVec4(0.0, 0.0, 1.0, 1.0), PrimVec2(1, 1)),
-		PrimVertex(PrimVec4(1, -1, 0.0, 1.0), PrimVec4(1.0, 1.0, 1.0, 1.0), PrimVec2(1, 0))};
+		PrimVertex{PrimVec4(-1, -1, 0.0, 1.0), PrimVec4(1.0, 0.0, 0.0, 1.0), PrimVec2(0, 0)},
+		PrimVertex{PrimVec4(-1, 1, 0.0, 1.0), PrimVec4(0.0, 1.0, 0.0, 1.0), PrimVec2(0, 1)},
+		PrimVertex{PrimVec4(1, 1, 0.0, 1.0), PrimVec4(0.0, 0.0, 1.0, 1.0), PrimVec2(1, 1)},
+		PrimVertex{PrimVec4(1, -1, 0.0, 1.0), PrimVec4(1.0, 1.0, 1.0, 1.0), PrimVec2(1, 0)}};
 
-	m_data->m_vertexArrayObject = GLVAO::create();
-	m_data->m_vertexArrayObject->bind();
+	m_data.m_vertexArrayObject = GLVAO::create();
+	m_data.m_vertexArrayObject->bind();
 
-	m_data->m_vertexBuffer = GLVBO::load(vertexData, sizeof(vertexData), true);
+	m_data.m_vertexBuffer = GLVBO::load(vertexData, sizeof(vertexData), true);
 
-	m_data->m_vertexArrayObject2 = GLVAO::create();
-	m_data->m_vertexArrayObject2->bind();
+	m_data.m_vertexArrayObject2 = GLVAO::create();
+	m_data.m_vertexArrayObject2->bind();
 
-	m_data->m_vertexBuffer2 = GLVBO::load(nullptr, MAX_VERTICES2 * sizeof(PrimVertex), true);
+	m_data.m_vertexBuffer2 = GLVBO::load(nullptr, MAX_VERTICES2 * sizeof(PrimVertex), true);
 
-	m_data->m_indexBuffer = GLIBO::load(s_indexData, sizeof(s_indexData));
+	m_data.m_indexBuffer = GLIBO::load(s_indexData, sizeof(s_indexData));
 
 	unsigned int indexData[MAX_VERTICES2 * 2];
 	int count = 0;
@@ -138,17 +119,17 @@ void GLPrimitiveRenderer::loadBufferData()
 		indexData[count++] = i + 2;
 		indexData[count++] = i + 3;
 	}
-	m_data->m_indexBuffer2 = GLIBO::load(indexData, sizeof(indexData));
+	m_data.m_indexBuffer2 = GLIBO::load(indexData, sizeof(indexData));
 
-	glEnableVertexAttribArray(m_data->m_positionAttribute);
-	glEnableVertexAttribArray(m_data->m_colourAttribute);
+	glEnableVertexAttribArray(m_data.m_positionAttribute);
+	glEnableVertexAttribArray(m_data.m_colourAttribute);
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(m_data->m_textureAttribute);
+	glEnableVertexAttribArray(m_data.m_textureAttribute);
 
-	glVertexAttribPointer(m_data->m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
-	glVertexAttribPointer(m_data->m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
-	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
+	glVertexAttribPointer(m_data.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
+	glVertexAttribPointer(m_data.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
+	glVertexAttribPointer(m_data.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
 	assert(glGetError() == GL_NO_ERROR);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -178,39 +159,26 @@ void GLPrimitiveRenderer::loadBufferData()
 		}
 	}
 
-	m_data->m_texturehandle = GLTexture::load(image, 256, 256);
+	m_data.m_texturehandle = GLTexture::load(image, 256, 256);
 
 	delete[] image;
 }
 
-GLPrimitiveRenderer::~GLPrimitiveRenderer()
-{
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	delete m_data;
-	delete m_data2;
-}
-
-void GLPrimitiveRenderer::drawLine()
-{
-}
-
 void GLPrimitiveRenderer::drawRect(float x0, float y0, float x1, float y1, float color[4])
 {
-	m_data->m_texturehandle->bind();
+	m_data.m_texturehandle->bind();
 	drawTexturedRect(x0, y0, x1, y1, color, 0, 0, 1, 1);
 	assert(glGetError() == GL_NO_ERROR);
 }
 
 void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVertex &v1, const PrimVertex &v2, const PrimVertex &v3, float viewMat[16], float projMat[16], bool useRGBA)
 {
-	m_data->m_shaderProg->use();
-	m_data->m_shaderProg->setMatrix4x4(VIEW_MATRIX, viewMat);
-	m_data->m_shaderProg->setMatrix4x4(PROJECTION_MATRIX, projMat);
+	m_data.m_shaderProg->use();
+	m_data.m_shaderProg->setMatrix4x4(VIEW_MATRIX, viewMat);
+	m_data.m_shaderProg->setMatrix4x4(PROJECTION_MATRIX, projMat);
 
-	m_data->m_vertexBuffer->bind();
-	m_data->m_vertexArrayObject->bind();
+	m_data.m_vertexBuffer->bind();
+	m_data.m_vertexArrayObject->bind();
 	bool useFiltering = false;
 	if (useFiltering)
 	{
@@ -237,26 +205,26 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 		p.p[1] = 1.f;
 	}
 
-	glUniform2fv(m_data->m_positionUniform, 1, (const GLfloat *)&p);
+	glUniform2fv(m_data.m_positionUniform, 1, (const GLfloat *)&p);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(m_data->m_positionAttribute);
+	glEnableVertexAttribArray(m_data.m_positionAttribute);
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(m_data->m_colourAttribute);
+	glEnableVertexAttribArray(m_data.m_colourAttribute);
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(m_data->m_textureAttribute);
+	glEnableVertexAttribArray(m_data.m_textureAttribute);
 
-	glVertexAttribPointer(m_data->m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
-	glVertexAttribPointer(m_data->m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
-	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
+	glVertexAttribPointer(m_data.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
+	glVertexAttribPointer(m_data.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
+	glVertexAttribPointer(m_data.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
 	assert(glGetError() == GL_NO_ERROR);
 
-	m_data->m_indexBuffer->bind();
+	m_data.m_indexBuffer->bind();
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = 6;
@@ -274,7 +242,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	assert(glGetError() == GL_NO_ERROR);
 
-	//glDisableVertexAttribArray(m_data->m_textureAttribute);
+	//glDisableVertexAttribArray(m_data.m_textureAttribute);
 	assert(glGetError() == GL_NO_ERROR);
 
 	glUseProgram(0);
@@ -284,8 +252,8 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 
 void GLPrimitiveRenderer::drawTexturedRect3D2Text(bool useRGBA)
 {
-	drawTexturedRect3D2(&m_data2->m_verticesText[0], m_data2->m_numVerticesText, useRGBA);
-	m_data2->m_numVerticesText = 0;
+	drawTexturedRect3D2(&m_data2.m_verticesText[0], m_data2.m_numVerticesText, useRGBA);
+	m_data2.m_numVerticesText = 0;
 }
 
 void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVertices, bool useRGBA)
@@ -303,15 +271,15 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 						  0, 0, 1, 0,
 						  0, 0, 0, 1};
 
-	m_data->m_shaderProg->use();
+	m_data.m_shaderProg->use();
 
-	glUniformMatrix4fv(m_data->m_viewmatUniform, 1, false, identity);
-	glUniformMatrix4fv(m_data->m_projMatUniform, 1, false, identity);
+	glUniformMatrix4fv(m_data.m_viewmatUniform, 1, false, identity);
+	glUniformMatrix4fv(m_data.m_projMatUniform, 1, false, identity);
 
 	assert(glGetError() == GL_NO_ERROR);
 
-	m_data->m_vertexBuffer2->bind();
-	m_data->m_vertexArrayObject2->bind();
+	m_data.m_vertexBuffer2->bind();
+	m_data.m_vertexArrayObject2->bind();
 
 	bool useFiltering = false;
 	if (useFiltering)
@@ -341,26 +309,26 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 		p.p[1] = 1.f;
 	}
 
-	glUniform2fv(m_data->m_positionUniform, 1, (const GLfloat *)&p);
+	glUniform2fv(m_data.m_positionUniform, 1, (const GLfloat *)&p);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(m_data->m_positionAttribute);
+	glEnableVertexAttribArray(m_data.m_positionAttribute);
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(m_data->m_colourAttribute);
+	glEnableVertexAttribArray(m_data.m_colourAttribute);
 	assert(glGetError() == GL_NO_ERROR);
 
-	glEnableVertexAttribArray(m_data->m_textureAttribute);
+	glEnableVertexAttribArray(m_data.m_textureAttribute);
 
-	glVertexAttribPointer(m_data->m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
-	glVertexAttribPointer(m_data->m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
-	glVertexAttribPointer(m_data->m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
+	glVertexAttribPointer(m_data.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)0);
+	glVertexAttribPointer(m_data.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)sizeof(PrimVec4));
+	glVertexAttribPointer(m_data.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(PrimVertex), (const GLvoid *)(sizeof(PrimVec4) + sizeof(PrimVec4)));
 	assert(glGetError() == GL_NO_ERROR);
 
-	m_data->m_indexBuffer2->bind();
+	m_data.m_indexBuffer2->bind();
 
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = (numVertices / 4) * 6;
@@ -378,7 +346,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	assert(glGetError() == GL_NO_ERROR);
 
-	//glDisableVertexAttribArray(m_data->m_textureAttribute);
+	//glDisableVertexAttribArray(m_data.m_textureAttribute);
 	assert(glGetError() == GL_NO_ERROR);
 
 	glUseProgram(0);
@@ -389,19 +357,19 @@ void GLPrimitiveRenderer::drawTexturedRect3D2(PrimVertex *vertices, int numVerti
 void GLPrimitiveRenderer::drawTexturedRect2a(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA)
 {
 	PrimVertex vertexData[4] = {
-		PrimVertex(PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v0)),
-		PrimVertex(PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v1)),
-		PrimVertex(PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v1)),
-		PrimVertex(PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v0))};
+		PrimVertex{PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v0)},
+		PrimVertex{PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v1)},
+		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v1)},
+		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v0)}};
 
-	//	int sz = m_data2->m_numVerticesText;
+	//	int sz = m_data2.m_numVerticesText;
 
-	m_data2->m_verticesRect[m_data2->m_numVerticesRect++] = vertexData[0];
-	m_data2->m_verticesRect[m_data2->m_numVerticesRect++] = vertexData[1];
-	m_data2->m_verticesRect[m_data2->m_numVerticesRect++] = vertexData[2];
-	m_data2->m_verticesRect[m_data2->m_numVerticesRect++] = vertexData[3];
+	m_data2.m_verticesRect[m_data2.m_numVerticesRect++] = vertexData[0];
+	m_data2.m_verticesRect[m_data2.m_numVerticesRect++] = vertexData[1];
+	m_data2.m_verticesRect[m_data2.m_numVerticesRect++] = vertexData[2];
+	m_data2.m_verticesRect[m_data2.m_numVerticesRect++] = vertexData[3];
 
-	if (m_data2->m_numVerticesRect >= MAX_VERTICES2)
+	if (m_data2.m_numVerticesRect >= MAX_VERTICES2)
 	{
 		flushBatchedRects();
 	}
@@ -409,32 +377,32 @@ void GLPrimitiveRenderer::drawTexturedRect2a(float x0, float y0, float x1, float
 
 void GLPrimitiveRenderer::flushBatchedRects()
 {
-	if (m_data2->m_numVerticesRect == 0)
+	if (m_data2.m_numVerticesRect == 0)
 		return;
 
-	m_data->m_texturehandle->bind();
-	drawTexturedRect3D2(m_data2->m_verticesRect, m_data2->m_numVerticesRect, 0);
-	m_data2->m_numVerticesRect = 0;
+	m_data.m_texturehandle->bind();
+	drawTexturedRect3D2(m_data2.m_verticesRect, m_data2.m_numVerticesRect, 0);
+	m_data2.m_numVerticesRect = 0;
 }
 void GLPrimitiveRenderer::drawTexturedRect2(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA)
 {
 	PrimVertex vertexData[4] = {
-		PrimVertex(PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v0)),
-		PrimVertex(PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v1)),
-		PrimVertex(PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v1)),
-		PrimVertex(PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v0))};
+		PrimVertex{PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v0)},
+		PrimVertex{PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v1)},
+		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v1)},
+		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v0)}};
 
-	//	int sz = m_data2->m_numVerticesText;
+	//	int sz = m_data2.m_numVerticesText;
 
-	m_data2->m_verticesText[m_data2->m_numVerticesText++] = vertexData[0];
-	m_data2->m_verticesText[m_data2->m_numVerticesText++] = vertexData[1];
-	m_data2->m_verticesText[m_data2->m_numVerticesText++] = vertexData[2];
-	m_data2->m_verticesText[m_data2->m_numVerticesText++] = vertexData[3];
+	m_data2.m_verticesText[m_data2.m_numVerticesText++] = vertexData[0];
+	m_data2.m_verticesText[m_data2.m_numVerticesText++] = vertexData[1];
+	m_data2.m_verticesText[m_data2.m_numVerticesText++] = vertexData[2];
+	m_data2.m_verticesText[m_data2.m_numVerticesText++] = vertexData[3];
 
-	if (m_data2->m_numVerticesText >= MAX_VERTICES2)
+	if (m_data2.m_numVerticesText >= MAX_VERTICES2)
 	{
-		drawTexturedRect3D2(m_data2->m_verticesText, m_data2->m_numVerticesText, useRGBA);
-		m_data2->m_numVerticesText = 0;
+		drawTexturedRect3D2(m_data2.m_verticesText, m_data2.m_numVerticesText, useRGBA);
+		m_data2.m_numVerticesText = 0;
 	}
 }
 
@@ -445,10 +413,10 @@ void GLPrimitiveRenderer::drawTexturedRect(float x0, float y0, float x1, float y
 						  0, 0, 1, 0,
 						  0, 0, 0, 1};
 	PrimVertex vertexData[4] = {
-		PrimVertex(PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v0)),
-		PrimVertex(PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v1)),
-		PrimVertex(PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v1)),
-		PrimVertex(PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v0))};
+		PrimVertex{PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v0)},
+		PrimVertex{PrimVec4(-1.f + 2.f * x0 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u0, v1)},
+		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y1 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v1)},
+		PrimVertex{PrimVec4(-1.f + 2.f * x1 / float(m_screenWidth), 1.f - 2.f * y0 / float(m_screenHeight), 0.f, 1.f), PrimVec4(color[0], color[1], color[2], color[3]), PrimVec2(u1, v0)}};
 
 	drawTexturedRect3D(vertexData[0], vertexData[1], vertexData[2], vertexData[3], identity, identity, useRGBA);
 }

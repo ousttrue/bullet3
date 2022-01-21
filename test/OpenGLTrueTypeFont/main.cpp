@@ -6,7 +6,6 @@
 #include <GLShader.h>
 #include <GLVAO.h>
 #include <GLVBO.h>
-#include <GLPrimInternalData.h>
 #include <GLPrimitiveRenderer.h>
 #include <OpenSans.h>
 
