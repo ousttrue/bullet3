@@ -39,14 +39,13 @@ class GwenInternalData
 {
 	std::unique_ptr<struct MyMenuItemHander> m_handler2;
 	std::unique_ptr<struct GL3TexLoader> m_myTexLoader;
-	//struct sth_stash;
-	//class GwenOpenGL3CoreRenderer*	pRenderer;
 	std::unique_ptr<Gwen::Renderer::Base> pRenderer;
 	Gwen::Skin::Simple skin;
 
 public:
 	std::unique_ptr<Gwen::Controls::Canvas> pCanvas;
-	//GLPrimitiveRenderer* m_primRenderer;
+	GLPrimitiveRenderer* m_primRenderer;
+	class OpenGL2RenderCallbacks* m_renderCallbacks;
 	Gwen::Controls::TabButton* m_demoPage;
 	Gwen::Controls::TabButton* m_explorerPage;
 	Gwen::Controls::TreeControl* m_explorerTreeCtrl;
@@ -74,7 +73,7 @@ public:
 	b3ToggleButtonCallback m_toggleButtonCallback;
 	b3ComboBoxCallback m_comboBoxCallback;
 
-	GwenInternalData(struct GlfwApp* s_app, int width, int height, float retinaScale);
+	GwenInternalData(int width, int height, float retinaScale);
 	~GwenInternalData();
 	int setup(class ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
 			  const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE);

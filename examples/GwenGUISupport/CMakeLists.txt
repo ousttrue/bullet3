@@ -4,5 +4,5 @@ add_library(
   GraphingTexture.cpp GwenParameterInterface.cpp GwenUserInterface.cpp
   GwenTextureWindow.cpp gwenInternalData.cpp)
 target_link_libraries(${TARGET_NAME} PRIVATE BulletDynamics CommonInterfaces
-                                             OpenGLWindow gwen)
+                                             GLFont gwen)
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

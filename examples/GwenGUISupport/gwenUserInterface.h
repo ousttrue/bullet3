@@ -4,14 +4,14 @@
 class GwenUserInterface : public CommonGUIInterface
 {
 	class GwenInternalData* m_data;
-	GwenUserInterface(struct GlfwApp* s_app, int width, int height, float retinaScale);
+	GwenUserInterface(int width, int height, float retinaScale);
 public:
 	~GwenUserInterface() override;
 	class GwenInternalData* getInternalData()
 	{
 		return m_data;
 	}
-	static std::tuple<CommonGUIInterface*, int> Create(struct GlfwApp* app, int width, int height, float reginaScale, class ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
+	static std::tuple<CommonGUIInterface*, int> Create(int width, int height, float reginaScale, class ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
 													   const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE);
 	struct CommonParameterInterface* CreateCommonParameterInterface() override;
 	struct Common2dCanvasInterface* CreateCommon2dCanvasInterface() override;

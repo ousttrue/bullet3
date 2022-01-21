@@ -2,13 +2,13 @@
 #include "Gwen/Controls/TreeNode.h"
 #include "GwenTextureWindow.h"
 #include "GraphingTexture.h"
+#include "opengl_fontstashcallbacks.h"
 #include <memory>
 #include <tuple>
 #include <functional>
 #include <Common2dCanvasInterface.h>
 #include <CommonExampleInterface.h>
 #include <Bullet3Common/b3HashMap.h>
-#include <GlfwApp.h>
 
 #define MAX_GRAPH_WINDOWS 5
 
@@ -295,19 +295,17 @@ struct MyButtonHander : public Gwen::Event::Handler
 //
 // GwenInternalData
 //
-GwenInternalData::GwenInternalData(GlfwApp* s_app, int width, int height, float retinaScale)
+GwenInternalData::GwenInternalData(int width, int height, float retinaScale)
 {
 	m_myTexLoader.reset(new GL3TexLoader);
 
-	auto fontstash = s_app->getFontStash();
-
-	// m_gui = new GwenInternalData;
-	// init(width, height, m_gwenRenderer, retinaScale);
-	// void GwenInternalData::init(int width, int height, Gwen::Renderer::Base* renderer, float retinaScale)
-
 	m_curYposition = 20;
-	//m_primRenderer = new GLPrimitiveRenderer(width,height);
-	pRenderer.reset(new GwenOpenGL3CoreRenderer(s_app->getPrimRenderer(), fontstash, width, height, retinaScale, m_myTexLoader.get()));
+
+	m_primRenderer = new GLPrimitiveRenderer();
+	m_primRenderer->setScreenSize(width, height);
+	m_renderCallbacks = new OpenGL2RenderCallbacks(m_primRenderer->getData());
+	auto fontstash = std::make_shared<FontStash>(512, 512, m_renderCallbacks);  //256,256);//,1024);//512,512);
+	pRenderer.reset(new GwenOpenGL3CoreRenderer(m_primRenderer, fontstash, width, height, retinaScale, m_myTexLoader.get()));
 
 	skin.SetRender(pRenderer.get());
 

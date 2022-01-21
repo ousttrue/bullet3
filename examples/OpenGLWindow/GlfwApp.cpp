@@ -407,11 +407,6 @@ bool GlfwApp::createWindow(const b3gWindowConstructionInfo& ci)
 	return true;
 }
 
-std::shared_ptr<FontStash> GlfwApp::getFontStash()
-{
-	return m_fontStash;
-}
-
 void GlfwApp::drawText3D(const char* txt, float position[3], float orientation[4], float color[4], float size, int optionFlag)
 {
 	B3_PROFILE("GlfwApp::drawText3D");

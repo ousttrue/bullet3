@@ -3,15 +3,11 @@
 #include "gwenInternalData.h"
 #include "GwenOpenGL3CoreRenderer.h"
 #include "GwenParameterInterface.h"
-#include <CommonGUIInterface.h>
-#include <Common2dCanvasInterface.h>
 #include <CommonExampleInterface.h>
-#include <LinearMath/btHashMap.h>
-#include <OpenGLInclude.h>
 
-GwenUserInterface::GwenUserInterface(GlfwApp* s_app, int width, int height, float retinaScale)
+GwenUserInterface::GwenUserInterface(int width, int height, float retinaScale)
 {
-	m_data = new GwenInternalData(s_app, width, height, retinaScale);
+	m_data = new GwenInternalData(width, height, retinaScale);
 }
 
 GwenUserInterface::~GwenUserInterface()
@@ -19,11 +15,11 @@ GwenUserInterface::~GwenUserInterface()
 	delete m_data;
 }
 
-std::tuple<CommonGUIInterface*, int> GwenUserInterface::Create(GlfwApp* app, int width, int height, float reginaScale,
+std::tuple<CommonGUIInterface*, int> GwenUserInterface::Create(int width, int height, float reginaScale,
 															   ExampleEntries* gAllExamples, const char* demoNameFromCommandOption,
 															   const std::function<void()>& onB, const std::function<void()>& onD, const std::function<void(int)>& _onE)
 {
-	auto m_gwen = new GwenUserInterface(app, width, height, reginaScale);
+	auto m_gwen = new GwenUserInterface(width, height, reginaScale);
 	auto onE = [_onE, m_gwen, gAllExamples](int id)
 	{
 		_onE(id);

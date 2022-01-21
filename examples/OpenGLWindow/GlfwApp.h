@@ -34,7 +34,6 @@ public:
 	GlfwApp& operator=(const GlfwApp&) = delete;
 
 	~GlfwApp() override;
-	class GLPrimitiveRenderer* getPrimRenderer() { return m_primRenderer; }
 	class GLInstancingRenderer* getRenderer() { return m_instancingRenderer; }
 	bool createWindow(const b3gWindowConstructionInfo& ci) override;
 	void dumpNextFrameToPng(const char* filename) override;
@@ -51,7 +50,6 @@ public:
 	int registerCubeShape(float halfExtentsX, float halfExtentsY, float halfExtentsZ, int textureIndex = -1, float textureScaling = 1) override;
 	int registerGraphicsUnitSphereShape(EnumSphereLevelOfDetail lod, int textureId = -1) override;
 	void registerGrid(int xres, int yres, float color0[4], float color1[4]) override;
-	std::shared_ptr<class FontStash> getFontStash();
 public:
 	void closeWindow() override;
 	void runMainLoop() override {}

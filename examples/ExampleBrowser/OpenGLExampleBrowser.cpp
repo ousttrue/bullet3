@@ -677,7 +677,7 @@ public:
 		args.GetCmdLineArgument("start_demo_name", demoNameFromCommandOption);
 
 		int demo_index;
-		std::tie(m_gwen, demo_index) = factory(s_app, width, height, s_app->getRetinaScale(),
+		std::tie(m_gwen, demo_index) = factory(width, height, s_app->getRetinaScale(),
 											   gAllExamples, demoNameFromCommandOption,
 											   std::bind(&OpenGLExampleBrowserInternalData::OnButtonB, this),
 											   std::bind(&OpenGLExampleBrowserInternalData::OnButtonD, this),
