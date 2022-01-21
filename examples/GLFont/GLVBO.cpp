@@ -34,7 +34,7 @@ void GLVBO::unbind()
 void GLVBO::upload(const void* bytes, size_t size)
 {
 	bind();
-	glBufferData(GL_ARRAY_BUFFER, size, bytes, GL_DYNAMIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, bytes);
 	assert(glGetError() == GL_NO_ERROR);
 	unbind();
 }
@@ -54,6 +54,7 @@ std::shared_ptr<GLIBO> GLIBO::load(const void* bytes, size_t size)
 	assert(ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, bytes, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	return std::shared_ptr<GLIBO>(new GLIBO(ibo));
 }
 

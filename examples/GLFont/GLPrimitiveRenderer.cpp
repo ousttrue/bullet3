@@ -184,9 +184,6 @@ void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices,
 
 	assert(glGetError() == GL_NO_ERROR);
 
-	m_vertexBuffer2->bind();
-	m_vertexArrayObject2->bind();
-
 	bool useFiltering = false;
 	if (useFiltering)
 	{
@@ -199,14 +196,9 @@ void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices,
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 
-	/*   PrimVertex vertexData[4] = {
-		   v0,v1,v2,v3
-		};
-    */
-
-	glBufferSubData(GL_ARRAY_BUFFER, 0, numVertices * sizeof(PrimVertex), vertices);
-
-	assert(glGetError() == GL_NO_ERROR);
+	m_vertexArrayObject2->bind();
+	m_vertexBuffer2->upload(vertices, numVertices * sizeof(PrimVertex));
+	m_vertexBuffer2->bind();
 
 	PrimVec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
 	if (useRGBA)
@@ -280,8 +272,6 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 	m_data.m_shaderProg->setMatrix4x4(VIEW_MATRIX, viewMat);
 	m_data.m_shaderProg->setMatrix4x4(PROJECTION_MATRIX, projMat);
 
-	m_data.m_vertexBuffer->bind();
-	m_data.m_vertexArrayObject->bind();
 	bool useFiltering = false;
 	if (useFiltering)
 	{
@@ -294,12 +284,12 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 
+	m_data.m_vertexBuffer->bind();
+	m_data.m_vertexArrayObject->bind();
 	PrimVertex vertexData[4] = {
 		v0, v1, v2, v3};
-
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(PrimVertex), vertexData);
-
-	assert(glGetError() == GL_NO_ERROR);
+	m_data.m_vertexBuffer->upload(vertexData, 4 * sizeof(PrimVertex));
+	m_data.m_vertexBuffer->bind();
 
 	PrimVec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
 	if (useRGBA)
