@@ -335,7 +335,8 @@ static ExampleEntry gDefaultExamples[] =
 #endif
 
 		ExampleEntry(0, "Rendering"),
-		ExampleEntry(1, "Instanced Rendering", "Simple example of fast instanced rendering, only active when using OpenGL3+.", RenderInstancingCreateFunc),
+		ExampleEntry(1, "Instanced Rendering", "Simple example of fast instanced rendering, only active when using OpenGL3+.", [](auto options)
+					 { return new RenderInstancingDemo(options.m_app); }),
 		ExampleEntry(1, "CoordinateSystemDemo", "Show the axis and positive rotation direction around the axis.", [](auto options)
 					 { return new CoordinateSystemDemo(options.m_app); }),
 		ExampleEntry(1, "Time Series", "Render some value(s) in a 2D graph window, shifting to the left", TimeSeriesCreateFunc),

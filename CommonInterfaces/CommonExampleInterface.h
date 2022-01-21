@@ -27,10 +27,10 @@ class CommonExampleInterface
 public:
 	using CreateFunc = std::function<class CommonExampleInterface*(CommonExampleOptions& options)>;
 	virtual ~CommonExampleInterface() {}
-	virtual void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) = 0;
+	virtual void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) {}
 	virtual void exitPhysics() {}
 	virtual void updateGraphics() {}
-	virtual void stepSimulation(float deltaTime) = 0;
+	virtual void stepSimulation(float deltaTime) {}
 	virtual void physicsDebugDraw(int debugFlags) {}  //for now we reuse the flags in Bullet/src/LinearMath/btIDebugDraw.h
 	virtual CameraResetInfo cameraResetInfo() const { return {}; }
 	virtual bool mouseMoveCallback(const CommonCameraInterface* camera, float x, float y) { return false; }
@@ -51,9 +51,6 @@ public:
 	{
 		return new EmptyExample;
 	}
-	void initPhysics(CommonCameraInterface* camera, struct GUIHelperInterface* m_guiHelper) override {}
-	void exitPhysics() override {}
-	void stepSimulation(float deltaTime) override {}
 };
 
 class ExampleEntries
