@@ -49,8 +49,6 @@ public:
 	int registerGraphicsUnitSphereShape(EnumSphereLevelOfDetail lod, int textureId = -1) override;
 	void registerGrid(int xres, int yres, float color0[4], float color1[4]) override;
 public:
-	void closeWindow() override;
-	void runMainLoop() override {}
 	float getTimeInSeconds() override;
 	bool requestedExit() const override;
 	void setRequestExit() override;

@@ -834,11 +834,6 @@ void GlfwApp::dumpNextFrameToPng(const char* filename)
 	m_renderTexture->enable();
 }
 
-void GlfwApp::closeWindow()
-{
-	setRequestExit();
-}
-
 float GlfwApp::getTimeInSeconds()
 {
 	return glfwGetTime();

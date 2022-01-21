@@ -99,8 +99,6 @@ struct CommonGraphicsApp
 	std::list<b3WheelCallback> wheelCallback;
 	std::list<b3KeyboardCallback> keyboardCallback;
 
-	virtual void closeWindow() = 0;
-	virtual void runMainLoop() = 0;
 	virtual float getTimeInSeconds() = 0;
 	virtual bool requestedExit() const = 0;
 	virtual void setRequestExit() = 0;

@@ -247,16 +247,6 @@ int main(int argc, char* argv[])
 		auto err = glGetError();
 		b3Assert(err == GL_NO_ERROR);
 
-		//	render.InitShaders();
-
-		//	render.writeTransforms();
-
-		app.runMainLoop();
-
-		//	app.setMouseCallback(b3DefaultMouseCallback);
-		//	app.setKeyboardCallback(b3DefaultKeyboardCallback);
-		//  app.setWheelCallback(b3DefaultWheelCallback);
-
 		err = glGetError();
 		b3Assert(err == GL_NO_ERROR);
 
