@@ -1,26 +1,13 @@
 #include "GlfwApp.h"
-#include <CommonExampleInterface.h>
-#include <fontstash.h>
 #include "GLRenderToTexture.h"
-#include "opengl_fontstashcallbacks.h"
 #include "ShapeData.h"
-#include <GLTexture.h>
 #include <Bullet3Common/b3Quaternion.h>
 #include <stb_image_write.h>
-#include <memory>
-#include <stdexcept>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <list>
-#include <GLFW/glfw3.h>
-#include <OpenSans.h>
-#include <TwFonts.h>
-
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <assert.h>
 #include <glad/gl.h>
+#include <assert.h>
+#include <stdexcept>
 
 static void window_close_callback(GLFWwindow* window)
 {
@@ -111,150 +98,6 @@ static void SimpleWheelCallback(GLFWwindow* window, double deltax, double deltay
 	}
 }
 
-struct MyRenderCallbacks : public RenderCallbacks
-{
-	GLInstancingRenderer* m_instancingRenderer;
-
-	b3AlignedObjectArray<unsigned char> m_rgbaTexture;
-	float m_color[4];
-	float m_worldPosition[3];
-	float m_worldOrientation[4];
-
-	int m_textureIndex;
-
-	MyRenderCallbacks(GLInstancingRenderer* instancingRenderer)
-		: m_instancingRenderer(instancingRenderer),
-		  m_textureIndex(-1)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			m_color[i] = 1;
-			m_worldOrientation[i] = 0;
-		}
-		m_worldPosition[0] = 0;
-		m_worldPosition[1] = 0;
-		m_worldPosition[2] = 0;
-
-		m_worldOrientation[0] = 0;
-		m_worldOrientation[1] = 0;
-		m_worldOrientation[2] = 0;
-		m_worldOrientation[3] = 1;
-	}
-	virtual ~MyRenderCallbacks()
-	{
-		m_rgbaTexture.clear();
-	}
-
-	virtual void setWorldPosition(float pos[3])
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			m_worldPosition[i] = pos[i];
-		}
-	}
-
-	virtual void setWorldOrientation(float orn[4])
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			m_worldOrientation[i] = orn[i];
-		}
-	}
-
-	virtual void setColorRGBA(float color[4])
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			m_color[i] = color[i];
-		}
-	}
-	virtual void updateTexture(sth_texture* texture, sth_glyph* glyph, int textureWidth, int textureHeight)
-	{
-		if (glyph)
-		{
-			m_rgbaTexture.resize(textureWidth * textureHeight * 3);
-			for (int i = 0; i < textureWidth * textureHeight; i++)
-			{
-				m_rgbaTexture[i * 3 + 0] = texture->m_texels[i];
-				m_rgbaTexture[i * 3 + 1] = texture->m_texels[i];
-				m_rgbaTexture[i * 3 + 2] = texture->m_texels[i];
-			}
-			bool flipPixelsY = false;
-			m_instancingRenderer->updateTexture(m_textureIndex, &m_rgbaTexture[0], flipPixelsY);
-		}
-		else
-		{
-			if (textureWidth && textureHeight)
-			{
-				texture->m_texels = (unsigned char*)malloc(textureWidth * textureHeight);
-				memset(texture->m_texels, 0, textureWidth * textureHeight);
-				if (m_textureIndex < 0)
-				{
-					m_rgbaTexture.resize(textureWidth * textureHeight * 3);
-					bool flipPixelsY = false;
-					m_textureIndex = m_instancingRenderer->registerTexture(&m_rgbaTexture[0], textureWidth, textureHeight, flipPixelsY);
-
-					int strideInBytes = 9 * sizeof(float);
-					int numVertices = sizeof(cube_vertices_textured) / strideInBytes;
-					int numIndices = sizeof(cube_indices) / sizeof(int);
-
-					float halfExtentsX = 1;
-					float halfExtentsY = 1;
-					float halfExtentsZ = 1;
-					float textureScaling = 4;
-
-					b3AlignedObjectArray<GfxVertexFormat1> verts;
-					verts.resize(numVertices);
-					for (int i = 0; i < numVertices; i++)
-					{
-						verts[i].x = halfExtentsX * cube_vertices_textured[i * 9];
-						verts[i].y = halfExtentsY * cube_vertices_textured[i * 9 + 1];
-						verts[i].z = halfExtentsZ * cube_vertices_textured[i * 9 + 2];
-						verts[i].w = cube_vertices_textured[i * 9 + 3];
-						verts[i].nx = cube_vertices_textured[i * 9 + 4];
-						verts[i].ny = cube_vertices_textured[i * 9 + 5];
-						verts[i].nz = cube_vertices_textured[i * 9 + 6];
-						verts[i].u = cube_vertices_textured[i * 9 + 7] * textureScaling;
-						verts[i].v = cube_vertices_textured[i * 9 + 8] * textureScaling;
-					}
-
-					int shapeId = m_instancingRenderer->registerShape(&verts[0].x, numVertices, cube_indices, numIndices, B3_GL_TRIANGLES, m_textureIndex);
-					b3Vector3 pos = b3MakeVector3(0, 0, 0);
-					b3Quaternion orn(0, 0, 0, 1);
-					b3Vector4 color = b3MakeVector4(1, 1, 1, 1);
-					b3Vector3 scaling = b3MakeVector3(.1, .1, .1);
-					//m_instancingRenderer->registerGraphicsInstance(shapeId, pos, orn, color, scaling);
-					m_instancingRenderer->writeTransforms();
-				}
-				else
-				{
-					b3Assert(0);
-				}
-			}
-			else
-			{
-				delete texture->m_texels;
-				texture->m_texels = 0;
-				//there is no m_instancingRenderer->freeTexture (yet), all textures are released at reset/deletion of the renderer
-			}
-		}
-	}
-	virtual void render(sth_texture* texture)
-	{
-		int index = 0;
-
-		float width = 1;
-		b3AlignedObjectArray<unsigned int> indices;
-		indices.resize(texture->nverts);
-		for (int i = 0; i < indices.size(); i++)
-		{
-			indices[i] = i;
-		}
-
-		m_instancingRenderer->drawTexturedTriangleMesh(m_worldPosition, m_worldOrientation, &texture->newverts[0].position.p[0], texture->nverts, &indices[0], indices.size(), m_color, m_textureIndex);
-	}
-};
-
 static void error_callback(int error, const char* description)
 {
 	fprintf(stderr, "Error: %s\n", description);
@@ -281,7 +124,6 @@ GlfwApp::GlfwApp()
 GlfwApp::~GlfwApp()
 {
 	delete m_instancingRenderer;
-	delete m_primRenderer;
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
 }
@@ -332,8 +174,6 @@ bool GlfwApp::createWindow(const b3gWindowConstructionInfo& ci)
 			glViewport(0, 0, width, height);
 			if (gApp->m_instancingRenderer)
 				gApp->m_instancingRenderer->resize(width, height);
-			if (gApp->m_primRenderer)
-				gApp->m_primRenderer->setScreenSize(width, height);
 		});
 	keyboardCallback.push_back(
 		[self = this](int keycode, int state)
@@ -359,61 +199,14 @@ bool GlfwApp::createWindow(const b3gWindowConstructionInfo& ci)
 	int maxShapeCapacityInBytes = 128 * 1024 * 1024;
 	m_instancingRenderer = new GLInstancingRenderer(maxNumObjectCapacity, maxShapeCapacityInBytes);
 
-	m_primRenderer = new GLPrimitiveRenderer();
-	m_primRenderer->setScreenSize(width, height);
 	m_renderer = m_instancingRenderer;
 
 	m_instancingRenderer->init();
 	m_instancingRenderer->resize(width, height);
-	m_primRenderer->setScreenSize(width, height);
 	b3Assert(glGetError() == GL_NO_ERROR);
 
 	m_instancingRenderer->InitShaders();
-
-	m_largeFontTextureId = GLTexture::load_tw_large();
-
-	{
-		m_renderCallbacks = new OpenGL2RenderCallbacks(m_primRenderer->getData());
-		m_renderCallbacks2 = new MyRenderCallbacks(m_instancingRenderer);
-		m_fontStash2 = std::make_shared<FontStash>(512, 512, m_renderCallbacks2);
-		m_fontStash = std::make_shared<FontStash>(512, 512, m_renderCallbacks);  //256,256);//,1024);//512,512);
-
-		b3Assert(glGetError() == GL_NO_ERROR);
-
-		if (!m_fontStash)
-		{
-			b3Warning("Could not create stash");
-			//fprintf(stderr, "Could not create stash.\n");
-		}
-
-		if (!m_fontStash2)
-		{
-			b3Warning("Could not create fontStash2");
-		}
-
-		unsigned char* data2 = OpenSansData;
-		unsigned char* data = (unsigned char*)data2;
-		if (!(m_droidRegular = m_fontStash->add_font_from_memory(data)))
-		{
-			b3Warning("error!\n");
-		}
-		if (!(m_droidRegular2 = m_fontStash2->add_font_from_memory(data)))
-		{
-			b3Warning("error!\n");
-		}
-
-		b3Assert(glGetError() == GL_NO_ERROR);
-	}
 	return true;
-}
-
-void GlfwApp::drawTexturedRect(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA)
-{
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	m_primRenderer->drawTexturedRect(x0, y0, x1, y1, color, u0, v0, u1, v1, useRGBA);
-	glDisable(GL_BLEND);
 }
 
 int GlfwApp::registerCubeShape(float halfExtentsX, float halfExtentsY, float halfExtentsZ, int textureIndex, float textureScaling)

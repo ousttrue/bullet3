@@ -1,16 +1,10 @@
 #include <CommonGraphicsAppInterface.h>
 #include "GLInstancingRenderer.h"
-#include "GLPrimitiveRenderer.h"
 #include <memory>
 
 struct GlfwApp : public CommonGraphicsApp
 {
 private:
-	std::shared_ptr<GLTexture> m_largeFontTextureId;
-	std::shared_ptr<class FontStash> m_fontStash;
-	std::shared_ptr<class FontStash> m_fontStash2;
-	struct RenderCallbacks* m_renderCallbacks = nullptr;
-	struct RenderCallbacks* m_renderCallbacks2 = nullptr;
 	int m_droidRegular = 0;
 	int m_droidRegular2 = 0;
 	int m_textureId = -1;
@@ -23,7 +17,6 @@ private:
 	int m_customViewPortHeight = -1;
 	int m_mp4Fps = 60;
 
-	class GLPrimitiveRenderer* m_primRenderer;
 	class GLInstancingRenderer* m_instancingRenderer;
 	float m_retinaScale = 1.0f;
 	struct GLFWwindow* m_window = nullptr;
@@ -43,11 +36,11 @@ public:
 	void setViewport(int width, int height) override;
 	void setBackgroundColor(float red, float green, float blue) override;
 	void drawGrid(DrawGridData data = DrawGridData()) override;
-	
-	void drawTexturedRect(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA) override;
+
 	int registerCubeShape(float halfExtentsX, float halfExtentsY, float halfExtentsZ, int textureIndex = -1, float textureScaling = 1) override;
 	int registerGraphicsUnitSphereShape(EnumSphereLevelOfDetail lod, int textureId = -1) override;
 	void registerGrid(int xres, int yres, float color0[4], float color1[4]) override;
+
 public:
 	float getTimeInSeconds() override;
 	bool requestedExit() const override;
