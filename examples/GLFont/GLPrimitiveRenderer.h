@@ -52,30 +52,24 @@ struct PrimInternalData
 	std::shared_ptr<class GLIBO> m_indexBuffer;
 	std::shared_ptr<class GLIBO> m_indexBuffer2;
 	std::shared_ptr<class GLTexture> m_texturehandle;
+
+	PrimInternalData();
+	void drawTexturedRect3D(PrimVertex* vertices, int numVertices, bool useRGBA);
 };
 
 #define MAX_VERTICES2 8192
-struct PrimInternalData2
-{
-	PrimInternalData2()
-		: m_numVerticesText(0),
-		  m_numVerticesRect(0)
-	{
-	}
-	int m_numVerticesText;
-	int m_numVerticesRect;
-	PrimVertex m_verticesText[MAX_VERTICES2];
-	PrimVertex m_verticesRect[MAX_VERTICES2];
-};
-
 class GLPrimitiveRenderer
 {
-	int m_screenWidth=1;
-	int m_screenHeight=1;
+	int m_screenWidth = 1;
+	int m_screenHeight = 1;
 
 	PrimInternalData m_data;
-	PrimInternalData2 m_data2;
-	void loadBufferData();
+
+	int m_numVerticesText = 0;
+	PrimVertex m_verticesText[MAX_VERTICES2];
+
+	int m_numVerticesRect = 0;
+	PrimVertex m_verticesRect[MAX_VERTICES2];
 
 public:
 	GLPrimitiveRenderer();
@@ -93,5 +87,4 @@ public:
 private:
 	void drawTexturedRect2a(float x0, float y0, float x1, float y1, float color[4], float u0, float v0, float u1, float v1, int useRGBA = 0);
 	void flushBatchedRects();
-	void drawTexturedRect3D2(PrimVertex* vertices, int numVertices, bool useRGBA = true);
 };
