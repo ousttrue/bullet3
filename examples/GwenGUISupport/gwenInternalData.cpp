@@ -307,7 +307,7 @@ GwenInternalData::GwenInternalData(GlfwApp* s_app, int width, int height, float 
 
 	m_curYposition = 20;
 	//m_primRenderer = new GLPrimitiveRenderer(width,height);
-	pRenderer.reset(new GwenOpenGL3CoreRenderer(s_app->m_primRenderer, fontstash, width, height, retinaScale, m_myTexLoader.get()));
+	pRenderer.reset(new GwenOpenGL3CoreRenderer(s_app->getPrimRenderer(), fontstash, width, height, retinaScale, m_myTexLoader.get()));
 
 	skin.SetRender(pRenderer.get());
 

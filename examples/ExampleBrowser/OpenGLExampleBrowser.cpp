@@ -294,7 +294,8 @@ private:
 		{
 			//either Y = up or Z
 			int upAxis = enable ? 1 : 2;
-			s_app->m_instancingRenderer->getActiveCamera()->setCameraUpAxis(upAxis);
+			auto renderer = s_guiHelper->getRenderInterface();
+			renderer->getActiveCamera()->setCameraUpAxis(upAxis);
 		}
 
 		if (flag == COV_ENABLE_RENDERING)
@@ -417,8 +418,9 @@ private:
 				if (resetCamera)
 				{
 					auto info = sCurrentDemo->cameraResetInfo();
-					s_guiHelper->getRenderInterface()->getActiveCamera()->resetCamera(info);
-					s_app->m_instancingRenderer->updateCamera();
+					auto renderer = s_guiHelper->getRenderInterface();
+					renderer->getActiveCamera()->resetCamera(info);
+					renderer->updateCamera();
 				}
 			}
 		}

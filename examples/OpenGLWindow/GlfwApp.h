@@ -5,12 +5,13 @@
 
 struct GlfwApp : public CommonGraphicsApp
 {
+private:
 	unsigned int m_fontTextureId = 0;
 	unsigned int m_largeFontTextureId = 0;
 	std::shared_ptr<class FontStash> m_fontStash;
 	std::shared_ptr<class FontStash> m_fontStash2;
-	class RenderCallbacks* m_renderCallbacks = nullptr;
-	class RenderCallbacks* m_renderCallbacks2 = nullptr;
+	struct RenderCallbacks* m_renderCallbacks = nullptr;
+	struct RenderCallbacks* m_renderCallbacks2 = nullptr;
 	int m_droidRegular = 0;
 	int m_droidRegular2 = 0;
 	int m_textureId = -1;
@@ -26,11 +27,15 @@ struct GlfwApp : public CommonGraphicsApp
 	class GLPrimitiveRenderer* m_primRenderer;
 	class GLInstancingRenderer* m_instancingRenderer;
 	float m_retinaScale = 1.0f;
+
+public:
 	GlfwApp();
 	GlfwApp(const GlfwApp&) = delete;
 	GlfwApp& operator=(const GlfwApp&) = delete;
 
 	~GlfwApp() override;
+	class GLPrimitiveRenderer* getPrimRenderer() { return m_primRenderer; }
+	class GLInstancingRenderer* getRenderer() { return m_instancingRenderer; }
 	std::shared_ptr<CommonWindowInterface> createWindow(const b3gWindowConstructionInfo& ci) override;
 	void dumpNextFrameToPng(const char* filename) override;
 	void dumpFramesToVideo(const char* mp4Filename) override;

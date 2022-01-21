@@ -24,7 +24,8 @@ int main(int argc, char* argv[])
 	}
 
 	auto example = std::make_unique<CoordinateSystemDemo>(&app);
-	auto camera = app.m_instancingRenderer->getActiveCamera();
+	auto renderer = app.getRenderer();
+	auto camera = renderer->getActiveCamera();
 	window->mouseButtonCallback.push_back(
 		[&example, camera](int button, int state, float x, float y, ButtonFlags flags)
 		{
@@ -69,8 +70,8 @@ int main(int argc, char* argv[])
 		example->stepSimulation(dtSec);
 
 		// render
-		app.m_instancingRenderer->init();
-		app.m_instancingRenderer->updateCamera();
+		renderer->init();
+		renderer->updateCamera();
 		if (auto world = example->getDynamicsWorld())
 		{
 			gui.syncPhysicsToGraphics(world);
