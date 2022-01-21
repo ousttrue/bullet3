@@ -1,4 +1,6 @@
 #include "GLInstancingRenderer.h"
+#include <GLVAO.h>
+#include <memory>
 
 ///todo: make this configurable in the gui
 bool useShadowMap = true;  // true;//false;//true;
@@ -120,8 +122,8 @@ GLint lineWidthRange[2] = {1, 1};
 
 struct b3GraphicsInstance
 {
-	GLuint m_cube_vao;
-	GLuint m_index_vbo;
+	std::shared_ptr<GLVAO> m_cube_vao;
+	std::shared_ptr<GLIBO> m_index_vbo;
 	GLuint m_textureIndex;
 	int m_numIndices;
 	int m_numVertices;
@@ -136,8 +138,7 @@ struct b3GraphicsInstance
 	int m_flags;  //transparency etc
 
 	b3GraphicsInstance()
-		: m_cube_vao(-1),
-		  m_index_vbo(-1),
+		: 
 		  m_textureIndex(-1),
 		  m_numIndices(-1),
 		  m_numVertices(-1),
@@ -267,14 +268,6 @@ void GLInstancingRenderer::removeAllInstances()
 
 	for (int i = 0; i < m_graphicsInstances.size(); i++)
 	{
-		if (m_graphicsInstances[i]->m_index_vbo)
-		{
-			glDeleteBuffers(1, &m_graphicsInstances[i]->m_index_vbo);
-		}
-		if (m_graphicsInstances[i]->m_cube_vao)
-		{
-			glDeleteVertexArrays(1, &m_graphicsInstances[i]->m_cube_vao);
-		}
 		delete m_graphicsInstances[i];
 	}
 	m_graphicsInstances.clear();
@@ -1055,17 +1048,11 @@ int GLInstancingRenderer::registerShape(const float* vertices, int numvertices, 
 					vertices);
 #endif
 
-	glGenBuffers(1, &gfxObj->m_index_vbo);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gfxObj->m_index_vbo);
 	int indexBufferSizeInBytes = gfxObj->m_numIndices * sizeof(int);
+	gfxObj->m_index_vbo = GLIBO::load(indices, indexBufferSizeInBytes);
 
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBufferSizeInBytes, NULL, GL_STATIC_DRAW);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indexBufferSizeInBytes, indices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	glGenVertexArrays(1, &gfxObj->m_cube_vao);
-	glBindVertexArray(gfxObj->m_cube_vao);
+	gfxObj->m_cube_vao = GLVAO::create();
+	gfxObj->m_cube_vao->bind();
 	m_vbo->bind();
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -2242,7 +2229,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 				int COLOR_BUFFER_SIZE = (totalNumInstances * sizeof(float) * 4);
 				//		int SCALE_BUFFER_SIZE = (totalNumInstances*sizeof(float)*3);
 
-				glBindVertexArray(gfxObj->m_cube_vao);
+				gfxObj->m_cube_vao->bind();
 
 				int vertexStride = 9 * sizeof(float);
 				PointerCaster vertex;
@@ -2286,7 +2273,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 				int indexCount = gfxObj->m_numIndices;
 				GLvoid* indexOffset = 0;
 
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gfxObj->m_index_vbo);
+				gfxObj->m_index_vbo->bind();
 				{
 					B3_PROFILE("glDrawElementsInstanced");
 
