@@ -30,10 +30,10 @@ void GLVBO::unbind()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void GLVBO::upload(const void* bytes, size_t size)
+void GLVBO::upload(const void* bytes, size_t size, size_t offset)
 {
 	bind();
-	glBufferSubData(GL_ARRAY_BUFFER, 0, size, bytes);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, bytes);
 	assert(glGetError() == GL_NO_ERROR);
 	unbind();
 }

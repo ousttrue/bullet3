@@ -13,7 +13,7 @@ public:
 	static std::shared_ptr<GLVBO> load(const void* bytes, size_t size, bool isDynamic);
 	void bind();
 	void unbind();
-	void upload(const void* bytes, size_t size);
+	void upload(const void* bytes, size_t size, size_t offset = 0);
 };
 
 class GLIBO

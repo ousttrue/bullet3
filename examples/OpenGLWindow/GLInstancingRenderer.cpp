@@ -412,11 +412,6 @@ GLInstancingRenderer::~GLInstancingRenderer()
 
 	sData2 = 0;
 
-	if (m_data)
-	{
-		if (m_data->m_vbo)
-			glDeleteBuffers(1, &m_data->m_vbo);
-	}
 	delete m_data;
 }
 
@@ -645,8 +640,7 @@ void GLInstancingRenderer::writeSingleInstanceScaleToCPU(const double* scale, in
 
 void GLInstancingRenderer::writeSingleInstanceTransformToGPU(float* position, float* orientation, int objectUniqueId)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vbo);
-	//glFlush();
+	m_data->m_vbo->bind();
 
 	b3PublicGraphicsInstance* pg = m_data->m_publicGraphicsInstances.getHandle(objectUniqueId);
 	b3Assert(pg);
@@ -689,8 +683,7 @@ void GLInstancingRenderer::writeTransforms()
 		b3Assert(glGetError() == GL_NO_ERROR);
 	}
 	{
-		//B3_PROFILE("glBindBuffer");
-		glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vbo);
+		m_data->m_vbo->bind();
 	}
 
 	{
@@ -1114,21 +1107,13 @@ void GLInstancingRenderer::updateShape(int shapeIndex, const float* vertices, in
 {
 	b3GraphicsInstance* gfxObj = m_graphicsInstances[shapeIndex];
 	int numvertices = gfxObj->m_numVertices;
-	b3Assert(numvertices == numVertices);
 	if (numvertices != numVertices)
+		b3Assert(false);
 		return;
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vbo);
 	int vertexStrideInBytes = 9 * sizeof(float);
 	int sz = numvertices * vertexStrideInBytes;
-#if 0
-	char* dest=  (char*)glMapBuffer( GL_ARRAY_BUFFER,GL_WRITE_ONLY);//GL_WRITE_ONLY
-	memcpy(dest+vertexStrideInBytes*gfxObj->m_vertexArrayOffset,vertices,sz);
-	glUnmapBuffer( GL_ARRAY_BUFFER);
-#else
-	glBufferSubData(GL_ARRAY_BUFFER, vertexStrideInBytes * gfxObj->m_vertexArrayOffset, sz,
-					vertices);
-#endif
+	m_data->m_vbo->upload(vertices, sz, vertexStrideInBytes * gfxObj->m_vertexArrayOffset);
 }
 
 int GLInstancingRenderer::registerShape(const float* vertices, int numvertices, const int* indices, int numIndices, int primitiveType, int textureId)
@@ -1167,7 +1152,7 @@ int GLInstancingRenderer::registerShape(const float* vertices, int numvertices, 
 		return -1;
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vbo);
+	m_data->m_vbo->bind();
 
 #if 0
 
@@ -1195,7 +1180,7 @@ int GLInstancingRenderer::registerShape(const float* vertices, int numvertices, 
 
 	glGenVertexArrays(1, &gfxObj->m_cube_vao);
 	glBindVertexArray(gfxObj->m_cube_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vbo);
+	m_data->m_vbo->bind();
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -1323,17 +1308,9 @@ void GLInstancingRenderer::InitShaders()
 
 	glUseProgram(0);
 
-	//GLuint offset = 0;
-
-	glGenBuffers(1, &m_data->m_vbo);
-	checkError("glGenBuffers");
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vbo);
-
 	int size = m_data->m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE + SCALE_BUFFER_SIZE;
 	m_data->m_vboSize = size;
-
-	glBufferData(GL_ARRAY_BUFFER, size, 0, GL_DYNAMIC_DRAW);  //GL_STATIC_DRAW);
+	m_data->m_vbo = GLVBO::load(0, size, true);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -2238,7 +2215,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 	{
 		B3_PROFILE("glFlush2");
 
-		glBindBuffer(GL_ARRAY_BUFFER, m_data->m_vbo);
+		m_data->m_vbo->bind();
 		//glFlush();
 	}
 	b3Assert(glGetError() == GL_NO_ERROR);
