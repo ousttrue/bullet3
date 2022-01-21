@@ -131,3 +131,7 @@ void GLShader::setMatrix4x4(const char *name, const float value[16])
 {
 	glUniformMatrix4fv(getUniformLocation(name), 1, false, value);
 }
+
+void GLShader::setFloat2(const char *name, const float value[2])
+{
+}

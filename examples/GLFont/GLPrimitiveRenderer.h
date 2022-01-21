@@ -36,7 +36,7 @@ struct PrimVertex
 
 struct PrimInternalData
 {
-	std::shared_ptr<class GLShader> m_shaderProg;
+	std::shared_ptr<class GLShader> m_shader;
 	int m_viewmatUniform;
 	int m_projMatUniform;
 	int m_positionUniform;

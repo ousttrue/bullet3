@@ -11,7 +11,7 @@
 
 void OpenGL2RenderCallbacks::display2()
 {
-	m_data->m_shaderProg->use();
+	m_data->m_shader->use();
 	float identity[16] = {1, 0, 0, 0,
 						  0, 1, 0, 0,
 						  0, 0, 1, 0,

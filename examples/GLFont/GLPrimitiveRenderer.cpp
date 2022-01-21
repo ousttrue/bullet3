@@ -4,6 +4,7 @@
 #include "GLMesh.h"
 #include <assert.h>
 #include <memory>
+#include <glad/gl.h>
 
 auto VIEW_MATRIX = "viewMatrix";
 auto PROJECTION_MATRIX = "projMatrix";
@@ -52,34 +53,34 @@ static const char *fragmentShader3D =
 //
 PrimInternalData::PrimInternalData()
 {
-	m_shaderProg = GLShader::load(vertexShader3D, fragmentShader3D);
+	m_shader = GLShader::load(vertexShader3D, fragmentShader3D);
 
-	m_viewmatUniform = m_shaderProg->getUniformLocation(VIEW_MATRIX);
+	m_viewmatUniform = m_shader->getUniformLocation(VIEW_MATRIX);
 	if (m_viewmatUniform < 0)
 	{
 		assert(0);
 	}
-	m_projMatUniform = m_shaderProg->getUniformLocation(PROJECTION_MATRIX);
+	m_projMatUniform = m_shader->getUniformLocation(PROJECTION_MATRIX);
 	if (m_projMatUniform < 0)
 	{
 		assert(0);
 	}
-	m_positionUniform = m_shaderProg->getUniformLocation("p");
+	m_positionUniform = m_shader->getUniformLocation("p");
 	if (m_positionUniform < 0)
 	{
 		assert(0);
 	}
-	m_colourAttribute = m_shaderProg->getAttributeLocation("colour");
+	m_colourAttribute = m_shader->getAttributeLocation("colour");
 	if (m_colourAttribute < 0)
 	{
 		assert(0);
 	}
-	m_positionAttribute = m_shaderProg->getAttributeLocation("position");
+	m_positionAttribute = m_shader->getAttributeLocation("position");
 	if (m_positionAttribute < 0)
 	{
 		assert(0);
 	}
-	m_textureAttribute = m_shaderProg->getAttributeLocation("texuv");
+	m_textureAttribute = m_shader->getAttributeLocation("texuv");
 	if (m_textureAttribute < 0)
 	{
 		assert(0);
@@ -116,13 +117,11 @@ PrimInternalData::PrimInternalData()
 	}
 
 	{
-		glActiveTexture(GL_TEXTURE0);
-
-		GLubyte *image = new GLubyte[256 * 256 * 3];
+		uint8_t image[256 * 256 * 3];
 		for (int y = 0; y < 256; ++y)
 		{
 			//   const int	t=y>>5;
-			GLubyte *pi = image + y * 256 * 3;
+			auto pi = image + y * 256 * 3;
 			for (int x = 0; x < 256; ++x)
 			{
 				if (x < y)  //x<2||y<2||x>253||y>253)
@@ -142,13 +141,8 @@ PrimInternalData::PrimInternalData()
 				pi += 3;
 			}
 		}
-
 		m_texturehandle = GLTexture::load(image, 256, 256);
-
-		delete[] image;
 	}
-
-	assert(glGetError() == GL_NO_ERROR);
 }
 
 void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices, bool useRGBA)
@@ -158,30 +152,16 @@ void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices,
 		return;
 	}
 
-	assert(glGetError() == GL_NO_ERROR);
 	float identity[16] = {1, 0, 0, 0,
 						  0, 1, 0, 0,
 						  0, 0, 1, 0,
 						  0, 0, 0, 1};
 
-	m_shaderProg->use();
+	m_shader->use();
+	m_shader->setMatrix4x4("viewMatrix", identity);
+	m_shader->setMatrix4x4("projMatrix", identity);
 
-	glUniformMatrix4fv(m_viewmatUniform, 1, false, identity);
-	glUniformMatrix4fv(m_projMatUniform, 1, false, identity);
-
-	assert(glGetError() == GL_NO_ERROR);
-
-	bool useFiltering = false;
-	if (useFiltering)
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	}
-	else
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	}
+	m_texturehandle->setFiltering(false);
 
 	m_mesh2->vbo()->upload(vertices, numVertices * sizeof(PrimVertex));
 
@@ -192,10 +172,11 @@ void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices,
 		p.p[1] = 1.f;
 	}
 
-	glUniform2fv(m_positionUniform, 1, (const GLfloat *)&p);
+	m_shader->setFloat2("p", p.p);
+
 	int indexCount = (numVertices / 4) * 6;
 	m_mesh2->draw(indexCount);
-	m_shaderProg->unuse();
+	m_shader->unuse();
 }
 
 //
@@ -216,9 +197,9 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 {
 	assert(glGetError() == GL_NO_ERROR);
 
-	m_data.m_shaderProg->use();
-	m_data.m_shaderProg->setMatrix4x4(VIEW_MATRIX, viewMat);
-	m_data.m_shaderProg->setMatrix4x4(PROJECTION_MATRIX, projMat);
+	m_data.m_shader->use();
+	m_data.m_shader->setMatrix4x4(VIEW_MATRIX, viewMat);
+	m_data.m_shader->setMatrix4x4(PROJECTION_MATRIX, projMat);
 
 	bool useFiltering = false;
 	if (useFiltering)
@@ -247,7 +228,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 	//glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	int indexCount = 6;
 	m_data.m_mesh->draw(indexCount);
-	m_data.m_shaderProg->unuse();
+	m_data.m_shader->unuse();
 	assert(glGetError() == GL_NO_ERROR);
 }
 

@@ -149,23 +149,23 @@ static const char* fragmentShader =
 
 void loadShader()
 {
-	sData.m_shaderProg = GLShader::load(vertexShader, fragmentShader);
-	sData.m_positionUniform = sData.m_shaderProg->getUniformLocation("p");
+	sData.m_shader = GLShader::load(vertexShader, fragmentShader);
+	sData.m_positionUniform = sData.m_shader->getUniformLocation("p");
 	if (sData.m_positionUniform < 0)
 	{
 		b3Assert(0);
 	}
-	sData.m_colourAttribute = sData.m_shaderProg->getAttributeLocation("colour");
+	sData.m_colourAttribute = sData.m_shader->getAttributeLocation("colour");
 	if (sData.m_colourAttribute < 0)
 	{
 		b3Assert(0);
 	}
-	sData.m_positionAttribute = sData.m_shaderProg->getAttributeLocation("position");
+	sData.m_positionAttribute = sData.m_shader->getAttributeLocation("position");
 	if (sData.m_positionAttribute < 0)
 	{
 		b3Assert(0);
 	}
-	sData.m_textureAttribute = sData.m_shaderProg->getAttributeLocation("texuv");
+	sData.m_textureAttribute = sData.m_shader->getAttributeLocation("texuv");
 	if (sData.m_textureAttribute < 0)
 	{
 		b3Assert(0);
@@ -179,7 +179,7 @@ void display()
 
 	const float timeScale = 0.008f;
 
-	sData.m_shaderProg->use();
+	sData.m_shader->use();
 
 	err = glGetError();
 	b3Assert(err == GL_NO_ERROR);

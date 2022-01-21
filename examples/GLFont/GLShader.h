@@ -1,5 +1,4 @@
 #pragma once
-#include "OpenGLInclude.h"
 #include <stdint.h>
 #include <memory>
 
@@ -17,4 +16,5 @@ public:
 	void use();
 	void unuse();
 	void setMatrix4x4(const char *name, const float value[16]);
+	void setFloat2(const char *name, const float value[2]);
 };

@@ -13,4 +13,5 @@ public:
 	static std::shared_ptr<GLTexture> load(const void *image, int width, int height);
 	void bind();
 	void unbind();
+	void setFiltering(bool use);
 };
