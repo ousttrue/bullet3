@@ -1,4 +1,4 @@
-# api
+# bullet physics API
 
 ```{toctree}
 btDefaultSerializer
