@@ -243,6 +243,8 @@ struct FrameInfo
 	const b3AlignedObjectArray<InternalTextureHandle>& textureHandles;
 	unsigned int defaultTexturehandle;
 	int maxShapeCapacityInBytes;
+	b3AlignedObjectArray<SortableTransparentInstance> transparentInstances;
+	const CommonCameraInterface* activeCamera = nullptr;
 	FrameInfo(int orgRenderMode, const b3Vector3& _lightPos, const b3AlignedObjectArray<InternalTextureHandle>& _textureHandles, unsigned int _defaultTextureHandle, int _maxShapeCapacityInBytes)
 		: renderMode(orgRenderMode), lightPos(_lightPos), textureHandles(_textureHandles), defaultTexturehandle(_defaultTextureHandle), maxShapeCapacityInBytes(_maxShapeCapacityInBytes)
 	{
@@ -267,6 +269,10 @@ struct FrameInfo
 			renderMode = B3_USE_PROJECTIVE_TEXTURE_RENDERMODE;
 		}
 	}
+
+	int totalNumInstances = 0;
+	void sortTransparent(const b3AlignedObjectArray<struct b3GraphicsInstance*>& m_graphicsInstances, const CommonCameraInterface* m_activeCamera,
+						 b3AlignedObjectArray<float>& m_instance_positions_ptr);
 };
 
 struct b3GraphicsInstance
@@ -301,9 +307,7 @@ public:
 	{
 	}
 
-	void draw(int pass, int i, const FrameInfo& info,
-			  int totalNumInstances, const b3AlignedObjectArray<SortableTransparentInstance>& transparentInstances,
-			  const CommonCameraInterface* activeCamera)
+	void draw(int pass, int i, const FrameInfo& info)
 	{
 		//only draw stuff (opaque/transparent) if it is the right pass
 		int drawThisPass = (pass == 0) == ((m_flags & B3_INSTANCE_TRANSPARANCY) == 0);
@@ -358,9 +362,9 @@ public:
 			b3Assert(glGetError() == GL_NO_ERROR);
 			//	int myOffset = m_instanceOffset*4*sizeof(float);
 
-			int POSITION_BUFFER_SIZE = (totalNumInstances * sizeof(float) * 4);
-			int ORIENTATION_BUFFER_SIZE = (totalNumInstances * sizeof(float) * 4);
-			int COLOR_BUFFER_SIZE = (totalNumInstances * sizeof(float) * 4);
+			int POSITION_BUFFER_SIZE = (info.totalNumInstances * sizeof(float) * 4);
+			int ORIENTATION_BUFFER_SIZE = (info.totalNumInstances * sizeof(float) * 4);
+			int COLOR_BUFFER_SIZE = (info.totalNumInstances * sizeof(float) * 4);
 			//		int SCALE_BUFFER_SIZE = (totalNumInstances*sizeof(float)*3);
 
 			m_cube_vao->bind();
@@ -372,9 +376,9 @@ public:
 			//vertex position
 			glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(float), vertex.m_pointer);
 			//instance_position
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes));
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(info.transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes));
 			//instance_quaternion
-			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(info.transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
 
 			PointerCaster uv;
 			uv.m_baseIndex = 7 * sizeof(float) + vertex.m_baseIndex;
@@ -385,9 +389,9 @@ public:
 			glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(float), uv.m_pointer);
 			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), normal.m_pointer);
 			//instance_color
-			glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
+			glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(info.transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
 			//instance_scale
-			glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
+			glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(info.transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
 
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
@@ -416,7 +420,7 @@ public:
 					instancingShaderPointSprite->use();
 					glUniformMatrix4fv(ProjectionMatrixPointSprite, 1, false, &m_projectionMatrix[0]);
 					glUniformMatrix4fv(ModelViewMatrixPointSprite, 1, false, &m_viewMatrix[0]);
-					glUniform1f(screenWidthPointSprite, float(activeCamera->getScreenWidth()));
+					glUniform1f(screenWidthPointSprite, float(info.activeCamera->getScreenWidth()));
 
 					//glUniform1i(uniform_texture_diffusePointSprite, 0);
 					b3Assert(glGetError() == GL_NO_ERROR);
@@ -469,7 +473,7 @@ public:
 							glEnable(GL_MULTISAMPLE);
 							if (m_flags & B3_INSTANCE_TRANSPARANCY)
 							{
-								int instanceId = transparentInstances[i].m_instanceId;
+								int instanceId = info.transparentInstances[i].m_instanceId;
 								glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes));
 								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
 								glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
@@ -542,7 +546,7 @@ public:
 							//gLightDir.normalize();
 							glUniform3f(useShadow_lightPosIn, info.lightPos[0], info.lightPos[1], info.lightPos[2]);
 							float camPos[3];
-							activeCamera->getCameraPosition(camPos);
+							info.activeCamera->getCameraPosition(camPos);
 							glUniform3f(useShadow_cameraPositionIn, camPos[0], camPos[1], camPos[2]);
 							glUniform1f(useShadow_materialShininessIn, m_materialShinyNess);
 							glUniform1f(useShadow_shadowmapIntensityIn, m_shadowmapIntensity);
@@ -559,7 +563,7 @@ public:
 
 							if (m_flags & B3_INSTANCE_TRANSPARANCY)
 							{
-								int instanceId = transparentInstances[i].m_instanceId;
+								int instanceId = info.transparentInstances[i].m_instanceId;
 								glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes));
 								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
 								glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
@@ -618,7 +622,7 @@ public:
 							glUniformMatrix4fv(projectiveTexture_MVP, 1, false, &MVP[0]);
 							glUniform3f(projectiveTexture_lightPosIn, info.lightPos[0], info.lightPos[1], info.lightPos[2]);
 							float camPos[3];
-							activeCamera->getCameraPosition(camPos);
+							info.activeCamera->getCameraPosition(camPos);
 							glUniform3f(projectiveTexture_cameraPositionIn, camPos[0], camPos[1], camPos[2]);
 							glUniform1f(projectiveTexture_materialShininessIn, m_materialShinyNess);
 
@@ -627,7 +631,7 @@ public:
 							//sort transparent objects
 							if (m_flags & B3_INSTANCE_TRANSPARANCY)
 							{
-								int instanceId = transparentInstances[i].m_instanceId;
+								int instanceId = info.transparentInstances[i].m_instanceId;
 								glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes));
 								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
 								glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
@@ -665,6 +669,81 @@ public:
 		}
 	}
 };
+
+B3_ATTRIBUTE_ALIGNED16(struct)
+TransparentDistanceSortPredicate{
+
+	inline bool operator()(const SortableTransparentInstance& a, const SortableTransparentInstance& b) const {
+
+		return (a.m_projection > b.m_projection);
+}
+}
+;
+
+void FrameInfo::sortTransparent(const b3AlignedObjectArray<struct b3GraphicsInstance*>& m_graphicsInstances, const CommonCameraInterface* _activeCamera,
+								b3AlignedObjectArray<float>& m_instance_positions_ptr)
+{
+	activeCamera = _activeCamera;
+	for (int i = 0; i < m_graphicsInstances.size(); i++)
+	{
+		totalNumInstances += m_graphicsInstances[i]->m_numGraphicsInstances;
+	}
+
+	{
+		int curOffset = 0;
+		//GLuint lastBindTexture = 0;
+
+		transparentInstances.reserve(totalNumInstances);
+
+		float fwd[3];
+		activeCamera->getCameraForwardVector(fwd);
+		b3Vector3 camForwardVec;
+		camForwardVec.setValue(fwd[0], fwd[1], fwd[2]);
+
+		// sort m_graphicsInstances
+		for (int obj = 0; obj < m_graphicsInstances.size(); obj++)
+		{
+			b3GraphicsInstance* gfxObj = m_graphicsInstances[obj];
+
+			if (gfxObj->m_numGraphicsInstances)
+			{
+				SortableTransparentInstance inst;
+
+				inst.m_shapeIndex = obj;
+
+				if ((gfxObj->m_flags & B3_INSTANCE_TRANSPARANCY) == 0)
+				{
+					inst.m_instanceId = curOffset;
+					b3Vector3 centerPosition;
+					centerPosition.setValue(m_instance_positions_ptr[inst.m_instanceId * 4 + 0],
+											m_instance_positions_ptr[inst.m_instanceId * 4 + 1],
+											m_instance_positions_ptr[inst.m_instanceId * 4 + 2]);
+					centerPosition *= -1;  //reverse sort opaque instances
+					inst.m_projection = centerPosition.dot(camForwardVec);
+					transparentInstances.push_back(inst);
+				}
+				else
+				{
+					for (int i = 0; i < gfxObj->m_numGraphicsInstances; i++)
+					{
+						inst.m_instanceId = curOffset + i;
+						b3Vector3 centerPosition;
+
+						centerPosition.setValue(m_instance_positions_ptr[inst.m_instanceId * 4 + 0],
+												m_instance_positions_ptr[inst.m_instanceId * 4 + 1],
+												m_instance_positions_ptr[inst.m_instanceId * 4 + 2]);
+						inst.m_projection = centerPosition.dot(camForwardVec);
+						transparentInstances.push_back(inst);
+					}
+				}
+				curOffset += gfxObj->m_numGraphicsInstances;
+			}
+		}
+		TransparentDistanceSortPredicate sorter;
+
+		transparentInstances.quickSort(sorter);
+	}
+}
 
 bool m_ortho = false;
 
@@ -2286,16 +2365,6 @@ void GLInstancingRenderer::drawLine(const float from[4], const float to[4], cons
 	glUseProgram(0);
 }
 
-B3_ATTRIBUTE_ALIGNED16(struct)
-TransparentDistanceSortPredicate{
-
-	inline bool operator()(const SortableTransparentInstance& a, const SortableTransparentInstance& b) const {
-
-		return (a.m_projection > b.m_projection);
-}
-}
-;
-
 void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 {
 	B3_PROFILE("renderSceneInternal");
@@ -2465,74 +2534,14 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 	}
 	b3Assert(glGetError() == GL_NO_ERROR);
 
-	int totalNumInstances = 0;
-	for (int i = 0; i < m_graphicsInstances.size(); i++)
-	{
-		totalNumInstances += m_graphicsInstances[i]->m_numGraphicsInstances;
-	}
-
-	b3AlignedObjectArray<SortableTransparentInstance> transparentInstances;
-	{
-		int curOffset = 0;
-		//GLuint lastBindTexture = 0;
-
-		transparentInstances.reserve(totalNumInstances);
-
-		float fwd[3];
-		m_activeCamera->getCameraForwardVector(fwd);
-		b3Vector3 camForwardVec;
-		camForwardVec.setValue(fwd[0], fwd[1], fwd[2]);
-
-		// sort m_graphicsInstances
-		for (int obj = 0; obj < m_graphicsInstances.size(); obj++)
-		{
-			b3GraphicsInstance* gfxObj = m_graphicsInstances[obj];
-
-			if (gfxObj->m_numGraphicsInstances)
-			{
-				SortableTransparentInstance inst;
-
-				inst.m_shapeIndex = obj;
-
-				if ((gfxObj->m_flags & B3_INSTANCE_TRANSPARANCY) == 0)
-				{
-					inst.m_instanceId = curOffset;
-					b3Vector3 centerPosition;
-					centerPosition.setValue(m_instance_positions_ptr[inst.m_instanceId * 4 + 0],
-											m_instance_positions_ptr[inst.m_instanceId * 4 + 1],
-											m_instance_positions_ptr[inst.m_instanceId * 4 + 2]);
-					centerPosition *= -1;  //reverse sort opaque instances
-					inst.m_projection = centerPosition.dot(camForwardVec);
-					transparentInstances.push_back(inst);
-				}
-				else
-				{
-					for (int i = 0; i < gfxObj->m_numGraphicsInstances; i++)
-					{
-						inst.m_instanceId = curOffset + i;
-						b3Vector3 centerPosition;
-
-						centerPosition.setValue(m_instance_positions_ptr[inst.m_instanceId * 4 + 0],
-												m_instance_positions_ptr[inst.m_instanceId * 4 + 1],
-												m_instance_positions_ptr[inst.m_instanceId * 4 + 2]);
-						inst.m_projection = centerPosition.dot(camForwardVec);
-						transparentInstances.push_back(inst);
-					}
-				}
-				curOffset += gfxObj->m_numGraphicsInstances;
-			}
-		}
-		TransparentDistanceSortPredicate sorter;
-
-		transparentInstances.quickSort(sorter);
-	}
+	info.sortTransparent(m_graphicsInstances, m_activeCamera, m_instance_positions_ptr);
 
 	//two passes: first for opaque instances, second for transparent ones.
 	for (int pass = 0; pass < 2; pass++)
 	{
-		for (int i = 0; i < transparentInstances.size(); i++)
+		for (int i = 0; i < info.transparentInstances.size(); i++)
 		{
-			int shapeIndex = transparentInstances[i].m_shapeIndex;
+			int shapeIndex = info.transparentInstances[i].m_shapeIndex;
 
 			//during a reflectionPlanePass, only draw the plane, nothing else
 			if (info.reflectionPlanePass)
@@ -2542,7 +2551,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 			}
 
 			b3GraphicsInstance* gfxObj = m_graphicsInstances[shapeIndex];
-			gfxObj->draw(pass, i, info, totalNumInstances, transparentInstances, m_activeCamera);
+			gfxObj->draw(pass, i, info);
 		}
 	}
 
