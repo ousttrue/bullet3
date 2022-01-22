@@ -241,8 +241,10 @@ struct FrameInfo
 	bool reflectionPlanePass = false;
 	b3Vector3 lightPos;
 	const b3AlignedObjectArray<InternalTextureHandle>& textureHandles;
-	FrameInfo(int orgRenderMode, const b3Vector3& _lightPos, const b3AlignedObjectArray<InternalTextureHandle>& _textureHandles)
-		: renderMode(orgRenderMode), lightPos(_lightPos), textureHandles(_textureHandles)
+	unsigned int defaultTexturehandle;
+	int maxShapeCapacityInBytes;
+	FrameInfo(int orgRenderMode, const b3Vector3& _lightPos, const b3AlignedObjectArray<InternalTextureHandle>& _textureHandles, unsigned int _defaultTextureHandle, int _maxShapeCapacityInBytes)
+		: renderMode(orgRenderMode), lightPos(_lightPos), textureHandles(_textureHandles), defaultTexturehandle(_defaultTextureHandle), maxShapeCapacityInBytes(_maxShapeCapacityInBytes)
 	{
 		if (orgRenderMode == B3_USE_SHADOWMAP_RENDERMODE_REFLECTION_PLANE)
 		{
@@ -299,8 +301,8 @@ public:
 	{
 	}
 
-	void draw(int pass, int i, const FrameInfo& info, unsigned int m_defaultTexturehandle,
-			  int totalNumInstances, int m_maxShapeCapacityInBytes, const b3AlignedObjectArray<SortableTransparentInstance>& transparentInstances,
+	void draw(int pass, int i, const FrameInfo& info,
+			  int totalNumInstances, const b3AlignedObjectArray<SortableTransparentInstance>& transparentInstances,
 			  const CommonCameraInterface* activeCamera)
 	{
 		//only draw stuff (opaque/transparent) if it is the right pass
@@ -344,7 +346,7 @@ public:
 			}
 			else
 			{
-				curBindTexture = m_defaultTexturehandle;
+				curBindTexture = info.defaultTexturehandle;
 				glBindTexture(GL_TEXTURE_2D, curBindTexture);
 			}
 
@@ -370,9 +372,9 @@ public:
 			//vertex position
 			glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(float), vertex.m_pointer);
 			//instance_position
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + m_maxShapeCapacityInBytes));
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes));
 			//instance_quaternion
-			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
 
 			PointerCaster uv;
 			uv.m_baseIndex = 7 * sizeof(float) + vertex.m_baseIndex;
@@ -383,9 +385,9 @@ public:
 			glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(float), uv.m_pointer);
 			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), normal.m_pointer);
 			//instance_color
-			glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
+			glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
 			//instance_scale
-			glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
+			glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(transparentInstances[i].m_instanceId * 4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
 
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
@@ -468,10 +470,10 @@ public:
 							if (m_flags & B3_INSTANCE_TRANSPARANCY)
 							{
 								int instanceId = transparentInstances[i].m_instanceId;
-								glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes));
-								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
-								glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
-								glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
+								glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes));
+								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
+								glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
+								glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
 
 								glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 							}
@@ -558,10 +560,10 @@ public:
 							if (m_flags & B3_INSTANCE_TRANSPARANCY)
 							{
 								int instanceId = transparentInstances[i].m_instanceId;
-								glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes));
-								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
-								glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
-								glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
+								glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes));
+								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
+								glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
+								glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
 								glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 							}
 							else
@@ -626,10 +628,10 @@ public:
 							if (m_flags & B3_INSTANCE_TRANSPARANCY)
 							{
 								int instanceId = transparentInstances[i].m_instanceId;
-								glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes));
-								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
-								glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
-								glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + m_maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
+								glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes));
+								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE));
+								glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE));
+								glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((instanceId)*4 * sizeof(float) + info.maxShapeCapacityInBytes + POSITION_BUFFER_SIZE + ORIENTATION_BUFFER_SIZE + COLOR_BUFFER_SIZE));
 								glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 							}
 							else
@@ -2318,7 +2320,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 	float depthProjectionMatrix[4][4];
 	GLfloat depthModelViewMatrix[4][4];
 
-	auto info = FrameInfo(orgRenderMode, m_lightPos, m_textureHandles);
+	auto info = FrameInfo(orgRenderMode, m_lightPos, m_textureHandles, m_defaultTexturehandle, m_maxShapeCapacityInBytes);
 
 	// Compute the MVP matrix from the light's point of view
 	if (info.renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
@@ -2540,7 +2542,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 			}
 
 			b3GraphicsInstance* gfxObj = m_graphicsInstances[shapeIndex];
-			gfxObj->draw(pass, i, info, m_defaultTexturehandle, totalNumInstances, m_maxShapeCapacityInBytes, transparentInstances, m_activeCamera);
+			gfxObj->draw(pass, i, info, totalNumInstances, transparentInstances, m_activeCamera);
 		}
 	}
 
