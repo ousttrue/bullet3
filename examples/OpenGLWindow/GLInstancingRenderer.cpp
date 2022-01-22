@@ -237,6 +237,11 @@ SortableTransparentInstance
 	int m_instanceId;
 };
 
+struct FrameInfo
+{
+	int renderMode;
+};
+
 struct b3GraphicsInstance
 {
 	std::shared_ptr<GLVAO> m_cube_vao;
@@ -269,7 +274,7 @@ public:
 	{
 	}
 
-	void draw(int pass, int i, int renderMode, const InternalTextureHandle* m_textureHandles, unsigned int m_defaultTexturehandle,
+	void draw(int pass, int i, const FrameInfo& info, const InternalTextureHandle* m_textureHandles, unsigned int m_defaultTexturehandle,
 			  int totalNumInstances, int m_maxShapeCapacityInBytes, const b3AlignedObjectArray<SortableTransparentInstance>& transparentInstances,
 			  const CommonCameraInterface* activeCamera)
 	{
@@ -279,7 +284,7 @@ public:
 		//transparent objects don't cast shadows (to simplify things)
 		if (m_flags & B3_INSTANCE_TRANSPARANCY)
 		{
-			if (renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
+			if (info.renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
 				drawThisPass = 0;
 		}
 
@@ -295,7 +300,7 @@ public:
 				if (m_textureHandles[m_textureIndex].m_enableFiltering)
 				{
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-					if (renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
+					if (info.renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
 					{
 						glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 					}
@@ -405,7 +410,7 @@ public:
 						glDisable(GL_CULL_FACE);
 					}
 
-					switch (renderMode)
+					switch (info.renderMode)
 					{
 						case B3_SEGMENTATION_MASK_RENDERMODE:
 						{
@@ -2292,6 +2297,8 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 		renderMode = B3_USE_PROJECTIVE_TEXTURE_RENDERMODE;
 	}
 
+	FrameInfo info{renderMode};
+
 	//	glEnable(GL_DEPTH_TEST);
 
 	GLint dims[4];
@@ -2320,7 +2327,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 	//GLfloat textureModelViewMatrix[4][4];
 
 	// Compute the MVP matrix from the light's point of view
-	if (renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
+	if (info.renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
 	{
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
@@ -2539,7 +2546,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 			}
 
 			b3GraphicsInstance* gfxObj = m_graphicsInstances[shapeIndex];
-			gfxObj->draw(pass, i, renderMode, &m_textureHandles.at(0), m_defaultTexturehandle, totalNumInstances, m_maxShapeCapacityInBytes, transparentInstances, m_activeCamera);
+			gfxObj->draw(pass, i, info, &m_textureHandles.at(0), m_defaultTexturehandle, totalNumInstances, m_maxShapeCapacityInBytes, transparentInstances, m_activeCamera);
 		}
 	}
 
@@ -2547,7 +2554,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 		B3_PROFILE("glFlush");
 		//glFlush();
 	}
-	if (renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
+	if (info.renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
 	{
 		//	writeTextureToPng(shadowMapWidth,shadowMapHeight,"shadowmap.png",4);
 		m_shadowMap->disable();
