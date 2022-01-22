@@ -1,6 +1,7 @@
 #include "GLInstancingRenderer.h"
 #include <GLVAO.h>
 #include <memory>
+#include "LinearMath/btVector3.h"
 #define MAX_POINTS_IN_BATCH 1024
 #define MAX_LINES_IN_BATCH 1024
 #define MAX_TRIANGLES_IN_BATCH 8192
@@ -64,9 +65,6 @@
 #include <stb_image_write.h>
 #include <stdio.h>
 
-extern int gShapeIndex;
-
-static b3Vector3 m_lightPos = b3MakeVector3(-50, 30, 40);
 static float m_projectionMatrix[16] = {0};
 static float m_viewMatrix[16] = {0};
 static GLfloat depthMVP[4][4];
@@ -241,8 +239,10 @@ struct FrameInfo
 	int renderMode;
 	bool reflectionPass = false;
 	bool reflectionPlanePass = false;
-
-	FrameInfo(int orgRenderMode) : renderMode(orgRenderMode)
+	b3Vector3 lightPos;
+	const b3AlignedObjectArray<InternalTextureHandle>& textureHandles;
+	FrameInfo(int orgRenderMode, const b3Vector3& _lightPos, const b3AlignedObjectArray<InternalTextureHandle>& _textureHandles)
+		: renderMode(orgRenderMode), lightPos(_lightPos), textureHandles(_textureHandles)
 	{
 		if (orgRenderMode == B3_USE_SHADOWMAP_RENDERMODE_REFLECTION_PLANE)
 		{
@@ -299,7 +299,7 @@ public:
 	{
 	}
 
-	void draw(int pass, int i, const FrameInfo& info, const InternalTextureHandle* m_textureHandles, unsigned int m_defaultTexturehandle,
+	void draw(int pass, int i, const FrameInfo& info, unsigned int m_defaultTexturehandle,
 			  int totalNumInstances, int m_maxShapeCapacityInBytes, const b3AlignedObjectArray<SortableTransparentInstance>& transparentInstances,
 			  const CommonCameraInterface* activeCamera)
 	{
@@ -319,10 +319,10 @@ public:
 			GLuint curBindTexture = 0;
 			if (m_flags & B3_INSTANCE_TEXTURE)
 			{
-				curBindTexture = m_textureHandles[m_textureIndex].m_glTexture;
+				curBindTexture = info.textureHandles[m_textureIndex].m_glTexture;
 				glBindTexture(GL_TEXTURE_2D, curBindTexture);
 
-				if (m_textureHandles[m_textureIndex].m_enableFiltering)
+				if (info.textureHandles[m_textureIndex].m_enableFiltering)
 				{
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
 					if (info.renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
@@ -459,7 +459,7 @@ public:
 							glUniformMatrix4fv(ProjectionMatrix, 1, false, &m_projectionMatrix[0]);
 							glUniformMatrix4fv(ModelViewMatrix, 1, false, &m_viewMatrix[0]);
 
-							b3Vector3 gLightDir = m_lightPos;
+							b3Vector3 gLightDir = info.lightPos;
 							gLightDir.normalize();
 							glUniform3f(regularLightDirIn, gLightDir[0], gLightDir[1], gLightDir[2]);
 
@@ -538,7 +538,7 @@ public:
 
 							glUniformMatrix4fv(useShadow_MVP, 1, false, &MVP[0]);
 							//gLightDir.normalize();
-							glUniform3f(useShadow_lightPosIn, m_lightPos[0], m_lightPos[1], m_lightPos[2]);
+							glUniform3f(useShadow_lightPosIn, info.lightPos[0], info.lightPos[1], info.lightPos[2]);
 							float camPos[3];
 							activeCamera->getCameraPosition(camPos);
 							glUniform3f(useShadow_cameraPositionIn, camPos[0], camPos[1], camPos[2]);
@@ -614,7 +614,7 @@ public:
 							}
 
 							glUniformMatrix4fv(projectiveTexture_MVP, 1, false, &MVP[0]);
-							glUniform3f(projectiveTexture_lightPosIn, m_lightPos[0], m_lightPos[1], m_lightPos[2]);
+							glUniform3f(projectiveTexture_lightPosIn, info.lightPos[0], info.lightPos[1], info.lightPos[2]);
 							float camPos[3];
 							activeCamera->getCameraPosition(camPos);
 							glUniform3f(projectiveTexture_cameraPositionIn, camPos[0], camPos[1], camPos[2]);
@@ -2298,10 +2298,6 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 {
 	B3_PROFILE("renderSceneInternal");
 
-	auto info = FrameInfo(orgRenderMode);
-
-	//	glEnable(GL_DEPTH_TEST);
-
 	GLint dims[4];
 	glGetIntegerv(GL_VIEWPORT, dims);
 	//we need to get the viewport dims, because on Apple Retina the viewport dimension is different from screenWidth
@@ -2321,11 +2317,8 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 
 	float depthProjectionMatrix[4][4];
 	GLfloat depthModelViewMatrix[4][4];
-	//GLfloat depthModelViewMatrix2[4][4];
 
-	// For projective texture mapping
-	//float textureProjectionMatrix[4][4];
-	//GLfloat textureModelViewMatrix[4][4];
+	auto info = FrameInfo(orgRenderMode, m_lightPos, m_textureHandles);
 
 	// Compute the MVP matrix from the light's point of view
 	if (info.renderMode == B3_CREATE_SHADOWMAP_RENDERMODE)
@@ -2547,7 +2540,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 			}
 
 			b3GraphicsInstance* gfxObj = m_graphicsInstances[shapeIndex];
-			gfxObj->draw(pass, i, info, &m_textureHandles.at(0), m_defaultTexturehandle, totalNumInstances, m_maxShapeCapacityInBytes, transparentInstances, m_activeCamera);
+			gfxObj->draw(pass, i, info, m_defaultTexturehandle, totalNumInstances, m_maxShapeCapacityInBytes, transparentInstances, m_activeCamera);
 		}
 	}
 

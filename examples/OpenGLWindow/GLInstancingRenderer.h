@@ -54,6 +54,7 @@ class GLInstancingRenderer : public CommonRenderInterface
 	unsigned int m_defaultTexturehandle;
 	b3AlignedObjectArray<InternalTextureHandle> m_textureHandles;
 
+	b3Vector3 m_lightPos = b3MakeVector3(-50, 30, 40);
 	class GLRenderToTexture* m_shadowMap = nullptr;
 
 	unsigned int m_renderFrameBuffer = 0;
