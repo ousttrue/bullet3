@@ -41,8 +41,6 @@
 
 #include "GLShader.h"
 
-#include "GLInstanceRendererInternalData.h"
-
 //GLSL shader strings, embedded using build3/stringify
 #include "Shaders/pointSpriteVS.h"
 #include "Shaders/pointSpritePS.h"
