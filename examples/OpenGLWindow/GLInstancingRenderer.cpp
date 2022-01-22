@@ -279,34 +279,20 @@ struct b3GraphicsInstance
 {
 	std::shared_ptr<GLVAO> m_cube_vao;
 	std::shared_ptr<GLIBO> m_index_vbo;
-	GLuint m_textureIndex;
-	int m_numIndices;
-	int m_numVertices;
+	GLuint m_textureIndex = -1;
+	int m_numIndices = -1;
+	int m_numVertices = -1;
 
-	int m_numGraphicsInstances;
+	int m_numGraphicsInstances = 0;
 	b3AlignedObjectArray<int> m_tempObjectUids;
-	int m_instanceOffset;
-	int m_vertexArrayOffset;
-	int m_primitiveType;
-	float m_materialShinyNess;
-	b3Vector3 m_materialSpecularColor;
-	int m_flags;  //transparency etc
+	int m_instanceOffset = 0;
+	int m_vertexArrayOffset = 0;
+	int m_primitiveType = B3_GL_TRIANGLES;
+	float m_materialShinyNess = 41;
+	b3Vector3 m_materialSpecularColor = b3MakeVector3(.5, .5, .5);
+	int m_flags = 0;  //transparency etc
 
 public:
-	b3GraphicsInstance()
-		: m_textureIndex(-1),
-		  m_numIndices(-1),
-		  m_numVertices(-1),
-		  m_numGraphicsInstances(0),
-		  m_instanceOffset(0),
-		  m_vertexArrayOffset(0),
-		  m_primitiveType(B3_GL_TRIANGLES),
-		  m_materialShinyNess(41),
-		  m_materialSpecularColor(b3MakeVector3(.5, .5, .5)),
-		  m_flags(0)
-	{
-	}
-
 	void draw(int pass, int i, const FrameInfo& info)
 	{
 		//only draw stuff (opaque/transparent) if it is the right pass
