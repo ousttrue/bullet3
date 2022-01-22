@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
-#include <GLMesh.h>
+#include "GLMesh.h"
+#include "GLShader.h"
 
 struct PrimVec2
 {
@@ -39,13 +40,13 @@ struct PrimVertex
 
 struct PrimInternalData
 {
-	std::shared_ptr<class GLShader> m_shader;
-	int m_viewmatUniform;
-	int m_projMatUniform;
-	int m_positionUniform;
-	int m_colourAttribute;
-	int m_positionAttribute;
-	int m_textureAttribute;
+	std::shared_ptr<GLShader> m_shader;
+	GLUniformVarable m_viewmatUniform{"viewMatrix"};
+	GLUniformVarable m_projMatUniform{"projMatrix"};
+	GLUniformVarable m_positionUniform{"p"};
+	GLVertexAttribute m_colourAttribute{"colour"};
+	GLVertexAttribute m_positionAttribute{"position"};
+	GLVertexAttribute m_textureAttribute{"texuv"};
 
 	std::shared_ptr<class GLMesh> m_mesh;
 	std::shared_ptr<class GLMesh> m_mesh2;

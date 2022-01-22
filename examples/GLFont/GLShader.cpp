@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vcruntime.h>
 
 // Load the shader from the source text
 void gltLoadShaderSrc(const char *szShaderSrc, GLuint shader)
@@ -127,11 +128,39 @@ void GLShader::unuse()
 	glUseProgram(0);
 }
 
-void GLShader::setMatrix4x4(const char *name, const float value[16])
+uint32_t GLUniformVarable::getLocation(uint32_t program) const
 {
-	glUniformMatrix4fv(getUniformLocation(name), 1, false, value);
+	if (m_location == -1)
+	{
+		m_location = glGetUniformLocation(program, m_name.c_str());
+		assert(m_location != -1);
+	}
+	return m_location;
+}
+void GLUniformVarable::setMat4(const float *p) const
+{
+	assert(m_location != -1);
+	glUniformMatrix4fv(m_location, 1, false, p);
+}
+void GLUniformVarable::setFloat2(const float *p) const
+{
+	assert(m_location != -1);
+	glUniform2fv(m_location, 1, p);
 }
 
-void GLShader::setFloat2(const char *name, const float value[2])
+uint32_t GLVertexAttribute::getLocation(uint32_t program) const
 {
+	if (m_location == -1)
+	{
+		m_location = glad_glGetAttribLocation(program, m_name.c_str());
+		assert(m_location != -1);
+	}
+	return m_location;
+}
+
+void GLVertexAttribute::enable(unsigned int float_count, size_t stride, size_t offset) const
+{
+	assert(m_location != -1);
+	glEnableVertexAttribArray(m_location);
+	glVertexAttribPointer(m_location, float_count, GL_FLOAT, GL_FALSE, stride, (const GLvoid *)offset);
 }

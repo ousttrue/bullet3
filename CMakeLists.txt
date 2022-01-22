@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(BULLET_PHYSICS)
 file(STRINGS "VERSION" BULLET_VERSION)
+# set(CMAKE_CXX_STANDARD 17)
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options(/wd4244 /wd4305 /wd4828 /wd4996 /wd4267 /wd4312)

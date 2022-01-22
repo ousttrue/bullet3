@@ -39,30 +39,13 @@ void loadBufferData()
 	auto vbo = GLVBO::load(vertexData, sizeof(vertexData), false);
 	unsigned int indexData[6] = {0, 1, 2, 0, 2, 3};
 	auto ibo = GLIBO::load(indexData, sizeof(indexData));
-	sData.m_mesh= GLMesh::create(vbo, ibo, Vertex::layout);
+	sData.m_mesh = GLMesh::create(vbo, ibo, Vertex::layout);
 
-	glEnableVertexAttribArray(sData.m_positionAttribute);
-	glEnableVertexAttribArray(sData.m_colourAttribute);
+	sData.m_positionAttribute.enable(4, sizeof(Vertex), offsetof(Vertex, position));
+	sData.m_colourAttribute.enable(4, sizeof(Vertex), offsetof(Vertex, colour));
+	sData.m_textureAttribute.enable(2, sizeof(Vertex), offsetof(Vertex, uv));
+
 	auto err = glGetError();
-	b3Assert(err == GL_NO_ERROR);
-	glEnableVertexAttribArray(sData.m_textureAttribute);
-
-	// Vertex vertexDataOrg[4] = {
-	// 	{vec4(-0.5, -0.5, 0.0, 1.0), vec4(1.0, 0.0, 0.0, 1.0), vec2(0, 0)},
-	// 	{vec4(-0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0, 1)},
-	// 	{vec4(0.5, 0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 1)},
-	// 	{vec4(0.5, -0.5, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(1, 0)}};
-
-	// Vertex vertexData2[4] = {
-	// 	{vec4(0, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.015625)},
-	// 	{vec4(0.0234375, 0.901042, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.015625)},
-	// 	{vec4(0.0234375, 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.101562, 0.105469)},
-	// 	{vec4(0., 0.871094, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), vec2(0.0078125, 0.105469)}};
-
-	glVertexAttribPointer(sData.m_positionAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
-	glVertexAttribPointer(sData.m_colourAttribute, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(vec4));
-	glVertexAttribPointer(sData.m_textureAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec4) + sizeof(vec4)));
-	err = glGetError();
 	b3Assert(err == GL_NO_ERROR);
 }
 
@@ -150,26 +133,10 @@ static const char* fragmentShader =
 void loadShader()
 {
 	sData.m_shader = GLShader::load(vertexShader, fragmentShader);
-	sData.m_positionUniform = sData.m_shader->getUniformLocation("p");
-	if (sData.m_positionUniform < 0)
-	{
-		b3Assert(0);
-	}
-	sData.m_colourAttribute = sData.m_shader->getAttributeLocation("colour");
-	if (sData.m_colourAttribute < 0)
-	{
-		b3Assert(0);
-	}
-	sData.m_positionAttribute = sData.m_shader->getAttributeLocation("position");
-	if (sData.m_positionAttribute < 0)
-	{
-		b3Assert(0);
-	}
-	sData.m_textureAttribute = sData.m_shader->getAttributeLocation("texuv");
-	if (sData.m_textureAttribute < 0)
-	{
-		b3Assert(0);
-	}
+	sData.m_positionUniform.getLocation(sData.m_shader->program());
+	sData.m_colourAttribute.getLocation(sData.m_shader->program());
+	sData.m_positionAttribute.getLocation(sData.m_shader->program());
+	sData.m_textureAttribute.getLocation(sData.m_shader->program());
 }
 
 void display()
@@ -189,7 +156,7 @@ void display()
 	// 	b3Assert(err == GL_NO_ERROR);
 
 	vec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
-	glUniform2fv(sData.m_positionUniform, 1, (const GLfloat*)&p);
+	sData.m_positionUniform.setFloat2(p.p);
 
 	int indexCount = 6;
 	sData.m_mesh->draw(indexCount);
@@ -230,7 +197,7 @@ int main(int argc, char* argv[])
 
 	{
 		GlfwApp app;
-		if(!app.createWindow({1600, 1200, "title"}))
+		if (!app.createWindow({1600, 1200, "title"}))
 		{
 			return 1;
 		}

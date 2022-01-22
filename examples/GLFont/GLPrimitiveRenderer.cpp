@@ -18,9 +18,6 @@ VertexAttributeLayout PrimVertex::layout[3] = {
 	VertexAttributeLayout{2, sizeof(PrimVertex), offsetof(PrimVertex, uv)},
 };
 
-auto VIEW_MATRIX = "viewMatrix";
-auto PROJECTION_MATRIX = "projMatrix";
-
 static const char *vertexShader3D =
 	"#version 150   \n"
 	"\n"
@@ -66,37 +63,12 @@ static const char *fragmentShader3D =
 PrimInternalData::PrimInternalData()
 {
 	m_shader = GLShader::load(vertexShader3D, fragmentShader3D);
-
-	m_viewmatUniform = m_shader->getUniformLocation(VIEW_MATRIX);
-	if (m_viewmatUniform < 0)
-	{
-		assert(0);
-	}
-	m_projMatUniform = m_shader->getUniformLocation(PROJECTION_MATRIX);
-	if (m_projMatUniform < 0)
-	{
-		assert(0);
-	}
-	m_positionUniform = m_shader->getUniformLocation("p");
-	if (m_positionUniform < 0)
-	{
-		assert(0);
-	}
-	m_colourAttribute = m_shader->getAttributeLocation("colour");
-	if (m_colourAttribute < 0)
-	{
-		assert(0);
-	}
-	m_positionAttribute = m_shader->getAttributeLocation("position");
-	if (m_positionAttribute < 0)
-	{
-		assert(0);
-	}
-	m_textureAttribute = m_shader->getAttributeLocation("texuv");
-	if (m_textureAttribute < 0)
-	{
-		assert(0);
-	}
+	m_viewmatUniform.getLocation(m_shader->program());
+	m_projMatUniform.getLocation(m_shader->program());
+	m_positionUniform.getLocation(m_shader->program());
+	m_positionAttribute.getLocation(m_shader->program());
+	m_colourAttribute.getLocation(m_shader->program());
+	m_textureAttribute.getLocation(m_shader->program());
 
 	{
 		PrimVertex vertexData[4] = {
@@ -170,8 +142,8 @@ void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices,
 						  0, 0, 0, 1};
 
 	m_shader->use();
-	m_shader->setMatrix4x4("viewMatrix", identity);
-	m_shader->setMatrix4x4("projMatrix", identity);
+	m_viewmatUniform.setMat4(identity);
+	m_projMatUniform.setMat4(identity);
 
 	m_texture->setFiltering(false);
 
@@ -184,7 +156,7 @@ void PrimInternalData::drawTexturedRect3D(PrimVertex *vertices, int numVertices,
 		p.p[1] = 1.f;
 	}
 
-	m_shader->setFloat2("p", p.p);
+	m_positionUniform.setFloat2(p.p);
 
 	int indexCount = (numVertices / 4) * 6;
 	m_mesh2->draw(indexCount);
@@ -207,8 +179,8 @@ void GLPrimitiveRenderer::drawRect(float x0, float y0, float x1, float y1, float
 void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVertex &v1, const PrimVertex &v2, const PrimVertex &v3, float viewMat[16], float projMat[16], bool useRGBA)
 {
 	m_data.m_shader->use();
-	m_data.m_shader->setMatrix4x4(VIEW_MATRIX, viewMat);
-	m_data.m_shader->setMatrix4x4(PROJECTION_MATRIX, projMat);
+	m_data.m_viewmatUniform.setMat4(viewMat);
+	m_data.m_projMatUniform.setMat4(projMat);
 
 	m_data.m_texture->setFiltering(false);
 
@@ -222,7 +194,7 @@ void GLPrimitiveRenderer::drawTexturedRect3D(const PrimVertex &v0, const PrimVer
 		p.p[0] = 1.f;
 		p.p[1] = 1.f;
 	}
-	m_data.m_shader->setFloat2("p", p.p);
+	m_data.m_positionUniform.setFloat2(p.p);
 
 	int indexCount = 6;
 	m_data.m_mesh->draw(indexCount);

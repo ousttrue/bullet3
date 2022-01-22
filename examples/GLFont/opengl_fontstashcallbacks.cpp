@@ -16,11 +16,11 @@ void OpenGL2RenderCallbacks::display2()
 						  0, 1, 0, 0,
 						  0, 0, 1, 0,
 						  0, 0, 0, 1};
-	glUniformMatrix4fv(m_data->m_viewmatUniform, 1, false, identity);
-	glUniformMatrix4fv(m_data->m_projMatUniform, 1, false, identity);
+	m_data->m_viewmatUniform.setMat4(identity);
+	m_data->m_projMatUniform.setMat4(identity);
 
 	vec2 p(0.f, 0.f);  //?b?0.5f * sinf(timeValue), 0.5f * cosf(timeValue) );
-	glUniform2fv(m_data->m_positionUniform, 1, (const GLfloat*)&p);
+	m_data->m_positionUniform.setFloat2(p.p);
 }
 
 void OpenGL2RenderCallbacks::updateTexture(sth_texture* texture, sth_glyph* glyph, int textureWidth, int textureHeight)
