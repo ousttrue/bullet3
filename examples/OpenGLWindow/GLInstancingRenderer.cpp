@@ -71,7 +71,6 @@ static float m_projectionMatrix[16] = {0};
 static float m_viewMatrix[16] = {0};
 static GLfloat depthMVP[4][4];
 static b3Vector3 m_lightSpecularIntensity = b3MakeVector3(1, 1, 1);
-bool reflectionPass;
 static std::shared_ptr<GLShader> triangleShaderProgram;
 static GLint triangle_mvp_location = -1;
 static GLint triangle_vpos_location = -1;
@@ -240,6 +239,32 @@ SortableTransparentInstance
 struct FrameInfo
 {
 	int renderMode;
+	bool reflectionPass = false;
+	bool reflectionPlanePass = false;
+
+	FrameInfo(int orgRenderMode) : renderMode(orgRenderMode)
+	{
+		if (orgRenderMode == B3_USE_SHADOWMAP_RENDERMODE_REFLECTION_PLANE)
+		{
+			reflectionPlanePass = true;
+			renderMode = B3_USE_SHADOWMAP_RENDERMODE;
+		}
+		if (orgRenderMode == B3_USE_SHADOWMAP_RENDERMODE_REFLECTION)
+		{
+			reflectionPass = true;
+			renderMode = B3_USE_SHADOWMAP_RENDERMODE;
+		}
+
+		if (!useShadowMap)
+		{
+			renderMode = orgRenderMode;
+		}
+
+		if (orgRenderMode == B3_USE_PROJECTIVE_TEXTURE_RENDERMODE)
+		{
+			renderMode = B3_USE_PROJECTIVE_TEXTURE_RENDERMODE;
+		}
+	}
 };
 
 struct b3GraphicsInstance
@@ -492,7 +517,7 @@ public:
 							glUniform3f(useShadow_materialSpecularColor, m_materialSpecularColor[0], m_materialSpecularColor[1], m_materialSpecularColor[2]);
 
 							float MVP[16];
-							if (reflectionPass)
+							if (info.reflectionPass)
 							{
 								//todo: create an API to select this reflection matrix, to allow
 								//reflection planes different from Z-axis up through (0,0,0)
@@ -571,7 +596,7 @@ public:
 							glUniform3f(projectiveTexture_materialSpecularColor, m_materialSpecularColor[0], m_materialSpecularColor[1], m_materialSpecularColor[2]);
 
 							float MVP[16];
-							if (reflectionPass)
+							if (info.reflectionPass)
 							{
 								float tmp[16];
 								float reflectionMatrix[16] = {1, 0, 0, 0,
@@ -2272,32 +2297,8 @@ TransparentDistanceSortPredicate{
 void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 {
 	B3_PROFILE("renderSceneInternal");
-	int renderMode = orgRenderMode;
-	reflectionPass = false;
-	bool reflectionPlanePass = false;
 
-	if (orgRenderMode == B3_USE_SHADOWMAP_RENDERMODE_REFLECTION_PLANE)
-	{
-		reflectionPlanePass = true;
-		renderMode = B3_USE_SHADOWMAP_RENDERMODE;
-	}
-	if (orgRenderMode == B3_USE_SHADOWMAP_RENDERMODE_REFLECTION)
-	{
-		reflectionPass = true;
-		renderMode = B3_USE_SHADOWMAP_RENDERMODE;
-	}
-
-	if (!useShadowMap)
-	{
-		renderMode = orgRenderMode;
-	}
-
-	if (orgRenderMode == B3_USE_PROJECTIVE_TEXTURE_RENDERMODE)
-	{
-		renderMode = B3_USE_PROJECTIVE_TEXTURE_RENDERMODE;
-	}
-
-	FrameInfo info{renderMode};
+	auto info = FrameInfo(orgRenderMode);
 
 	//	glEnable(GL_DEPTH_TEST);
 
@@ -2539,7 +2540,7 @@ void GLInstancingRenderer::renderSceneInternal(int orgRenderMode)
 			int shapeIndex = transparentInstances[i].m_shapeIndex;
 
 			//during a reflectionPlanePass, only draw the plane, nothing else
-			if (reflectionPlanePass)
+			if (info.reflectionPlanePass)
 			{
 				if (shapeIndex != m_planeReflectionShapeIndex)
 					continue;
